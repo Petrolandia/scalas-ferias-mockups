@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 1 — Grelha de gestão da escala</title>
+<style>
+/* === MOLDURA COMUM (copiar) === */
+/* Tokens copiados de src/app/globals.css:2-33 (tema «Menta») */
+:root {
+  --bg: #f3f6f3;
+  --card: #fff;
+  --border: rgba(0, 0, 0, 0.15);
+  --txt: #1f2a24;
+  --mut: #66736b;
+  --hint: #9aa49e;
+  --sidebar: #2f3a33;
+  --sidebar-tx: #dfeee5;
+  --brand: #7fc9a2;
+  --primary: #2e9e68;
+  --primary-hover: #267f54;
+  --ok-bg: #e2f2e9;
+  --ok-tx: #1f6b44;
+  --ok-bd: #7fc9a2;
+  --row-hover: rgba(127, 201, 162, 0.12);
+  --er-bg: #fcebeb;
+  --er-tx: #a32d2d;
+  --er-bd: #f09595;
+  --warn-bg: #faeeda;
+  --warn-tx: #854f0b;
+  --warn-bd: #e8c44e;
+  --info-tx: #1d4ed8;
+  --info-bg: #e6eefc;
+  --info-bd: #9db7f0;
+  --on-primary: #fff;
+}
+* { box-sizing: border-box; padding: 0; margin: 0; }
+[hidden] { display: none !important; }
+html, body {
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--txt);
+  -webkit-font-smoothing: antialiased;
+}
+body { min-height: 100vh; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+/* ── Barra do mockup (não faz parte do ecrã) ── */
+.mock-bar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+  padding: 8px 16px; background: var(--sidebar); color: var(--sidebar-tx); font-size: 13px;
+}
+.mock-back { padding: 4px 10px; border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 6px; white-space: nowrap; }
+.mock-back:hover { background: rgba(255, 255, 255, 0.12); }
+.mock-title { font-weight: 600; flex: 1 1 200px; min-width: 0; }
+.mock-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+.mock-bar button {
+  font-size: 13px; min-height: 30px; padding: 3px 12px; cursor: pointer; font-family: inherit;
+  background: transparent; color: var(--sidebar-tx); border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 6px;
+}
+.mock-bar button:hover { background: rgba(255, 255, 255, 0.12); }
+.mock-bar [role='tab'][aria-selected='true'],
+.mock-bar [aria-pressed='true'] { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+.mock-view { display: inline-flex; }
+.mock-view button { border-radius: 0; margin-left: -1px; }
+.mock-view button:first-child { border-radius: 6px 0 0 6px; margin-left: 0; }
+.mock-view button:last-child { border-radius: 0 6px 6px 0; }
+
+/* ── Palco: dois dispositivos lado a lado, a quebrar para baixo ── */
+.mock-main { padding: 16px 16px 56px; }
+.variant-notes {
+  max-width: 1180px; margin: 0 auto 16px; padding: 10px 14px; font-size: 14px; line-height: 1.5;
+  background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--primary); border-radius: 8px;
+}
+.variant-notes b { font-weight: 600; }
+.variant-notes .note-extra { margin-top: 4px; font-size: 12px; color: var(--mut); }
+.stage { display: flex; flex-wrap: wrap; gap: 28px 24px; align-items: flex-start; justify-content: center; }
+.stage-item { min-width: 0; max-width: 100%; }
+.stage-cap { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; color: var(--mut); }
+.stage-reset {
+  font-size: 12px; min-height: 0; padding: 2px 10px; cursor: pointer; font-family: inherit;
+  background: var(--card); color: var(--mut); border: 1px solid var(--border); border-radius: 6px;
+}
+.stage-reset:hover { color: var(--txt); }
+.device-scroll { overflow-x: auto; max-width: 100%; padding: 2px; }
+.device-scroll--phone { padding: 8px; }
+body[data-view='desktop'] .stage-item--phone,
+body[data-view='phone'] .stage-item--desktop { display: none; }
+
+/* ── Dispositivos: largura fixa, contentor para as container queries ── */
+.device {
+  container-type: inline-size; container-name: app; position: relative;
+  background: var(--bg); overflow: hidden;
+}
+.device--desktop { width: 1180px; border-radius: 10px; box-shadow: 0 0 0 1px var(--border), 0 4px 18px rgba(0, 0, 0, 0.08); }
+.device--phone { width: 375px; border-radius: 22px; box-shadow: 0 0 0 1px var(--border), 0 0 0 6px #dde5df, 0 6px 22px rgba(0, 0, 0, 0.15); }
+
+/* ── Mini-app: barra lateral + conteúdo (réplica de .shell/.sidebar/.content) ── */
+.app { display: flex; position: relative; min-height: 560px; font-size: 14px; background: var(--bg); color: var(--txt); }
+.app-side {
+  width: 220px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; padding: 20px 12px;
+  background: var(--sidebar); color: var(--sidebar-tx);
+}
+.app-logo {
+  background: #fff; border-radius: 8px; padding: 8px 10px; margin-bottom: 4px; text-align: center;
+  font-weight: 700; font-size: 18px; letter-spacing: 0.04em; color: var(--primary);
+}
+.app-side nav { display: flex; flex-direction: column; gap: 4px; }
+.sidebar-link {
+  display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; font-size: 14px;
+  color: var(--sidebar-tx); opacity: 0.85; flex-shrink: 0;
+}
+.sidebar-link:hover { opacity: 1; background: rgba(255, 255, 255, 0.1); }
+.sidebar-link--active { background: rgba(127, 201, 162, 0.22); color: #bfe8d2; opacity: 1; }
+.sidebar-section { font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.5; padding: 0 10px; margin: 12px 0 2px; }
+.sidebar-section:first-child { margin-top: 4px; }
+.app-user { margin-top: auto; padding-top: 16px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.app-user__name { padding: 0 10px; opacity: 0.8; }
+.app-side .app-user button {
+  width: 100%; text-align: left; background: transparent; border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--sidebar-tx); border-radius: 8px; padding: 8px 10px; font-size: 13px; cursor: pointer; min-height: 0;
+}
+.app-side .app-user button:hover { background: rgba(255, 255, 255, 0.1); }
+.app-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.app-top { display: none; }
+.app-scrim { display: none; }
+.app-content { flex: 1; min-width: 0; padding: 24px; position: relative; }
+.app-toast {
+  position: absolute; z-index: 60; transform: translateX(-50%); width: max-content; max-width: calc(100% - 24px);
+  padding: 8px 14px; border-radius: 8px; background: var(--sidebar); color: var(--sidebar-tx); font-size: 13px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25); pointer-events: none;
+}
+.sheet { position: absolute; inset: 0; z-index: 50; background: rgba(0, 0, 0, 0.35); }
+.sheet__box {
+  position: absolute; width: min(520px, calc(100% - 24px)); max-height: 80%; overflow: auto;
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+}
+.new-tag {
+  display: inline-block; vertical-align: middle; margin-left: 6px; padding: 0 6px; border-radius: 4px; font-size: 11px;
+  font-weight: 600; text-transform: none; letter-spacing: 0; background: var(--info-bg); border: 1px solid var(--info-bd); color: var(--info-tx);
+}
+
+/* ── Base de formulários e botões (globals.css) ── */
+.device input, .device select, .device textarea, .device button {
+  font-size: 16px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 8px;
+  background: #fff; min-height: 36px; font-family: inherit; color: var(--txt);
+}
+.device input[type='checkbox'], .device input[type='radio'] { min-height: 0; width: 18px; height: 18px; accent-color: var(--primary); }
+.device label { font-size: 12px; color: var(--mut); display: block; margin-bottom: 12px; }
+.device label > input, .device label > select, .device label > textarea { display: block; width: 100%; max-width: 420px; margin-top: 4px; }
+.device button.primary {
+  background: var(--primary); color: #fff; border: none; font-weight: 600; cursor: pointer; padding: 10px 22px; border-radius: 8px;
+}
+.device button.primary:hover { background: var(--primary-hover); }
+.device button.primary:disabled { background: var(--hint); cursor: not-allowed; }
+.device button.secondary { cursor: pointer; background: #fff; }
+.device .btn-row {
+  display: inline-block; font-size: 13px; font-weight: 500; padding: 4px 12px; min-height: 0;
+  border: 1px solid var(--primary); border-radius: 6px; background: #f2faf6; color: var(--primary-hover);
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+}
+.device .btn-row:hover { background: #e3f4ea; }
+.device .btn-row[aria-pressed='true'], .device .btn-row[aria-current='page'] { background: var(--primary); color: #fff; }
+.device .btn-row.btn-row-strong { background: var(--primary); color: #fff; font-weight: 600; }
+.device .btn-row.btn-row-strong:hover { background: var(--primary-hover); }
+.device .btn-row.btn-row-quiet { font-size: 12px; font-weight: 400; border-color: var(--border); background: var(--bg); color: var(--mut); }
+.device .btn-row.btn-row-quiet:hover { background: var(--card); color: var(--txt); }
+.device .btn-row.danger { border-color: #c0392b; color: #c0392b; background: #fdf3f2; }
+.device .btn-row:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Cartões, badges, avisos (globals.css) ── */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.badge-ok, .badge-warn, .badge-err, .badge-info, .badge-mut {
+  font-size: 12px; padding: 2px 8px; border-radius: 4px; white-space: nowrap; border: 1px solid; display: inline-block;
+}
+.badge-ok { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.badge-warn { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); }
+.badge-err { background: var(--er-bg); border-color: var(--er-bd); color: var(--er-tx); }
+.badge-info { background: var(--info-bg); border-color: var(--info-bd); color: var(--info-tx); }
+.badge-mut { background: var(--bg); border-color: var(--border); color: var(--mut); }
+.alert-ok, .alert-warn, .alert-err, .alert-info { border-radius: 8px; padding: 8px 12px; font-size: 14px; border: 1px solid; }
+.alert-ok { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.alert-warn { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); }
+.alert-err { background: var(--er-bg); border-color: var(--er-bd); color: var(--er-tx); }
+.alert-info { background: var(--info-bg); border-color: var(--info-bd); color: var(--info-tx); }
+.toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 12px 0 16px; }
+.toolbar-actions { margin-left: auto; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.muted { color: var(--mut); }
+.small { font-size: 12px; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Separadores de trabalho e filtro segmentado (precedente 2026-09-25) */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin: 4px 0 12px; flex-wrap: wrap; }
+.tabs [role='tab'] {
+  border: 1px solid transparent; border-bottom: none; border-radius: 8px 8px 0 0; background: none; min-height: 0;
+  font-size: 15px; padding: 8px 14px; cursor: pointer; color: var(--mut); margin-bottom: -1px;
+}
+.tabs [role='tab'][aria-selected='true'] { background: var(--card); border-color: var(--border); color: var(--txt); font-weight: 600; }
+.tab-count { display: inline-block; min-width: 20px; padding: 0 6px; border-radius: 10px; background: var(--er-bg); color: var(--er-tx); font-size: 12px; font-weight: 600; text-align: center; }
+.seg { display: inline-flex; border: 1px solid var(--primary); border-radius: 6px; overflow: hidden; }
+.device .seg button { border: none; border-radius: 0; min-height: 0; font-size: 13px; padding: 4px 12px; background: #f2faf6; color: var(--primary-hover); cursor: pointer; }
+.device .seg button[aria-pressed='true'] { background: var(--primary); color: #fff; font-weight: 600; }
+
+/* ── Tabelas (globals.css:492-): base desktop ── */
+.device table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 14px; }
+.device th { text-align: left; font-size: 12px; color: var(--mut); border-bottom: 1px solid var(--border); padding: 6px 8px; }
+.device td { padding: 8px; border-bottom: 1px solid var(--border); }
+.table-scroll-wrap { overflow-x: auto; }
+
+/* ── ≤768px: réplica do bloco @media (max-width: 768px) de globals.css, por container query ── */
+@container app (max-width: 768px) {
+  .app-side {
+    position: absolute; top: 0; left: 0; bottom: 0; z-index: 30; width: 240px;
+    transform: translateX(-100%); visibility: hidden;
+    transition: transform 0.22s ease, visibility 0s linear 0.22s; box-shadow: 4px 0 16px rgba(0, 0, 0, 0.25);
+  }
+  .app[data-menu-open] .app-side { transform: none; visibility: visible; transition: transform 0.22s ease; }
+  .app[data-menu-open] .app-scrim { display: block; position: absolute; inset: 0; z-index: 20; background: rgba(0, 0, 0, 0.4); }
+  .app-top {
+    display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+  .app-top .app-burger { padding: 6px 10px; line-height: 1; cursor: pointer; }
+  .app-top__title { font-weight: 600; font-size: 15px; }
+  .app-content { padding: 16px; }
+  h1 { font-size: 20px; }
+  .card { padding: 12px; }
+  .tabs [role='tab'] { flex: 1; padding: 8px 6px; font-size: 14px; }
+  .toolbar-actions { margin-left: 0; }
+  .sheet__box { padding: 12px; }
+
+  /* Grelha por omissão: a tabela é o próprio contentor de scroll */
+  table:not(.table--cards):not(.table--scroll) { display: block; overflow-x: auto; width: 100%; margin-top: 12px; font-size: 13px; }
+  table:not(.table--cards):not(.table--scroll) th,
+  table:not(.table--cards):not(.table--scroll) td { white-space: nowrap; padding: 4px 8px; font-variant-numeric: tabular-nums; }
+  /* .table--fill: 2–3 colunas, 100% da largura, o nome quebra */
+  table.table--fill:not(.table--cards):not(.table--scroll) { display: table; width: 100%; table-layout: auto; overflow-x: visible; }
+  table.table--fill:not(.table--cards):not(.table--scroll) th,
+  table.table--fill:not(.table--cards):not(.table--scroll) td { white-space: normal; overflow-wrap: anywhere; }
+  /* .table--cards: linhas viram cards; exige data-label em cada td (excepto acções) */
+  table.table--cards thead { display: none; }
+  table.table--cards, table.table--cards tbody, table.table--cards tfoot, table.table--cards tr, table.table--cards td { display: block; width: 100%; }
+  table.table--cards tr { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; padding: 8px 12px; }
+  table.table--cards td { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 4px 0; border-bottom: none; }
+  table.table--cards td[data-label]::before {
+    content: attr(data-label); font-size: 11px; font-weight: 600; color: var(--mut); text-transform: uppercase; letter-spacing: 0.04em; flex-shrink: 0;
+  }
+  table.table--cards td:not([data-label]) { justify-content: flex-end; border-top: 1px solid var(--border); margin-top: 4px; padding-top: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* Página estreita: o dispositivo mantém 375 px, com deslocação na moldura. */
+@media (max-width: 420px) {
+  .mock-main { padding: 12px 0 40px; }
+  .variant-notes { margin-left: 12px; margin-right: 12px; }
+  .stage-cap { padding: 0 12px; }
+  .device-scroll--phone { padding: 0; }
+  .device--phone { border-radius: 0; box-shadow: 0 0 0 1px var(--border); }
+}
+@media (max-width: 700px) {
+  .mock-bar { position: static; padding: 8px 12px; }
+  .mock-back { order: 1; }
+  .mock-view { order: 2; margin-left: auto; }
+  .mock-title { order: 3; flex-basis: 100%; }
+  .mock-tabs { order: 4; flex: 1 1 100%; flex-wrap: nowrap; }
+  .mock-tabs button { flex: 1 1 0; min-width: 0; padding: 4px 4px; font-size: 12px; line-height: 1.25; }
+}
+/* === FIM MOLDURA === */
+
+/* === ESPECÍFICO DESTE MOCKUP === */
+.esc { --d-folga: #f2922d; --d-ferias: #2e7d32; --d-baixa: #7b3fb5; --d-ft: #daa520; --c-err: #c0392b; --c-warn: #e0a21a; display: flex; flex-direction: column; gap: 8px; }
+.esc h1 { font-size: 22px; font-weight: 600; line-height: 1.2; }
+.esc h2 { font-size: 14px; font-weight: 600; }
+.esc h3 { font-size: 13px; font-weight: 600; }
+.esc-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; }
+.esc-head .wk { display: block; font-size: 14px; font-weight: 400; color: var(--mut); margin-top: 2px; }
+.week-nav { display: inline-flex; gap: 6px; margin-left: auto; }
+.status { display: inline-block; font-size: 12px; padding: 3px 10px; border-radius: 6px; border: 1px solid; line-height: 1.4; }
+.status.is-dirty { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); }
+.status.is-clean { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.status-host .draft-v { font-size: 12px; color: var(--mut); margin-left: 8px; }
+.esc .toolbar { margin: 2px 0 2px; gap: 8px; }
+.nweeks { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.device .nweeks label { display: inline-flex; align-items: center; gap: 6px; margin: 0; font-size: 12px; }
+.device .nweeks label > select { display: inline-block; width: auto; margin: 0; min-height: 30px; padding: 2px 6px; font-size: 13px; }
+kbd { font: 600 11px/1 system-ui, sans-serif; background: #fff; border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 4px; padding: 2px 5px; color: var(--txt); }
+
+/* grelha */
+.grid-wrap { overflow-x: auto; background: var(--card); border: 1px solid var(--border); border-radius: 10px; }
+.device table.sg { border-collapse: separate; border-spacing: 0; margin-top: 0; width: 100%; font-size: 12px; }
+.sg th, .sg td { border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); padding: 0; }
+.sg tr > :last-child { border-right: none; }
+.sg tbody tr:last-child td, .sg tbody tr:last-child th { border-bottom: none; }
+.sg thead th { background: #f7faf8; padding: 6px 4px; text-align: center; vertical-align: top; font-weight: 600; color: var(--txt); font-size: 12px; }
+.sg .name { position: sticky; left: 0; z-index: 3; text-align: left; min-width: 100px; max-width: 100px; padding: 6px 6px 6px 8px; background: var(--card); font-size: 13px; font-weight: 500; box-shadow: 1px 0 0 var(--border); }
+.sg thead .name, .sg tfoot .name { background: #f7faf8; }
+.sg tfoot th.name { font-size: 12px; font-weight: 600; color: var(--mut); }
+.dayh { min-width: 72px; }
+.dayh .dn { display: block; }
+.dayh .tg { display: block; margin-top: 2px; font-size: 10px; font-weight: 500; line-height: 1.25; padding: 0 3px; border-radius: 3px; }
+.tg-ep { color: var(--mut); }
+.tg-ft { background: color-mix(in srgb, var(--d-ft) 30%, #fff); color: #5a4300; }
+.tg-fer { background: var(--info-bg); color: var(--info-tx); }
+.sg td.cell { position: relative; min-width: 72px; height: 46px; padding: 4px 2px 3px 6px; text-align: center; vertical-align: middle; background: var(--card); cursor: default; user-select: none; -webkit-user-select: none; }
+.sg td.cell::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--kc, transparent); }
+.sg td.cell .c-main { display: block; font-weight: 600; font-size: 11.5px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sg td.cell .c-sub { display: block; font-size: 10px; line-height: 1.15; color: var(--mut); white-space: nowrap; }
+.sg td.cell .c-tag { display: block; font-size: 10px; line-height: 1.1; font-weight: 600; color: #5a4300; }
+.sg td.cell .pin { position: absolute; top: 1px; right: 2px; font-size: 10px; line-height: 1; }
+.sg td.k-F { --kc: var(--d-folga); background: color-mix(in srgb, var(--d-folga) 22%, #fff); }
+.sg td.k-V { --kc: var(--d-ferias); background: color-mix(in srgb, var(--d-ferias) 18%, #fff); }
+.sg td.k-B { --kc: var(--d-baixa); background: color-mix(in srgb, var(--d-baixa) 18%, #fff); }
+.sg td.k-B .c-main { white-space: normal; line-height: 1.15; }
+.sg td.k-FT { --kc: var(--d-ft); background: color-mix(in srgb, var(--d-ft) 28%, #fff); }
+.sg td.k-E { background: repeating-linear-gradient(135deg, #fff 0 6px, #f1f4f2 6px 12px); color: var(--hint); }
+.sg td.cell:hover { box-shadow: inset 0 0 0 1px var(--primary); }
+.sg td.cell.is-warn { box-shadow: inset 0 0 0 2px var(--c-warn); }
+.sg td.cell.is-err { box-shadow: inset 0 0 0 2px var(--c-err); }
+.sg:focus-within td.cell.is-focus { outline: 2px solid var(--primary); outline-offset: -2px; }
+.sg td.cell.is-sel { background-image: linear-gradient(rgba(29, 78, 216, 0.12), rgba(29, 78, 216, 0.12)); outline: 2px solid var(--info-tx); outline-offset: -2px; }
+.sg td.cell.is-paint { outline: 2px dashed var(--primary); outline-offset: -2px; }
+.is-flash { outline: 3px solid var(--info-tx) !important; outline-offset: -3px; }
+.sg .tot { position: sticky; right: 0; z-index: 2; min-width: 84px; text-align: center; padding: 4px 4px; font-variant-numeric: tabular-nums; white-space: nowrap; background: #fbfdfb; box-shadow: -1px 0 0 var(--border); }
+.sg thead .tot { background: #f7faf8; }
+.sg .tot b { display: block; font-size: 11.5px; }
+.sg thead .tot { white-space: normal; }
+.sg .tot .c-sub { display: block; font-size: 10px; color: var(--mut); }
+.sg .tot.over b { color: var(--warn-tx); }
+.sg .tot.under b { color: var(--mut); }
+.sg tfoot td.foot { text-align: center; padding: 5px 3px; font-size: 12px; background: #f7faf8; font-variant-numeric: tabular-nums; }
+.sg tfoot td.foot .c-sub { display: block; font-size: 10px; color: var(--mut); }
+.sg tfoot td.foot:last-child, .cov-row td:last-child { position: sticky; right: 0; z-index: 2; box-shadow: -1px 0 0 var(--border); }
+.sg-note { font-size: 11px; color: var(--mut); margin-top: 4px; }
+
+/* legenda e teclado */
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; margin-top: 8px; font-size: 12px; color: var(--mut); }
+.legend .sw { display: inline-block; width: 14px; height: 12px; border-radius: 3px; margin-right: 5px; vertical-align: -2px; border-left: 3px solid var(--kc); background: var(--bgc); }
+.keys { margin-top: 6px; font-size: 12px; color: var(--mut); line-height: 2; }
+.keys kbd { margin: 0 1px; }
+
+/* pincel */
+.brush-bar { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; padding: 8px 10px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; }
+.brush-lbl { font-size: 12px; font-weight: 600; color: var(--mut); margin-right: 2px; }
+.device .chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; min-height: 30px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--primary); background: #f2faf6; color: var(--primary-hover); cursor: pointer; white-space: nowrap; }
+.device .chip:hover { background: #e3f4ea; }
+.device .chip[aria-pressed='true'] { background: var(--primary); color: #fff; font-weight: 600; }
+.chip kbd { background: #fff; color: var(--txt); }
+.brush-state { margin-left: auto; font-size: 12px; color: var(--mut); }
+
+/* validação */
+.val-panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; font-size: 13px; }
+.val-toggle { display: none; }
+.val-title { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.val-sum { font-size: 12px; font-weight: 500; color: var(--mut); }
+.val-body { display: flex; flex-direction: column; gap: 10px; }
+.val-sec h3 { display: flex; gap: 6px; align-items: center; margin-bottom: 4px; }
+.val-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.val-none { font-size: 12px; color: var(--ok-tx); }
+.device .val-item { display: block; width: 100%; text-align: left; font-size: 12.5px; line-height: 1.35; padding: 6px 8px; min-height: 0; border-radius: 8px; border: 1px solid; cursor: pointer; }
+.val-item.err { background: var(--er-bg); border-color: var(--er-bd); color: var(--er-tx); }
+.val-item.warn { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); }
+.val-item.div { background: var(--info-bg); border-color: var(--info-bd); color: var(--info-tx); }
+.val-item:hover { filter: brightness(0.97); }
+.vi-code { display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.02em; font-family: inherit; }
+.vi-go { display: block; margin-top: 2px; font-size: 11px; text-decoration: underline; }
+.val-foot { border-top: 1px solid var(--border); padding-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+.val-foot .primary { width: 100%; }
+.pub-note { font-size: 12px; color: var(--mut); }
+.a-layout, .c-layout { display: grid; grid-template-columns: minmax(0, 1fr) 204px; gap: 12px; align-items: start; }
+.c-layout { grid-template-columns: minmax(0, 1fr) 216px; }
+.a-main, .c-main { min-width: 0; }
+.app-content:has(> .esc) { padding: 16px; }
+
+/* A — pincel fixo + painel */
+.esc-a .grid-host { min-width: 0; }
+
+/* B — fluxo em 3 passos */
+.stepper { list-style: none; display: flex; margin: 4px 0 8px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--card); }
+.stepper li { flex: 1; }
+.stepper li + li { border-left: 1px solid var(--border); }
+.device .stepper button { width: 100%; border: none; border-radius: 0; min-height: 48px; display: flex; align-items: center; justify-content: center; gap: 10px; background: transparent; cursor: pointer; font-size: 14px; color: var(--mut); }
+.stepper .n { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--border); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; background: #fff; }
+.device .stepper button[aria-current='step'] { background: var(--ok-bg); color: var(--ok-tx); font-weight: 600; }
+.stepper button[aria-current='step'] .n { background: var(--primary); border-color: var(--primary); color: #fff; }
+.step-count { display: inline-flex; gap: 3px; }
+.sc { min-width: 20px; padding: 0 6px; border-radius: 10px; font-size: 12px; font-weight: 600; text-align: center; }
+.sc-err { background: var(--er-bg); color: var(--er-tx); border: 1px solid var(--er-bd); }
+.sc-warn { background: var(--warn-bg); color: var(--warn-tx); border: 1px solid var(--warn-bd); }
+.step-panel { display: none; }
+.b-flow[data-step='1'] .step-panel[data-step='1'], .b-flow[data-step='2'] .step-panel[data-step='2'], .b-flow[data-step='3'] .step-panel[data-step='3'] { display: block; }
+.step-lead { font-size: 15px; font-weight: 600; margin: 8px 0 12px; }
+.start-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.device .start-card { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; text-align: left; padding: 18px; min-height: 170px; border: 1px solid var(--border); border-radius: 12px; background: var(--card); cursor: pointer; color: var(--txt); }
+.device .start-card:hover { border-color: var(--primary); background: var(--row-hover); }
+.device .start-card.is-rec { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+.start-card .ct { font-size: 16px; font-weight: 600; }
+.start-card .cd { font-size: 13px; color: var(--mut); line-height: 1.45; }
+.start-card .cm { margin-top: auto; font-size: 12px; color: var(--ok-tx); font-weight: 600; }
+.start-extra { margin-top: 14px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 12px; }
+.step-foot { display: flex; justify-content: space-between; gap: 8px; margin-top: 12px; }
+.sum-host h3 { margin: 10px 0 6px; font-size: 14px; }
+.diff-list { list-style: none; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.diff-list li { padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); }
+.diff-list .chg { display: block; font-variant-numeric: tabular-nums; margin-left: 12px; }
+.diff-list .chg:first-of-type { margin-left: 0; display: inline; }
+.notify { margin: 10px 0; font-size: 14px; }
+.pub-zone { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; align-items: flex-start; }
+.pub-zone .more { width: 100%; padding: 12px; border: 1px dashed var(--border); border-radius: 10px; background: var(--card); display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+.week-dates { list-style: none; font-size: 13px; display: flex; flex-direction: column; gap: 4px; }
+.week-dates li { font-variant-numeric: tabular-nums; }
+.week-dates .muted { margin-left: 4px; }
+
+/* C — seleção, inspector, cobertura */
+.cov-row th, .cov-row td { background: #fbfdfb; border-bottom: 1px solid var(--border); }
+.cov-row td.cov { height: 58px; vertical-align: bottom; padding: 4px 2px 3px; text-align: center; }
+.cov-row .name { font-size: 12px; color: var(--mut); vertical-align: bottom; font-weight: 600; }
+.cov-bar { display: block; width: 46%; min-height: 2px; margin: 0 auto 2px; background: var(--primary); border-radius: 3px 3px 0 0; }
+.cov-n { font-size: 11px; font-weight: 600; color: var(--mut); }
+.cov-strip { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; align-items: end; margin-bottom: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 8px 8px 6px; }
+.cov-strip .cs { display: flex; flex-direction: column; align-items: center; gap: 2px; justify-content: flex-end; height: 76px; font-size: 11px; }
+.cov-strip .cs-bar { width: 60%; background: var(--primary); border-radius: 3px 3px 0 0; }
+.cov-strip .cs-n { font-weight: 600; }
+.cov-strip .cs-d { font-size: 10px; color: var(--mut); }
+.c-acc-view { display: none; }
+.insp { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; font-size: 13px; }
+.insp-title { font-size: 14px; font-weight: 600; }
+.insp-val { font-size: 20px; font-weight: 700; margin: 4px 0 8px; font-variant-numeric: tabular-nums; }
+.insp-dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; margin-bottom: 12px; align-items: baseline; }
+.insp-dl dt { color: var(--mut); font-size: 12px; }
+.insp-dl dd { font-size: 13px; }
+.insp-btns { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+.val-inline { margin-top: 12px; }
+.sel-bar { position: absolute; z-index: 40; transform: translateX(-50%); display: flex; gap: 6px; align-items: center; padding: 6px 8px; background: var(--sidebar); color: var(--sidebar-tx); border-radius: 10px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); max-width: calc(100% - 24px); flex-wrap: wrap; justify-content: center; font-size: 13px; }
+.sel-bar .sel-n { padding: 0 6px; white-space: nowrap; }
+.device .sel-bar button { background: transparent; color: var(--sidebar-tx); border: 1px solid rgba(255, 255, 255, 0.3); font-size: 13px; min-height: 32px; padding: 3px 10px; border-radius: 6px; cursor: pointer; white-space: nowrap; }
+.device .sel-bar button:hover { background: rgba(255, 255, 255, 0.14); }
+.sel-bar .menu-wrap { position: relative; display: inline-block; }
+.sel-bar .menu { position: absolute; bottom: calc(100% + 6px); left: 0; display: flex; flex-direction: column; gap: 2px; padding: 4px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25); min-width: 210px; }
+.device .sel-bar .menu button { color: var(--txt); border: none; text-align: left; }
+.device .sel-bar .menu button:hover { background: var(--row-hover); }
+.acc-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; overflow: hidden; }
+.device .acc-head { width: 100%; display: flex; align-items: center; gap: 8px; justify-content: space-between; text-align: left; border: none; border-radius: 0; min-height: 48px; background: transparent; cursor: pointer; font-size: 14px; }
+.acc-head .nm { font-weight: 600; flex: 1; min-width: 0; }
+.acc-head .tt { font-size: 12px; color: var(--mut); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.acc-days { list-style: none; border-top: 1px solid var(--border); }
+.acc-day { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-bottom: 1px solid var(--border); border-left: 3px solid transparent; font-size: 13px; }
+.acc-day:last-child { border-bottom: none; }
+.acc-day .ad { width: 64px; color: var(--mut); flex-shrink: 0; font-size: 12px; }
+.acc-day .av { flex: 1; font-weight: 600; font-variant-numeric: tabular-nums; min-width: 0; }
+.acc-day.k-F { border-left-color: var(--d-folga); background: color-mix(in srgb, var(--d-folga) 18%, #fff); }
+.acc-day.k-V { border-left-color: var(--d-ferias); background: color-mix(in srgb, var(--d-ferias) 14%, #fff); }
+.acc-day.k-B { border-left-color: var(--d-baixa); background: color-mix(in srgb, var(--d-baixa) 14%, #fff); }
+.acc-day.k-FT { border-left-color: var(--d-ft); background: color-mix(in srgb, var(--d-ft) 24%, #fff); }
+.acc-day.is-err { box-shadow: inset 0 0 0 2px var(--c-err); }
+.acc-day.is-warn { box-shadow: inset 0 0 0 2px var(--c-warn); }
+.acc-flag { font-size: 11px; padding: 0 6px; border-radius: 10px; }
+
+/* editor (inspector e diálogo) */
+.editor label { margin-bottom: 8px; }
+.editor label > input, .editor label > select { max-width: none; }
+.editor .ed-times { display: grid; grid-template-columns: 1fr 1fr; gap: 0 8px; }
+.editor[data-work='0'] .ed-times, .editor[data-work='0'] .ed-brk { display: none; }
+.editor .ed-brk { font-size: 12px; color: var(--mut); margin: -2px 0 8px; }
+.device .chk { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--txt); }
+.device .chk > input { display: inline-block; width: 18px; margin: 0; }
+.ed-err { margin: 6px 0; font-size: 13px; }
+.sheet-h { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.sheet-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.sheet__box ul { margin: 8px 0 0 18px; font-size: 13px; }
+.sheet__box ul.week-dates { margin-left: 0; }
+
+/* O telemóvel tem altura própria e o conteúdo rola lá dentro (barras fixas dentro do ecrã) */
+.device--phone .app { height: 800px; min-height: 0; }
+.device--phone .app-main { min-height: 0; }
+.device--phone .app-content { overflow-y: auto; overscroll-behavior: contain; min-height: 0; }
+
+/* ≤768px: o que muda por container query */
+@container app (max-width: 768px) {
+  .esc h1 { font-size: 20px; }
+  .week-nav { margin-left: 0; width: 100%; }
+  .a-layout, .c-layout { grid-template-columns: minmax(0, 1fr); }
+  .sg .tot, .sg tfoot td.foot:last-child, .cov-row td:last-child { position: static; box-shadow: none; }
+  .sg .name { min-width: 92px; max-width: 92px; padding: 4px 6px; font-size: 12px; }
+  .val-toggle { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; font-size: 14px; font-weight: 600; min-height: 44px; cursor: pointer; background: var(--card); }
+  .val-title { display: none; }
+  .val-panel:not([data-open]) .val-body { display: none; }
+  .val-panel[data-has-error] .val-toggle { border-color: var(--er-bd); color: var(--er-tx); background: var(--er-bg); }
+  .device .chip { min-height: 40px; }
+  .device .btn-row { padding: 8px 12px; }
+  .brush-state { display: none; }
+  .nweeks { width: 100%; }
+  /* A: pincel numa barra inferior fixa dentro do telemóvel */
+  .esc-a .a-layout, .esc-a .a-main { display: contents; }
+  .esc-a .val-panel { order: 1; }
+  .esc-a .grid-host { order: 2; }
+  .esc-a .legend-host { order: 3; }
+  .esc-a .brush-host { order: 4; position: sticky; bottom: -16px; z-index: 20; margin: 0 -16px -16px; }
+  .esc-a .brush-bar { flex-wrap: nowrap; overflow-x: auto; margin: 0; border-radius: 0; border-width: 1px 0 0; box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.12); padding: 8px 12px; }
+  /* B */
+  .stepper .lbl { display: none; }
+  .stepper button[aria-current='step'] .lbl { display: inline; }
+  .stepper li { flex: 0 0 auto; width: 25%; }
+  .stepper li:has(button[aria-current='step']) { flex: 1; width: auto; }
+  .start-grid { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .device .start-card { min-height: 0; padding: 14px; }
+  .step-foot .btn-row { flex: 1; text-align: center; }
+  .brush-bar { flex-wrap: nowrap; overflow-x: auto; }
+  /* C */
+  .c-grid-view, .insp { display: none; }
+  .c-acc-view { display: block; }
+  .c-main .val-inline { margin-top: 4px; }
+  .sheet__box .editor .ed-times { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body data-view="both">
+
+<header class="mock-bar">
+  <a class="mock-back" href="2026-10-03-escalas-ferias-mockups.html">← Índice</a>
+  <span class="mock-title">1 · Grelha de gestão da escala (/escala/2026/33)</span>
+  <div class="mock-tabs" role="tablist" aria-label="Variantes">
+    <button type="button" role="tab" id="tab-a" data-variant="a" aria-controls="panel-a" aria-selected="false">A · Folha com pincel</button>
+    <button type="button" role="tab" id="tab-b" data-variant="b" aria-controls="panel-b" aria-selected="false">B · Fluxo em 3 passos</button>
+    <button type="button" role="tab" id="tab-c" data-variant="c" aria-controls="panel-c" aria-selected="false">C · Seleção e ação</button>
+  </div>
+  <div class="mock-view" role="group" aria-label="Dispositivos">
+    <button type="button" data-view="both" aria-pressed="true">Ambos</button>
+    <button type="button" data-view="desktop" aria-pressed="false">Desktop</button>
+    <button type="button" data-view="phone" aria-pressed="false">375 px</button>
+  </div>
+</header>
+
+<main class="mock-main">
+  <section role="tabpanel" id="panel-a" aria-labelledby="tab-a" data-variant="a" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> a grelha é a folha de cálculo: escolhe-se um pincel (1, 2, 3, F, T, ⌫) e clica-se ou arrasta-se nas células; painel fixo à direita com erros, avisos e divergências e o Publicar no fundo.</p>
+      <p><b>Vantagens:</b> pintar uma semana são poucos gestos e o teclado dispensa o rato; os problemas estão sempre à vista e cada um leva à célula.</p>
+      <p><b>Custo:</b> o painel tira ~230 px à grelha (que passa a rolar na horizontal) e o pincel obriga a aprender um modo («qual está ativo?»).</p>
+      <p class="note-extra">Estado inicial: 1 erro (Duarte Sá, quinta/sexta). Corrija-o, por exemplo com a tecla 2 na célula de quinta, e o Publicar ativa-se.</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-b" aria-labelledby="tab-b" data-variant="b" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> stepper «1 Ponto de partida → 2 Ajustar → 3 Publicar»: um clique num cartão copia ou gera a semana, depois ajusta-se na grelha e o último passo resume as diferenças face à publicada.</p>
+      <p><b>Vantagens:</b> nunca se começa do zero; o resumo diz quem recebe aviso de escala alterada; os problemas aparecem na própria célula e no contador do passo 2.</p>
+      <p><b>Custo:</b> mais ecrãs para uma semana que já está quase certa; ajustes soltos obrigam a passar pelos passos (a 375 px, ecrãs sucessivos com «Seguinte»).</p>
+      <p class="note-extra">Estado inicial: 1 erro (Duarte Sá). O passo 3 bloqueia a publicação até ser corrigido.</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-c" aria-labelledby="tab-c" data-variant="c" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> seleciona-se (clique, arrastar, Shift+clique) e aparece uma barra flutuante de ação; o inspector explica a célula focada (origem, «porquê», fixar, editor) e uma barra de cobertura mostra as pessoas por dia.</p>
+      <p><b>Vantagens:</b> aplica a várias células sem escolher um modo; cada célula explica-se; a cobertura vê-se sem somar de cabeça.</p>
+      <p><b>Custo:</b> o inspector ocupa ~250 px; a 375 px a grelha dá lugar a uma lista por pessoa (acordeão), onde se edita dia a dia.</p>
+      <p class="note-extra">Estado inicial: 1 erro (Duarte Sá). O pincel continua disponível: com um pincel ativo, o clique aplica em vez de selecionar.</p>
+    </div>
+  </section>
+</main>
+
+<!-- Conteúdo de cada variante: clonado por JS para o desktop e para os 375 px. Sem id aqui dentro. -->
+<template data-variant="a" data-active="Escala" data-title="Escala" data-user="Carla Videira">
+  <main class="esc esc-a">
+    <div class="esc-head">
+      <h1>Escala <span class="wk">Semana 33 · 10/08–16/08/2026</span></h1>
+      <div class="week-nav" role="group" aria-label="Navegar entre semanas">
+        <button type="button" class="btn-row btn-row-quiet" data-route="/escala/2026/32">‹ Semana 32</button>
+        <button type="button" class="btn-row btn-row-quiet" data-route="/escala/2026/34">Semana 34 ›</button>
+      </div>
+    </div>
+    <div class="status-host"></div>
+    <div class="toolbar">
+      <button type="button" class="btn-row" data-act="generate">Gerar semana</button>
+      <button type="button" class="btn-row" data-act="copy">Copiar semana anterior</button>
+      <button type="button" class="btn-row" data-act="spread">Distribuir folgas</button>
+      <button type="button" class="btn-row btn-row-quiet undo-btn" data-act="undo" disabled>Anular</button>
+      <div class="toolbar-actions"><div class="nweeks nweeks-host" data-mode="sheet"></div></div>
+    </div>
+    <div class="a-layout">
+      <section class="a-main" aria-label="Grelha da semana">
+        <div class="brush-host"></div>
+        <div class="grid-host"></div>
+        <div class="legend-host"></div>
+      </section>
+      <aside class="val-panel" aria-label="Validação">
+        <button type="button" class="val-toggle" data-act="val-toggle" aria-expanded="false"><span class="val-sum"></span><span aria-hidden="true">▾</span></button>
+        <h2 class="val-title">Validação <span class="val-sum"></span></h2>
+        <div class="val-body val-host"></div>
+        <div class="val-foot">
+          <button type="button" class="primary pub-btn" data-act="publish">Publicar</button>
+          <p class="pub-note"></p>
+        </div>
+      </aside>
+    </div>
+  </main>
+</template>
+
+<template data-variant="b" data-active="Escala" data-title="Escala" data-user="Carla Videira">
+  <main class="esc esc-b">
+    <div class="esc-head">
+      <h1>Escala <span class="wk">Semana 33 · 10/08–16/08/2026</span></h1>
+      <div class="week-nav" role="group" aria-label="Navegar entre semanas">
+        <button type="button" class="btn-row btn-row-quiet" data-route="/escala/2026/32">‹ Semana 32</button>
+        <button type="button" class="btn-row btn-row-quiet" data-route="/escala/2026/34">Semana 34 ›</button>
+      </div>
+    </div>
+    <div class="status-host"></div>
+    <ol class="stepper" aria-label="Passos para preparar a semana">
+      <li><button type="button" data-act="step" data-step="1"><span class="n">1</span><span class="lbl">Ponto de partida</span></button></li>
+      <li><button type="button" data-act="step" data-step="2"><span class="n">2</span><span class="lbl">Ajustar</span><span class="step-count"><span class="sc sc-err" hidden></span><span class="sc sc-warn" hidden></span></span></button></li>
+      <li><button type="button" data-act="step" data-step="3"><span class="n">3</span><span class="lbl">Publicar</span></button></li>
+    </ol>
+    <div class="b-flow" data-step="1">
+      <section class="step-panel" data-step="1" aria-label="Ponto de partida">
+        <p class="step-lead">Como quer começar a semana 33?</p>
+        <div class="start-grid">
+          <button type="button" class="start-card is-rec" data-act="copy" data-next="2">
+            <span class="ct">Copiar semana 32</span>
+            <span class="cd">Só os horários de trabalho, no mesmo dia da semana. Descansos, férias, dias fechados e a época vêm das regras desta semana. As células fixadas mantêm-se.</span>
+            <span class="cm">1 clique e passa ao ajuste</span>
+          </button>
+          <button type="button" class="start-card" data-act="generate" data-next="2">
+            <span class="ct">Gerar pelos padrões</span>
+            <span class="cd">Turno por omissão de cada pessoa, folga fixa, rotação, época Agosto e férias aprovadas. Preenche tudo o que não está fixado.</span>
+            <span class="cm">1 clique e passa ao ajuste</span>
+          </button>
+          <button type="button" class="start-card" data-act="step" data-step="2">
+            <span class="ct">Continuar o rascunho</span>
+            <span class="cd">Retoma a semana como está: rascunho v5, com alterações por publicar face à v2.</span>
+            <span class="cm">Sem alterar nada</span>
+          </button>
+        </div>
+        <p class="start-extra"><button type="button" class="btn-row" data-act="spread">Distribuir folgas</button><span class="muted">Reequilibra as folgas rotativas pelos dias de seg, ter, qui e sex antes de ajustar.</span></p>
+      </section>
+      <section class="step-panel" data-step="2" aria-label="Ajustar a grelha">
+        <div class="brush-host"></div>
+        <div class="grid-host"></div>
+        <div class="legend-host"></div>
+        <div class="val-panel val-inline" aria-label="Problemas">
+          <button type="button" class="val-toggle" data-act="val-toggle" aria-expanded="false"><span class="val-sum"></span><span aria-hidden="true">▾</span></button>
+          <h2 class="val-title">Problemas <span class="val-sum"></span></h2>
+          <div class="val-body val-host"></div>
+        </div>
+        <div class="toolbar">
+          <button type="button" class="btn-row" data-act="spread">Distribuir folgas</button>
+          <button type="button" class="btn-row btn-row-quiet undo-btn" data-act="undo" disabled>Anular</button>
+        </div>
+        <div class="step-foot">
+          <button type="button" class="btn-row" data-act="step" data-step="1">‹ Ponto de partida</button>
+          <button type="button" class="btn-row btn-row-strong" data-act="step" data-step="3">Seguinte: publicar ›</button>
+        </div>
+      </section>
+      <section class="step-panel" data-step="3" aria-label="Publicar">
+        <div class="sum-host"></div>
+        <div class="pub-zone">
+          <div>
+            <button type="button" class="primary pub-btn" data-act="publish-confirm">Publicar esta semana</button>
+            <p class="pub-note"></p>
+          </div>
+          <div class="more nweeks nweeks-host" data-mode="inline"></div>
+        </div>
+        <div class="step-foot">
+          <button type="button" class="btn-row" data-act="step" data-step="2">‹ Ajustar</button>
+          <span></span>
+        </div>
+      </section>
+    </div>
+  </main>
+</template>
+
+<template data-variant="c" data-active="Escala" data-title="Escala" data-user="Carla Videira">
+  <main class="esc esc-c">
+    <div class="esc-head">
+      <h1>Escala <span class="wk">Semana 33 · 10/08–16/08/2026</span></h1>
+      <div class="week-nav" role="group" aria-label="Navegar entre semanas">
+        <button type="button" class="btn-row btn-row-quiet" data-route="/escala/2026/32">‹ Semana 32</button>
+        <button type="button" class="btn-row btn-row-quiet" data-route="/escala/2026/34">Semana 34 ›</button>
+      </div>
+    </div>
+    <div class="status-host"></div>
+    <div class="toolbar">
+      <button type="button" class="btn-row" data-act="generate">Gerar semana</button>
+      <button type="button" class="btn-row" data-act="copy">Copiar semana anterior</button>
+      <button type="button" class="btn-row" data-act="spread">Distribuir folgas</button>
+      <button type="button" class="btn-row btn-row-quiet undo-btn" data-act="undo" disabled>Anular</button>
+      <div class="toolbar-actions">
+        <div class="nweeks nweeks-host" data-mode="sheet"></div>
+        <button type="button" class="primary pub-btn" data-act="publish">Publicar</button>
+      </div>
+    </div>
+    <p class="pub-note"></p>
+    <div class="c-layout">
+      <section class="c-main" aria-label="Grelha da semana">
+        <div class="c-grid-view">
+          <div class="brush-host"></div>
+          <div class="grid-host"></div>
+          <div class="legend-host"></div>
+        </div>
+        <div class="c-acc-view">
+          <div class="cov-strip"></div>
+          <div class="acc-host"></div>
+        </div>
+        <div class="val-panel val-inline" aria-label="Problemas">
+          <button type="button" class="val-toggle" data-act="val-toggle" aria-expanded="false"><span class="val-sum"></span><span aria-hidden="true">▾</span></button>
+          <h2 class="val-title">Problemas <span class="val-sum"></span></h2>
+          <div class="val-body val-host"></div>
+        </div>
+      </section>
+      <aside class="insp" aria-label="Inspector da célula"><div class="insp-host"></div></aside>
+    </div>
+  </main>
+</template>
+
+<script>
+/* Feriados nacionais: datas UTC, incluindo os móveis da Páscoa. */
+var nationalHolidayCache = {};
+function nationalHolidays(year) {
+  if (nationalHolidayCache[year]) return nationalHolidayCache[year];
+  var a = year % 19, b = Math.floor(year / 100), c = year % 100, d = Math.floor(b / 4), e = b % 4;
+  var f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
+  var i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451);
+  var easter = new Date(Date.UTC(year, Math.floor((h + l - 7 * m + 114) / 31) - 1, (h + l - 7 * m + 114) % 31 + 1));
+  var result = {}, fixed = { '01-01': 'Ano Novo', '04-25': 'Dia da Liberdade', '05-01': 'Dia do Trabalhador', '06-10': 'Dia de Portugal', '08-15': 'Assunção de Nossa Senhora', '10-05': 'Implantação da República', '11-01': 'Todos os Santos', '12-01': 'Restauração da Independência', '12-08': 'Imaculada Conceição', '12-25': 'Natal' };
+  Object.keys(fixed).forEach(function (key) { result[year + '-' + key] = fixed[key]; });
+  [[-2, 'Sexta-feira Santa'], [0, 'Páscoa'], [60, 'Corpo de Deus']].forEach(function (entry) { result[new Date(easter.getTime() + entry[0] * 864e5).toISOString().slice(0, 10)] = entry[1]; });
+  return nationalHolidayCache[year] = result;
+}
+function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] || ''; }
+</script>
+<script>
+/* === MOLDURA COMUM (copiar) === */
+/* API para o JS específico (script a seguir a este):
+     window.mockInit = (deviceEl, variant, kind) => {}   chamado por cada clone (kind = 'desktop' | 'phone')
+     Mock.on(tipo, seletor, (evento, elemento, deviceEl) => {})   delegação com escopo no .device
+     Mock.toast(deviceEl, texto)   Mock.sheet(deviceEl, html|Node) → caixa   Mock.closeSheet(deviceEl)
+     Mock.state(deviceEl) → objeto por clone   Mock.uid(prefixo) → id único   Mock.$ Mock.$$ Mock.esc
+   No markup dos templates (sem id): data-id="k" → id único por clone; data-for / data-controls /
+   data-labelledby / data-describedby="k" → for / aria-controls / aria-labelledby / aria-describedby.
+   [data-route="/rota"] simula navegação (aviso «Abre /rota»). Atributos do <template>:
+   data-active (item do menu activo), data-title (título da barra a 375 px), data-user (nome na barra lateral). */
+(function () {
+  'use strict';
+  var VIEW_KEY = 'escalas-ferias-mock-view';
+  var MENU = [
+    ['Geral', [['Início', '/']]],
+    ['Operação', [['Horas', '/horas'], ['As minhas horas', '/horas/minhas'], ['Escala', '/escala'], ['A minha escala', '/escala/minha'],
+      ['Férias', '/ferias'], ['As minhas férias', '/ferias/minhas'], ['Gorjetas', '/gorjetas'], ['As minhas gorjetas', '/gorjetas/minhas'],
+      ['Fecho de caixa', '/caixa']]],
+    ['Cadastros', [['Cadastros', '/cadastros']]]
+  ];
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var mk = function (tag, cls) { var n = document.createElement(tag); if (cls) n.className = cls; return n; };
+  var clamp = function (v, lo, hi) { return Math.min(Math.max(v, lo), hi); };
+  var states = new WeakMap();
+  var counter = 0;
+  var uid = function (p) { counter += 1; return (p || 'u') + '-' + counter; };
+  var state = function (dev) { if (!states.has(dev)) states.set(dev, {}); return states.get(dev); };
+
+  /* ids únicos por clone: data-id define, os data-for/controls/labelledby/describedby ligam */
+  function wireIds(root) {
+    var map = {};
+    var get = function (k) { if (!map[k]) map[k] = uid(k); return map[k]; };
+    $$('[data-id]', root).forEach(function (n) { n.id = get(n.getAttribute('data-id')); });
+    [['data-for', 'for'], ['data-controls', 'aria-controls'], ['data-labelledby', 'aria-labelledby'], ['data-describedby', 'aria-describedby']]
+      .forEach(function (p) { $$('[' + p[0] + ']', root).forEach(function (n) { n.setAttribute(p[1], get(n.getAttribute(p[0]))); }); });
+  }
+
+  /* parte visível do dispositivo (para posicionar avisos e diálogos onde o utilizador está a olhar) */
+  function visibleBox(dev) {
+    var r = dev.getBoundingClientRect();
+    var sc = dev.closest('.device-scroll');
+    return {
+      top: clamp(-r.top, 0, r.height), bottom: clamp(window.innerHeight - r.top, 0, r.height),
+      left: sc ? sc.scrollLeft : 0, width: sc ? sc.clientWidth : dev.clientWidth
+    };
+  }
+  function toast(dev, msg) {
+    var app = $('.app', dev); if (!app) return;
+    var t = $('.app-toast', app);
+    if (!t) { t = mk('div', 'app-toast'); t.setAttribute('role', 'status'); app.appendChild(t); }
+    t.textContent = msg; t.hidden = false;
+    var v = visibleBox(dev);
+    t.style.top = Math.max(8, v.bottom - 56) + 'px';
+    t.style.left = (v.left + v.width / 2) + 'px';
+    clearTimeout(t._h); t._h = setTimeout(function () { t.hidden = true; }, 2800);
+  }
+  function sheet(dev, content) {
+    var app = $('.app', dev), s = $('.sheet', app);
+    if (!s) { s = mk('div', 'sheet'); s.innerHTML = '<div class="sheet__box" role="dialog" aria-modal="true"></div>'; app.appendChild(s); }
+    var box = $('.sheet__box', s);
+    if (typeof content === 'string') box.innerHTML = content; else if (content) box.replaceChildren(content);
+    wireIds(box); s.hidden = false;
+    var v = visibleBox(dev);
+    box.style.top = (v.top + 24) + 'px';
+    box.style.left = Math.max(12, v.left + (v.width - box.offsetWidth) / 2) + 'px';
+    var f = $('button, input, select, textarea, a[href]', box); if (f) f.focus();
+    return box;
+  }
+  function closeSheet(dev) { var s = $('.sheet', dev); if (s) s.hidden = true; }
+  function setMenu(dev, open) {
+    var app = $('.app', dev); if (!app) return;
+    app.toggleAttribute('data-menu-open', open);
+    var b = $('.app-burger', dev); if (b) { b.setAttribute('aria-expanded', String(open)); b.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu'); }
+  }
+  function on(type, selector, fn) {
+    document.addEventListener(type, function (e) {
+      var t = e.target && e.target.closest ? e.target.closest(selector) : null; if (!t) return;
+      var dev = t.closest('.device'); if (!dev) return;
+      fn(e, t, dev);
+    });
+  }
+
+  /* mini-app: barra lateral (desktop) / barra superior com ☰ (≤768px, por container query) */
+  function buildApp(tpl) {
+    var active = tpl.dataset.active || document.body.dataset.active || '';
+    var title = tpl.dataset.title || active;
+    var user = tpl.dataset.user || 'Carla Videira';
+    var app = mk('div', 'app');
+    var nav = MENU.map(function (sec) {
+      return '<div class="sidebar-section">' + esc(sec[0]) + '</div>' + sec[1].map(function (it) {
+        var on_ = it[0] === active;
+        return '<a class="sidebar-link' + (on_ ? ' sidebar-link--active' : '') + '" href="#" data-route="' + esc(it[1]) + '"' + (on_ ? ' aria-current="page"' : '') + '>' + esc(it[0]) + '</a>';
+      }).join('');
+    }).join('');
+    app.innerHTML =
+      '<aside class="app-side" aria-label="Menu principal"><div class="app-logo">GIG</div><nav>' + nav + '</nav>' +
+      '<div class="app-user"><span class="app-user__name">' + esc(user) + '</span><button type="button" data-route="/login">Sair</button></div></aside>' +
+      '<div class="app-scrim" data-act-scrim></div>' +
+      '<div class="app-main"><div class="app-top"><button type="button" class="app-burger" aria-expanded="false" aria-label="Abrir menu">☰</button>' +
+      '<span class="app-top__title">' + esc(title) + '</span></div><div class="app-content"></div></div>';
+    $('.app-content', app).appendChild(tpl.content.cloneNode(true));
+    return app;
+  }
+  function fill(dev) {
+    var tpl = $('template[data-variant="' + dev.dataset.variant + '"]');
+    states.delete(dev);
+    dev.replaceChildren(buildApp(tpl));
+    wireIds(dev);
+    if (typeof window.mockInit === 'function') window.mockInit(dev, dev.dataset.variant, dev.dataset.kind);
+  }
+  function mount(panel) {
+    var v = panel.dataset.variant;
+    var stage = $('.stage', panel) || panel.appendChild(mk('div', 'stage'));
+    stage.replaceChildren();
+    [['desktop', 'Desktop'], ['phone', '375 px']].forEach(function (d) {
+      var item = mk('figure', 'stage-item stage-item--' + d[0]);
+      item.innerHTML = '<figcaption class="stage-cap"><span>' + d[1] + '</span><button type="button" class="stage-reset" title="Repor o estado inicial">Repor</button></figcaption>';
+      var dev = mk('div', 'device device--' + d[0]);
+      dev.dataset.variant = v; dev.dataset.kind = d[0];
+      var sc = mk('div', 'device-scroll' + (d[0] === 'phone' ? ' device-scroll--phone' : '')); sc.appendChild(dev); item.appendChild(sc);
+      stage.appendChild(item);
+      fill(dev);
+    });
+    panel.dataset.rendered = '1';
+  }
+
+  /* separadores A/B/C (hash #a/#b/#c) e alternador de dispositivos */
+  var tabs = $$('.mock-bar [role="tab"]'), panels = $$('[role="tabpanel"]');
+  function select(v, focus) {
+    if (!tabs.some(function (t) { return t.dataset.variant === v; })) v = tabs[0].dataset.variant;
+    tabs.forEach(function (t) { var o = t.dataset.variant === v; t.setAttribute('aria-selected', String(o)); t.tabIndex = o ? 0 : -1; if (o && focus) t.focus(); });
+    panels.forEach(function (p) { p.hidden = p.dataset.variant !== v; if (p.dataset.variant === v && !p.dataset.rendered) mount(p); });
+    if (location.hash.slice(1) !== v) { try { history.replaceState(null, '', '#' + v); } catch (e) { /* file:// restrito */ } }
+  }
+  function setView(v) {
+    document.body.dataset.view = v;
+    $$('.mock-view button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.view === v)); });
+    try { localStorage.setItem(VIEW_KEY, v); } catch (e) { /* sem armazenamento */ }
+  }
+  function boot() {
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { select(t.dataset.variant); });
+      t.addEventListener('keydown', function (e) {
+        var j = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }[e.key];
+        if (j === undefined) return; e.preventDefault(); select(tabs[(j + tabs.length) % tabs.length].dataset.variant, true);
+      });
+    });
+    $$('.mock-view button').forEach(function (b) { b.addEventListener('click', function () { setView(b.dataset.view); }); });
+    window.addEventListener('hashchange', function () { select(location.hash.slice(1).toLowerCase()); });
+    var saved = null; try { saved = localStorage.getItem(VIEW_KEY); } catch (e) { /* ignorar */ }
+    setView(['both', 'desktop', 'phone'].indexOf(saved) >= 0 ? saved : 'both');
+    select(location.hash.slice(1).toLowerCase());
+  }
+
+  /* comportamentos da moldura */
+  on('click', '.app-burger', function (e, t, dev) { setMenu(dev, !$('.app', dev).hasAttribute('data-menu-open')); });
+  on('click', '.app-scrim', function (e, t, dev) { setMenu(dev, false); });
+  on('click', '[data-route]', function (e, t, dev) { e.preventDefault(); setMenu(dev, false); toast(dev, 'Abre ' + t.getAttribute('data-route')); });
+  on('click', 'a[href="#"]', function (e) { e.preventDefault(); });
+  on('click', '.sheet', function (e, t, dev) { if (e.target === t || e.target.closest('[data-close-sheet]')) closeSheet(dev); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    $$('.sheet:not([hidden])').forEach(function (s) { closeSheet(s.closest('.device')); });
+    $$('.app[data-menu-open]').forEach(function (a) { setMenu(a.closest('.device'), false); });
+  });
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.stage-reset'); if (!b) return;
+    fill($('.device', b.closest('.stage-item')));
+  });
+
+  window.Mock = { $: $, $$: $$, esc: esc, uid: uid, state: state, on: on, toast: toast, sheet: sheet, closeSheet: closeSheet, setMenu: setMenu };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+/* === FIM MOLDURA === */
+</script>
+<script>
+/* === ESPECÍFICO DESTE MOCKUP === */
+(function () {
+  'use strict';
+  var $ = Mock.$, $$ = Mock.$$, esc = Mock.esc, S = Mock.state;
+
+  /* ───────── dados fictícios (semana 33: 10/08–16/08/2026) ───────── */
+  var DAYN = ['seg', 'ter', 'qua', 'qui', 'sex', 'sáb', 'dom'];
+  var DAY_MS = 86400000, DATE0 = Date.UTC(2026, 7, 10);
+  var TODAY = '03/10';
+  var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+  var fmtDM = function (ms) { var d = new Date(ms); return pad(d.getUTCDate()) + '/' + pad(d.getUTCMonth() + 1); };
+  var dayDate = function (c) { return fmtDM(DATE0 + c * DAY_MS); };
+  var dayLabel = function (c) { return DAYN[c] + ' ' + dayDate(c); };
+  var toMin = function (t) { var p = t.split(':'); return (+p[0]) * 60 + (+p[1]); };
+  var hhmm = function (m) { return pad(Math.floor(m / 60)) + ':' + pad(m % 60); };
+  var pl = function (n, s, p) { return n + ' ' + (n === 1 ? s : p); };
+  var clone = function (o) { return JSON.parse(JSON.stringify(o)); };
+
+  var TPL = {
+    1: { name: 'Dia', s: '08:00', e: '17:30', bs: '12:30', be: '13:30' },
+    2: { name: 'Dia curto', s: '08:00', e: '17:00', bs: '12:00', be: '13:00' },
+    3: { name: 'Meio-dia', s: '09:00', e: '15:15', bs: '11:45', be: '12:45' }
+  };
+  var EMPS = [
+    { id: 'beatriz', name: 'Beatriz Moura', load: 40, off: 2 },
+    { id: 'tiago', name: 'Tiago Fontes', load: 40, off: 3 },
+    { id: 'ines', name: 'Inês Calado', load: 40, off: 0 },
+    { id: 'rui', name: 'Rui Pestana', load: 40, off: 1 },
+    { id: 'carla', name: 'Carla Videira', load: 40, off: 2 },
+    { id: 'duarte', name: 'Duarte Sá', load: 40, off: 3 },
+    { id: 'marta', name: 'Marta Leal', load: 40, off: 0 },
+    { id: 'hugo', name: 'Hugo Brandão', load: 40, off: 1 },
+    { id: 'matilde', name: 'Matilde Teles', load: 40, off: 0 },
+    { id: 'nuno', name: 'Nuno Arez', load: 30, off: 3 },
+    { id: 'filipa', name: 'Filipa Couto', load: 30, off: 1 }
+  ];
+  /* D=Dia · C=Dia curto · M=Meio-dia · T=F. trab. · F=Folga rotativa · S=Folga fixa (domingo) · V=Férias · B=Baixa médica · X=turno manual 14:00–23:00 */
+  var ROW = {
+    beatriz: 'F D T C C M M', tiago: 'C F T D M D M', ines: 'D D T F C M M', rui: 'C C T D F M M',
+    carla: 'F D T D C M M', duarte: 'D F T X D M M', marta: 'M C T F D C M', hugo: 'V V F V F V V',
+    matilde: 'B B B F D C M', nuno: 'D F T C M M S', filipa: 'C D T M F M S'
+  };
+  var PINS = { 'beatriz:5': 'Fixado à mão: sábado (feriado) com meio-dia', 'carla:5': 'Fixado à mão: sábado (feriado) com meio-dia' };
+  var COLS = 7, ROWS_N = EMPS.length;
+  var BRUSHES = [['1', 'Dia 08:00–17:30'], ['2', 'Dia curto 08:00–17:00'], ['3', 'Meio-dia 09:00–15:15'], ['F', 'Folga'], ['T', 'F. trab.'], ['X', 'Limpar', '⌫']];
+  var BRUSH_NAME = { 1: 'Dia', 2: 'Dia curto', 3: 'Meio-dia', F: 'Folga', T: 'F. trab.', X: 'Limpar' };
+
+  function W(t, src, note) {
+    var T = TPL[t];
+    return { k: 'W', s: T.s, e: T.e, bs: T.bs, be: T.be, tpl: t, pin: false, src: src, note: note };
+  }
+  function initCell(p, code, c) {
+    var x, t;
+    switch (code) {
+      case 'D': case 'C': case 'M':
+        t = code === 'D' ? 1 : code === 'C' ? 2 : 3;
+        x = p.id === 'tiago'
+          ? W(t, 'Cópia', 'Horário copiado da semana 32 (mesmo dia da semana)')
+          : W(t, 'Padrão', 'Turno por omissão de ' + p.name + ' (' + TPL[t].name + ')');
+        if (PINS[p.id + ':' + c]) { x.pin = true; x.src = 'Manual'; x.note = PINS[p.id + ':' + c]; }
+        return x;
+      case 'X': return { k: 'W', s: '14:00', e: '23:00', bs: '18:00', be: '19:00', tpl: 0, pin: true, src: 'Manual', note: 'Turno fixado à mão pela gestora: fecho de quinta (14:00–23:00)' };
+      case 'T': return { k: 'FT', s: '08:00', e: '17:30', bs: '12:30', be: '13:30', tpl: 1, pin: false, src: 'Época', note: 'Época Agosto: quarta trabalhada' };
+      case 'F':
+        if (p.id === 'hugo' && c === 2) return { k: 'F', pin: false, src: 'Férias', note: 'Descanso subjacente mantido nas férias (quarta reaberta como F. trab.)' };
+        if (p.id === 'hugo') return { k: 'F', pin: false, src: 'Férias', note: 'Rotativa: semana 6, desfasamento ' + p.off + ' — absorvida pelas férias' };
+        return { k: 'F', pin: false, src: 'Padrão', note: 'Rotativa: semana 6, desfasamento ' + p.off };
+      case 'S': return { k: 'F', pin: false, src: 'Padrão', note: 'Folga fixa (domingo)' };
+      case 'V': return { k: 'V', pin: false, src: 'Férias', note: 'Férias aprovadas 03/08–16/08' };
+      case 'B': return { k: 'B', pin: true, src: 'Manual', note: 'Baixa médica 10/08–12/08 lançada pela gestora' };
+    }
+    return { k: 'E', pin: false, src: '', note: '' };
+  }
+  function buildInitial() {
+    var cells = {}, leave = {};
+    EMPS.forEach(function (p) {
+      cells[p.id] = ROW[p.id].split(' ').map(function (code, c) { return initCell(p, code, c); });
+      leave[p.id] = [0, 1, 2, 3, 4, 5, 6].map(function () { return p.id === 'hugo'; });
+    });
+    return { cells: cells, leave: leave };
+  }
+  /* a v2 publicada: antes das férias do Hugo, da baixa da Matilde e do turno manual do Duarte */
+  function buildPub(cells) {
+    var pub = clone(cells), by = {};
+    EMPS.forEach(function (p) { by[p.id] = p; });
+    var set = function (id, codes) { codes.forEach(function (code, c) { if (code) pub[id][c] = initCell(by[id], code, c); }); };
+    set('duarte', [null, null, null, 'D']);
+    set('hugo', ['C', 'D', 'T', 'M', 'F', 'D', 'C']);
+    set('matilde', ['D', 'C', 'T']);
+    return pub;
+  }
+  function newState() {
+    var ini = buildInitial();
+    return {
+      cells: ini.cells, leave: ini.leave, gen: clone(ini.cells), pub: buildPub(ini.cells), pubVersion: 2, pubDate: '31/07',
+      draft: 5, brush: null, focus: { r: 0, c: 0 }, sel: [], anchor: null, undo: [], step: 1, open: { 5: true }, done: null, v: null
+    };
+  }
+
+  /* ───────── funções puras ───────── */
+  var worked = function (x) { return x.k === 'W' || x.k === 'FT'; };
+  var dur = function (x) { return toMin(x.e) - toMin(x.s); };
+  function cellLabel(x) {
+    switch (x.k) {
+      case 'W': return x.s + '–' + x.e;
+      case 'FT': return 'F. trab. ' + x.s + '–' + x.e;
+      case 'F': return 'Folga';
+      case 'V': return 'Férias';
+      case 'B': return 'Baixa médica';
+    }
+    return '—';
+  }
+  function tplOf(s, e) { for (var k in TPL) { if (TPL[k].s === s && TPL[k].e === e) return +k; } return 0; }
+  /* intervalo de almoço: 60 min, nenhum bloco acima de 5 h, alvo no meio do turno; até 5 h não há intervalo */
+  function placeBreak(s, e) {
+    var a = toMin(s), b = toMin(e), d = b - a;
+    if (d <= 300) return null;
+    var t = tplOf(s, e); if (t) return [TPL[t].bs, TPL[t].be];
+    var bs = Math.round((a + d / 2 - 30) / 15) * 15;
+    bs = Math.min(Math.max(bs, Math.max(a, b - 360)), Math.min(b - 60, a + 300));
+    return [hhmm(bs), hhmm(bs + 60)];
+  }
+  function brushCell(b) {
+    if (b === '1' || b === '2' || b === '3') {
+      var T = TPL[b];
+      return { k: 'W', s: T.s, e: T.e, bs: T.bs, be: T.be, tpl: +b, pin: true, src: 'Manual', note: 'Turno-tipo ' + b + ' («' + T.name + '») aplicado à mão' };
+    }
+    if (b === 'F') return { k: 'F', pin: true, src: 'Manual', note: 'Folga fixada à mão' };
+    if (b === 'T') return { k: 'FT', s: '08:00', e: '17:30', bs: '12:30', be: '13:30', tpl: 1, pin: true, src: 'Manual', note: 'Folga trabalhada fixada à mão (turno por omissão)' };
+    return { k: 'E', pin: false, src: '', note: '' };
+  }
+  function validate(st) {
+    var errors = [], warns = [], divs = [];
+    EMPS.forEach(function (p, r) {
+      var row = st.cells[p.id], c, a, b, rest;
+      for (c = 0; c < COLS; c++) {
+        if (st.leave[p.id][c] && worked(row[c])) {
+          errors.push({ code: 'TURNO_EM_FERIAS', msg: p.name + ': turno em ' + dayLabel(c) + ', dia de férias aprovadas.', cells: [[r, c]] });
+        }
+      }
+      for (c = 0; c < COLS - 1; c++) {
+        a = row[c]; b = row[c + 1];
+        if (worked(a) && worked(b)) {
+          rest = 1440 - toMin(a.e) + toMin(b.s);
+          if (rest < 660) {
+            errors.push({ code: 'DESCANSO_DIARIO', msg: p.name + ': só ' + hhmm(rest) + ' de descanso entre ' + dayLabel(c) + ' ' + a.e + ' e ' + dayLabel(c + 1) + ' ' + b.s + ' (mínimo 11:00, art. 214.º).', cells: [[r, c], [r, c + 1]] });
+          }
+        }
+      }
+      if (!row.some(function (x) { return !worked(x) && x.k !== 'E'; })) {
+        errors.push({ code: 'SEM_DESCANSO_SEMANAL', msg: p.name + ': nenhum dia de descanso na semana (art. 232.º).', cells: [[r, '*']] });
+      }
+    });
+    var h = EMPS.map(function (p) { return p.id; }).indexOf('hugo');
+    if (st.cells.hugo[4].k === 'F') {
+      warns.push({ code: 'ROTATIVA_ABSORVIDA', msg: 'Hugo Brandão: a folga rotativa de sex 14/08 coincide com férias aprovadas e não gera descanso extra.', cells: [[h, 4]] });
+    }
+    return { errors: errors, warns: warns, divs: divs };
+  }
+  function diffs(st) {
+    var out = [];
+    EMPS.forEach(function (p) {
+      var ch = [];
+      for (var c = 0; c < COLS; c++) {
+        var a = st.pub[p.id][c], b = st.cells[p.id][c];
+        if (cellLabel(a) !== cellLabel(b)) ch.push(dayLabel(c) + ' ' + cellLabel(a) + ' → ' + cellLabel(b));
+      }
+      if (ch.length) out.push({ name: p.name, ch: ch });
+    });
+    return out;
+  }
+  function totals(st, r) {
+    var planned = 0, ft = 0;
+    st.cells[EMPS[r].id].forEach(function (x) { if (x.k === 'W') planned += dur(x); else if (x.k === 'FT') ft += dur(x); });
+    return { planned: planned, ft: ft };
+  }
+  function dayTotals(st, c) {
+    var n = 0, m = 0;
+    EMPS.forEach(function (p) { var x = st.cells[p.id][c]; if (worked(x)) { n++; m += dur(x); } });
+    return { n: n, m: m };
+  }
+  function sumText(v) {
+    var parts = [];
+    if (v.errors.length) parts.push(pl(v.errors.length, 'erro', 'erros'));
+    if (v.warns.length) parts.push(pl(v.warns.length, 'aviso', 'avisos'));
+    return parts.length ? parts.join(' · ') : 'Sem erros nem avisos';
+  }
+  var nLabel = function (n) { return n === 1 ? 'a próxima semana' : 'as próximas ' + n + ' semanas'; };
+  function weeksList(n) {
+    var out = [];
+    for (var i = 1; i <= n; i++) {
+      var s = DATE0 + 7 * i * DAY_MS, e = s + 6 * DAY_MS, wed = s + 2 * DAY_MS;
+      out.push({
+        w: 33 + i, from: fmtDM(s), to: fmtDM(e), range: fmtDM(s) + '–' + fmtDM(e) + '/2026',
+        note: 'qua ' + fmtDM(wed) + (new Date(wed).getUTCMonth() === 7 ? ': F. trab. (Época Agosto)' : ': Folga (dia fechado)')
+      });
+    }
+    return out;
+  }
+  function moveFocus(r, c, key, ctrl) {
+    switch (key) {
+      case 'ArrowUp': return [Math.max(0, r - 1), c];
+      case 'ArrowDown': return [Math.min(ROWS_N - 1, r + 1), c];
+      case 'ArrowLeft': return [r, Math.max(0, c - 1)];
+      case 'ArrowRight': return [r, Math.min(COLS - 1, c + 1)];
+      case 'Home': return [ctrl ? 0 : r, 0];
+      case 'End': return [ctrl ? ROWS_N - 1 : r, COLS - 1];
+    }
+    return null;
+  }
+  function rect(a, b) {
+    var out = [], r0 = Math.min(a[0], b[0]), r1 = Math.max(a[0], b[0]), c0 = Math.min(a[1], b[1]), c1 = Math.max(a[1], b[1]);
+    for (var r = r0; r <= r1; r++) for (var c = c0; c <= c1; c++) out.push([r, c]);
+    return out;
+  }
+
+  /* ───────── HTML ───────── */
+  function brushHtml(st) {
+    var h = '<div class="brush-bar" role="toolbar" aria-label="Pincel"><span class="brush-lbl">Pincel</span>';
+    BRUSHES.forEach(function (b) {
+      h += '<button type="button" class="chip" data-act="brush" data-brush="' + b[0] + '" aria-pressed="false"><kbd>' + (b[2] || b[0]) + '</kbd> ' + esc(b[1]) + '</button>';
+    });
+    return h + '<span class="brush-state" aria-live="polite"></span></div>';
+  }
+  function legendHtml(variant) {
+    var sw = function (kc, bg, t) { return '<span><i class="sw" style="--kc:' + kc + ';--bgc:' + bg + '"></i>' + t + '</span>'; };
+    var h = '<div class="legend">' +
+      sw('#f2922d', 'color-mix(in srgb,#f2922d 22%,#fff)', 'Folga') + sw('#daa520', 'color-mix(in srgb,#daa520 28%,#fff)', 'F. trab.') +
+      sw('#2e7d32', 'color-mix(in srgb,#2e7d32 18%,#fff)', 'Férias') + sw('#7b3fb5', 'color-mix(in srgb,#7b3fb5 18%,#fff)', 'Baixa médica') +
+      '<span>📌 fixada (o gerador não a altera)</span><span><i class="sw" style="--kc:transparent;--bgc:#fff;box-shadow:inset 0 0 0 2px #c0392b"></i>erro</span><span><i class="sw" style="--kc:transparent;--bgc:#fff;box-shadow:inset 0 0 0 2px #e0a21a"></i>aviso</span></div>';
+    h += '<p class="keys">Teclado na célula: <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> mover · <kbd>Enter</kbd> editor · <kbd>F</kbd> folga · <kbd>T</kbd> F. trab. · <kbd>1</kbd>–<kbd>3</kbd> turno-tipo · <kbd>Delete</kbd> limpar';
+    if (variant === 'a' || variant === 'b') h += ' · arrastar com o pincel pinta várias células.';
+    else h += ' · <kbd>Shift</kbd>+clique ou arrastar seleciona várias.';
+    return h + '</p>';
+  }
+  function nweeksHtml(mode) {
+    var opts = '';
+    for (var i = 1; i <= 6; i++) opts += '<option value="' + i + '"' + (i === 3 ? ' selected' : '') + '>' + i + '</option>';
+    var h;
+    if (mode === 'inline') {
+      h = '<h3>Publicar também as próximas semanas</h3><p class="muted small">Gera cada semana pelos padrões e publica-a, por esta ordem. Pára na primeira com erros.</p>' +
+        '<label>Quantas semanas <select class="n-sel" aria-label="Número de semanas">' + opts + '</select></label><ul class="week-dates"></ul>' +
+        '<button type="button" class="btn-row btn-row-strong pub-n" data-act="nweeks-confirm"><span class="n-btn"></span></button>';
+    } else {
+      h = '<label>Próximas semanas <select class="n-sel" aria-label="Número de semanas">' + opts + '</select></label>' +
+        '<button type="button" class="btn-row btn-row-strong" data-act="nweeks"><span class="n-btn"></span></button>';
+    }
+    return h;
+  }
+  function syncN(block) {
+    var sel = $('.n-sel', block); if (!sel) return;
+    var n = +sel.value, btn = $('.n-btn', block), inline = block.dataset.mode === 'inline';
+    if (btn) btn.textContent = inline ? 'Publicar também ' + nLabel(n) : 'Gerar e publicar ' + nLabel(n);
+    var list = $('.week-dates', block);
+    if (list) list.innerHTML = weeksList(n).map(function (w) { return '<li><b>Semana ' + w.w + '</b> ' + w.range + ' <span class="muted">' + w.note + '</span></li>'; }).join('');
+  }
+  function cellInner(x) {
+    switch (x.k) {
+      case 'W': return '<span class="c-main">' + x.s + '–' + x.e + '</span><span class="c-sub">' + (x.tpl ? TPL[x.tpl].name : 'Manual') + '</span>';
+      case 'FT': return '<span class="c-tag">F. trab.</span> <span class="c-main">' + x.s + '–' + x.e + '</span>';
+      case 'F': return '<span class="c-main">Folga</span>';
+      case 'V': return '<span class="c-main">Férias</span>';
+      case 'B': return '<span class="c-main">Baixa médica</span>';
+    }
+    return '<span class="c-main">—</span>';
+  }
+  function cellTip(x) {
+    var t = [];
+    if (x.note) t.push('Porquê: ' + x.note);
+    if (x.src) t.push('Origem: ' + x.src);
+    if (worked(x) && x.bs) t.push('Intervalo ' + x.bs + '–' + x.be);
+    return t.join(' · ');
+  }
+  function renderGrid(dev) {
+    var host = $('.grid-host', dev); if (!host) return;
+    var st = S(dev), v = st.v, marks = {}, sel = {}, cov = dev.dataset.variant === 'c';
+    v.errors.forEach(function (i) { i.cells.forEach(function (k) { if (k[1] !== '*') marks[k[0] + ',' + k[1]] = 'is-err'; }); });
+    v.warns.forEach(function (i) { i.cells.forEach(function (k) { if (!marks[k[0] + ',' + k[1]]) marks[k[0] + ',' + k[1]] = 'is-warn'; }); });
+    st.sel.forEach(function (k) { sel[k[0] + ',' + k[1]] = 1; });
+    var h = '<div class="grid-wrap"><table class="sg table--scroll" role="grid" aria-label="Escala da semana 33"><thead>';
+    if (cov) {
+      h += '<tr class="cov-row"><th class="name" scope="row">Cobertura</th>';
+      for (var c0 = 0; c0 < COLS; c0++) { var dt0 = dayTotals(st, c0); h += '<td class="cov" title="' + pl(dt0.n, 'pessoa', 'pessoas') + ' a trabalhar"><span class="cov-bar" style="height:' + Math.round(dt0.n / ROWS_N * 34) + 'px"></span><span class="cov-n">' + dt0.n + '</span></td>'; }
+      h += '<td></td></tr>';
+    }
+    h += '<tr><th class="name" scope="col">Funcionário</th>';
+    for (var c = 0; c < COLS; c++) {
+      h += '<th class="dayh" scope="col"><span class="dn">' + dayLabel(c) + '</span><span class="tg tg-ep">Época Agosto</span>' +
+        (c === 2 ? '<span class="tg tg-ft">F. trab.</span>' : '') + (nationalHoliday(new Date(DATE0 + c * DAY_MS).toISOString().slice(0, 10)) ? '<span class="tg tg-fer">Feriado (aberto)</span>' : '') + '</th>';
+    }
+    h += '<th class="tot" scope="col">Planeadas / carga</th></tr></thead><tbody>';
+    EMPS.forEach(function (p, r) {
+      h += '<tr><th class="name" scope="row">' + esc(p.name) + '</th>';
+      for (var cc = 0; cc < COLS; cc++) {
+        var x = st.cells[p.id][cc], key = r + ',' + cc, foc = st.focus.r === r && st.focus.c === cc;
+        var cls = 'cell k-' + x.k + (x.pin ? ' is-pinned' : '') + (marks[key] ? ' ' + marks[key] : '') + (foc ? ' is-focus' : '') + (sel[key] ? ' is-sel' : '');
+        h += '<td class="' + cls + '" data-r="' + r + '" data-c="' + cc + '" tabindex="' + (foc ? 0 : -1) + '" title="' + esc(cellTip(x)) + '" aria-label="' + esc(p.name + ', ' + dayLabel(cc) + ': ' + cellLabel(x) + (x.pin ? ', fixada' : '')) + '">' +
+          (x.pin ? '<span class="pin" aria-hidden="true">📌</span>' : '') + cellInner(x) + '</td>';
+      }
+      var t = totals(st, r), tgt = p.load * 60, diff = t.planned - tgt;
+      h += '<td class="tot' + (diff > 60 ? ' over' : diff < -60 ? ' under' : '') + '" title="' + (diff === 0 ? 'Igual à carga contratada' : (diff > 0 ? '+' : '−') + hhmm(Math.abs(diff)) + ' face à carga contratada. Férias e baixas não contam como horas planeadas.') + '"><b>' + hhmm(t.planned) + ' / ' + hhmm(tgt) + '</b>' + (t.ft ? '<span class="c-sub">+' + hhmm(t.ft) + ' F. trab.</span>' : '') + '</td></tr>';
+    });
+    h += '</tbody><tfoot><tr><th class="name" scope="row">Pessoas · horas</th>';
+    var gm = 0;
+    for (var c2 = 0; c2 < COLS; c2++) { var d2 = dayTotals(st, c2); gm += d2.m; h += '<td class="foot"><b>' + d2.n + '</b> pess.<span class="c-sub">' + hhmm(d2.m) + '</span></td>'; }
+    h += '<td class="foot"><b>' + hhmm(gm) + '</b><span class="c-sub">total da semana</span></td></tr></tfoot></table></div>' +
+      '<p class="sg-note">Totais por dia incluem F. trab.; os totais por pessoa não (ficam fora do banco de horas e aparecem à parte).</p>';
+    host.innerHTML = h;
+  }
+  function renderStatus(dev) {
+    var st = S(dev), dirty = diffs(st).length > 0, h;
+    if (dirty) h = '<span class="status is-dirty">Rascunho — alterações por publicar · publicada v' + st.pubVersion + ' em ' + st.pubDate + '</span>';
+    else h = '<span class="status is-clean">Publicada v' + st.pubVersion + ' em ' + st.pubDate + ' · sem alterações por publicar</span>';
+    $$('.status-host', dev).forEach(function (n) { n.innerHTML = h + '<span class="draft-v">rascunho v' + st.draft + '</span>'; });
+  }
+  function valHtml(v) {
+    var attr = function (cells) { return cells.map(function (k) { return k[0] + ',' + k[1]; }).join(';'); };
+    var sec = function (title, badge, cls, items, none) {
+      var h = '<section class="val-sec"><h3>' + title + ' <span class="' + badge + '">' + items.length + '</span></h3>';
+      if (!items.length) return h + '<p class="val-none">' + none + '</p></section>';
+      return h + '<ul class="val-list">' + items.map(function (i) {
+        var row = i.cells[0][1] === '*';
+        return '<li><button type="button" class="val-item ' + cls + '" data-act="goto" data-cells="' + attr(i.cells) + '"' + (i.note ? ' data-note="' + esc(i.note) + '"' : '') + '><code class="vi-code">' + i.code + '</code><span class="vi-msg">' + esc(i.msg) + '</span><span class="vi-go">' + (row ? 'Ver linha' : 'Ir à célula') + '</span></button></li>';
+      }).join('') + '</ul></section>';
+    };
+    return sec('Erros (bloqueiam)', 'badge-err', 'err', v.errors, 'Sem erros.') + sec('Avisos', 'badge-warn', 'warn', v.warns, 'Sem avisos.') + sec('Divergências', 'badge-info', 'div', v.divs, 'Sem divergências.');
+  }
+  function renderVal(dev) {
+    var st = S(dev), v = st.v;
+    $$('.val-host', dev).forEach(function (n) { n.innerHTML = valHtml(v); });
+    $$('.val-sum', dev).forEach(function (n) { n.textContent = sumText(v); });
+    $$('.val-panel', dev).forEach(function (n) { n.toggleAttribute('data-has-error', v.errors.length > 0); });
+  }
+  function syncPub(dev) {
+    var st = S(dev), v = st.v, dirty = diffs(st).length > 0, off = v.errors.length > 0 || !dirty;
+    var msg = v.errors.length ? 'Publicar bloqueado: ' + pl(v.errors.length, 'erro por corrigir', 'erros por corrigir') + '.' : (dirty ? 'Sem erros: pode publicar.' : 'Sem alterações face à publicada v' + st.pubVersion + '.');
+    $$('.pub-btn', dev).forEach(function (b) { b.disabled = off; b.title = off ? msg : ''; });
+    $$('.pub-n', dev).forEach(function (b) { b.disabled = v.errors.length > 0; b.title = v.errors.length ? msg : ''; });
+    $$('.pub-note', dev).forEach(function (n) { n.textContent = msg; });
+  }
+  function summaryHtml(st, v) {
+    var d = diffs(st), h = '';
+    if (st.done) h += '<div class="alert-ok" role="status">Semana 33 publicada (v' + st.done.v + '). ' + pl(st.done.n, 'pessoa recebe', 'pessoas recebem') + ' aviso de escala alterada.</div>';
+    if (v.errors.length) h += '<div class="alert-err" role="alert"><b>' + pl(v.errors.length, 'erro impede', 'erros impedem') + ' a publicação.</b> ' + esc(v.errors[0].msg) + ' <button type="button" class="btn-row danger" data-act="fix-first">Corrigir</button></div>';
+    h += '<h3>Diferenças face à publicada v' + st.pubVersion + '</h3>';
+    if (!d.length) h += '<p class="muted">Sem diferenças face à publicada v' + st.pubVersion + '.</p>';
+    else {
+      h += '<ul class="diff-list">' + d.map(function (p) {
+        return '<li><b>' + esc(p.name) + ':</b> ' + p.ch.map(function (c) { return '<span class="chg">' + esc(c) + '</span>'; }).join('') + '</li>';
+      }).join('') + '</ul><p class="notify"><b>Recebem aviso de escala alterada: ' + pl(d.length, 'pessoa', 'pessoas') + '</b> <span class="muted">(' + d.map(function (p) { return esc(p.name); }).join(', ') + ')</span></p>';
+    }
+    return h;
+  }
+  function editorHtml(st, r, c) {
+    var x = st.cells[EMPS[r].id][c], work = worked(x), s = x.s || '08:00', e = x.e || '17:30';
+    var br = work ? [x.bs || '', x.be || ''] : (placeBreak(s, e) || ['', '']);
+    var kinds = [['W', 'Trabalho'], ['FT', 'Folga trabalhada'], ['F', 'Folga'], ['V', 'Férias'], ['B', 'Baixa médica']];
+    return '<div class="editor" data-r="' + r + '" data-c="' + c + '" data-work="' + (work ? 1 : 0) + '" data-manual="0">' +
+      '<label>Tipo<select data-f="kind">' + kinds.map(function (k) { return '<option value="' + k[0] + '"' + (x.k === k[0] ? ' selected' : '') + '>' + k[1] + '</option>'; }).join('') + '</select></label>' +
+      '<div class="ed-times"><label>Início<input type="time" data-f="s" value="' + s + '"></label><label>Fim<input type="time" data-f="e" value="' + e + '"></label>' +
+      '<label>Início do intervalo<input type="time" data-f="bs" value="' + br[0] + '"></label><label>Fim do intervalo<input type="time" data-f="be" value="' + br[1] + '"></label></div>' +
+      '<p class="ed-brk" data-f="brk">' + (br[0] ? 'Intervalo recalculado se mudar o início ou o fim.' : 'Sem intervalo (turno até 5 h).') + '</p>' +
+      '<label class="chk"><input type="checkbox" data-f="pin"' + ' checked' + '> Fixar (o gerador não altera)</label>' +
+      '<p class="ed-err alert-err" role="alert" hidden></p></div>';
+  }
+  function sheetEditorHtml(st, r, c) {
+    var x = st.cells[EMPS[r].id][c];
+    return '<h2 class="sheet-h">Editar célula</h2><p class="muted small">' + esc(EMPS[r].name) + ' · ' + dayLabel(c) + ' · atual: ' + esc(cellLabel(x)) + '</p>' + editorHtml(st, r, c) +
+      '<div class="sheet-btns"><button type="button" class="primary" data-act="ed-save">Gravar</button><button type="button" class="btn-row" data-act="ed-clear">Limpar célula</button><button type="button" class="btn-row btn-row-quiet" data-close-sheet>Cancelar</button></div>';
+  }
+  function readEditor(ed) {
+    var f = function (n) { return $('[data-f="' + n + '"]', ed); };
+    var k = f('kind').value, pin = f('pin').checked;
+    if (k === 'W' || k === 'FT') {
+      var s = f('s').value, e = f('e').value, bs = f('bs').value, be = f('be').value;
+      if (!s || !e || toMin(e) <= toMin(s)) return { error: 'HORARIO_INVALIDO: o fim tem de ser depois do início.' };
+      if ((bs && !be) || (!bs && be) || (bs && (toMin(bs) < toMin(s) || toMin(be) > toMin(e) || toMin(be) <= toMin(bs)))) return { error: 'INTERVALO_INVALIDO: o intervalo tem de estar dentro do turno.' };
+      return { cell: { k: k, s: s, e: e, bs: bs || undefined, be: be || undefined, tpl: tplOf(s, e), pin: pin, src: 'Manual', note: (k === 'FT' ? 'Folga trabalhada' : 'Turno') + ' editado à mão (' + s + '–' + e + ')' } };
+    }
+    return { cell: { k: k, pin: pin, src: 'Manual', note: { F: 'Folga', V: 'Férias', B: 'Baixa médica' }[k] + ' lançada à mão' } };
+  }
+  function inspHtml(st) {
+    var f = st.focus, p = EMPS[f.r], x = st.cells[p.id][f.c];
+    if (st.sel.length > 1) return '<h2 class="insp-title">' + pl(st.sel.length, 'célula selecionada', 'células selecionadas') + '</h2><p class="muted">Use a barra de ações flutuante para aplicar um turno, folga, F. trab., fixar ou limpar. Clique numa só célula para a editar aqui.</p>';
+    var srcBadge = { 'Padrão': 'badge-mut', 'Época': 'badge-info', 'Férias': 'badge-ok', 'Cópia': 'badge-mut', 'Manual': 'badge-warn' }[x.src] || 'badge-mut';
+    return '<h2 class="insp-title">' + esc(p.name) + ' · ' + dayLabel(f.c) + '</h2><p class="insp-val">' + esc(cellLabel(x)) + (x.pin ? ' <span aria-label="fixada">📌</span>' : '') + '</p>' +
+      '<dl class="insp-dl"><dt>Origem</dt><dd>' + (x.src ? '<span class="' + srcBadge + '">' + x.src + '</span>' : '—') + '</dd><dt>Porquê</dt><dd>' + (x.note ? esc(x.note) : '—') + '</dd>' +
+      (worked(x) && x.bs ? '<dt>Intervalo</dt><dd>' + x.bs + '–' + x.be + '</dd>' : '') + '</dl>' +
+      editorHtml(st, f.r, f.c) + '<div class="insp-btns"><button type="button" class="btn-row btn-row-strong" data-act="ed-save">Gravar</button>' +
+      '<button type="button" class="btn-row" data-act="toggle-pin">' + (x.pin ? 'Desafixar' : 'Fixar') + '</button><button type="button" class="btn-row" data-act="ed-clear">Limpar</button></div>';
+  }
+  function accHtml(st) {
+    return EMPS.map(function (p, r) {
+      var t = totals(st, r), open = !!st.open[r], bad = 0;
+      st.v.errors.forEach(function (i) { if (i.cells.some(function (k) { return k[0] === r; })) bad++; });
+      var days = '';
+      for (var c = 0; c < COLS; c++) {
+        var x = st.cells[p.id][c], mk = '';
+        st.v.errors.forEach(function (i) { if (i.cells.some(function (k) { return k[0] === r && k[1] === c; })) mk = 'is-err'; });
+        if (!mk) st.v.warns.forEach(function (i) { if (i.cells.some(function (k) { return k[0] === r && k[1] === c; })) mk = 'is-warn'; });
+        days += '<li class="acc-day k-' + x.k + ' ' + mk + '" data-r="' + r + '" data-c="' + c + '" title="' + esc(cellTip(x)) + '"><span class="ad">' + dayLabel(c) + '</span><span class="av">' + esc(cellLabel(x)) + (x.pin ? ' 📌' : '') + '</span><button type="button" class="btn-row" data-act="edit-cell" data-r="' + r + '" data-c="' + c + '" aria-label="Editar ' + esc(p.name + ', ' + dayLabel(c)) + '">Editar</button></li>';
+      }
+      return '<div class="acc-item"><button type="button" class="acc-head" data-act="acc" data-r="' + r + '" aria-expanded="' + open + '"><span class="nm">' + esc(p.name) + '</span>' + (bad ? '<span class="sc sc-err">' + bad + '</span>' : '') + '<span class="tt">' + hhmm(t.planned) + ' / ' + hhmm(p.load * 60) + '</span><span aria-hidden="true">' + (open ? '▴' : '▾') + '</span></button><ul class="acc-days"' + (open ? '' : ' hidden') + '>' + days + '</ul></div>';
+    }).join('');
+  }
+
+  /* ───────── estado → ecrã ───────── */
+  function cellEl(dev, r, c) { return $('td.cell[data-r="' + r + '"][data-c="' + c + '"]', dev); }
+  function refresh(dev) {
+    var st = S(dev), ae = document.activeElement, had = ae && dev.contains(ae) && ae.matches && ae.matches('td.cell');
+    st.v = validate(st);
+    renderGrid(dev); renderStatus(dev); renderVal(dev); syncPub(dev);
+    $$('.undo-btn', dev).forEach(function (b) { b.disabled = !st.undo.length; });
+    $$('.nweeks', dev).forEach(syncN);
+    $$('.brush-bar', dev).forEach(function (bar) {
+      $$('.chip', bar).forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.brush === st.brush)); });
+      $('.brush-state', bar).textContent = st.brush ? 'Pincel «' + BRUSH_NAME[st.brush] + '» ativo: clique ou arraste nas células.' : 'Sem pincel: o clique só foca a célula. Escolha um pincel ou use o teclado.';
+    });
+    if (dev.dataset.variant === 'b') renderB(dev);
+    if (dev.dataset.variant === 'c') renderC(dev);
+    if (had) { var el = cellEl(dev, st.focus.r, st.focus.c); if (el) el.focus({ preventScroll: true }); }
+  }
+  function renderB(dev) {
+    var st = S(dev), v = st.v;
+    $('.b-flow', dev).dataset.step = st.step;
+    $$('.stepper button', dev).forEach(function (b) {
+      if (+b.dataset.step === st.step) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+    });
+    var e = $('.sc-err', dev), w = $('.sc-warn', dev);
+    e.hidden = !v.errors.length; e.textContent = v.errors.length; e.title = pl(v.errors.length, 'erro', 'erros');
+    w.hidden = !v.warns.length; w.textContent = v.warns.length; w.title = pl(v.warns.length, 'aviso', 'avisos');
+    $('.sum-host', dev).innerHTML = summaryHtml(st, v);
+  }
+  function setStep(dev, n) {
+    var st = S(dev); st.step = n; renderB(dev);
+    var ac = $('.app-content', dev); if (ac) ac.scrollTop = 0;
+  }
+  function renderC(dev) {
+    var st = S(dev);
+    var ih = $('.insp-host', dev); if (ih) ih.innerHTML = inspHtml(st);
+    var ah = $('.acc-host', dev); if (ah) ah.innerHTML = accHtml(st);
+    var cs = $('.cov-strip', dev);
+    if (cs) {
+      var h = '';
+      for (var c = 0; c < COLS; c++) { var d = dayTotals(st, c); h += '<div class="cs" title="' + pl(d.n, 'pessoa', 'pessoas') + '"><span class="cs-n">' + d.n + '</span><span class="cs-bar" style="height:' + Math.round(d.n / ROWS_N * 48) + 'px"></span><span class="cs-d">' + DAYN[c] + ' ' + dayDate(c).slice(0, 2) + '</span></div>'; }
+      cs.innerHTML = h;
+    }
+    updateSelBar(dev);
+  }
+  function updateSelBar(dev) {
+    var bar = $('.sel-bar', dev); if (!bar) return;
+    var st = S(dev), n = st.sel.length;
+    bar.hidden = n < 1;
+    if (n < 1) return;
+    $('.sel-n', bar).textContent = pl(n, 'célula', 'células');
+    var all = st.sel.every(function (k) { return st.cells[EMPS[k[0]].id][k[1]].pin; });
+    $('[data-act="sel-pin"]', bar).textContent = all ? 'Desafixar' : 'Fixar';
+    placeFloat(dev);
+  }
+  function placeFloat(dev) {
+    var bar = $('.sel-bar', dev); if (!bar || bar.hidden) return;
+    var r = dev.getBoundingClientRect(), sc = dev.closest('.device-scroll');
+    var visBottom = Math.min(window.innerHeight - r.top, r.height);
+    bar.style.top = Math.max(120, visBottom - bar.offsetHeight - 72) + 'px';
+    bar.style.left = (sc ? sc.scrollLeft + sc.clientWidth / 2 : dev.clientWidth / 2) + 'px';
+  }
+  function createSelBar(dev) {
+    var app = $('.app', dev), bar = document.createElement('div');
+    bar.className = 'sel-bar'; bar.setAttribute('role', 'toolbar'); bar.setAttribute('aria-label', 'Ações sobre a seleção'); bar.hidden = true;
+    bar.innerHTML = '<b class="sel-n"></b><span class="menu-wrap"><button type="button" data-act="sel-menu" aria-haspopup="true" aria-expanded="false">Aplicar turno ▾</button><span class="menu" role="menu" hidden>' +
+      [1, 2, 3].map(function (i) { return '<button type="button" role="menuitem" data-act="sel-apply" data-brush="' + i + '">' + i + ' · ' + TPL[i].name + ' ' + TPL[i].s + '–' + TPL[i].e + '</button>'; }).join('') +
+      '</span></span><button type="button" data-act="sel-apply" data-brush="F">Folga</button><button type="button" data-act="sel-apply" data-brush="T">F. trab.</button>' +
+      '<button type="button" data-act="sel-pin">Fixar</button><button type="button" data-act="sel-apply" data-brush="X">Limpar</button><button type="button" data-act="sel-clear" aria-label="Fechar a seleção">✕</button>';
+    app.appendChild(bar);
+  }
+  function focusCell(dev, r, c, noFocus) {
+    var st = S(dev), old = cellEl(dev, st.focus.r, st.focus.c);
+    if (old) { old.classList.remove('is-focus'); old.tabIndex = -1; }
+    st.focus = { r: r, c: c };
+    var el = cellEl(dev, r, c);
+    if (el) { el.classList.add('is-focus'); el.tabIndex = 0; if (!noFocus) el.focus({ preventScroll: true }); }
+  }
+  function paintSel(dev) {
+    var st = S(dev), m = {};
+    st.sel.forEach(function (k) { m[k[0] + ',' + k[1]] = 1; });
+    $$('td.cell', dev).forEach(function (td) { td.classList.toggle('is-sel', !!m[td.dataset.r + ',' + td.dataset.c]); });
+  }
+  function setSel(dev, list, anchor) {
+    var st = S(dev); st.sel = list; if (anchor) st.anchor = anchor;
+    paintSel(dev);
+    if (list.length) { var l = list[list.length - 1]; focusCell(dev, l[0], l[1], true); }
+    renderC(dev);
+  }
+  function gotoCells(dev, cells) {
+    var st = S(dev), els = [];
+    var all = [];
+    cells.forEach(function (k) { if (k[1] === '*') for (var c = 0; c < COLS; c++) all.push([k[0], c]); else all.push(k); });
+    if (dev.dataset.variant === 'c') { all.forEach(function (k) { st.open[k[0]] = true; }); $('.acc-host', dev).innerHTML = accHtml(st); }
+    all.forEach(function (k) {
+      $$('td.cell[data-r="' + k[0] + '"][data-c="' + k[1] + '"], .acc-day[data-r="' + k[0] + '"][data-c="' + k[1] + '"]', dev).forEach(function (el) { if (el.offsetParent !== null) els.push(el); });
+    });
+    els.forEach(function (el) { el.classList.add('is-flash'); });
+    if (els[0]) {
+      els[0].scrollIntoView({ block: 'nearest', inline: 'center' });
+      if (els[0].matches('td.cell')) focusCell(dev, +els[0].dataset.r, +els[0].dataset.c);
+    }
+    setTimeout(function () { els.forEach(function (el) { el.classList.remove('is-flash'); }); }, 1800);
+  }
+  var parseCells = function (s) { return s.split(';').map(function (p) { var a = p.split(','); return [+a[0], a[1] === '*' ? '*' : +a[1]]; }); };
+
+  /* ───────── mutações ───────── */
+  function pushUndo(st) { st.undo.push(JSON.stringify(st.cells)); if (st.undo.length > 20) st.undo.shift(); }
+  function touch(dev, msg) {
+    var st = S(dev); st.draft++; st.done = null; refresh(dev);
+    Mock.toast(dev, msg + ' · rascunho v' + st.draft);
+  }
+  function apply(dev, targets, brush) {
+    if (!targets.length) return;
+    var st = S(dev); pushUndo(st);
+    targets.forEach(function (k) { st.cells[EMPS[k[0]].id][k[1]] = brushCell(brush); });
+    touch(dev, brush === 'X' ? pl(targets.length, 'célula limpa', 'células limpas') : '«' + BRUSH_NAME[brush] + '» aplicado a ' + pl(targets.length, 'célula', 'células'));
+  }
+  function setPin(dev, targets, value) {
+    var st = S(dev); pushUndo(st);
+    targets.forEach(function (k) { var x = st.cells[EMPS[k[0]].id][k[1]]; x.pin = value; if (value && !x.src) x.src = 'Manual'; });
+    touch(dev, value ? pl(targets.length, 'célula fixada', 'células fixadas') : pl(targets.length, 'célula desafixada', 'células desafixadas'));
+  }
+  function doPublish(dev, quiet) {
+    var st = S(dev), n = diffs(st).length;
+    st.pub = clone(st.cells); st.pubVersion++; st.pubDate = TODAY; st.done = { v: st.pubVersion, n: n };
+    refresh(dev);
+    if (!quiet) Mock.toast(dev, 'Semana 33 publicada (v' + st.pubVersion + ') · ' + pl(n, 'pessoa recebe', 'pessoas recebem') + ' aviso');
+  }
+  function nweeksSheet(n) {
+    var ws = weeksList(n), first = ws[0], last = ws[ws.length - 1];
+    return '<h2 class="sheet-h">Gerar e publicar ' + nLabel(n) + '</h2>' +
+      '<p class="muted small">Gera cada semana pelos padrões (turno por omissão, folgas, rotação, época e férias) e publica-a, por esta ordem. Pára na primeira semana com erros. A semana 33 não é alterada.</p>' +
+      '<ul class="week-dates">' + ws.map(function (w) { return '<li><b>Semana ' + w.w + '</b> ' + w.range + ' <span class="muted">' + w.note + '</span></li>'; }).join('') + '</ul>' +
+      '<p class="small" style="margin-top:8px">De ' + first.from + '/2026 a ' + last.to + '/2026.</p>' +
+      '<div class="sheet-btns"><button type="button" class="primary" data-act="nweeks-confirm" data-n="' + n + '">Gerar e publicar ' + pl(n, 'semana', 'semanas') + '</button><button type="button" class="btn-row btn-row-quiet" data-close-sheet>Cancelar</button></div>';
+  }
+
+  /* ───────── ações (data-act) ───────── */
+  var ACT = {
+    brush: function (e, t, dev) { var st = S(dev); st.brush = st.brush === t.dataset.brush ? null : t.dataset.brush; refresh(dev); },
+    generate: function (e, t, dev) {
+      var st = S(dev); pushUndo(st); var kept = 0;
+      EMPS.forEach(function (p) { st.cells[p.id] = st.cells[p.id].map(function (x, c) { if (x.pin) { kept++; return x; } return clone(st.gen[p.id][c]); }); });
+      touch(dev, 'Semana gerada pelos padrões; ' + pl(kept, 'célula fixada mantida', 'células fixadas mantidas'));
+      if (t.dataset.next) setStep(dev, +t.dataset.next);
+    },
+    copy: function (e, t, dev) {
+      var st = S(dev); pushUndo(st); var kept = 0, n = 0;
+      EMPS.forEach(function (p) { st.cells[p.id].forEach(function (x) { if (x.pin) kept++; else if (x.k === 'W') { x.src = 'Cópia'; x.note = 'Horário copiado da semana 32 (mesmo dia da semana)'; n++; } }); });
+      touch(dev, 'Copiados os horários da semana 32 (' + pl(n, 'turno', 'turnos') + '); descansos e férias vêm das regras');
+      if (t.dataset.next) setStep(dev, +t.dataset.next);
+    },
+    spread: function (e, t, dev) { Mock.toast(dev, 'Folgas rotativas distribuídas: seg 2 · ter 3 · qui 3 · sex 3'); },
+    undo: function (e, t, dev) {
+      var st = S(dev); if (!st.undo.length) return;
+      st.cells = JSON.parse(st.undo.pop()); st.draft++; st.done = null; refresh(dev); Mock.toast(dev, 'Última alteração anulada · rascunho v' + st.draft);
+    },
+    'val-toggle': function (e, t) { var p = t.closest('.val-panel'), o = !p.hasAttribute('data-open'); p.toggleAttribute('data-open', o); t.setAttribute('aria-expanded', String(o)); },
+    goto: function (e, t, dev) {
+      var st = S(dev); if (dev.dataset.variant === 'b' && st.step !== 2) setStep(dev, 2);
+      var cells = parseCells(t.dataset.cells);
+      gotoCells(dev, cells);
+      if (t.dataset.note) Mock.toast(dev, t.dataset.note);
+    },
+    'fix-first': function (e, t, dev) {
+      var st = S(dev); setStep(dev, 2); gotoCells(dev, st.v.errors[0].cells);
+    },
+    step: function (e, t, dev) { setStep(dev, +t.dataset.step); },
+    publish: function (e, t, dev) {
+      var st = S(dev), d = diffs(st);
+      if (st.v.errors.length) { Mock.toast(dev, 'Publicar bloqueado: ' + pl(st.v.errors.length, 'erro', 'erros')); return; }
+      Mock.sheet(dev, '<h2 class="sheet-h">Publicar a semana 33 (v' + (st.pubVersion + 1) + ')?</h2><p>Recebem aviso de escala alterada: <b>' + pl(d.length, 'pessoa', 'pessoas') + '</b> (' + d.map(function (p) { return esc(p.name); }).join(', ') + ').</p>' +
+        '<ul>' + d.map(function (p) { return '<li>' + esc(p.name) + ': ' + pl(p.ch.length, 'dia alterado', 'dias alterados') + '</li>'; }).join('') + '</ul>' +
+        '<p class="muted small" style="margin-top:8px">Publicar não cria horas, ausências nem pagamentos: a folha semanal continua a ser a realidade.</p>' +
+        '<div class="sheet-btns"><button type="button" class="primary" data-act="publish-confirm">Publicar v' + (st.pubVersion + 1) + '</button><button type="button" class="btn-row btn-row-quiet" data-close-sheet>Cancelar</button></div>');
+    },
+    'publish-confirm': function (e, t, dev) {
+      var st = S(dev); if (st.v.errors.length) return;
+      Mock.closeSheet(dev); doPublish(dev);
+    },
+    nweeks: function (e, t, dev) { var n = +$('.n-sel', t.closest('.nweeks')).value; Mock.sheet(dev, nweeksSheet(n)); },
+    'nweeks-confirm': function (e, t, dev) {
+      var n = t.dataset.n ? +t.dataset.n : +$('.n-sel', t.closest('.nweeks')).value, ws = weeksList(n), st = S(dev);
+      var also = dev.dataset.variant === 'b';
+      if (also) { if (st.v.errors.length) return; if (diffs(st).length) doPublish(dev, true); } else Mock.closeSheet(dev);
+      Mock.toast(dev, (also ? 'Semana 33 e ' : '') + (n === 1 ? 'semana ' + ws[0].w : 'semanas ' + ws[0].w + ' a ' + ws[n - 1].w) + ' geradas e publicadas (' + ws[0].from + '–' + ws[n - 1].to + '/2026)');
+    },
+    'edit-cell': function (e, t, dev) { openEditor(dev, +t.dataset.r, +t.dataset.c); },
+    acc: function (e, t, dev) {
+      var st = S(dev), r = +t.dataset.r; st.open[r] = !st.open[r];
+      var host = $('.acc-host', dev); host.innerHTML = accHtml(st);
+    },
+    'ed-save': function (e, t, dev) {
+      var st = S(dev), box = t.closest('.sheet__box, .insp'), ed = $('.editor', box), r = +ed.dataset.r, c = +ed.dataset.c;
+      var res = readEditor(ed), er = $('.ed-err', ed);
+      if (res.error) { er.textContent = res.error; er.hidden = false; return; }
+      pushUndo(st); st.cells[EMPS[r].id][c] = res.cell; Mock.closeSheet(dev);
+      touch(dev, EMPS[r].name + ', ' + dayLabel(c) + ': ' + cellLabel(res.cell));
+    },
+    'ed-clear': function (e, t, dev) {
+      var st = S(dev), box = t.closest('.sheet__box, .insp'), ed = $('.editor', box);
+      Mock.closeSheet(dev); apply(dev, [[+ed.dataset.r, +ed.dataset.c]], 'X');
+    },
+    'toggle-pin': function (e, t, dev) {
+      var st = S(dev), x = st.cells[EMPS[st.focus.r].id][st.focus.c]; setPin(dev, [[st.focus.r, st.focus.c]], !x.pin);
+    },
+    'sel-menu': function (e, t) {
+      var m = $('.menu', t.parentNode), o = m.hidden; m.hidden = !o; t.setAttribute('aria-expanded', String(o));
+    },
+    'sel-apply': function (e, t, dev) {
+      var st = S(dev), list = st.sel.slice(); var m = $('.sel-bar .menu', dev); if (m) m.hidden = true;
+      apply(dev, list, t.dataset.brush);
+    },
+    'sel-pin': function (e, t, dev) {
+      var st = S(dev), all = st.sel.every(function (k) { return st.cells[EMPS[k[0]].id][k[1]].pin; }); setPin(dev, st.sel.slice(), !all);
+    },
+    'sel-clear': function (e, t, dev) { setSel(dev, []); }
+  };
+  Mock.on('click', '[data-act]', function (e, t, dev) { var h = ACT[t.dataset.act]; if (h) h(e, t, dev); });
+  Mock.on('change', '.n-sel', function (e, t) { syncN(t.closest('.nweeks')); });
+
+  function openEditor(dev, r, c) {
+    var st = S(dev);
+    if (dev.dataset.variant === 'c' && $('.insp', dev) && $('.insp', dev).offsetParent !== null) {
+      st.sel = [[r, c]]; focusCell(dev, r, c, true); renderC(dev); paintSel(dev);
+      var f = $('.insp [data-f="s"]', dev) || $('.insp [data-f="kind"]', dev); if (f) f.focus();
+      return;
+    }
+    Mock.sheet(dev, sheetEditorHtml(st, r, c));
+  }
+
+  /* editor: o intervalo recalcula-se ao mudar início/fim, salvo se foi ajustado à mão */
+  Mock.on('change', '[data-f="kind"]', function (e, t) { var ed = t.closest('.editor'); ed.dataset.work = (t.value === 'W' || t.value === 'FT') ? 1 : 0; });
+  Mock.on('input', '[data-f="s"], [data-f="e"]', function (e, t) {
+    var ed = t.closest('.editor'); if (ed.dataset.manual === '1') return;
+    var s = $('[data-f="s"]', ed).value, en = $('[data-f="e"]', ed).value; if (!s || !en || toMin(en) <= toMin(s)) return;
+    var b = placeBreak(s, en);
+    $('[data-f="bs"]', ed).value = b ? b[0] : ''; $('[data-f="be"]', ed).value = b ? b[1] : '';
+    $('[data-f="brk"]', ed).textContent = b ? 'Intervalo recalculado: ' + b[0] + '–' + b[1] + '.' : 'Sem intervalo (turno até 5 h).';
+  });
+  Mock.on('input', '[data-f="bs"], [data-f="be"]', function (e, t) {
+    var ed = t.closest('.editor'); ed.dataset.manual = '1'; $('[data-f="brk"]', ed).textContent = 'Intervalo ajustado à mão: mantém-se (é assinalado se ficar em conflito).';
+  });
+
+  /* ───────── teclado ───────── */
+  Mock.on('keydown', 'td.cell', function (e, t, dev) {
+    var st = S(dev), r = +t.dataset.r, c = +t.dataset.c, k = e.key, isC = dev.dataset.variant === 'c';
+    var mv = moveFocus(r, c, k, e.ctrlKey || e.metaKey);
+    if (mv) {
+      e.preventDefault();
+      if (isC) { setSel(dev, e.shiftKey ? rect(st.anchor || [r, c], mv) : [mv], e.shiftKey ? null : mv); focusCell(dev, mv[0], mv[1]); }
+      else focusCell(dev, mv[0], mv[1]);
+      return;
+    }
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    var inSel = st.sel.some(function (q) { return q[0] === r && q[1] === c; });
+    var targets = (isC && st.sel.length > 1 && inSel) ? st.sel.slice() : [[r, c]];
+    if (k === 'Enter') { e.preventDefault(); openEditor(dev, r, c); }
+    else if (k === 'f' || k === 'F') { e.preventDefault(); apply(dev, targets, 'F'); }
+    else if (k === 't' || k === 'T') { e.preventDefault(); apply(dev, targets, 'T'); }
+    else if (/^[1-9]$/.test(k)) { e.preventDefault(); if (+k <= 3) apply(dev, targets, k); else Mock.toast(dev, 'Só há 3 turnos-tipo: a tecla ' + k + ' não tem turno'); }
+    else if (k === 'Delete' || k === 'Backspace') { e.preventDefault(); apply(dev, targets, 'X'); }
+    else if (k === 'Escape' && isC) { setSel(dev, []); }
+  });
+
+  /* ───────── rato: pincel (A, B, C) e seleção (C) ───────── */
+  var drag = null, suppress = false;
+  var rcOf = function (t) { return [+t.dataset.r, +t.dataset.c]; };
+  Mock.on('mousedown', 'td.cell', function (e, t, dev) {
+    if (e.button !== 0) return;
+    var st = S(dev), rc = rcOf(t);
+    if (st.brush) { drag = { dev: dev, kind: 'paint', cells: [rc], moved: false }; t.classList.add('is-paint'); }
+    else if (dev.dataset.variant === 'c') drag = { dev: dev, kind: 'sel', from: e.shiftKey && st.anchor ? st.anchor : rc, moved: false };
+  });
+  Mock.on('mouseover', 'td.cell', function (e, t, dev) {
+    if (!drag || drag.dev !== dev || !(e.buttons & 1)) return;
+    var rc = rcOf(t);
+    if (drag.kind === 'paint') {
+      if (!drag.cells.some(function (q) { return q[0] === rc[0] && q[1] === rc[1]; })) { drag.cells.push(rc); drag.moved = true; t.classList.add('is-paint'); }
+    } else if (rc[0] !== drag.from[0] || rc[1] !== drag.from[1] || drag.moved) {
+      drag.moved = true; S(dev).sel = rect(drag.from, rc); paintSel(dev);
+    }
+  });
+  document.addEventListener('mouseup', function () {
+    if (!drag) return;
+    var d = drag; drag = null;
+    if (!d.moved) { $$('td.is-paint', d.dev).forEach(function (n) { n.classList.remove('is-paint'); }); return; }
+    suppress = true; setTimeout(function () { suppress = false; }, 0);
+    if (d.kind === 'paint') apply(d.dev, d.cells, S(d.dev).brush);
+    else { var st = S(d.dev); st.anchor = d.from; setSel(d.dev, st.sel, d.from); }
+  });
+  Mock.on('click', 'td.cell', function (e, t, dev) {
+    if (suppress) { suppress = false; return; }
+    var st = S(dev), rc = rcOf(t);
+    if (st.brush) { apply(dev, [rc], st.brush); return; }
+    if (dev.dataset.variant === 'c') {
+      if (e.shiftKey) setSel(dev, rect(st.anchor || st.focus && [st.focus.r, st.focus.c] || rc, rc));
+      else if (e.ctrlKey || e.metaKey) {
+        var has = st.sel.some(function (q) { return q[0] === rc[0] && q[1] === rc[1]; });
+        setSel(dev, has ? st.sel.filter(function (q) { return !(q[0] === rc[0] && q[1] === rc[1]); }) : st.sel.concat([rc]), rc);
+      } else setSel(dev, [rc], rc);
+      focusCell(dev, rc[0], rc[1]);
+    } else focusCell(dev, rc[0], rc[1]);
+  });
+  Mock.on('dblclick', 'td.cell', function (e, t, dev) { openEditor(dev, +t.dataset.r, +t.dataset.c); });
+  document.addEventListener('click', function (e) {
+    if (e.target.closest && e.target.closest('.sel-bar .menu-wrap')) return;
+    $$('.sel-bar .menu').forEach(function (m) { m.hidden = true; });
+    $$('.sel-bar [data-act="sel-menu"]').forEach(function (b) { b.setAttribute('aria-expanded', 'false'); });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    $$('.sel-bar .menu').forEach(function (m) { m.hidden = true; });
+  });
+  var raf = 0;
+  var replace = function () { raf = 0; $$('.device--desktop').forEach(placeFloat); };
+  window.addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(replace); }, { passive: true });
+  window.addEventListener('resize', function () { if (!raf) raf = requestAnimationFrame(replace); });
+
+  /* ───────── arranque de cada clone ───────── */
+  window.mockInit = function (dev, variant, kind) {
+    var st = S(dev); Object.keys(st).forEach(function (k) { delete st[k]; }); Object.assign(st, newState());
+    $$('.brush-host', dev).forEach(function (h) { h.innerHTML = brushHtml(st); });
+    $$('.legend-host', dev).forEach(function (h) { h.innerHTML = legendHtml(variant); });
+    $$('.nweeks-host', dev).forEach(function (h) { h.innerHTML = nweeksHtml(h.dataset.mode); });
+    if (variant === 'c' && kind === 'desktop') createSelBar(dev);
+    if (variant === 'c') { st.sel = [[5, 3]]; st.focus = { r: 5, c: 3 }; st.anchor = [5, 3]; }
+    refresh(dev);
+  };
+})();
+</script>
+</body>
+</html>

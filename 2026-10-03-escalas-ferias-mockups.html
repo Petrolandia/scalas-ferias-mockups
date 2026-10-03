@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Escalas e férias — mockups</title>
+<style>
+/* Tokens copiados de src/app/globals.css:2-33 (tema «Menta») */
+:root {
+  --bg: #f3f6f3; --card: #fff; --border: rgba(0, 0, 0, 0.15); --txt: #1f2a24; --mut: #66736b; --hint: #9aa49e;
+  --sidebar: #2f3a33; --sidebar-tx: #dfeee5; --brand: #7fc9a2; --primary: #2e9e68; --primary-hover: #267f54;
+  --ok-bg: #e2f2e9; --ok-tx: #1f6b44; --ok-bd: #7fc9a2; --row-hover: rgba(127, 201, 162, 0.12);
+  --warn-bg: #faeeda; --warn-tx: #854f0b; --warn-bd: #e8c44e;
+  --info-tx: #1d4ed8; --info-bg: #e6eefc; --info-bd: #9db7f0;
+}
+* { box-sizing: border-box; padding: 0; margin: 0; }
+[hidden] { display: none !important; }
+html, body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background: var(--bg); color: var(--txt); -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+.mock-bar { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: var(--sidebar); color: var(--sidebar-tx); font-size: 13px; }
+.mock-bar b { font-weight: 600; }
+.page { max-width: 1180px; margin: 0 auto; padding: 24px 16px 56px; }
+h1 { font-size: 28px; line-height: 1.2; }
+.sub { margin-top: 6px; font-size: 14px; color: var(--mut); }
+h2.section { font-size: 15px; font-weight: 600; margin: 32px 0 12px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.card-head { display: flex; align-items: flex-start; gap: 10px; }
+.num {
+  flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--ok-bg); border: 1px solid var(--ok-bd); color: var(--ok-tx); font-size: 14px; font-weight: 700;
+}
+.card h3 { font-size: 15px; font-weight: 600; line-height: 1.3; padding-top: 3px; }
+.route { font-family: ui-monospace, 'Cascadia Code', Consolas, monospace; font-size: 12px; color: var(--mut); overflow-wrap: anywhere; }
+.decide { font-size: 13px; color: var(--txt); line-height: 1.45; flex: 1; }
+.links { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
+.btn-row {
+  display: inline-block; font-size: 13px; font-weight: 500; padding: 4px 12px; min-height: 28px; line-height: 20px;
+  border: 1px solid var(--primary); border-radius: 6px; background: #f2faf6; color: var(--primary-hover); cursor: pointer;
+  font-family: inherit;
+}
+.btn-row:hover { background: #e3f4ea; }
+.btn-row-strong { background: var(--primary); color: #fff; font-weight: 600; }
+.btn-row-strong:hover { background: var(--primary-hover); }
+.btn-row-quiet { font-size: 12px; font-weight: 400; border-color: var(--border); background: var(--bg); color: var(--mut); }
+.links .spacer { flex: 1; }
+
+.pick-wrap { overflow-x: auto; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 4px 12px 12px; }
+table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 14px; }
+th { text-align: left; font-size: 12px; font-weight: 600; color: var(--mut); border-bottom: 1px solid var(--border); padding: 6px 8px; }
+td { padding: 8px; border-bottom: 1px solid var(--border); }
+th.c, td.c { text-align: center; width: 56px; }
+td.c input { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; vertical-align: middle; }
+td.c label { display: inline-block; padding: 6px 10px; margin: -6px -10px; cursor: pointer; }
+.pick-foot { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 10px; font-size: 12px; color: var(--mut); }
+.source { margin-top: 32px; font-size: 13px; color: var(--mut); line-height: 1.6; }
+.source a { color: var(--info-tx); text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
+
+@media (max-width: 420px) {
+  h1 { font-size: 22px; }
+  th.c, td.c { width: 44px; }
+  th, td { padding-left: 4px; padding-right: 4px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div class="mock-bar"><b>Mockups</b><span>Módulo Escalas e férias</span></div>
+
+<div class="page">
+  <h1>Escalas e férias — mockups</h1>
+  <p class="sub">03/10/2026 · Escolher uma variante (A, B ou C) por funcionalidade</p>
+
+  <h2 class="section">As nove funcionalidades</h2>
+  <div class="grid" id="grid"></div>
+
+  <h2 class="section">A tua escolha</h2>
+  <div class="pick-wrap">
+    <table id="pick">
+      <thead><tr><th>Funcionalidade</th><th class="c">A</th><th class="c">B</th><th class="c">C</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <div class="pick-foot">
+      <span>As escolhas são guardadas localmente neste browser.</span>
+      <button type="button" class="btn-row btn-row-quiet" id="clear">Limpar</button>
+    </div>
+  </div>
+
+  <p class="source">
+    Fontes: <a href="2026-10-03-escalas-ferias-design.md">2026-10-03-escalas-ferias-design.md</a> (spec)
+    e <a href="../plans/2026-10-03-escalas-ferias.md">../plans/2026-10-03-escalas-ferias.md</a> (plano).
+    Cada mockup tem a moldura de uma app mínima, em desktop e a 375 px, com a interação suficiente para contar cliques.
+  </p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var PREFIX = '2026-10-03-escalas-ferias-mockup-';
+  var STORE = 'escalas-ferias-escolha';
+  var FEATURES = [
+    { n: 1, file: '1-grelha-gestao.html', name: 'Grelha de gestão da escala', short: 'Grelha de gestão', route: '/escala/[ano]/[semana]',
+      decide: 'Como a gestora monta e corrige a semana, sem nunca a fazer do zero.' },
+    { n: 2, file: '2-minha-escala.html', name: 'A minha escala', short: 'A minha escala', route: '/escala/minha',
+      decide: 'Como a colaboradora vê a sua semana, quem trabalha com ela e o que mudou.' },
+    { n: 3, file: '3-cartao-inicio.html', name: 'Cartão «A minha escala» na página inicial', short: 'Cartão na página inicial', route: '/',
+      decide: 'Como a página inicial mostra os próximos dias e avisa de uma escala alterada.' },
+    { n: 4, file: '4-config-escala.html', name: 'Configuração da escala', short: 'Configuração da escala', route: '/escala/configuracao',
+      decide: 'Onde se definem turnos-tipo, padrões, épocas e a lista de verificação do arranque.' },
+    { n: 5, file: '5-ferias-gestao.html', name: 'Férias — gestão', short: 'Férias — gestão', route: '/ferias',
+      decide: 'Como se aprovam pedidos e se lê o mapa anual, os saldos e as divergências.' },
+    { n: 6, file: '6-minhas-ferias.html', name: 'As minhas férias', short: 'As minhas férias', route: '/ferias/minhas',
+      decide: 'Como a colaboradora vê o saldo e faz um pedido de férias.' },
+    { n: 7, file: '7-config-ferias.html', name: 'Configuração das férias', short: 'Configuração das férias', route: '/ferias/configuracao',
+      decide: 'Onde se definem o direito anual, a regra de contagem, os saldos iniciais e os encerramentos.' },
+    { n: 8, file: '8-impressoes.html', name: 'Impressões A4', short: 'Impressões A4', route: '/escala/imprimir · /ferias/imprimir',
+      decide: 'Como saem em papel a escala da semana e o mapa de férias.' },
+    { n: 9, file: '9-folha-semanal.html', name: 'Folha semanal: «Preencher com a escala»', short: 'Folha semanal', route: '/horas/[ano]/[semana]',
+      decide: 'Como a escala preenche a folha de horas, sem voltar a escrever o que já está planeado.' }
+  ];
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+
+  document.getElementById('grid').innerHTML = FEATURES.map(function (f) {
+    var url = PREFIX + f.file;
+    return '<article class="card">' +
+      '<div class="card-head"><span class="num" aria-hidden="true">' + f.n + '</span><h3>' + esc(f.name) + '</h3></div>' +
+      '<p class="route">' + esc(f.route) + '</p>' +
+      '<p class="decide">' + esc(f.decide) + '</p>' +
+      '<div class="links">' +
+        ['a', 'b', 'c'].map(function (v) {
+          return '<a class="btn-row" href="' + url + '#' + v + '" aria-label="Variante ' + v.toUpperCase() + ' — ' + esc(f.short) + '">' + v.toUpperCase() + '</a>';
+        }).join('') +
+        '<span class="spacer"></span><a class="btn-row btn-row-strong" href="' + url + '">Abrir</a>' +
+      '</div></article>';
+  }).join('');
+
+  var tbody = document.querySelector('#pick tbody');
+  tbody.innerHTML = FEATURES.map(function (f) {
+    return '<tr><td>' + f.n + ' · ' + esc(f.short) + '</td>' + ['a', 'b', 'c'].map(function (v) {
+      return '<td class="c"><label><input type="radio" name="f' + f.n + '" value="' + v + '" aria-label="' + esc(f.short) + ': variante ' + v.toUpperCase() + '"></label></td>';
+    }).join('') + '</tr>';
+  }).join('');
+
+  var read = function () { try { return JSON.parse(localStorage.getItem(STORE)) || {}; } catch (e) { return {}; } };
+  var write = function (o) { try { localStorage.setItem(STORE, JSON.stringify(o)); } catch (e) { /* sem armazenamento */ } };
+  var saved = read();
+  Object.keys(saved).forEach(function (k) {
+    var r = document.querySelector('input[name="' + k + '"][value="' + saved[k] + '"]'); if (r) r.checked = true;
+  });
+  tbody.addEventListener('change', function (e) {
+    if (e.target.type !== 'radio') return;
+    var o = read(); o[e.target.name] = e.target.value; write(o);
+  });
+  document.getElementById('clear').addEventListener('click', function () {
+    Array.prototype.forEach.call(tbody.querySelectorAll('input'), function (i) { i.checked = false; });
+    write({});
+  });
+})();
+</script>
+</body>
+</html>

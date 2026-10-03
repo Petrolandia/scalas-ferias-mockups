@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 4 — Configuração da escala</title>
+<style>
+/* === MOLDURA COMUM (copiar) === */
+/* Tokens copiados de src/app/globals.css:2-33 (tema «Menta») */
+:root {
+  --bg: #f3f6f3;
+  --card: #fff;
+  --border: rgba(0, 0, 0, 0.15);
+  --txt: #1f2a24;
+  --mut: #66736b;
+  --hint: #9aa49e;
+  --sidebar: #2f3a33;
+  --sidebar-tx: #dfeee5;
+  --brand: #7fc9a2;
+  --primary: #2e9e68;
+  --primary-hover: #267f54;
+  --ok-bg: #e2f2e9;
+  --ok-tx: #1f6b44;
+  --ok-bd: #7fc9a2;
+  --row-hover: rgba(127, 201, 162, 0.12);
+  --er-bg: #fcebeb;
+  --er-tx: #a32d2d;
+  --er-bd: #f09595;
+  --warn-bg: #faeeda;
+  --warn-tx: #854f0b;
+  --warn-bd: #e8c44e;
+  --info-tx: #1d4ed8;
+  --info-bg: #e6eefc;
+  --info-bd: #9db7f0;
+  --on-primary: #fff;
+}
+* { box-sizing: border-box; padding: 0; margin: 0; }
+[hidden] { display: none !important; }
+html, body {
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--txt);
+  -webkit-font-smoothing: antialiased;
+}
+body { min-height: 100vh; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+/* ── Barra do mockup (não faz parte do ecrã) ── */
+.mock-bar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+  padding: 8px 16px; background: var(--sidebar); color: var(--sidebar-tx); font-size: 13px;
+}
+.mock-back { padding: 4px 10px; border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 6px; white-space: nowrap; }
+.mock-back:hover { background: rgba(255, 255, 255, 0.12); }
+.mock-title { font-weight: 600; flex: 1 1 200px; min-width: 0; }
+.mock-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+.mock-bar button {
+  font-size: 13px; min-height: 30px; padding: 3px 12px; cursor: pointer; font-family: inherit;
+  background: transparent; color: var(--sidebar-tx); border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 6px;
+}
+.mock-bar button:hover { background: rgba(255, 255, 255, 0.12); }
+.mock-bar [role='tab'][aria-selected='true'],
+.mock-bar [aria-pressed='true'] { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+.mock-view { display: inline-flex; }
+.mock-view button { border-radius: 0; margin-left: -1px; }
+.mock-view button:first-child { border-radius: 6px 0 0 6px; margin-left: 0; }
+.mock-view button:last-child { border-radius: 0 6px 6px 0; }
+
+/* ── Palco: dois dispositivos lado a lado, a quebrar para baixo ── */
+.mock-main { padding: 16px 16px 56px; }
+.variant-notes {
+  max-width: 1180px; margin: 0 auto 16px; padding: 10px 14px; font-size: 14px; line-height: 1.5;
+  background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--primary); border-radius: 8px;
+}
+.variant-notes b { font-weight: 600; }
+.variant-notes .note-extra { margin-top: 4px; font-size: 12px; color: var(--mut); }
+.stage { display: flex; flex-wrap: wrap; gap: 28px 24px; align-items: flex-start; justify-content: center; }
+.stage-item { min-width: 0; max-width: 100%; }
+.stage-cap { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; color: var(--mut); }
+.stage-reset {
+  font-size: 12px; min-height: 0; padding: 2px 10px; cursor: pointer; font-family: inherit;
+  background: var(--card); color: var(--mut); border: 1px solid var(--border); border-radius: 6px;
+}
+.stage-reset:hover { color: var(--txt); }
+.device-scroll { overflow-x: auto; max-width: 100%; padding: 2px; }
+.device-scroll--phone { padding: 8px; }
+body[data-view='desktop'] .stage-item--phone,
+body[data-view='phone'] .stage-item--desktop { display: none; }
+
+/* ── Dispositivos: largura fixa, contentor para as container queries ── */
+.device {
+  container-type: inline-size; container-name: app; position: relative;
+  background: var(--bg); overflow: hidden;
+}
+.device--desktop { width: 1180px; border-radius: 10px; box-shadow: 0 0 0 1px var(--border), 0 4px 18px rgba(0, 0, 0, 0.08); }
+.device--phone { width: 375px; border-radius: 22px; box-shadow: 0 0 0 1px var(--border), 0 0 0 6px #dde5df, 0 6px 22px rgba(0, 0, 0, 0.15); }
+
+/* ── Mini-app: barra lateral + conteúdo (réplica de .shell/.sidebar/.content) ── */
+.app { display: flex; position: relative; min-height: 560px; font-size: 14px; background: var(--bg); color: var(--txt); }
+.app-side {
+  width: 220px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; padding: 20px 12px;
+  background: var(--sidebar); color: var(--sidebar-tx);
+}
+.app-logo {
+  background: #fff; border-radius: 8px; padding: 8px 10px; margin-bottom: 4px; text-align: center;
+  font-weight: 700; font-size: 18px; letter-spacing: 0.04em; color: var(--primary);
+}
+.app-side nav { display: flex; flex-direction: column; gap: 4px; }
+.sidebar-link {
+  display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; font-size: 14px;
+  color: var(--sidebar-tx); opacity: 0.85; flex-shrink: 0;
+}
+.sidebar-link:hover { opacity: 1; background: rgba(255, 255, 255, 0.1); }
+.sidebar-link--active { background: rgba(127, 201, 162, 0.22); color: #bfe8d2; opacity: 1; }
+.sidebar-section { font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.5; padding: 0 10px; margin: 12px 0 2px; }
+.sidebar-section:first-child { margin-top: 4px; }
+.app-user { margin-top: auto; padding-top: 16px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.app-user__name { padding: 0 10px; opacity: 0.8; }
+.app-side .app-user button {
+  width: 100%; text-align: left; background: transparent; border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--sidebar-tx); border-radius: 8px; padding: 8px 10px; font-size: 13px; cursor: pointer; min-height: 0;
+}
+.app-side .app-user button:hover { background: rgba(255, 255, 255, 0.1); }
+.app-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.app-top { display: none; }
+.app-scrim { display: none; }
+.app-content { flex: 1; min-width: 0; padding: 24px; position: relative; }
+.app-toast {
+  position: absolute; z-index: 60; transform: translateX(-50%); width: max-content; max-width: calc(100% - 24px);
+  padding: 8px 14px; border-radius: 8px; background: var(--sidebar); color: var(--sidebar-tx); font-size: 13px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25); pointer-events: none;
+}
+.sheet { position: absolute; inset: 0; z-index: 50; background: rgba(0, 0, 0, 0.35); }
+.sheet__box {
+  position: absolute; width: min(520px, calc(100% - 24px)); max-height: 80%; overflow: auto;
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+}
+.new-tag {
+  display: inline-block; vertical-align: middle; margin-left: 6px; padding: 0 6px; border-radius: 4px; font-size: 11px;
+  font-weight: 600; text-transform: none; letter-spacing: 0; background: var(--info-bg); border: 1px solid var(--info-bd); color: var(--info-tx);
+}
+
+/* ── Base de formulários e botões (globals.css) ── */
+.device input, .device select, .device textarea, .device button {
+  font-size: 16px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 8px;
+  background: #fff; min-height: 36px; font-family: inherit; color: var(--txt);
+}
+.device input[type='checkbox'], .device input[type='radio'] { min-height: 0; width: 18px; height: 18px; accent-color: var(--primary); }
+.device label { font-size: 12px; color: var(--mut); display: block; margin-bottom: 12px; }
+.device label > input, .device label > select, .device label > textarea { display: block; width: 100%; max-width: 420px; margin-top: 4px; }
+.device button.primary {
+  background: var(--primary); color: #fff; border: none; font-weight: 600; cursor: pointer; padding: 10px 22px; border-radius: 8px;
+}
+.device button.primary:hover { background: var(--primary-hover); }
+.device button.primary:disabled { background: var(--hint); cursor: not-allowed; }
+.device button.secondary { cursor: pointer; background: #fff; }
+.device .btn-row {
+  display: inline-block; font-size: 13px; font-weight: 500; padding: 4px 12px; min-height: 0;
+  border: 1px solid var(--primary); border-radius: 6px; background: #f2faf6; color: var(--primary-hover);
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+}
+.device .btn-row:hover { background: #e3f4ea; }
+.device .btn-row[aria-pressed='true'], .device .btn-row[aria-current='page'] { background: var(--primary); color: #fff; }
+.device .btn-row.btn-row-strong { background: var(--primary); color: #fff; font-weight: 600; }
+.device .btn-row.btn-row-strong:hover { background: var(--primary-hover); }
+.device .btn-row.btn-row-quiet { font-size: 12px; font-weight: 400; border-color: var(--border); background: var(--bg); color: var(--mut); }
+.device .btn-row.btn-row-quiet:hover { background: var(--card); color: var(--txt); }
+.device .btn-row.danger { border-color: #c0392b; color: #c0392b; background: #fdf3f2; }
+.device .btn-row:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Cartões, badges, avisos (globals.css) ── */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.badge-ok, .badge-warn, .badge-err, .badge-info, .badge-mut {
+  font-size: 12px; padding: 2px 8px; border-radius: 4px; white-space: nowrap; border: 1px solid; display: inline-block;
+}
+.badge-ok { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.badge-warn { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); }
+.badge-err { background: var(--er-bg); border-color: var(--er-bd); color: var(--er-tx); }
+.badge-info { background: var(--info-bg); border-color: var(--info-bd); color: var(--info-tx); }
+.badge-mut { background: var(--bg); border-color: var(--border); color: var(--mut); }
+.alert-ok, .alert-warn, .alert-err, .alert-info { border-radius: 8px; padding: 8px 12px; font-size: 14px; border: 1px solid; }
+.alert-ok { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.alert-warn { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); }
+.alert-err { background: var(--er-bg); border-color: var(--er-bd); color: var(--er-tx); }
+.alert-info { background: var(--info-bg); border-color: var(--info-bd); color: var(--info-tx); }
+.toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 12px 0 16px; }
+.toolbar-actions { margin-left: auto; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.muted { color: var(--mut); }
+.small { font-size: 12px; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Separadores de trabalho e filtro segmentado (precedente 2026-09-25) */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin: 4px 0 12px; flex-wrap: wrap; }
+.tabs [role='tab'] {
+  border: 1px solid transparent; border-bottom: none; border-radius: 8px 8px 0 0; background: none; min-height: 0;
+  font-size: 15px; padding: 8px 14px; cursor: pointer; color: var(--mut); margin-bottom: -1px;
+}
+.tabs [role='tab'][aria-selected='true'] { background: var(--card); border-color: var(--border); color: var(--txt); font-weight: 600; }
+.tab-count { display: inline-block; min-width: 20px; padding: 0 6px; border-radius: 10px; background: var(--er-bg); color: var(--er-tx); font-size: 12px; font-weight: 600; text-align: center; }
+.seg { display: inline-flex; border: 1px solid var(--primary); border-radius: 6px; overflow: hidden; }
+.device .seg button { border: none; border-radius: 0; min-height: 0; font-size: 13px; padding: 4px 12px; background: #f2faf6; color: var(--primary-hover); cursor: pointer; }
+.device .seg button[aria-pressed='true'] { background: var(--primary); color: #fff; font-weight: 600; }
+
+/* ── Tabelas (globals.css:492-): base desktop ── */
+.device table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 14px; }
+.device th { text-align: left; font-size: 12px; color: var(--mut); border-bottom: 1px solid var(--border); padding: 6px 8px; }
+.device td { padding: 8px; border-bottom: 1px solid var(--border); }
+.table-scroll-wrap { overflow-x: auto; }
+
+/* ── ≤768px: réplica do bloco @media (max-width: 768px) de globals.css, por container query ── */
+@container app (max-width: 768px) {
+  .app-side {
+    position: absolute; top: 0; left: 0; bottom: 0; z-index: 30; width: 240px;
+    transform: translateX(-100%); visibility: hidden;
+    transition: transform 0.22s ease, visibility 0s linear 0.22s; box-shadow: 4px 0 16px rgba(0, 0, 0, 0.25);
+  }
+  .app[data-menu-open] .app-side { transform: none; visibility: visible; transition: transform 0.22s ease; }
+  .app[data-menu-open] .app-scrim { display: block; position: absolute; inset: 0; z-index: 20; background: rgba(0, 0, 0, 0.4); }
+  .app-top {
+    display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+  .app-top .app-burger { padding: 6px 10px; line-height: 1; cursor: pointer; }
+  .app-top__title { font-weight: 600; font-size: 15px; }
+  .app-content { padding: 16px; }
+  h1 { font-size: 20px; }
+  .card { padding: 12px; }
+  .tabs [role='tab'] { flex: 1; padding: 8px 6px; font-size: 14px; }
+  .toolbar-actions { margin-left: 0; }
+  .sheet__box { padding: 12px; }
+
+  /* Grelha por omissão: a tabela é o próprio contentor de scroll */
+  table:not(.table--cards):not(.table--scroll) { display: block; overflow-x: auto; width: 100%; margin-top: 12px; font-size: 13px; }
+  table:not(.table--cards):not(.table--scroll) th,
+  table:not(.table--cards):not(.table--scroll) td { white-space: nowrap; padding: 4px 8px; font-variant-numeric: tabular-nums; }
+  /* .table--fill: 2–3 colunas, 100% da largura, o nome quebra */
+  table.table--fill:not(.table--cards):not(.table--scroll) { display: table; width: 100%; table-layout: auto; overflow-x: visible; }
+  table.table--fill:not(.table--cards):not(.table--scroll) th,
+  table.table--fill:not(.table--cards):not(.table--scroll) td { white-space: normal; overflow-wrap: anywhere; }
+  /* .table--cards: linhas viram cards; exige data-label em cada td (excepto acções) */
+  table.table--cards thead { display: none; }
+  table.table--cards, table.table--cards tbody, table.table--cards tfoot, table.table--cards tr, table.table--cards td { display: block; width: 100%; }
+  table.table--cards tr { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; padding: 8px 12px; }
+  table.table--cards td { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 4px 0; border-bottom: none; }
+  table.table--cards td[data-label]::before {
+    content: attr(data-label); font-size: 11px; font-weight: 600; color: var(--mut); text-transform: uppercase; letter-spacing: 0.04em; flex-shrink: 0;
+  }
+  table.table--cards td:not([data-label]) { justify-content: flex-end; border-top: 1px solid var(--border); margin-top: 4px; padding-top: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* Página estreita: o dispositivo mantém 375 px, com deslocação na moldura. */
+@media (max-width: 420px) {
+  .mock-main { padding: 12px 0 40px; }
+  .variant-notes { margin-left: 12px; margin-right: 12px; }
+  .stage-cap { padding: 0 12px; }
+  .device-scroll--phone { padding: 0; }
+  .device--phone { border-radius: 0; box-shadow: 0 0 0 1px var(--border); }
+}
+@media (max-width: 700px) {
+  .mock-bar { position: static; padding: 8px 12px; }
+  .mock-back { order: 1; }
+  .mock-view { order: 2; margin-left: auto; }
+  .mock-title { order: 3; flex-basis: 100%; }
+  .mock-tabs { order: 4; flex: 1 1 100%; flex-wrap: nowrap; }
+  .mock-tabs button { flex: 1 1 0; min-width: 0; padding: 4px 4px; font-size: 12px; line-height: 1.25; }
+}
+/* === FIM MOLDURA === */
+
+/* === ESPECÍFICO DESTE MOCKUP === */
+.cfg h1 { font-size: 24px; font-weight: 600; margin-bottom: 4px; }
+.cfg .lead { font-size: 14px; margin-bottom: 12px; max-width: 70ch; }
+.cfg-stack { display: flex; flex-direction: column; gap: 16px; }
+[data-sec] { scroll-margin-top: 64px; }
+[data-sec].flash { animation: flash 1.2s ease-out 1; }
+@keyframes flash { from { box-shadow: 0 0 0 3px var(--brand); } to { box-shadow: 0 0 0 0 transparent; } }
+.sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 6px 12px; flex-wrap: wrap; margin-bottom: 4px; }
+.sec-head h2 { font-size: 16px; font-weight: 600; }
+.sec-sub { font-size: 13px; color: var(--mut); margin-bottom: 8px; max-width: 75ch; }
+.sub-h { font-size: 14px; font-weight: 600; margin: 18px 0 4px; }
+.btn-line { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.btn-line.end { justify-content: flex-end; margin-top: 12px; }
+.empty { margin-top: 8px; display: flex; flex-direction: column; gap: 8px; }
+.empty p { font-size: 14px; }
+.sug { font-size: 13px; color: var(--mut); }
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 0 12px; }
+.err { margin: 6px 0; }
+.device .check-line { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--txt); margin: 4px 0 12px; }
+.device .check-line > input { display: inline-block; width: 18px; margin: 0; }
+.wd-picks { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 4px 0 12px; }
+.device .wd-picks label { display: inline-flex; align-items: center; gap: 4px; margin: 0; font-size: 13px; color: var(--txt); }
+.device .wd-picks label > input { display: inline-block; width: 16px; height: 16px; margin: 0; }
+.sheet-title { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+
+/* Simulação de permissões (só do mockup) */
+.sim-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; margin: 0 0 16px; padding: 6px 10px; border: 1px dashed var(--border); border-radius: 8px; background: #fbfdfb; font-size: 12px; color: var(--mut); }
+.device .sim-bar label { display: inline-flex; align-items: center; gap: 6px; margin: 0; font-size: 12px; color: var(--txt); }
+.device .sim-bar label > input { display: inline-block; width: 16px; height: 16px; margin: 0; }
+
+/* Lista de verificação */
+.chk-sum { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 4px 0 8px; font-size: 14px; }
+.bar { flex: 1 1 140px; max-width: 280px; height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; }
+.bar > span { display: block; height: 100%; background: var(--primary); border-radius: 4px; }
+.chk { list-style: none; }
+.chk li { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 4px 12px; align-items: start; padding: 10px 0; border-top: 1px solid var(--border); }
+.chk-ico { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 700; margin-top: 1px; }
+.chk-ico.ok { background: var(--ok-bg); color: var(--ok-tx); border: 1px solid var(--ok-bd); }
+.chk-ico.warn { background: var(--warn-bg); color: var(--warn-tx); border: 1px solid var(--warn-bd); }
+.chk-main b { font-size: 14px; font-weight: 600; }
+.chk-main p { font-size: 13px; color: var(--mut); margin-top: 2px; }
+.chk-act { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; align-items: center; }
+.only-ferias { display: inline-block; margin-left: 6px; vertical-align: middle; }
+
+/* Turnos / tabelas */
+.table--cards .ord { display: inline-flex; gap: 4px; }
+.device .ord button { min-height: 28px; padding: 0 8px; font-size: 13px; cursor: pointer; }
+.device .ord button:disabled { opacity: 0.4; cursor: not-allowed; }
+.hint { font-size: 12px; color: var(--mut); margin-top: 6px; }
+
+/* Padrões: grelha com selects por célula */
+.table--scroll { width: max-content; min-width: 100%; }
+.table--scroll th, .table--scroll td { white-space: nowrap; padding-left: 6px; padding-right: 6px; }
+.cfg code { overflow-wrap: anywhere; word-break: break-all; }
+.device .table--scroll select { min-height: 32px; padding: 2px 6px; font-size: 14px; border-radius: 6px; }
+.table--scroll .stk { position: sticky; left: 0; z-index: 1; background: var(--card); box-shadow: 1px 0 0 var(--border); }
+.table--scroll .stk2 { left: 40px; }
+.table--scroll th.stk { z-index: 2; }
+.table--scroll tr.is-dirty td { background: #f7fbf8; }
+.table--scroll tr.is-dirty td.stk { background: #f7fbf8; }
+.pbar { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; margin: 12px 0 4px; }
+.pbar .grow { flex: 1 1 160px; max-width: 280px; }
+.device .pbar input[type='search'] { width: 100%; }
+.pbar-r { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.bulk { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0; padding: 8px 12px; border: 1px solid var(--primary); border-radius: 8px; background: var(--ok-bg); font-size: 14px; }
+.bulk.idle { border-color: var(--border); background: var(--bg); color: var(--mut); font-size: 13px; }
+.sub-pend { font-size: 12px; color: var(--mut); }
+
+/* Chips de dias */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+.device .chip { border-radius: 999px; min-height: 32px; padding: 3px 14px; font-size: 14px; cursor: pointer; background: #fff; }
+.device .chip[aria-pressed='true'] { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+.count-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.count-chips .badge-mut b { color: var(--txt); }
+.count-chips .badge-warn b { color: var(--warn-tx); }
+
+/* Pré-visualização da rotação */
+.rot-grid td.c, .rot-grid th.c { text-align: center; }
+.cnt-bad { background: var(--warn-bg); font-weight: 600; color: var(--warn-tx); }
+
+/* Calendário anual */
+.year-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 4px 0 8px; }
+.year-bar b { font-size: 18px; min-width: 56px; text-align: center; font-variant-numeric: tabular-nums; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--mut); margin: 4px 0 10px; }
+.legend i { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px; margin-right: 4px; border: 1px solid var(--border); }
+.year { display: grid; grid-template-columns: repeat(auto-fill, minmax(196px, 1fr)); gap: 16px 14px; }
+.month h3 { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.mgrid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; }
+.dow { font-size: 10px; color: var(--hint); text-align: center; }
+.device .day { position: relative; min-height: 0; aspect-ratio: 1; padding: 0; border: 1px solid transparent; border-radius: 4px; background: transparent; font-size: 11px; cursor: pointer; font-variant-numeric: tabular-nums; }
+.device .day:hover { border-color: var(--primary); }
+.device .day.out { visibility: hidden; }
+.device .day.closed { background: #dfe5e1; color: var(--mut); }
+.device .day.ftrab { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); font-weight: 600; }
+.device .day.hol { font-weight: 700; color: var(--er-tx); }
+.device .day.hol::after { content: ''; position: absolute; top: 2px; right: 2px; width: 5px; height: 5px; border-radius: 50%; background: var(--er-tx); }
+.device .day.exc { box-shadow: inset 0 0 0 2px var(--info-tx); }
+.device .day.today { outline: 2px solid var(--primary); outline-offset: 1px; }
+.legend .l-closed { background: #dfe5e1; }
+.legend .l-ftrab { background: var(--warn-bg); border-color: var(--warn-bd); }
+.legend .l-hol { background: #fff; position: relative; }
+.legend .l-hol::after { content: ''; position: absolute; top: 2px; right: 2px; width: 5px; height: 5px; border-radius: 50%; background: var(--er-tx); }
+.legend .l-exc { background: #fff; box-shadow: inset 0 0 0 2px var(--info-tx); border: none; }
+.day-why { font-size: 14px; margin-bottom: 8px; }
+.radios { display: flex; flex-direction: column; gap: 2px; margin: 6px 0 10px; }
+.device .radios label { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 14px; color: var(--txt); }
+.device .radios label > input { display: inline-block; width: 18px; margin: 0; }
+
+/* Assistente */
+.mode-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin: 0 0 12px; }
+.wiz-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.wiz-head b { font-size: 15px; }
+.wprog { height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; margin: 6px 0 10px; }
+.wprog > span { display: block; height: 100%; background: var(--primary); }
+.steps { list-style: none; display: flex; gap: 6px; margin: 0 0 14px; }
+.steps li { flex: 1 1 0; min-width: 0; }
+.steps li.is-cur { flex: 2.4 1 0; }
+.device .steps button { width: 100%; display: flex; flex-direction: column; align-items: flex-start; gap: 0; min-height: 0; padding: 6px 8px; border-radius: 8px; font-size: 12px; text-align: left; cursor: pointer; background: #fff; }
+.device .steps button[aria-current='step'] { border-color: var(--primary); background: var(--ok-bg); color: var(--ok-tx); font-weight: 600; }
+.steps .sn { font-weight: 700; font-size: 13px; }
+.steps .sn.ok { color: var(--ok-tx); }
+.steps .sn.warn { color: var(--warn-tx); }
+.step-card h2 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+.sugbox { margin: 12px 0; padding: 10px 12px; border: 1px dashed var(--ok-bd); border-radius: 8px; background: #f6fbf8; font-size: 14px; }
+.sugbox ul { list-style: none; margin-top: 4px; }
+.sugbox li { padding: 2px 0; font-variant-numeric: tabular-nums; }
+.sugbox .k { display: inline-block; min-width: 130px; margin-right: 8px; font-weight: 600; }
+.wiz-nav { display: flex; justify-content: space-between; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+.adjust { margin-top: 14px; padding-top: 6px; border-top: 1px solid var(--border); }
+.device .btn-big { font-size: 15px; padding: 10px 20px; border-radius: 8px; border: none; background: var(--primary); color: #fff; font-weight: 600; cursor: pointer; }
+.device .btn-big:hover { background: var(--primary-hover); }
+.device .btn-big:disabled { background: var(--hint); cursor: not-allowed; }
+.pend-strip { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 12px; font-size: 13px; }
+.url-hint { font-size: 12px; color: var(--mut); margin: -4px 0 12px; font-family: ui-monospace, Consolas, monospace; }
+
+@container app (max-width: 768px) {
+  .cfg h1 { font-size: 20px; }
+  .chk li { grid-template-columns: 28px minmax(0, 1fr); }
+  .chk-act { grid-column: 2; justify-content: flex-start; }
+  .year { grid-template-columns: 1fr; }
+  .device .day { aspect-ratio: 1.35; font-size: 13px; }
+  .steps .sname { display: none; }
+  .steps li.is-cur .sname { display: block; }
+  .steps li.is-cur { flex: 3 1 0; }
+  .tabs { flex-wrap: nowrap; overflow-x: auto; }
+  .tabs [role='tab'] { flex: 0 0 auto; padding: 8px 10px; font-size: 14px; white-space: nowrap; }
+  .pbar-r { margin-left: 0; }
+  .wiz-nav .btn-row, .btn-line .btn-big { flex: 1 1 auto; }
+}
+@container app (min-width: 769px) { .sugbox { max-width: 560px; } }
+</style>
+</head>
+<body data-view="both">
+
+<header class="mock-bar">
+  <a class="mock-back" href="2026-10-03-escalas-ferias-mockups.html">← Índice</a>
+  <span class="mock-title">4 · Configuração da escala</span>
+  <div class="mock-tabs" role="tablist" aria-label="Variantes">
+    <button type="button" role="tab" id="tab-a" data-variant="a" aria-controls="panel-a" aria-selected="false">A · Página única</button>
+    <button type="button" role="tab" id="tab-b" data-variant="b" aria-controls="panel-b" aria-selected="false">B · Assistente</button>
+    <button type="button" role="tab" id="tab-c" data-variant="c" aria-controls="panel-c" aria-selected="false">C · Separadores</button>
+  </div>
+  <div class="mock-view" role="group" aria-label="Dispositivos">
+    <button type="button" data-view="both" aria-pressed="true">Ambos</button>
+    <button type="button" data-view="desktop" aria-pressed="false">Desktop</button>
+    <button type="button" data-view="phone" aria-pressed="false">375 px</button>
+  </div>
+</header>
+
+<main class="mock-main">
+  <section role="tabpanel" id="panel-a" aria-labelledby="tab-a" data-variant="a" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> uma página só: a lista de verificação do arranque no topo (✓/⚠), cada ponto a ligar por âncora à secção respectiva; secções empilhadas em cartões, com o seu «Gravar».</p>
+      <p><b>Vantagens:</b> vê-se tudo e o que falta sem mudar de página; «Quarta fixa para os 11» e «Criar os 3 sugeridos» fazem o grosso em 1 clique.</p>
+      <p><b>Custo:</b> página comprida (sobretudo a 375 px) e nenhuma ordem imposta ao arranque.</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-b" aria-labelledby="tab-b" data-variant="b" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> assistente de 6 passos, cada um já preenchido com o sugerido e aplicável num clique, com «Ajustar» opcional; no fim «Gerar a primeira semana». Depois do arranque passa a separadores de «Manutenção».</p>
+      <p><b>Vantagens:</b> arranque em cerca de 6 cliques, sem decidir por onde começar; só mostra o que falta decidir.</p>
+      <p><b>Custo:</b> dois modos para manter (assistente e manutenção) e menos visão do conjunto durante o arranque.</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-c" aria-labelledby="tab-c" data-variant="c" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> separadores Arranque · Turnos · Pessoas · Rotação · Calendário · Regras legais, com calendário anual visual, pré-visualização de 4 semanas da rotação e seleção múltipla com acção em lote.</p>
+      <p><b>Vantagens:</b> vê-se o efeito (quartas fechadas, Agosto, quantos folgam por dia) antes de sair; o lote trata os 11 de uma vez.</p>
+      <p><b>Custo:</b> mais interface para construir e manter; o arranque faz-se separador a separador.</p>
+    </div>
+  </section>
+</main>
+
+<!-- Esqueleto de cada variante: clonado por JS para o desktop e para os 375 px. Sem id aqui dentro; o conteúdo dos [data-sec] é pintado pelo 2.º script. -->
+<template data-variant="a" data-active="Escala" data-title="Configuração da escala" data-user="Carla Videira">
+  <main class="cfg">
+    <h1>Configuração da escala</h1>
+    <p class="lead muted">Tudo o que a escala precisa antes de gerar a primeira semana. Cada secção grava à parte.</p>
+    <div class="sim-bar" data-sec="sim"></div>
+    <div class="cfg-stack">
+      <section class="card" data-sec="check"></section>
+      <section class="card" data-sec="turnos"></section>
+      <section class="card" data-sec="pessoas"></section>
+      <section class="card" data-sec="rot"></section>
+      <section class="card" data-sec="cal"></section>
+      <section class="card" data-sec="int"></section>
+      <section class="card" data-sec="legal"></section>
+    </div>
+  </main>
+</template>
+
+<template data-variant="b" data-active="Escala" data-title="Configuração da escala" data-user="Carla Videira">
+  <main class="cfg">
+    <h1>Configuração da escala</h1>
+    <div class="sim-bar" data-sec="sim"></div>
+    <div class="mode-bar" data-sec="mode"></div>
+    <div data-sec="wiz"></div>
+  </main>
+</template>
+
+<template data-variant="c" data-active="Escala" data-title="Configuração da escala" data-user="Carla Videira">
+  <main class="cfg">
+    <h1>Configuração da escala</h1>
+    <div class="sim-bar" data-sec="sim"></div>
+    <div data-sec="ctabs"></div>
+  </main>
+</template>
+
+<script>
+/* === MOLDURA COMUM (copiar) === */
+/* API para o JS específico (script a seguir a este):
+     window.mockInit = (deviceEl, variant, kind) => {}   chamado por cada clone (kind = 'desktop' | 'phone')
+     Mock.on(tipo, seletor, (evento, elemento, deviceEl) => {})   delegação com escopo no .device
+     Mock.toast(deviceEl, texto)   Mock.sheet(deviceEl, html|Node) → caixa   Mock.closeSheet(deviceEl)
+     Mock.state(deviceEl) → objeto por clone   Mock.uid(prefixo) → id único   Mock.$ Mock.$$ Mock.esc
+   No markup dos templates (sem id): data-id="k" → id único por clone; data-for / data-controls /
+   data-labelledby / data-describedby="k" → for / aria-controls / aria-labelledby / aria-describedby.
+   [data-route="/rota"] simula navegação (aviso «Abre /rota»). Atributos do <template>:
+   data-active (item do menu activo), data-title (título da barra a 375 px), data-user (nome na barra lateral). */
+(function () {
+  'use strict';
+  var VIEW_KEY = 'escalas-ferias-mock-view';
+  var MENU = [
+    ['Geral', [['Início', '/']]],
+    ['Operação', [['Horas', '/horas'], ['As minhas horas', '/horas/minhas'], ['Escala', '/escala'], ['A minha escala', '/escala/minha'],
+      ['Férias', '/ferias'], ['As minhas férias', '/ferias/minhas'], ['Gorjetas', '/gorjetas'], ['As minhas gorjetas', '/gorjetas/minhas'],
+      ['Fecho de caixa', '/caixa']]],
+    ['Cadastros', [['Cadastros', '/cadastros']]]
+  ];
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var mk = function (tag, cls) { var n = document.createElement(tag); if (cls) n.className = cls; return n; };
+  var clamp = function (v, lo, hi) { return Math.min(Math.max(v, lo), hi); };
+  var states = new WeakMap();
+  var counter = 0;
+  var uid = function (p) { counter += 1; return (p || 'u') + '-' + counter; };
+  var state = function (dev) { if (!states.has(dev)) states.set(dev, {}); return states.get(dev); };
+
+  /* ids únicos por clone: data-id define, os data-for/controls/labelledby/describedby ligam */
+  function wireIds(root) {
+    var map = {};
+    var get = function (k) { if (!map[k]) map[k] = uid(k); return map[k]; };
+    $$('[data-id]', root).forEach(function (n) { n.id = get(n.getAttribute('data-id')); });
+    [['data-for', 'for'], ['data-controls', 'aria-controls'], ['data-labelledby', 'aria-labelledby'], ['data-describedby', 'aria-describedby']]
+      .forEach(function (p) { $$('[' + p[0] + ']', root).forEach(function (n) { n.setAttribute(p[1], get(n.getAttribute(p[0]))); }); });
+  }
+
+  /* parte visível do dispositivo (para posicionar avisos e diálogos onde o utilizador está a olhar) */
+  function visibleBox(dev) {
+    var r = dev.getBoundingClientRect();
+    var sc = dev.closest('.device-scroll');
+    return {
+      top: clamp(-r.top, 0, r.height), bottom: clamp(window.innerHeight - r.top, 0, r.height),
+      left: sc ? sc.scrollLeft : 0, width: sc ? sc.clientWidth : dev.clientWidth
+    };
+  }
+  function toast(dev, msg) {
+    var app = $('.app', dev); if (!app) return;
+    var t = $('.app-toast', app);
+    if (!t) { t = mk('div', 'app-toast'); t.setAttribute('role', 'status'); app.appendChild(t); }
+    t.textContent = msg; t.hidden = false;
+    var v = visibleBox(dev);
+    t.style.top = Math.max(8, v.bottom - 56) + 'px';
+    t.style.left = (v.left + v.width / 2) + 'px';
+    clearTimeout(t._h); t._h = setTimeout(function () { t.hidden = true; }, 2800);
+  }
+  function sheet(dev, content) {
+    var app = $('.app', dev), s = $('.sheet', app);
+    if (!s) { s = mk('div', 'sheet'); s.innerHTML = '<div class="sheet__box" role="dialog" aria-modal="true"></div>'; app.appendChild(s); }
+    var box = $('.sheet__box', s);
+    if (typeof content === 'string') box.innerHTML = content; else if (content) box.replaceChildren(content);
+    wireIds(box); s.hidden = false;
+    var v = visibleBox(dev);
+    box.style.top = (v.top + 24) + 'px';
+    box.style.left = Math.max(12, v.left + (v.width - box.offsetWidth) / 2) + 'px';
+    var f = $('button, input, select, textarea, a[href]', box); if (f) f.focus();
+    return box;
+  }
+  function closeSheet(dev) { var s = $('.sheet', dev); if (s) s.hidden = true; }
+  function setMenu(dev, open) {
+    var app = $('.app', dev); if (!app) return;
+    app.toggleAttribute('data-menu-open', open);
+    var b = $('.app-burger', dev); if (b) { b.setAttribute('aria-expanded', String(open)); b.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu'); }
+  }
+  function on(type, selector, fn) {
+    document.addEventListener(type, function (e) {
+      var t = e.target && e.target.closest ? e.target.closest(selector) : null; if (!t) return;
+      var dev = t.closest('.device'); if (!dev) return;
+      fn(e, t, dev);
+    });
+  }
+
+  /* mini-app: barra lateral (desktop) / barra superior com ☰ (≤768px, por container query) */
+  function buildApp(tpl) {
+    var active = tpl.dataset.active || document.body.dataset.active || '';
+    var title = tpl.dataset.title || active;
+    var user = tpl.dataset.user || 'Carla Videira';
+    var app = mk('div', 'app');
+    var nav = MENU.map(function (sec) {
+      return '<div class="sidebar-section">' + esc(sec[0]) + '</div>' + sec[1].map(function (it) {
+        var on_ = it[0] === active;
+        return '<a class="sidebar-link' + (on_ ? ' sidebar-link--active' : '') + '" href="#" data-route="' + esc(it[1]) + '"' + (on_ ? ' aria-current="page"' : '') + '>' + esc(it[0]) + '</a>';
+      }).join('');
+    }).join('');
+    app.innerHTML =
+      '<aside class="app-side" aria-label="Menu principal"><div class="app-logo">GIG</div><nav>' + nav + '</nav>' +
+      '<div class="app-user"><span class="app-user__name">' + esc(user) + '</span><button type="button" data-route="/login">Sair</button></div></aside>' +
+      '<div class="app-scrim" data-act-scrim></div>' +
+      '<div class="app-main"><div class="app-top"><button type="button" class="app-burger" aria-expanded="false" aria-label="Abrir menu">☰</button>' +
+      '<span class="app-top__title">' + esc(title) + '</span></div><div class="app-content"></div></div>';
+    $('.app-content', app).appendChild(tpl.content.cloneNode(true));
+    return app;
+  }
+  function fill(dev) {
+    var tpl = $('template[data-variant="' + dev.dataset.variant + '"]');
+    states.delete(dev);
+    dev.replaceChildren(buildApp(tpl));
+    wireIds(dev);
+    if (typeof window.mockInit === 'function') window.mockInit(dev, dev.dataset.variant, dev.dataset.kind);
+  }
+  function mount(panel) {
+    var v = panel.dataset.variant;
+    var stage = $('.stage', panel) || panel.appendChild(mk('div', 'stage'));
+    stage.replaceChildren();
+    [['desktop', 'Desktop'], ['phone', '375 px']].forEach(function (d) {
+      var item = mk('figure', 'stage-item stage-item--' + d[0]);
+      item.innerHTML = '<figcaption class="stage-cap"><span>' + d[1] + '</span><button type="button" class="stage-reset" title="Repor o estado inicial">Repor</button></figcaption>';
+      var dev = mk('div', 'device device--' + d[0]);
+      dev.dataset.variant = v; dev.dataset.kind = d[0];
+      var sc = mk('div', 'device-scroll' + (d[0] === 'phone' ? ' device-scroll--phone' : '')); sc.appendChild(dev); item.appendChild(sc);
+      stage.appendChild(item);
+      fill(dev);
+    });
+    panel.dataset.rendered = '1';
+  }
+
+  /* separadores A/B/C (hash #a/#b/#c) e alternador de dispositivos */
+  var tabs = $$('.mock-bar [role="tab"]'), panels = $$('[role="tabpanel"]');
+  function select(v, focus) {
+    if (!tabs.some(function (t) { return t.dataset.variant === v; })) v = tabs[0].dataset.variant;
+    tabs.forEach(function (t) { var o = t.dataset.variant === v; t.setAttribute('aria-selected', String(o)); t.tabIndex = o ? 0 : -1; if (o && focus) t.focus(); });
+    panels.forEach(function (p) { p.hidden = p.dataset.variant !== v; if (p.dataset.variant === v && !p.dataset.rendered) mount(p); });
+    if (location.hash.slice(1) !== v) { try { history.replaceState(null, '', '#' + v); } catch (e) { /* file:// restrito */ } }
+  }
+  function setView(v) {
+    document.body.dataset.view = v;
+    $$('.mock-view button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.view === v)); });
+    try { localStorage.setItem(VIEW_KEY, v); } catch (e) { /* sem armazenamento */ }
+  }
+  function boot() {
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { select(t.dataset.variant); });
+      t.addEventListener('keydown', function (e) {
+        var j = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }[e.key];
+        if (j === undefined) return; e.preventDefault(); select(tabs[(j + tabs.length) % tabs.length].dataset.variant, true);
+      });
+    });
+    $$('.mock-view button').forEach(function (b) { b.addEventListener('click', function () { setView(b.dataset.view); }); });
+    window.addEventListener('hashchange', function () { select(location.hash.slice(1).toLowerCase()); });
+    var saved = null; try { saved = localStorage.getItem(VIEW_KEY); } catch (e) { /* ignorar */ }
+    setView(['both', 'desktop', 'phone'].indexOf(saved) >= 0 ? saved : 'both');
+    select(location.hash.slice(1).toLowerCase());
+  }
+
+  /* comportamentos da moldura */
+  on('click', '.app-burger', function (e, t, dev) { setMenu(dev, !$('.app', dev).hasAttribute('data-menu-open')); });
+  on('click', '.app-scrim', function (e, t, dev) { setMenu(dev, false); });
+  on('click', '[data-route]', function (e, t, dev) { e.preventDefault(); setMenu(dev, false); toast(dev, 'Abre ' + t.getAttribute('data-route')); });
+  on('click', 'a[href="#"]', function (e) { e.preventDefault(); });
+  on('click', '.sheet', function (e, t, dev) { if (e.target === t || e.target.closest('[data-close-sheet]')) closeSheet(dev); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    $$('.sheet:not([hidden])').forEach(function (s) { closeSheet(s.closest('.device')); });
+    $$('.app[data-menu-open]').forEach(function (a) { setMenu(a.closest('.device'), false); });
+  });
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.stage-reset'); if (!b) return;
+    fill($('.device', b.closest('.stage-item')));
+  });
+
+  window.Mock = { $: $, $$: $$, esc: esc, uid: uid, state: state, on: on, toast: toast, sheet: sheet, closeSheet: closeSheet, setMenu: setMenu };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+/* === FIM MOLDURA === */
+</script>
+<script>
+/* === ESPECÍFICO DESTE MOCKUP === */
+(function () {
+'use strict';
+var $ = Mock.$, $$ = Mock.$$, esc = Mock.esc;
+
+/* ───────── Dados fictícios (iguais em todos os ficheiros) ───────── */
+var NAMES = ['Beatriz Moura', 'Tiago Fontes', 'Inês Calado', 'Rui Pestana', 'Carla Videira', 'Duarte Sá', 'Marta Leal', 'Hugo Brandão', 'Matilde Teles', 'Nuno Arez', 'Filipa Couto'];
+var PART = { 'Nuno Arez': 1, 'Filipa Couto': 1 };
+var ACCT = { 'Inês Calado': 1, 'Carla Videira': 1, 'Marta Leal': 1, 'Rui Pestana': 2 }; /* 1 = conta com escala.minha, 2 = conta sem escala.minha */
+var TODAY = '2026-10-03';
+var START = '2026-10-01';
+var WD = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+var WDL = ['segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado', 'domingo'];
+var SUGGESTED = [{ name: 'Dia', start: '08:00', end: '17:30' }, { name: 'Dia curto', start: '08:00', end: '17:00' }, { name: 'Meio-dia', start: '09:00', end: '15:15' }];
+var KNOWN_BREAK = { '08:00-17:30': ['12:30', '13:30'], '08:00-17:00': ['12:00', '13:00'], '09:00-15:15': ['11:45', '12:45'] };
+var SHIFT_NOTE = 'Horas planeadas = fim − início, sem desconto do intervalo.';
+var DAYSRC = 'Dia';
+
+/* ───────── Utilitários ───────── */
+function p2(n) { return ('0' + n).slice(-2); }
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+function tm(s) { var a = s.split(':'); return (+a[0]) * 60 + (+a[1]); }
+function hm(m) { return p2(Math.floor(m / 60)) + ':' + p2(m % 60); }
+function D(iso) { var a = iso.split('-'); return Date.UTC(+a[0], +a[1] - 1, +a[2]); }
+function I(ms) { var d = new Date(ms); return d.getUTCFullYear() + '-' + p2(d.getUTCMonth() + 1) + '-' + p2(d.getUTCDate()); }
+function add(iso, n) { return I(D(iso) + n * 864e5); }
+function wdOf(iso) { return (new Date(D(iso)).getUTCDay() + 6) % 7 + 1; }
+function fmt(iso) { var a = iso.split('-'); return a[2] + '/' + a[1] + '/' + a[0]; }
+function fmtS(iso) { var a = iso.split('-'); return a[2] + '/' + a[1]; }
+function pl(n, a, b) { return n + ' ' + (n === 1 ? a : b); }
+function norm(s) { return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+function bdg(c, t) { return '<span class="badge-' + c + '">' + esc(t) + '</span>'; }
+function btn(act, label, cls, attrs) { return '<button type="button" class="btn-row ' + (cls || '') + '" data-act="' + act + '"' + (attrs || '') + '>' + label + '</button>'; }
+function opts(list, cur) { return list.map(function (o) { return '<option value="' + esc(o[0]) + '"' + (String(o[0]) === String(cur) ? ' selected' : '') + '>' + esc(o[1]) + '</option>'; }).join(''); }
+function head(t, sub, right) { return '<div class="sec-head"><h2>' + t + '</h2>' + (right || '') + '</div>' + (sub ? '<p class="sec-sub">' + sub + '</p>' : ''); }
+
+function easter(y) {
+  var a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3);
+  var h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451);
+  var mo = Math.floor((h + l - 7 * m + 114) / 31), da = (h + l - 7 * m + 114) % 31 + 1;
+  return y + '-' + p2(mo) + '-' + p2(da);
+}
+var holCache = {};
+function holidays(y) {
+  if (holCache[y]) return holCache[y];
+  var e = easter(y);
+  var list = [[y + '-01-01', 'Ano Novo'], [add(e, -2), 'Sexta-feira Santa'], [e, 'Páscoa'], [y + '-04-25', 'Dia da Liberdade'], [y + '-05-01', 'Dia do Trabalhador'],
+    [add(e, 60), 'Corpo de Deus'], [y + '-06-10', 'Dia de Portugal'], [y + '-08-15', 'Assunção de Nossa Senhora'], [y + '-10-05', 'Implantação da República'],
+    [y + '-11-01', 'Todos os Santos'], [y + '-12-01', 'Restauração da Independência'], [y + '-12-08', 'Imaculada Conceição'], [y + '-12-25', 'Natal']];
+  list.sort(function (a, b) { return a[0] < b[0] ? -1 : 1; });
+  holCache[y] = list.map(function (x) { return { date: x[0], label: x[1] }; });
+  return holCache[y];
+}
+function holOn(iso) { return holidays(+iso.slice(0, 4)).filter(function (h) { return h.date === iso; })[0] || null; }
+
+/* ───────── Estado ───────── */
+function seed(v, full) {
+  var S = {
+    templates: [], nid: 1,
+    people: NAMES.map(function (n) { return { name: n, part: !!PART[n], acct: ACCT[n] || 0, tramos: [] }; }),
+    seasons: [], exc: [], closed: [3],
+    rot: { days: [1, 2, 4, 5], anchor: '2026-01-05' }, int: { brk: 60, max: '05:00', rest: '11:00' },
+    legal: [
+      { key: 'ALMOCO_TEMPO_TRABALHO', label: 'Almoço como tempo de trabalho', ref: 'art. 197.º', desc: 'O intervalo mostra-se sem desconto das horas planeadas. Falta confirmar a base legal.', status: 'PENDENTE', note: '', who: '', when: '' },
+      { key: 'DESCANSO_OBRIGATORIO_COMPLEMENTAR', label: 'Descanso obrigatório e complementar', ref: 'art. 215.º', desc: 'Qual das duas folgas semanais é a obrigatória e qual a complementar. Enquanto estiver por validar, a impressão mostra «Folga» com a nota «Classificação do descanso por validar».', status: 'PENDENTE', note: '', who: '', when: '' }
+    ],
+    perms: { adminUsers: true, feriasVer: true },
+    pdraft: {}, sel: {}, q: '', eff: START, rotDone: false, year: 2026, skip5: false, msg: '', adj: {}, err: {}, hol: true
+  };
+  S.rotF = clone(S.rot); S.intF = clone(S.int);
+  if (v === 'a' || v === 'c' || full) {
+    S.seasons.push({ id: 's1', name: 'Agosto', from: '2026-08-01', to: '2026-08-31', closed: [], reopened: 'FOLGA_TRABALHADA', rotCont: true });
+    S.exc.push({ date: '2026-12-24', label: 'Consoada', kind: 'FECHADO' });
+  }
+  if (full) {
+    SUGGESTED.forEach(function (t) { S.templates.push({ id: 't' + S.nid++, name: t.name, start: t.start, end: t.end, active: true }); });
+    S.people.forEach(function (p, i) { p.tramos.push({ since: START, fixed: 3, rotates: true, offset: i % 4, shift: '' }); });
+    S.rotDone = true;
+  }
+  return S;
+}
+function tr(p, at) { var r = null; p.tramos.forEach(function (t) { if (t.since <= at && (!r || t.since >= r.since)) r = t; }); return r; }
+function nextTr(p, at) { var r = null; p.tramos.forEach(function (t) { if (t.since > at && (!r || t.since < r.since)) r = t; }); return r; }
+function upsertTramo(p, t) {
+  var ex = p.tramos.filter(function (x) { return x.since === t.since; })[0];
+  if (ex) { ex.fixed = t.fixed; ex.rotates = t.rotates; ex.offset = t.offset; ex.shift = t.shift; } else { p.tramos.push(clone(t)); p.tramos.sort(function (a, b) { return a.since < b.since ? -1 : 1; }); }
+}
+function baseTramo() { return { since: START, fixed: null, rotates: true, offset: 0, shift: '' }; }
+function activeTemplates(S) { return S.templates.filter(function (t) { return t.active; }); }
+function tplName(S, id) { var t = S.templates.filter(function (x) { return x.id === id; })[0]; return t ? t.name : 'Por omissão (' + DAYSRC + ')'; }
+
+function planned(t) { return hm(tm(t.end) - tm(t.start)); }
+function brkOf(S, t) {
+  var dur = tm(t.end) - tm(t.start);
+  if (dur <= tm(S.int.max)) return null;
+  var key = t.start + '-' + t.end;
+  if (S.int.brk === 60 && KNOWN_BREAK[key]) return KNOWN_BREAK[key];
+  var mid = tm(t.start) + Math.round(dur / 2), s = Math.round((mid - S.int.brk / 2) / 15) * 15;
+  return [hm(s), hm(s + S.int.brk)];
+}
+
+/* Resolução de um dia: excepção › época › base (o encerramento colectivo vive em Férias) */
+function dayState(S, iso) {
+  var w = wdOf(iso), ex = S.exc.filter(function (e) { return e.date === iso; })[0] || null, h = holOn(iso);
+  var seas = S.seasons.filter(function (s) { return iso >= s.from && iso <= s.to; })[0];
+  var o = { open: true, ftrab: false, hol: !!h || !!(ex && ex.kind === 'FERIADO'), holLabel: h ? h.label : (ex && ex.kind === 'FERIADO' ? ex.label : ''), exc: ex, why: '' };
+  if (ex && ex.kind === 'FECHADO') { o.open = false; o.why = 'Excepção: fechado (' + ex.label + ')'; return o; }
+  if (ex && ex.kind === 'ABERTO') { o.why = 'Excepção: aberto (' + ex.label + ')'; return o; }
+  if (seas) {
+    if (seas.closed.indexOf(w) >= 0) { o.open = false; o.why = 'Época ' + seas.name + ': fechado'; }
+    else if (S.closed.indexOf(w) >= 0) { o.ftrab = seas.reopened === 'FOLGA_TRABALHADA'; o.why = 'Época ' + seas.name + ': ' + WDL[w - 1] + ' aberta' + (o.ftrab ? ' como F. trab.' : ''); }
+    else o.why = 'Época ' + seas.name + ': aberto';
+    return o;
+  }
+  if (S.closed.indexOf(w) >= 0) { o.open = false; o.why = 'Dia fechado de base (' + WDL[w - 1] + ')'; } else o.why = 'Aberto';
+  return o;
+}
+function stateText(o) { return o.open ? (o.ftrab ? 'Aberto · F. trab.' : 'Aberto') : 'Fechado'; }
+
+/* Rotação */
+function rotFor(S, p, monday) {
+  var t = tr(p, monday), n = S.rot.days.length;
+  if (!t || !t.rotates || !n) return null;
+  var k = Math.round((D(monday) - D(S.rot.anchor)) / 6048e5), idx = (((k + t.offset) % n) + n) % n, d = S.rot.days[idx], shifted = false;
+  if (t.fixed && d === t.fixed) { idx = (idx + 1) % n; d = S.rot.days[idx]; shifted = true; }
+  return { day: d, shifted: shifted };
+}
+function weeksFrom(n) { var out = []; for (var i = 0; i < n; i++) { var m = add('2026-10-05', 7 * i); out.push({ w: 41 + i, monday: m }); } return out; }
+function counts(S, monday) {
+  var c = {}; S.rot.days.forEach(function (d) { c[d] = 0; });
+  S.people.forEach(function (p) { var r = rotFor(S, p, monday); if (r) c[r.day] = (c[r.day] || 0) + 1; });
+  return c;
+}
+function balanced(c) { var v = Object.keys(c).map(function (k) { return c[k]; }); return !v.length || (Math.max.apply(null, v) - Math.min.apply(null, v) <= 1); }
+function distribute(S, eff) {
+  var n = S.rot.days.length, k = 0;
+  if (!n) return 0;
+  S.people.forEach(function (p) {
+    var t = tr(p, eff) || tr(p, TODAY);
+    if (!t || !t.rotates) return;
+    var nt = clone(t); nt.offset = k % n; nt.since = eff; upsertTramo(p, nt); k++;
+  });
+  S.rotDone = k > 0; return k;
+}
+function quartaFor(S, commit) {
+  var n = 0;
+  S.people.forEach(function (p) {
+    if (p.tramos.length) return;
+    var t = baseTramo(); t.fixed = 3;
+    if (commit) upsertTramo(p, t); else S.pdraft[p.name] = t;
+    n++;
+  });
+  return n;
+}
+function commitDrafts(S) {
+  var n = 0;
+  S.people.forEach(function (p) { var d = S.pdraft[p.name]; if (!d) return; upsertTramo(p, d); n++; });
+  S.pdraft = {}; return n;
+}
+function missingSuggested(S) { return SUGGESTED.filter(function (s) { return !S.templates.some(function (t) { return t.name === s.name; }); }); }
+function addSuggested(S) { var miss = missingSuggested(S); miss.forEach(function (s) { S.templates.push({ id: 't' + S.nid++, name: s.name, start: s.start, end: s.end, active: true }); }); return miss.length; }
+function dirtyRot(S) { return JSON.stringify(S.rot) !== JSON.stringify(S.rotF); }
+function dirtyInt(S) { return JSON.stringify(S.int) !== JSON.stringify(S.intF); }
+function pendLegal(S) { return S.legal.filter(function (r) { return r.status === 'PENDENTE'; }).length; }
+function sorted(a) { return a.slice().sort(function (x, y) { return x - y; }); }
+
+/* ───────── Lista de verificação do arranque ───────── */
+function adminLink(S, label, route) {
+  return S.perms.adminUsers ? '<a href="#" class="btn-row" data-route="' + route + '">' + label + '</a>' : '<span class="muted small">Peça a um administrador.</span>';
+}
+function checklist(S) {
+  var it = [], nt = activeTemplates(S).length;
+  it.push({ ok: nt > 0, go: 'turnos', t: 'Turnos-tipo', d: nt ? pl(nt, 'turno activo', 'turnos activos') + '.' : 'Nenhum turno-tipo criado. A grelha da escala precisa de, pelo menos, um.', a: nt ? '' : btn('suggest', 'Criar os 3 sugeridos', 'btn-row-strong') });
+  var np = S.people.filter(function (p) { return !p.tramos.length; }).length;
+  it.push({ ok: !np, go: 'pessoas', t: 'Padrões por funcionário', d: np ? np + ' funcionários activos sem padrão (folga fixa, rotação).' : 'Todos os funcionários activos têm padrão.', a: '' });
+  var nc = S.people.filter(function (p) { return p.acct === 0; });
+  it.push({ ok: !nc.length, go: 'contas', t: 'Contas de utilizador', d: nc.length ? pl(nc.length, 'funcionário activo sem conta', 'funcionários activos sem conta') + ': ' + nc.map(function (p) { return p.name; }).join(', ') + '.' : 'Todos têm conta.', a: nc.length ? adminLink(S, 'Criar contas em Administração › Utilizadores', '/admin/utilizadores/novo') : '' });
+  var ne = S.people.filter(function (p) { return p.acct === 2; });
+  it.push({ ok: !ne.length, go: 'contas', t: 'Acesso à própria escala', d: ne.length ? pl(ne.length, 'conta sem a permissão escala.minha', 'contas sem a permissão escala.minha') + ': ' + ne.map(function (p) { return p.name; }).join(', ') + '. Não vê a sua escala.' : 'Todas as contas veem a própria escala.', a: ne.length ? adminLink(S, 'Rever em Administração › Utilizadores', '/admin/utilizadores') : '' });
+  if (S.perms.feriasVer) {
+    var fa = '<a href="#" class="btn-row" data-route="/ferias/configuracao">Abrir configuração de férias</a>';
+    it.push({ ok: false, ferias: true, t: 'Férias: data de referência', d: 'Por definir. É a data a partir da qual se contam os saldos.', a: fa });
+    it.push({ ok: false, ferias: true, t: 'Férias: saldos iniciais', d: '11 funcionários sem saldo inicial.', a: fa });
+  }
+  return it;
+}
+function goBtn(st, key, label) {
+  if (st.v === 'a' && (key === 'turnos' || key === 'pessoas')) return btn('goto', 'Ir a ' + label, 'btn-row-quiet', ' data-sec-go="' + key + '"');
+  if (st.v === 'c' && (key === 'turnos' || key === 'pessoas')) return btn('tab', 'Ir a ' + label, 'btn-row-quiet', ' data-n="' + key + '"');
+  if (st.v === 'b') { var n = { turnos: 1, pessoas: 2, contas: 5 }[key]; if (n) return btn('step', 'Ir ao passo ' + n, 'btn-row-quiet', ' data-n="' + n + '"'); }
+  return '';
+}
+function chkList(S, st, opt) {
+  var items = checklist(S); if (opt && opt.filter) items = items.filter(opt.filter); var pend = items.filter(function (i) { return !i.ok; }).length;
+  var h = '<div class="chk-sum"><b>' + (pend ? pl(pend, 'ponto por resolver', 'pontos por resolver') : 'Tudo resolvido') + '</b><span class="muted">de ' + items.length + '</span><span class="bar" role="img" aria-label="' + (items.length - pend) + ' de ' + items.length + ' pontos resolvidos"><span style="width:' + Math.round((items.length - pend) / items.length * 100) + '%"></span></span></div>';
+  h += '<ul class="chk">' + items.map(function (i) {
+    var goLabel = { turnos: 'Turnos-tipo', pessoas: 'Padrões', contas: 'Contas' }[i.go];
+    var go = (!i.ok && i.go && !(opt && opt.nogo)) ? goBtn(st, i.go, goLabel) : '';
+    return '<li><span class="chk-ico ' + (i.ok ? 'ok' : 'warn') + '" aria-hidden="true">' + (i.ok ? '✓' : '⚠') + '</span>' +
+      '<div class="chk-main"><b>' + esc(i.t) + '</b>' + (i.ferias ? '<span class="badge-info only-ferias" title="Só se consulta com a permissão ferias.ver">visível só com ferias.ver</span>' : '') +
+      '<span class="sr-only">' + (i.ok ? ' — feito' : ' — por resolver') + '</span><p>' + esc(i.d) + '</p></div>' +
+      '<div class="chk-act">' + go + (i.a || '') + '</div></li>';
+  }).join('') + '</ul>';
+  return h;
+}
+
+/* ───────── Turnos-tipo e intervalo ───────── */
+function tTurnos(S) {
+  if (!S.templates.length) {
+    return '<div class="alert-warn empty"><p><b>Ainda não há turnos-tipo.</b> Servem de pincel na grelha e de turno por omissão nos padrões.</p>' +
+      '<p class="sug">Sugeridos a partir dos dados: Dia 08:00–17:30 · Dia curto 08:00–17:00 · Meio-dia 09:00–15:15</p>' +
+      '<div class="btn-line">' + btn('suggest', 'Criar os 3 sugeridos', 'btn-row-strong') + btn('newturno', 'Novo turno') + '</div></div>';
+  }
+  var rows = S.templates.map(function (t, i) {
+    var b = brkOf(S, t);
+    return '<tr><td data-label="Ordem"><span class="ord"><button type="button" data-act="mv" data-i="' + i + '" data-d="-1" aria-label="Subir ' + esc(t.name) + '"' + (i === 0 ? ' disabled' : '') + '>↑</button><button type="button" data-act="mv" data-i="' + i + '" data-d="1" aria-label="Descer ' + esc(t.name) + '"' + (i === S.templates.length - 1 ? ' disabled' : '') + '>↓</button></span></td>' +
+      '<td data-label="Nome"><b>' + esc(t.name) + '</b> <span class="muted small">' + (i + 1) + '</span></td>' +
+      '<td data-label="Horário" class="num">' + t.start + '–' + t.end + '</td>' +
+      '<td data-label="Horas planeadas" class="num">' + planned(t) + '</td>' +
+      '<td data-label="Intervalo" class="num">' + (b ? b[0] + '–' + b[1] : 'sem intervalo') + '</td>' +
+      '<td data-label="Estado">' + (t.active ? bdg('ok', 'Activo') : bdg('mut', 'Inactivo')) + '</td>' +
+      '<td>' + btn('editturno', 'Editar', '', ' data-i="' + i + '"') + ' ' + btn('toggleturno', t.active ? 'Desactivar' : 'Activar', 'btn-row-quiet', ' data-i="' + i + '"') + '</td></tr>';
+  }).join('');
+  return '<table class="table--cards"><thead><tr><th>Ordem</th><th>Nome</th><th class="num">Horário</th><th class="num">Horas planeadas</th><th class="num">Intervalo</th><th>Estado</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>' +
+    '<div class="btn-line" style="margin-top:12px">' + btn('newturno', 'Novo turno', 'btn-row-strong') + (missingSuggested(S).length ? btn('suggest', 'Criar os sugeridos em falta', 'btn-row-quiet') : '') + '</div>' +
+    '<p class="hint">' + SHIFT_NOTE + ' Cada célula da escala pode ter qualquer início e fim; o turno-tipo é só um atalho.</p>';
+}
+function tInt(S) {
+  var f = S.intF, d = dirtyInt(S);
+  return '<div class="form-grid"><label>Duração do intervalo (minutos)<input type="number" min="0" step="5" data-f="brk" value="' + f.brk + '"></label>' +
+    '<label>Máximo de trabalho seguido (HH:mm)<input type="time" data-f="max" value="' + f.max + '"></label>' +
+    '<label>Descanso diário mínimo (HH:mm)<input type="time" data-f="rest" value="' + f.rest + '"></label></div>' +
+    '<p class="hint">Nenhum bloco seguido passa do máximo (art. 213.º); descanso mínimo entre turnos (art. 214.º). Turnos até ao máximo não têm intervalo. Ao mudar estes valores, o intervalo dos turnos-tipo é recalculado.</p>' +
+    '<div class="btn-line" style="margin-top:10px">' + btn('intsave', 'Gravar intervalo', 'btn-row-strong', d ? '' : ' disabled') + (d ? bdg('info', 'por gravar') : '') + '</div>';
+}
+
+/* ───────── Padrões por funcionário ───────── */
+function effOf(S, p) { return S.pdraft[p.name] || tr(p, TODAY); }
+function vigText(S, p) {
+  var cur = tr(p, TODAY), nx = nextTr(p, TODAY), h = '';
+  if (S.pdraft[p.name]) h += bdg('info', 'por gravar') + ' ';
+  if (cur) h += '<span>desde ' + fmt(cur.since) + '</span>'; else if (!S.pdraft[p.name]) h += bdg('warn', 'Sem padrão');
+  if (nx) h += '<br><span class="sub-pend">seguinte: desde ' + fmt(nx.since) + '</span>';
+  return h;
+}
+function pSelects(S, p, i) {
+  var d = S.pdraft[p.name], cur = tr(p, TODAY), e = d || cur, nb = !e, n = S.rot.days.length;
+  var fx = opts([[nb ? '' : '', nb ? '—' : 'Nenhuma']].concat(WD.map(function (w, k) { return [k + 1, w]; })), e && e.fixed ? e.fixed : '');
+  var ro = opts((nb ? [['', '—']] : []).concat([['1', 'Sim'], ['0', 'Não']]), nb ? '' : (e.rotates ? '1' : '0'));
+  var of = []; for (var k = 0; k < n; k++) of.push([k, String(k)]);
+  var os = opts((nb ? [['', '—']] : []).concat(of), nb ? '' : e.offset);
+  var sh = opts([['', 'Por omissão']].concat(activeTemplates(S).map(function (t) { return [t.id, t.name]; })), nb ? '' : e.shift);
+  var nm = esc(p.name);
+  return {
+    fixed: '<select data-p="fixed" data-i="' + i + '" data-k="p' + i + 'f" aria-label="Folga fixa de ' + nm + '">' + fx + '</select>',
+    rot: '<select data-p="rotates" data-i="' + i + '" data-k="p' + i + 'r" aria-label="Roda: ' + nm + '">' + ro + '</select>',
+    off: '<select data-p="offset" data-i="' + i + '" data-k="p' + i + 'o" aria-label="Desfasamento de ' + nm + '">' + os + '</select>',
+    sh: '<select data-p="shift" data-i="' + i + '" data-k="p' + i + 's" aria-label="Turno por omissão de ' + nm + '">' + sh + '</select>'
+  };
+}
+function pBar(S, st, selectable) {
+  var nd = Object.keys(S.pdraft).length, nq = S.people.filter(function (p) { return !p.tramos.length && !S.pdraft[p.name]; }).length;
+  return '<div class="pbar"><label class="grow" style="margin:0"><span class="sr-only">Filtrar por nome</span><input type="search" data-filter data-k="filter" placeholder="Filtrar por nome" value="' + esc(S.q) + '"></label>' +
+    (nq ? btn('quarta', 'Quarta fixa para os ' + nq, 'btn-row-strong') : '') +
+    '<span class="pbar-r">' + (nd ? bdg('info', pl(nd, 'linha por gravar', 'linhas por gravar')) + btn('pdisc', 'Descartar', 'btn-row-quiet') : '') + btn('pgrav', 'Gravar padrões' + (nd ? ' (' + nd + ')' : ''), 'btn-row-strong', nd ? '' : ' disabled') + '</span></div>';
+}
+function tPessoasGrid(S, st, selectable) {
+  var allSel = S.people.length && S.people.every(function (p) { return S.sel[p.name]; });
+  var rows = S.people.map(function (p, i) {
+    var s = pSelects(S, p, i), cur = tr(p, TODAY);
+    return '<tr data-name="' + esc(norm(p.name)) + '"' + (S.pdraft[p.name] ? ' class="is-dirty"' : '') + (S.q && norm(p.name).indexOf(norm(S.q)) < 0 ? ' hidden' : '') + '>' +
+      (selectable ? '<td class="stk"><input type="checkbox" data-act="sel" data-name="' + esc(p.name) + '" data-k="sel' + i + '" aria-label="Selecionar ' + esc(p.name) + '"' + (S.sel[p.name] ? ' checked' : '') + '></td>' : '') +
+      '<td class="stk' + (selectable ? ' stk2' : '') + '"><b>' + esc(p.name) + '</b></td><td class="num">' + (p.part ? '30:00' : '40:00') + '</td>' +
+      '<td>' + s.fixed + '</td><td>' + s.rot + '</td><td>' + s.off + '</td><td>' + s.sh + '</td><td>' + vigText(S, p) + '</td>' +
+      '<td>' + btn('newtramo', 'Novo tramo a partir de…', 'btn-row-quiet', ' data-i="' + i + '"' + (cur ? '' : ' disabled title="Grave primeiro o padrão"')) + '</td></tr>';
+  }).join('');
+  return pBar(S, st, selectable) +
+    (selectable ? bulkBar(S) : '') +
+    '<div class="table-scroll-wrap"><table class="table--scroll"><thead><tr>' + (selectable ? '<th class="stk" style="width:40px"><input type="checkbox" data-act="selall" data-k="selall" aria-label="Selecionar todos"' + (allSel ? ' checked' : '') + '></th>' : '') +
+    '<th class="stk' + (selectable ? ' stk2' : '') + '">Funcionário</th><th class="num">Carga</th><th>Folga fixa</th><th>Roda</th><th>Desfasamento</th><th>Turno por omissão</th><th>Vigência</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+    '<p class="hint">Alterar uma célula grava no tramo vigente. Para mudar só a partir de uma data, use «Novo tramo a partir de…». A folga rotativa nunca se funde com a fixa.</p>';
+}
+function bulkBar(S) {
+  var n = Object.keys(S.sel).filter(function (k) { return S.sel[k]; }).length;
+  if (!n) return '<div class="bulk idle" role="status">Selecione pessoas para aplicar a folga fixa ou a rotação em lote.</div>';
+  return '<div class="bulk" role="region" aria-label="Acções em lote"><b>' + pl(n, 'selecionado', 'selecionados') + '</b>' +
+    btn('bulk', 'Aplicar folga fixa: Quarta aos selecionados', 'btn-row-strong', ' data-w="fixed3"') + btn('bulk', 'Rodam: sim', '', ' data-w="rot1"') + btn('bulk', 'Rodam: não', '', ' data-w="rot0"') + btn('selclear', 'Limpar seleção', 'btn-row-quiet') + '</div>';
+}
+function tPessoasCards(S) {
+  var rows = S.people.map(function (p, i) {
+    var cur = tr(p, TODAY);
+    return '<tr data-name="' + esc(norm(p.name)) + '"' + (S.q && norm(p.name).indexOf(norm(S.q)) < 0 ? ' hidden' : '') + '><td data-label="Funcionário"><b>' + esc(p.name) + '</b></td><td data-label="Carga" class="num">' + (p.part ? '30:00' : '40:00') + '</td>' +
+      '<td data-label="Folga fixa">' + (cur ? (cur.fixed ? WD[cur.fixed - 1] : 'Nenhuma') : '—') + '</td>' +
+      '<td data-label="Roda">' + (cur ? (cur.rotates ? 'Sim' : 'Não') : '—') + '</td>' +
+      '<td data-label="Desfasamento" class="num">' + (cur && cur.rotates ? cur.offset : '—') + '</td>' +
+      '<td data-label="Turno por omissão">' + (cur ? esc(tplName(S, cur.shift)) : '—') + '</td>' +
+      '<td data-label="Vigência">' + vigText(S, p) + '</td>' +
+      '<td>' + btn('editp', cur ? 'Editar' : 'Definir padrão', '', ' data-i="' + i + '"') + ' ' + (cur ? btn('newtramo', 'Novo tramo a partir de…', 'btn-row-quiet', ' data-i="' + i + '"') : '') + '</td></tr>';
+  }).join('');
+  var nq = S.people.filter(function (p) { return !p.tramos.length; }).length;
+  return '<div class="pbar"><label class="grow" style="margin:0"><span class="sr-only">Filtrar por nome</span><input type="search" data-filter data-k="filter" placeholder="Filtrar por nome" value="' + esc(S.q) + '"></label>' + (nq ? '<span class="pbar-r">' + btn('quartaw', 'Quarta fixa para os ' + nq, 'btn-row-strong') + '</span>' : '') + '</div>' +
+    '<table class="table--cards"><thead><tr><th>Funcionário</th><th class="num">Carga</th><th>Folga fixa</th><th>Roda</th><th class="num">Desfasamento</th><th>Turno por omissão</th><th>Vigência</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>';
+}
+
+/* ───────── Rotação ───────── */
+function tRot(S, st, matrix) {
+  var f = S.rotF, d = dirtyRot(S), mon = wdOf(f.anchor) === 1, h = '';
+  h += '<p class="sub-h" style="margin-top:8px">Dias em que a folga rotativa pode cair</p><div class="chips" role="group" aria-label="Dias de folga rotativa">' +
+    WD.map(function (w, i) { return '<button type="button" class="chip" data-act="rotday" data-d="' + (i + 1) + '" aria-pressed="' + (f.days.indexOf(i + 1) >= 0) + '">' + w + '</button>'; }).join('') + '</div>' +
+    '<label>Âncora da contagem (uma segunda-feira)<input type="date" data-f="anchor" data-k="anchor" value="' + f.anchor + '"></label>' +
+    (!mon ? '<p class="alert-err err" role="alert">A âncora tem de ser uma segunda-feira.</p>' : '') +
+    (S.err.rot ? '<p class="alert-err err" role="alert">' + esc(S.err.rot) + '</p>' : '') +
+    '<div class="btn-line">' + btn('rotsave', 'Gravar rotação', 'btn-row-strong', d && mon ? '' : ' disabled') + (d ? bdg('info', 'por gravar') : '') + '</div>';
+  var np = S.people.filter(function (p) { return !p.tramos.length; }).length;
+  h += '<p class="sub-h">Distribuir folgas</p><p class="hint" style="margin-top:0">Atribui os desfasamentos 0, 1, 2, 3, 0… às pessoas activas que rodam, pela ordem da lista, para equilibrar quantas folgam em cada dia.</p>' +
+    '<div class="btn-line" style="margin-top:8px"><label style="margin:0">A partir de<input type="date" data-f="eff" value="' + S.eff + '"></label>' + btn('dist', 'Distribuir folgas', 'btn-row-strong', np ? ' disabled title="Defina primeiro os padrões"' : '') + '</div>' +
+    (np ? '<p class="hint">Defina primeiro os padrões dos ' + np + ' funcionários sem padrão.</p>' : '');
+  var wk = weeksFrom(matrix ? 4 : 1);
+  if (np === S.people.length) return h;
+  if (!matrix) {
+    var c = counts(S, wk[0].monday);
+    h += '<p class="sub-h">Quantos folgam por dia (semana ' + wk[0].w + ')</p><div class="count-chips">' + S.rot.days.map(function (dd) { return '<span class="' + (balanced(c) ? 'badge-mut' : 'badge-warn') + '">' + WD[dd - 1] + ' <b>' + (c[dd] || 0) + '</b></span>'; }).join('') + '</div>' +
+      (balanced(c) ? '<p class="hint" style="margin-top:0">Equilibrado: no máximo 1 pessoa de diferença entre dias.</p>' : '<p class="hint" style="margin-top:0">Desequilibrado: use «Distribuir folgas».</p>');
+    return h;
+  }
+  h += '<p class="sub-h">Pré-visualização das próximas 4 semanas</p><div class="table-scroll-wrap"><table class="table--scroll rot-grid"><thead><tr><th class="stk">Funcionário</th>' +
+    wk.map(function (w) { return '<th class="c">S' + w.w + ' · ' + fmtS(w.monday) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+    S.people.map(function (p) {
+      return '<tr><td class="stk"><b>' + esc(p.name) + '</b></td>' + wk.map(function (w) {
+        var r = rotFor(S, p, w.monday);
+        return '<td class="c">' + (r ? WD[r.day - 1] + (r.shifted ? ' <span title="Deslocada por colisão com a folga fixa" aria-label="deslocada por colisão">↷</span>' : '') : '<span class="muted">—</span>') + '</td>';
+      }).join('') + '</tr>';
+    }).join('') + '</tbody></table></div>';
+  h += '<p class="sub-h">Quantos folgam por dia</p><table class="table--fill rot-grid"><thead><tr><th>Dia</th>' + wk.map(function (w) { return '<th class="c">S' + w.w + '</th>'; }).join('') + '</tr></thead><tbody>' +
+    S.rot.days.map(function (dd) {
+      return '<tr><td>' + WDL[dd - 1] + '</td>' + wk.map(function (w) { var c = counts(S, w.monday); var vals = Object.keys(c).map(function (k) { return c[k]; }); var bad = Math.max.apply(null, vals) - Math.min.apply(null, vals) > 1; return '<td class="c' + (bad ? ' cnt-bad' : '') + '">' + (c[dd] || 0) + '</td>'; }).join('') + '</tr>';
+    }).join('') + '</tbody></table>' +
+    (wk.every(function (w) { return balanced(counts(S, w.monday)); }) ? '<p class="hint">Equilibrado: no máximo 1 pessoa de diferença entre dias, em todas as semanas.</p>' : '<p class="alert-warn err">Desequilibrado: algumas semanas concentram folgas num só dia. «Distribuir folgas» reparte-as.</p>') +
+    '<p class="hint">↷ = folga rotativa deslocada por colisão com a fixa. As duas nunca se fundem.</p>';
+  return h;
+}
+
+/* ───────── Calendário ───────── */
+function tClosed(S) {
+  return '<p class="sub-h" style="margin-top:8px">Dias fechados de base</p><div class="chips" role="group" aria-label="Dias fechados de base">' +
+    WD.map(function (w, i) { return '<button type="button" class="chip" data-act="closeday" data-d="' + (i + 1) + '" aria-pressed="' + (S.closed.indexOf(i + 1) >= 0) + '">' + w + '</button>'; }).join('') + '</div>' +
+    '<p class="hint" style="margin-top:0">Grava ao tocar. A quarta fechada é a folga fixa de quase todos.</p>';
+}
+function seasonRow(S, s) {
+  var re = S.closed.filter(function (d) { return s.closed.indexOf(d) < 0; });
+  return '<tr><td data-label="Época"><b>' + esc(s.name) + '</b></td><td data-label="Período" class="num">' + fmtS(s.from) + '–' + fmtS(s.to) + '</td>' +
+    '<td data-label="Fechados na época">' + (s.closed.length ? sorted(s.closed).map(function (d) { return WD[d - 1]; }).join(', ') : 'Nenhum') + '</td>' +
+    '<td data-label="Reabertos">' + (re.length ? re.map(function (d) { return WD[d - 1]; }).join(', ') + ' como ' + (s.reopened === 'FOLGA_TRABALHADA' ? 'F. trab.' : 'dia normal') : '—') + '</td>' +
+    '<td data-label="Rotação">' + (s.rotCont ? 'Continua' : 'Pára') + '</td><td>' + btn('editseason', 'Editar', '', ' data-id="' + s.id + '"') + ' ' + btn('delseason', 'Apagar', 'danger', ' data-id="' + s.id + '"') + '</td></tr>';
+}
+function tSeasons(S) {
+  var h = '<p class="sub-h">Épocas</p>';
+  if (!S.seasons.length) {
+    return h + '<div class="alert-info empty"><p>Sem épocas: a quarta fica fechada o ano todo. Em Agosto o dono abre a quarta e conta-a como folga trabalhada.</p><div class="btn-line">' +
+      btn('agosto', 'Criar época Agosto como no ano passado', 'btn-row-strong') + btn('newseason', 'Nova época') + '</div><p class="sug">Agosto 01/08–31/08: quarta aberta como F. trab., rotação continua.</p></div>';
+  }
+  return h + '<table class="table--cards"><thead><tr><th>Época</th><th class="num">Período</th><th>Fechados na época</th><th>Reabertos</th><th>Rotação</th><th></th></tr></thead><tbody>' + S.seasons.map(function (s) { return seasonRow(S, s); }).join('') + '</tbody></table>' +
+    '<div class="btn-line" style="margin-top:10px">' + btn('newseason', 'Nova época', 'btn-row-strong') + '</div><p class="hint">As épocas não se sobrepõem.</p>';
+}
+function excRows(S, list, hol) {
+  return list.map(function (r) {
+    var o = dayState(S, r.date), ex = S.exc.filter(function (e) { return e.date === r.date; })[0];
+    var tipo = hol ? (ex ? bdg('info', 'Feriado nacional · excepção ' + { FECHADO: 'fechado', ABERTO: 'aberto', FERIADO: 'feriado' }[ex.kind]) : bdg('mut', 'Feriado nacional · calculado')) : bdg('info', { FECHADO: 'Fechado', ABERTO: 'Aberto', FERIADO: 'Feriado' }[ex.kind]);
+    var act = hol ? (ex ? btn('resetexc', 'Repor', 'btn-row-quiet', ' data-date="' + r.date + '"') : btn('closehol', 'Fechar nesse dia', 'btn-row-quiet', ' data-date="' + r.date + '"')) : btn('editexc', 'Editar', '', ' data-date="' + r.date + '"') + ' ' + btn('delexc', 'Remover', 'danger', ' data-date="' + r.date + '"');
+    return '<tr><td data-label="Data" class="num">' + WD[wdOf(r.date) - 1] + ' ' + fmt(r.date) + '</td><td data-label="Etiqueta">' + esc(r.label) + '</td><td data-label="Tipo">' + tipo + '</td>' +
+      '<td data-label="Restaurante">' + bdg(o.open ? 'ok' : 'mut', stateText(o)) + (o.open ? '' : ' <span class="muted small">' + esc(o.why) + '</span>') + '</td><td>' + act + '</td></tr>';
+  }).join('');
+}
+function tExc(S, st) {
+  var y = S.year, ex = S.exc.filter(function (e) { return e.date.slice(0, 4) === String(y) && !holOn(e.date); }).sort(function (a, b) { return a.date < b.date ? -1 : 1; });
+  var hs = holidays(y), head_ = '<thead><tr><th class="num">Data</th><th>Etiqueta</th><th>Tipo</th><th>Restaurante</th><th></th></tr></thead>';
+  var h = '<p class="sub-h">Excepções de calendário</p>';
+  h += ex.length ? '<table class="table--cards">' + head_ + '<tbody>' + excRows(S, ex, false) + '</tbody></table>' : '<p class="muted small">Sem excepções em ' + y + '.</p>';
+  h += '<div class="btn-line" style="margin-top:10px">' + btn('newexc', 'Nova excepção', 'btn-row-strong') + btn('holtoggle', (S.hol ? 'Esconder' : 'Mostrar') + ' os ' + hs.length + ' feriados nacionais de ' + y, 'btn-row-quiet', ' aria-expanded="' + S.hol + '"') + '</div>';
+  if (S.hol) h += '<table class="table--cards">' + head_ + '<tbody>' + excRows(S, hs, true) + '</tbody></table><p class="hint">Calculados em código (fixos e de data móvel). O Carnaval não entra. O feriado é um facto: por omissão o restaurante abre; fechar exige uma excepção.</p>';
+  return h;
+}
+function tYear(S) {
+  var y = S.year, h = '<div class="year-bar">' + btn('year', '‹', 'btn-row-quiet', ' data-d="-1" aria-label="Ano anterior"') + '<b>' + y + '</b>' + btn('year', '›', 'btn-row-quiet', ' data-d="1" aria-label="Ano seguinte"') + '<span class="muted small">Toque num dia para abrir o editor de excepção.</span></div>' +
+    '<div class="legend"><span><i class="l-closed"></i>Fechado</span><span><i class="l-ftrab"></i>Aberto como F. trab.</span><span><i class="l-hol"></i>Feriado</span><span><i class="l-exc"></i>Excepção</span></div><div class="year">';
+  var names = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  for (var m = 0; m < 12; m++) {
+    var first = y + '-' + p2(m + 1) + '-01', lead = wdOf(first) - 1, dim = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
+    h += '<div class="month"><h3>' + names[m] + '</h3><div class="mgrid">' + ['S', 'T', 'Q', 'Q', 'S', 'S', 'D'].map(function (c, i) { return '<span class="dow" aria-hidden="true">' + c + '</span>'; }).join('');
+    for (var k = 0; k < lead; k++) h += '<span class="day out" aria-hidden="true"></span>';
+    for (var d = 1; d <= dim; d++) {
+      var iso = y + '-' + p2(m + 1) + '-' + p2(d), o = dayState(S, iso);
+      var cls = 'day' + (o.open ? '' : ' closed') + (o.ftrab ? ' ftrab' : '') + (o.hol ? ' hol' : '') + (o.exc ? ' exc' : '') + (iso === TODAY ? ' today' : '');
+      var tip = WD[wdOf(iso) - 1] + ' ' + fmt(iso) + ' · ' + stateText(o) + ' · ' + o.why + (o.hol ? ' · Feriado: ' + o.holLabel : '');
+      h += '<button type="button" class="' + cls + '" data-act="day" data-date="' + iso + '" title="' + esc(tip) + '" aria-label="' + esc(tip) + '">' + d + '</button>';
+    }
+    h += '</div></div>';
+  }
+  return h + '</div>';
+}
+
+/* ───────── Regras legais ───────── */
+function tLegal(S) {
+  var rows = S.legal.map(function (r) {
+    var pend = r.status === 'PENDENTE';
+    return '<tr><td data-label="Regra"><b>' + esc(r.label) + '</b> <span class="muted small">' + esc(r.ref) + '</span><br><span class="muted small">' + esc(r.desc) + '</span><br><code class="small muted">' + r.key + '</code></td>' +
+      '<td data-label="Estado">' + (pend ? bdg('warn', 'Por validar') : bdg('ok', 'Confirmada')) + '</td>' +
+      '<td data-label="Nota">' + (r.note ? esc(r.note) : '<span class="muted">—</span>') + '</td>' +
+      '<td data-label="Quem e quando">' + (r.who ? esc(r.who) + ' · ' + r.when : '<span class="muted">—</span>') + '</td>' +
+      '<td>' + btn('legal', pend ? 'Confirmar' : 'Repor como pendente', pend ? 'btn-row-strong' : '', ' data-key="' + r.key + '"') + '</td></tr>';
+  }).join('');
+  return '<table class="table--cards"><thead><tr><th>Regra</th><th>Estado</th><th>Nota</th><th>Quem e quando</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>' +
+    '<p class="hint">As regras ficam implementadas e configuráveis; os ecrãs mostram «por validar» até haver confirmação. Confirmar exige uma nota (fonte e regime). As regras de férias confirmam-se em /ferias/configuracao.</p>';
+}
+function simBar(S) {
+  return '<span>Simulação do mockup:</span><label><input type="checkbox" data-sim="adminUsers"' + (S.perms.adminUsers ? ' checked' : '') + '> utilizador com admin.utilizadores</label>' +
+    '<label><input type="checkbox" data-sim="feriasVer"' + (S.perms.feriasVer ? ' checked' : '') + '> utilizador com ferias.ver</label>';
+}
+
+
+/* ───────── Variantes (pintam os [data-sec]) ───────── */
+var B = {};
+function cur(dev) {
+  var st = Mock.state(dev);
+  if (st.v === 'b' && st.mode === 'm' && !st.done) { if (!st.demo) { st.demo = seed('b', true); st.demo.hol = st.kind === 'desktop'; st.demo.perms = st.S.perms; } return st.demo; }
+  return st.S;
+}
+var NOTE_REGRAS = 'Duas regras da escala por validar com o contabilista.';
+function secLegal(S) { var n = pendLegal(S); return head('Regras legais por validar', NOTE_REGRAS, n ? bdg('warn', n + ' por validar') : bdg('ok', 'Todas confirmadas')) + tLegal(S); }
+function secCal(S, st, year) {
+  return (year ? tYear(S) : '') + tClosed(S) + tSeasons(S) + tExc(S, st);
+}
+B.sim = function (S) { return simBar(S); };
+
+/* A · página única */
+B.check = function (S, st) { return head('Lista de verificação do arranque', 'O que falta antes de gerar a primeira semana. Cada ponto liga à secção respectiva, mais abaixo.') + chkList(S, st); };
+B.turnos = function (S) { return head('Turnos-tipo', 'Atalhos para a escala: o pincel da grelha e o turno por omissão dos padrões usam-nos.') + tTurnos(S); };
+B.pessoas = function (S, st) { return head('Padrões por funcionário', 'Uma linha por funcionário activo: folga fixa, se roda, desfasamento e turno por omissão. A vigência permite mudar só a partir de uma data.') + tPessoasGrid(S, st, false); };
+B.rot = function (S, st) { return head('Rotação', 'A folga rotativa cai 1 vez por semana, num dos dias escolhidos, e nunca se funde com a fixa.') + tRot(S, st, false); };
+B.cal = function (S, st) { return head('Calendário', 'Dias fechados, épocas e excepções. Os feriados nacionais são calculados.') + secCal(S, st, false); };
+B.int = function (S) { return head('Intervalo e descanso', 'Duração do intervalo de almoço e limites legais usados na validação.') + tInt(S); };
+B.legal = function (S) { return secLegal(S); };
+
+/* tabs partilhados por B (manutenção) e C */
+function tabsHtml(list, curTab, label, S) {
+  var pid = Mock.uid('pnl');
+  return { pid: pid, html: '<div class="tabs" role="tablist" aria-label="' + label + '">' + list.map(function (t) {
+    var on = t[0] === curTab;
+    return '<button type="button" role="tab" data-act="tab" data-n="' + t[0] + '" aria-selected="' + on + '" tabindex="' + (on ? 0 : -1) + '" aria-controls="' + pid + '">' + t[1] + (t[2] ? ' <span class="tab-count" aria-label="' + t[2] + ' por resolver">' + t[2] + '</span>' : '') + '</button>';
+  }).join('') + '</div>' };
+}
+function msgHtml(S) { return S.msg ? '<p class="alert-info err" role="status">' + esc(S.msg) + '</p>' : ''; }
+function urlHint(tab) { return '<p class="url-hint">/escala/configuracao?separador=' + tab + '</p>'; }
+function npend(S) { return S.people.filter(function (p) { return !p.tramos.length; }).length; }
+
+/* B · assistente */
+var STEPS = ['Turnos', 'Folgas fixas', 'Rotação', 'Calendário', 'Contas', 'Rever'];
+function stepDone(S, n) {
+  if (n === 1) return activeTemplates(S).length > 0;
+  if (n === 2) return npend(S) === 0;
+  if (n === 3) return S.rotDone;
+  if (n === 4) return S.seasons.length > 0;
+  if (n === 5) return S.skip5 || (!S.people.some(function (p) { return p.acct !== 1; }));
+  return false;
+}
+function adjust(S, st, n, inner) {
+  return '<div class="btn-line" style="margin-top:10px">' + btn('adj', S.adj[n] ? 'Fechar ajuste' : 'Ajustar', 'btn-row-quiet', ' data-n="' + n + '" aria-expanded="' + !!S.adj[n] + '"') + '</div>' + (S.adj[n] ? '<div class="adjust">' + inner() + '</div>' : '');
+}
+function stepBody(S, st, n) {
+  var h = '';
+  if (n === 1) {
+    var miss = missingSuggested(S).length, nt = activeTemplates(S).length;
+    h += '<h2>Turnos-tipo</h2><p class="sec-sub">Atalhos para a escala. Sugeridos a partir dos horários que já se praticam.</p>' +
+      '<div class="sugbox"><b>Sugerido</b><ul>' + SUGGESTED.map(function (s) { return '<li><span class="k">' + s.name + '</span>' + s.start + '–' + s.end + ' · ' + planned(s) + ' planeadas</li>'; }).join('') + '</ul></div>' +
+      (nt ? '<p class="alert-ok err" role="status">' + pl(nt, 'turno-tipo criado', 'turnos-tipo criados') + '.</p>' : '') +
+      '<div class="btn-line"><button type="button" class="btn-big" data-act="suggest"' + (miss ? '' : ' disabled') + '>' + (miss ? 'Usar os 3 turnos sugeridos' : 'Turnos sugeridos criados') + '</button></div>' +
+      adjust(S, st, 1, function () { return tTurnos(S); });
+  } else if (n === 2) {
+    var np = npend(S);
+    h += '<h2>Folgas fixas</h2><p class="sec-sub">A quarta é o dia fechado e a folga fixa de quase todos.</p>' +
+      '<div class="sugbox"><b>Sugerido</b><ul><li><span class="k">Folga fixa</span>quarta-feira</li><li><span class="k">Roda</span>sim (1 folga rotativa por semana)</li><li><span class="k">Vigência</span>desde ' + fmt(START) + '</li></ul></div>' +
+      (np === 0 ? '<p class="alert-ok err" role="status">Os ' + S.people.length + ' funcionários activos têm padrão.</p>' : '') +
+      '<div class="btn-line"><button type="button" class="btn-big" data-act="quartaw"' + (np ? '' : ' disabled') + '>' + (np ? 'Quarta fixa para os ' + np : 'Quarta fixa aplicada') + '</button></div>' +
+      adjust(S, st, 2, function () { return tPessoasCards(S); });
+  } else if (n === 3) {
+    var wk = weeksFrom(1)[0], c = counts(S, wk.monday), np3 = npend(S);
+    h += '<h2>Rotação</h2><p class="sec-sub">Reparte a folga rotativa pela equipa, para não folgarem todos no mesmo dia.</p>' +
+      '<div class="sugbox"><b>Sugerido</b><ul><li><span class="k">Dias</span>' + S.rot.days.map(function (d) { return WD[d - 1]; }).join(', ') + '</li><li><span class="k">Âncora</span>segunda ' + fmt(S.rot.anchor) + '</li><li><span class="k">Desfasamentos</span>0, 1, 2, 3, 0… por ordem da lista</li></ul></div>' +
+      (S.rotDone ? '<p class="alert-ok err" role="status">Folgas distribuídas. Semana ' + wk.w + ': ' + S.rot.days.map(function (d) { return WD[d - 1] + ' ' + (c[d] || 0); }).join(' · ') + '.</p>' : '') +
+      '<div class="btn-line"><button type="button" class="btn-big" data-act="dist"' + (np3 ? ' disabled' : '') + '>' + (S.rotDone ? 'Distribuir de novo' : 'Distribuir folgas rotativas') + '</button></div>' +
+      (np3 ? '<p class="hint">Faça primeiro o passo 2: faltam padrões a ' + np3 + ' funcionários.</p>' : '') +
+      adjust(S, st, 3, function () { return tRot(S, st, false); });
+  } else if (n === 4) {
+    var ag = S.seasons.length;
+    h += '<h2>Calendário</h2><p class="sec-sub">Dia fechado de base e a época em que a quarta reabre.</p>' +
+      '<div class="sugbox"><b>Sugerido</b><ul><li><span class="k">Fechado de base</span>quarta</li><li><span class="k">Época Agosto</span>01/08–31/08: quarta aberta como F. trab., rotação continua</li><li><span class="k">Feriados</span>' + holidays(2026).length + ' nacionais calculados; 15/08 aberto</li></ul></div>' +
+      (ag ? '<p class="alert-ok err" role="status">Época Agosto criada.</p>' : '') +
+      '<div class="btn-line"><button type="button" class="btn-big" data-act="agosto"' + (ag ? ' disabled' : '') + '>' + (ag ? 'Época Agosto criada' : 'Criar época Agosto como no ano passado') + '</button></div>' +
+      adjust(S, st, 4, function () { return secCal(S, st, false); });
+  } else if (n === 5) {
+    h += '<h2>Contas</h2><p class="sec-sub">Quem não tem conta, ou tem conta sem acesso à escala, não vê a própria escala. Este passo não bloqueia o arranque.</p>' +
+      chkList(S, st, { nogo: true, filter: function (i) { return i.go === 'contas' || i.ferias; } }) +
+      '<div class="btn-line" style="margin-top:12px">' + btn('skip5', 'Fica para depois', 'btn-row-strong') + '</div>';
+  } else {
+    var ok = stepDone(S, 1) && stepDone(S, 2);
+    h += '<h2>Rever e gerar</h2><p class="sec-sub">Resumo do que ficou configurado. Contas e férias podem ficar para depois.</p>' + chkList(S, st, { nogo: true }) +
+      '<p class="hint">Intervalo: ' + S.int.brk + ' min · máximo ' + S.int.max + ' seguidas · descanso diário mínimo ' + S.int.rest + ' (por omissão; em Manutenção › Intervalo).</p>' +
+      '<p class="alert-warn err">' + pendLegal(S) + ' regras legais por validar com o contabilista (Manutenção › Regras legais).</p>' +
+      '<div class="btn-line" style="margin-top:12px"><button type="button" class="btn-big" data-act="gen"' + (ok ? '' : ' disabled') + '>Gerar a primeira semana</button></div>' +
+      (ok ? '<p class="hint">Gera a semana 41 (05/10–11/10) a partir dos padrões e da rotação, como rascunho.</p>' : '<p class="hint">Falta concluir os passos 1 e 2.</p>');
+  }
+  return h;
+}
+function wizard(S, st) {
+  var n = st.step, pct = Math.round(n / 6 * 100);
+  var h = '<div class="card step-card"><div class="wiz-head"><b>Passo ' + n + ' de 6 · ' + STEPS[n - 1] + '</b><span class="muted small">Arranque da escala</span></div>' +
+    '<div class="wprog" role="progressbar" aria-valuemin="1" aria-valuemax="6" aria-valuenow="' + n + '" aria-label="Progresso do arranque"><span style="width:' + pct + '%"></span></div>' +
+    '<ol class="steps">' + STEPS.map(function (s, i) {
+      var k = i + 1, d = stepDone(S, k);
+      return '<li' + (k === n ? ' class="is-cur"' : '') + '><button type="button" data-act="step" data-n="' + k + '"' + (k === n ? ' aria-current="step"' : '') + '><span class="sn ' + (d ? 'ok' : '') + '">' + (d ? '✓' : k) + '<span class="sr-only"> ' + (d ? 'feito' : 'por fazer') + '</span></span><span class="sname">' + s + '</span></button></li>';
+    }).join('') + '</ol>' + stepBody(S, st, n) +
+    '<div class="wiz-nav">' + btn('prev', 'Anterior', 'btn-row-quiet', n === 1 ? ' disabled' : '') + (n < 6 ? btn('next', 'Seguinte', stepDone(S, n) ? 'btn-row-strong' : '') : '') + '</div></div>';
+  return h;
+}
+function maint(S, st) {
+  var tab = st.tab || 'turnos', np = npend(S), pend = checklist(S).filter(function (i) { return !i.ok; });
+  var list = [['turnos', 'Turnos', activeTemplates(S).length ? 0 : 1], ['pessoas', 'Pessoas', np], ['rot', 'Rotação', 0], ['cal', 'Calendário', 0], ['int', 'Intervalo', 0], ['legal', 'Regras legais', pendLegal(S)]];
+  var tb = tabsHtml(list, tab, 'Configuração da escala', S), body = '';
+  if (tab === 'turnos') body = head('Turnos-tipo') + tTurnos(S);
+  else if (tab === 'pessoas') body = head('Padrões por funcionário', 'Uma linha por funcionário activo, com o tramo vigente.') + tPessoasCards(S);
+  else if (tab === 'rot') body = head('Rotação') + tRot(S, st, false);
+  else if (tab === 'cal') body = head('Calendário') + secCal(S, st, false);
+  else if (tab === 'int') body = head('Intervalo e descanso') + tInt(S);
+  else body = secLegal(S);
+  return (st.done ? '<p class="alert-ok err" role="status">Arranque concluído: semana 41 gerada.</p>' : '<p class="alert-info err" role="status">Pré-visualização de como fica a página depois do arranque.</p>') +
+    '<p class="pend-strip">' + (pend.length ? '<b>Por resolver:</b> ' + pend.map(function (i) { return bdg('warn', i.t); }).join(' ') : '<b>Nada por resolver.</b>') + '</p>' +
+    tb.html + urlHint(tab) + '<div class="card" role="tabpanel" id="' + tb.pid + '">' + body + '</div>';
+}
+B.mode = function (S, st) {
+  return '<div class="seg" role="group" aria-label="Modo"><button type="button" data-act="mode" data-m="a" aria-pressed="' + (st.mode === 'a') + '">Arranque' + (st.done ? ' (concluído)' : '') + '</button><button type="button" data-act="mode" data-m="m" aria-pressed="' + (st.mode === 'm') + '">Manutenção</button></div>';
+};
+B.wiz = function (S, st) { return st.mode === 'm' ? maint(S, st) : wizard(S, st); };
+
+/* C · separadores + visual */
+B.ctabs = function (S, st) {
+  var np = npend(S), pend = checklist(S).filter(function (i) { return !i.ok; }).length, tab = st.tab;
+  var list = [['arranque', 'Arranque', pend], ['turnos', 'Turnos', activeTemplates(S).length ? 0 : 1], ['pessoas', 'Pessoas', np], ['rot', 'Rotação', S.rotDone ? 0 : 1], ['cal', 'Calendário', 0], ['legal', 'Regras legais', pendLegal(S)]];
+  var tb = tabsHtml(list, tab, 'Configuração da escala', S), body = '';
+  if (tab === 'arranque') body = head('Lista de verificação do arranque', 'O que falta antes de gerar a primeira semana.') + chkList(S, st);
+  else if (tab === 'turnos') body = head('Turnos-tipo') + tTurnos(S) + '<p class="sub-h" style="margin-top:24px">Intervalo e descanso</p>' + tInt(S);
+  else if (tab === 'pessoas') body = head('Padrões por funcionário', 'Selecione várias pessoas para aplicar a folga fixa ou a rotação de uma vez; depois grave.') + tPessoasGrid(S, st, true);
+  else if (tab === 'rot') body = head('Rotação', 'Veja as próximas 4 semanas antes de gravar.') + tRot(S, st, true);
+  else if (tab === 'cal') body = head('Calendário', 'Quartas fechadas a cinzento; Agosto com as quartas abertas como F. trab.') + secCal(S, st, true);
+  else body = secLegal(S);
+  return tb.html + urlHint(tab) + '<div class="card" role="tabpanel" id="' + tb.pid + '">' + msgHtml(S) + body + '</div>';
+};
+
+/* ───────── Pintura ───────── */
+function fkey(el) {
+  var g = function (a) { return el.getAttribute(a); };
+  if (g('data-k')) return g('data-k');
+  if (g('data-sim')) return 'sim|' + g('data-sim');
+  if (g('data-f')) return 'f|' + g('data-f');
+  if (g('data-act')) return g('data-act') + '|' + (g('data-i') || g('data-n') || g('data-d') || g('data-name') || g('data-id') || g('data-date') || g('data-w') || g('data-m') || g('data-key') || g('data-sec-go') || '');
+  return null;
+}
+function paint(dev) {
+  var st = Mock.state(dev), S = cur(dev), act = document.activeElement;
+  var fk = (act && dev.contains(act) && act !== dev) ? fkey(act) : null;
+  var sc = $$('.table-scroll-wrap', dev).map(function (w) { return w.scrollLeft; });
+  $$('[data-sec]', dev).forEach(function (n) { var f = B[n.getAttribute('data-sec')]; if (f) n.innerHTML = f(S, st); });
+  $$('.table-scroll-wrap', dev).forEach(function (w, i) { if (sc[i]) w.scrollLeft = sc[i]; });
+  if (fk) { var els = $$('[data-act],[data-k],[data-f],[data-sim]', dev); for (var i = 0; i < els.length; i++) { if (fkey(els[i]) === fk) { els[i].focus({ preventScroll: true }); break; } } }
+}
+
+/* ───────── Diálogos ───────── */
+var SH_BTN = function (label, dis) { return '<div class="btn-line end"><button type="button" class="secondary" data-close-sheet>Cancelar</button><button type="button" class="primary" data-act="sheet-save"' + (dis ? ' disabled' : '') + '>' + label + '</button></div>'; };
+var SH_ERR = '<p class="alert-err err" role="alert" data-s-err hidden></p>';
+function sv(box, k) { var n = $('[data-s="' + k + '"]', box); return n ? n.value : ''; }
+function sheetErr(box, msg) { var e = $('[data-s-err]', box); e.textContent = msg; e.hidden = false; return msg; }
+function turnoPrev(S, box) {
+  var s = sv(box, 'start'), e = sv(box, 'end'), p = $('[data-s-prev]', box); if (!p) return;
+  if (!s || !e || tm(e) <= tm(s)) { p.textContent = 'O fim tem de ser depois do início.'; return; }
+  var t = { start: s, end: e }, b = brkOf(S, t);
+  p.textContent = 'Horas planeadas: ' + planned(t) + ' · ' + (b ? 'intervalo ' + b[0] + '–' + b[1] : 'sem intervalo (turno até ' + S.int.max + ')');
+}
+var SHEETS = {
+  turno: function (S, d) {
+    var t = d.i >= 0 ? S.templates[d.i] : { name: '', start: '08:00', end: '17:30', active: true };
+    return '<h2 class="sheet-title">' + (d.i >= 0 ? 'Editar turno-tipo' : 'Novo turno-tipo') + '</h2><label>Nome<input data-s="name" value="' + esc(t.name) + '"></label>' +
+      '<div class="form-grid"><label>Início<input type="time" data-s="start" value="' + t.start + '"></label><label>Fim<input type="time" data-s="end" value="' + t.end + '"></label></div>' +
+      (d.i >= 0 ? '<label class="check-line"><input type="checkbox" data-s="active"' + (t.active ? ' checked' : '') + '> Activo</label>' : '') +
+      '<p class="hint" data-s-prev></p>' + SH_ERR + SH_BTN('Gravar turno');
+  },
+  pad: function (S, d) {
+    var p = S.people[d.i], c = tr(p, TODAY) || baseTramo(), n = S.rot.days.length, of = []; for (var k = 0; k < n; k++) of.push([k, String(k)]);
+    return '<h2 class="sheet-title">' + (d.novo ? 'Novo tramo de ' : 'Padrão de ') + esc(p.name) + '</h2>' +
+      (d.novo ? '<p class="hint" style="margin:-6px 0 10px">Tramo actual: desde ' + fmt(c.since) + '. O novo vale a partir da data escolhida; o anterior fica como está.</p><label>A partir de<input type="date" data-s="since" value="2026-10-05"></label>' : '<p class="hint" style="margin:-6px 0 10px">Altera o tramo vigente (desde ' + fmt(c.since) + '). Para mudar só a partir de uma data, use «Novo tramo a partir de…».</p>') +
+      '<div class="form-grid"><label>Folga fixa<select data-s="fixed">' + opts([['', 'Nenhuma']].concat(WD.map(function (w, i) { return [i + 1, w]; })), c.fixed || '') + '</select></label>' +
+      '<label>Roda<select data-s="rot">' + opts([['1', 'Sim'], ['0', 'Não']], c.rotates ? '1' : '0') + '</select></label>' +
+      '<label>Desfasamento<select data-s="off">' + opts(of, c.offset) + '</select></label>' +
+      '<label>Turno por omissão<select data-s="shift">' + opts([['', 'Por omissão']].concat(activeTemplates(S).map(function (t) { return [t.id, t.name]; })), c.shift) + '</select></label></div>' + SH_ERR + SH_BTN('Gravar padrão');
+  },
+  season: function (S, id) {
+    var s = id ? S.seasons.filter(function (x) { return x.id === id; })[0] : { name: '', from: '', to: '', closed: [], reopened: 'FOLGA_TRABALHADA', rotCont: true };
+    return '<h2 class="sheet-title">' + (id ? 'Editar época' : 'Nova época') + '</h2><label>Nome<input data-s="name" value="' + esc(s.name) + '"></label>' +
+      '<div class="form-grid"><label>De<input type="date" data-s="from" value="' + s.from + '"></label><label>Até<input type="date" data-s="to" value="' + s.to + '"></label></div>' +
+      '<p class="hint" style="margin:0">Dias fechados nesta época</p><div class="wd-picks">' + WD.map(function (w, i) { return '<label><input type="checkbox" data-s-wd="' + (i + 1) + '"' + (s.closed.indexOf(i + 1) >= 0 ? ' checked' : '') + '> ' + w + '</label>'; }).join('') + '</div>' +
+      '<label>Dias de base fechados que reabrem, contam como<select data-s="reopened">' + opts([['FOLGA_TRABALHADA', 'F. trab. (folga trabalhada)'], ['NORMAL', 'Dia normal']], s.reopened) + '</select></label>' +
+      '<label class="check-line"><input type="checkbox" data-s="rotCont"' + (s.rotCont ? ' checked' : '') + '> A rotação continua</label>' + SH_ERR + SH_BTN('Gravar época');
+  },
+  exc: function (S, d) {
+    var ex = S.exc.filter(function (e) { return e.date === d.date; })[0], o = d.date ? dayState(S, d.date) : null, kind = ex ? ex.kind : 'FECHADO';
+    var hol = d.date ? holOn(d.date) : null, kinds = [['FECHADO', 'Fechado'], ['ABERTO', 'Aberto'], ['FERIADO', 'Feriado (municipal ou outro)']];
+    return '<h2 class="sheet-title">' + (ex ? 'Editar excepção' : 'Excepção de calendário') + '</h2>' +
+      (o ? '<p class="day-why"><b>' + WD[wdOf(d.date) - 1] + ' ' + fmt(d.date) + '</b> · ' + stateText(o) + ' · ' + esc(o.why) + (hol ? ' · feriado: ' + esc(hol.label) : '') + '</p>' : '') +
+      (d.fromDay || ex ? '<input type="hidden" data-s="date" value="' + d.date + '">' : '<label>Data<input type="date" data-s="date" value=""></label>') +
+      '<label>Etiqueta<input data-s="label" value="' + esc(ex ? ex.label : (hol ? hol.label : '')) + '"></label>' +
+      '<div class="radios" role="radiogroup" aria-label="Tipo de excepção">' + kinds.map(function (k) { return '<label><input type="radio" name="exckind" data-s-kind value="' + k[0] + '"' + (kind === k[0] ? ' checked' : '') + '> ' + k[1] + '</label>'; }).join('') +
+      (ex ? '<label><input type="radio" name="exckind" data-s-kind value="NONE"> Sem excepção (repor)</label>' : '') + '</div>' + SH_ERR + SH_BTN('Gravar excepção');
+  },
+  legal: function (S, key) {
+    var r = S.legal.filter(function (x) { return x.key === key; })[0], pend = r.status === 'PENDENTE';
+    return '<h2 class="sheet-title">' + (pend ? 'Confirmar regra' : 'Repor como pendente') + '</h2><p class="day-why"><b>' + esc(r.label) + '</b> <span class="muted">' + esc(r.ref) + '</span><br><span class="muted small">' + esc(r.desc) + '</span></p>' +
+      '<label>' + (pend ? 'Nota (fonte e regime), obrigatória' : 'Motivo, obrigatório') + '<textarea data-s="note" rows="3" style="width:100%;max-width:none"></textarea></label>' +
+      '<p class="hint" style="margin:-6px 0 8px">Fica registado: Carla Videira · 03/10/2026 11:20.</p>' + SH_ERR + SH_BTN(pend ? 'Confirmar' : 'Repor como pendente', true);
+  }
+};
+function openSheet(dev, type, data) {
+  var st = Mock.state(dev), S = cur(dev), box;
+  st.sheet = { type: type, data: data };
+  box = Mock.sheet(dev, SHEETS[type](S, data));
+  if (type === 'turno') turnoPrev(S, box);
+}
+var SAVE = {
+  turno: function (S, d, box, dev) {
+    var name = sv(box, 'name').trim(), s = sv(box, 'start'), e = sv(box, 'end');
+    if (!name) return sheetErr(box, 'Indique o nome do turno.');
+    if (!s || !e || tm(e) <= tm(s)) return sheetErr(box, 'O fim tem de ser depois do início.');
+    if (S.templates.some(function (t, i) { return i !== d.i && t.name.toLowerCase() === name.toLowerCase(); })) return sheetErr(box, 'Já existe um turno com esse nome.');
+    if (d.i >= 0) { var t = S.templates[d.i]; t.name = name; t.start = s; t.end = e; t.active = $('[data-s="active"]', box).checked; } else S.templates.push({ id: 't' + S.nid++, name: name, start: s, end: e, active: true });
+    Mock.toast(dev, 'Turno ' + name + ' gravado (' + planned({ start: s, end: e }) + ' planeadas)');
+  },
+  pad: function (S, d, box, dev) {
+    var p = S.people[d.i], c = tr(p, TODAY), since = d.novo ? sv(box, 'since') : (c ? c.since : START);
+    if (!since) return sheetErr(box, 'Indique a data de início do tramo.');
+    var rot = sv(box, 'rot') === '1', t = { since: since, fixed: sv(box, 'fixed') ? +sv(box, 'fixed') : null, rotates: rot, offset: rot ? +sv(box, 'off') : 0, shift: sv(box, 'shift') };
+    upsertTramo(p, t); delete S.pdraft[p.name];
+    Mock.toast(dev, (d.novo ? 'Novo tramo de ' : 'Padrão de ') + p.name + ' gravado, desde ' + fmt(since));
+  },
+  season: function (S, id, box, dev) {
+    var name = sv(box, 'name').trim(), from = sv(box, 'from'), to = sv(box, 'to');
+    if (!name || !from || !to) return sheetErr(box, 'Indique o nome e as duas datas.');
+    if (to < from) return sheetErr(box, 'O fim não pode ser anterior ao início.');
+    var clash = S.seasons.filter(function (s) { return s.id !== id && from <= s.to && to >= s.from; })[0];
+    if (clash) return sheetErr(box, 'Sobrepõe a época ' + clash.name + ' (' + fmtS(clash.from) + '–' + fmtS(clash.to) + ').');
+    var cl = $$('[data-s-wd]', box).filter(function (c) { return c.checked; }).map(function (c) { return +c.getAttribute('data-s-wd'); });
+    var o = { id: id || 's' + S.nid++, name: name, from: from, to: to, closed: cl, reopened: sv(box, 'reopened'), rotCont: $('[data-s="rotCont"]', box).checked };
+    if (id) S.seasons[S.seasons.map(function (s) { return s.id; }).indexOf(id)] = o; else S.seasons.push(o);
+    Mock.toast(dev, 'Época ' + name + ' gravada');
+  },
+  exc: function (S, d, box, dev) {
+    var date = sv(box, 'date'), label = sv(box, 'label').trim(), k = $('[data-s-kind]:checked', box).value;
+    if (!date) return sheetErr(box, 'Indique a data.');
+    S.exc = S.exc.filter(function (e) { return e.date !== date; });
+    if (k === 'NONE') { Mock.toast(dev, 'Excepção de ' + fmt(date) + ' removida'); return; }
+    if (!label) return sheetErr(box, 'Indique a etiqueta.');
+    S.exc.push({ date: date, label: label, kind: k });
+    Mock.toast(dev, 'Excepção de ' + fmt(date) + ' gravada');
+  },
+  legal: function (S, key, box, dev) {
+    var note = sv(box, 'note').trim(), r = S.legal.filter(function (x) { return x.key === key; })[0];
+    if (!note) return sheetErr(box, 'A nota é obrigatória.');
+    if (r.status === 'PENDENTE') { r.status = 'CONFIRMADA'; r.note = note; r.who = 'Carla Videira'; r.when = '03/10/2026 11:20'; } else { r.status = 'PENDENTE'; r.note = note; r.who = ''; r.when = ''; }
+    Mock.toast(dev, r.status === 'CONFIRMADA' ? 'Regra confirmada' : 'Regra reposta como pendente');
+  }
+};
+
+/* ───────── Acções ───────── */
+var ACT = {
+  'sheet-save': function (t, S, st, dev) {
+    var box = $('.sheet__box', dev), h = SAVE[st.sheet.type];
+    if (h(S, st.sheet.data, box, dev) !== undefined) return;
+    Mock.closeSheet(dev); paint(dev);
+  },
+  goto: function (t, S, st, dev) { var n = $('[data-sec="' + t.getAttribute('data-sec-go') + '"]', dev); if (!n) return; n.scrollIntoView({ behavior: 'smooth', block: 'start' }); n.classList.add('flash'); setTimeout(function () { n.classList.remove('flash'); }, 1300); },
+  suggest: function (t, S, st, dev) { var n = addSuggested(S); Mock.toast(dev, n ? pl(n, 'turno-tipo criado', 'turnos-tipo criados') + ': Dia, Dia curto, Meio-dia' : 'Os sugeridos já existem'); paint(dev); },
+  newturno: function (t, S, st, dev) { openSheet(dev, 'turno', { i: -1 }); },
+  editturno: function (t, S, st, dev) { openSheet(dev, 'turno', { i: +t.getAttribute('data-i') }); },
+  toggleturno: function (t, S, st, dev) { var x = S.templates[+t.getAttribute('data-i')]; x.active = !x.active; Mock.toast(dev, 'Turno ' + x.name + (x.active ? ' activado' : ' desactivado')); paint(dev); },
+  mv: function (t, S, st, dev) { var i = +t.getAttribute('data-i'), j = i + (+t.getAttribute('data-d')), a = S.templates; if (j < 0 || j >= a.length) return; var x = a[i]; a[i] = a[j]; a[j] = x; paint(dev); },
+  intsave: function (t, S, st, dev) { S.int = clone(S.intF); Mock.toast(dev, 'Intervalo gravado; intervalos dos turnos recalculados'); paint(dev); },
+  rotday: function (t, S, st, dev) { var d = +t.getAttribute('data-d'), a = S.rotF.days, i = a.indexOf(d); if (i >= 0) a.splice(i, 1); else a.push(d); S.rotF.days = sorted(a); S.err.rot = ''; paint(dev); },
+  rotsave: function (t, S, st, dev) { if (!S.rotF.days.length) { S.err.rot = 'Escolha pelo menos um dia.'; paint(dev); return; } S.err.rot = ''; S.rot = clone(S.rotF); Mock.toast(dev, 'Rotação gravada'); paint(dev); },
+  dist: function (t, S, st, dev) { var n = distribute(S, S.eff); Mock.toast(dev, 'Folgas distribuídas por ' + n + ' pessoas (desfasamentos 0 a ' + (S.rot.days.length - 1) + ')'); paint(dev); },
+  quarta: function (t, S, st, dev) { var n = quartaFor(S, false); Mock.toast(dev, 'Quarta fixa aplicada a ' + n + ' linhas. Falta gravar.'); paint(dev); },
+  quartaw: function (t, S, st, dev) { var n = quartaFor(S, true); Mock.toast(dev, 'Quarta fixa gravada para ' + n + ' funcionários'); paint(dev); },
+  pgrav: function (t, S, st, dev) { var n = commitDrafts(S); Mock.toast(dev, pl(n, 'padrão gravado', 'padrões gravados')); paint(dev); },
+  pdisc: function (t, S, st, dev) { S.pdraft = {}; paint(dev); },
+  sel: function (t, S, st, dev) { S.sel[t.getAttribute('data-name')] = t.checked; S.msg = ''; paint(dev); },
+  selall: function (t, S, st, dev) { S.people.forEach(function (p) { S.sel[p.name] = t.checked; }); S.msg = ''; paint(dev); },
+  selclear: function (t, S, st, dev) { S.sel = {}; paint(dev); },
+  bulk: function (t, S, st, dev) {
+    var w = t.getAttribute('data-w'), n = 0;
+    S.people.forEach(function (p) {
+      if (!S.sel[p.name]) return;
+      var d = clone(S.pdraft[p.name] || tr(p, TODAY) || baseTramo());
+      if (w === 'fixed3') d.fixed = 3; else if (w === 'rot1') d.rotates = true; else { d.rotates = false; d.offset = 0; }
+      S.pdraft[p.name] = d; n++;
+    });
+    Mock.toast(dev, 'Aplicado a ' + n + ' selecionados. Falta gravar.'); paint(dev);
+  },
+  newtramo: function (t, S, st, dev) { openSheet(dev, 'pad', { i: +t.getAttribute('data-i'), novo: true }); },
+  editp: function (t, S, st, dev) { openSheet(dev, 'pad', { i: +t.getAttribute('data-i'), novo: false }); },
+  closeday: function (t, S, st, dev) { var d = +t.getAttribute('data-d'), i = S.closed.indexOf(d); if (i >= 0) S.closed.splice(i, 1); else S.closed.push(d); S.closed = sorted(S.closed); Mock.toast(dev, 'Dias fechados gravados: ' + (S.closed.length ? S.closed.map(function (x) { return WD[x - 1]; }).join(', ') : 'nenhum')); paint(dev); },
+  agosto: function (t, S, st, dev) { S.seasons.push({ id: 's' + S.nid++, name: 'Agosto', from: '2026-08-01', to: '2026-08-31', closed: [], reopened: 'FOLGA_TRABALHADA', rotCont: true }); Mock.toast(dev, 'Época Agosto criada: quarta aberta como F. trab.'); paint(dev); },
+  newseason: function (t, S, st, dev) { openSheet(dev, 'season', null); },
+  editseason: function (t, S, st, dev) { openSheet(dev, 'season', t.getAttribute('data-id')); },
+  delseason: function (t, S, st, dev) { var id = t.getAttribute('data-id'); S.seasons = S.seasons.filter(function (s) { return s.id !== id; }); Mock.toast(dev, 'Época apagada'); paint(dev); },
+  newexc: function (t, S, st, dev) { openSheet(dev, 'exc', { date: '', fromDay: false }); },
+  editexc: function (t, S, st, dev) { openSheet(dev, 'exc', { date: t.getAttribute('data-date'), fromDay: true }); },
+  delexc: function (t, S, st, dev) { var d = t.getAttribute('data-date'); S.exc = S.exc.filter(function (e) { return e.date !== d; }); Mock.toast(dev, 'Excepção removida'); paint(dev); },
+  closehol: function (t, S, st, dev) { var d = t.getAttribute('data-date'), h = holOn(d); S.exc.push({ date: d, label: h.label, kind: 'FECHADO' }); Mock.toast(dev, 'Restaurante fechado em ' + fmt(d)); paint(dev); },
+  resetexc: function (t, S, st, dev) { var d = t.getAttribute('data-date'); S.exc = S.exc.filter(function (e) { return e.date !== d; }); Mock.toast(dev, 'Reposto o comportamento por omissão'); paint(dev); },
+  holtoggle: function (t, S, st, dev) { S.hol = !S.hol; paint(dev); },
+  year: function (t, S, st, dev) { S.year += +t.getAttribute('data-d'); paint(dev); },
+  day: function (t, S, st, dev) { openSheet(dev, 'exc', { date: t.getAttribute('data-date'), fromDay: true }); },
+  legal: function (t, S, st, dev) { openSheet(dev, 'legal', t.getAttribute('data-key')); },
+  tab: function (t, S, st, dev) {
+    var n = t.getAttribute('data-n'); if (n === st.tab) return;
+    var had = Object.keys(S.sel).some(function (k) { return S.sel[k]; });
+    st.tab = n; S.sel = {}; S.msg = had ? 'Seleção limpa ao mudar de separador.' : ''; paint(dev);
+  },
+  step: function (t, S, st, dev) { st.step = +t.getAttribute('data-n'); paint(dev); },
+  next: function (t, S, st, dev) { st.step = Math.min(6, st.step + 1); paint(dev); },
+  prev: function (t, S, st, dev) { st.step = Math.max(1, st.step - 1); paint(dev); },
+  skip5: function (t, S, st, dev) { S.skip5 = true; st.step = 6; paint(dev); },
+  adj: function (t, S, st, dev) { var n = t.getAttribute('data-n'); S.adj[n] = !S.adj[n]; paint(dev); },
+  mode: function (t, S, st, dev) { st.mode = t.getAttribute('data-m'); st.tab = st.tab || 'turnos'; paint(dev); },
+  gen: function (t, S, st, dev) { st.done = true; st.mode = 'm'; st.tab = 'turnos'; Mock.toast(dev, 'Semana 41 gerada como rascunho · abre /escala/2026/41'); paint(dev); }
+};
+Mock.on('click', '[data-act]', function (e, t, dev) { var h = ACT[t.getAttribute('data-act')]; if (h) h(t, cur(dev), Mock.state(dev), dev, e); });
+Mock.on('change', '[data-p]', function (e, t, dev) {
+  var S = cur(dev), p = S.people[+t.getAttribute('data-i')], d = clone(S.pdraft[p.name] || tr(p, TODAY) || baseTramo()), f = t.getAttribute('data-p'), v = t.value;
+  if (f === 'fixed') d.fixed = v ? +v : null; else if (f === 'rotates') { d.rotates = v !== '0'; if (!d.rotates) d.offset = 0; } else if (f === 'offset') d.offset = v === '' ? 0 : +v; else d.shift = v;
+  S.pdraft[p.name] = d; paint(dev);
+});
+Mock.on('change', '[data-f]', function (e, t, dev) {
+  var S = cur(dev), f = t.getAttribute('data-f'), v = t.value;
+  if (f === 'eff') { if (v) S.eff = v; return; }
+  if (f === 'anchor') { if (v) S.rotF.anchor = v; } else if (f === 'brk') S.intF.brk = Math.max(0, +v || 0); else S.intF[f] = v || S.int[f];
+  paint(dev);
+});
+Mock.on('change', '[data-sim]', function (e, t, dev) { cur(dev).perms[t.getAttribute('data-sim')] = t.checked; var st = Mock.state(dev); if (st.demo) st.demo.perms = st.S.perms; paint(dev); });
+Mock.on('input', '[data-filter]', function (e, t, dev) {
+  var S = cur(dev); S.q = t.value; var q = norm(t.value);
+  $$('tr[data-name]', dev).forEach(function (r) { r.hidden = !!q && r.getAttribute('data-name').indexOf(q) < 0; });
+});
+Mock.on('input', '.sheet__box [data-s]', function (e, t, dev) {
+  var st = Mock.state(dev), box = t.closest('.sheet__box'), S = cur(dev);
+  if (st.sheet.type === 'turno') turnoPrev(S, box);
+  if (st.sheet.type === 'legal') $('[data-act="sheet-save"]', box).disabled = !sv(box, 'note').trim();
+});
+Mock.on('keydown', '[role="tab"][data-act="tab"]', function (e, t) {
+  var k = { ArrowRight: 1, ArrowLeft: -1 }[e.key]; if (!k) return;
+  var tabs = $$('[role="tab"]', t.parentNode), i = tabs.indexOf(t), n = tabs[(i + k + tabs.length) % tabs.length];
+  e.preventDefault(); n.click();
+  var again = $$('[role="tab"][aria-selected="true"]', n.closest('.device'))[0]; if (again) again.focus();
+});
+
+window.mockInit = function (dev, variant, kind) {
+  var st = Mock.state(dev);
+  st.v = variant; st.kind = kind; st.S = seed(variant, false); st.S.hol = kind === 'desktop';
+  st.mode = 'a'; st.step = 1; st.tab = variant === 'c' ? 'arranque' : 'turnos'; st.done = false;
+  paint(dev);
+};
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 8 — Impressões A4 da escala e do mapa de férias</title>
+<style>
+/* === MOLDURA COMUM (copiar) === */
+/* Tokens copiados de src/app/globals.css:2-33 (tema «Menta») */
+:root {
+  --bg: #f3f6f3;
+  --card: #fff;
+  --border: rgba(0, 0, 0, 0.15);
+  --txt: #1f2a24;
+  --mut: #66736b;
+  --hint: #9aa49e;
+  --sidebar: #2f3a33;
+  --sidebar-tx: #dfeee5;
+  --brand: #7fc9a2;
+  --primary: #2e9e68;
+  --primary-hover: #267f54;
+  --ok-bg: #e2f2e9;
+  --ok-tx: #1f6b44;
+  --ok-bd: #7fc9a2;
+  --row-hover: rgba(127, 201, 162, 0.12);
+  --er-bg: #fcebeb;
+  --er-tx: #a32d2d;
+  --er-bd: #f09595;
+  --warn-bg: #faeeda;
+  --warn-tx: #854f0b;
+  --warn-bd: #e8c44e;
+  --info-tx: #1d4ed8;
+  --info-bg: #e6eefc;
+  --info-bd: #9db7f0;
+  --on-primary: #fff;
+}
+* { box-sizing: border-box; padding: 0; margin: 0; }
+[hidden] { display: none !important; }
+html, body {
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--txt);
+  -webkit-font-smoothing: antialiased;
+}
+body { min-height: 100vh; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+/* ── Barra do mockup (não faz parte do ecrã) ── */
+.mock-bar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+  padding: 8px 16px; background: var(--sidebar); color: var(--sidebar-tx); font-size: 13px;
+}
+.mock-back { padding: 4px 10px; border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 6px; white-space: nowrap; }
+.mock-back:hover { background: rgba(255, 255, 255, 0.12); }
+.mock-title { font-weight: 600; flex: 1 1 200px; min-width: 0; }
+.mock-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+.mock-bar button {
+  font-size: 13px; min-height: 30px; padding: 3px 12px; cursor: pointer; font-family: inherit;
+  background: transparent; color: var(--sidebar-tx); border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 6px;
+}
+.mock-bar button:hover { background: rgba(255, 255, 255, 0.12); }
+.mock-bar [role='tab'][aria-selected='true'],
+.mock-bar [aria-pressed='true'] { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+.mock-view { display: inline-flex; }
+.mock-view button { border-radius: 0; margin-left: -1px; }
+.mock-view button:first-child { border-radius: 6px 0 0 6px; margin-left: 0; }
+.mock-view button:last-child { border-radius: 0 6px 6px 0; }
+
+/* ── Palco: dois dispositivos lado a lado, a quebrar para baixo ── */
+.mock-main { padding: 16px 16px 56px; }
+.variant-notes {
+  max-width: 1180px; margin: 0 auto 16px; padding: 10px 14px; font-size: 14px; line-height: 1.5;
+  background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--primary); border-radius: 8px;
+}
+.variant-notes b { font-weight: 600; }
+.variant-notes .note-extra { margin-top: 4px; font-size: 12px; color: var(--mut); }
+.stage { display: flex; flex-wrap: wrap; gap: 28px 24px; align-items: flex-start; justify-content: center; }
+.stage-item { min-width: 0; max-width: 100%; }
+.stage-cap { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; color: var(--mut); }
+.stage-reset {
+  font-size: 12px; min-height: 0; padding: 2px 10px; cursor: pointer; font-family: inherit;
+  background: var(--card); color: var(--mut); border: 1px solid var(--border); border-radius: 6px;
+}
+.stage-reset:hover { color: var(--txt); }
+.device-scroll { overflow-x: auto; max-width: 100%; padding: 2px; }
+.device-scroll--phone { padding: 8px; }
+body[data-view='desktop'] .stage-item--phone,
+body[data-view='phone'] .stage-item--desktop { display: none; }
+
+/* ── Dispositivos: largura fixa, contentor para as container queries ── */
+.device {
+  container-type: inline-size; container-name: app; position: relative;
+  background: var(--bg); overflow: hidden;
+}
+.device--desktop { width: 1180px; border-radius: 10px; box-shadow: 0 0 0 1px var(--border), 0 4px 18px rgba(0, 0, 0, 0.08); }
+.device--phone { width: 375px; border-radius: 22px; box-shadow: 0 0 0 1px var(--border), 0 0 0 6px #dde5df, 0 6px 22px rgba(0, 0, 0, 0.15); }
+
+/* ── Mini-app: barra lateral + conteúdo (réplica de .shell/.sidebar/.content) ── */
+.app { display: flex; position: relative; min-height: 560px; font-size: 14px; background: var(--bg); color: var(--txt); }
+.app-side {
+  width: 220px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; padding: 20px 12px;
+  background: var(--sidebar); color: var(--sidebar-tx);
+}
+.app-logo {
+  background: #fff; border-radius: 8px; padding: 8px 10px; margin-bottom: 4px; text-align: center;
+  font-weight: 700; font-size: 18px; letter-spacing: 0.04em; color: var(--primary);
+}
+.app-side nav { display: flex; flex-direction: column; gap: 4px; }
+.sidebar-link {
+  display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; font-size: 14px;
+  color: var(--sidebar-tx); opacity: 0.85; flex-shrink: 0;
+}
+.sidebar-link:hover { opacity: 1; background: rgba(255, 255, 255, 0.1); }
+.sidebar-link--active { background: rgba(127, 201, 162, 0.22); color: #bfe8d2; opacity: 1; }
+.sidebar-section { font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.5; padding: 0 10px; margin: 12px 0 2px; }
+.sidebar-section:first-child { margin-top: 4px; }
+.app-user { margin-top: auto; padding-top: 16px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.app-user__name { padding: 0 10px; opacity: 0.8; }
+.app-side .app-user button {
+  width: 100%; text-align: left; background: transparent; border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--sidebar-tx); border-radius: 8px; padding: 8px 10px; font-size: 13px; cursor: pointer; min-height: 0;
+}
+.app-side .app-user button:hover { background: rgba(255, 255, 255, 0.1); }
+.app-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.app-top { display: none; }
+.app-scrim { display: none; }
+.app-content { flex: 1; min-width: 0; padding: 24px; position: relative; }
+.app-toast {
+  position: absolute; z-index: 60; transform: translateX(-50%); width: max-content; max-width: calc(100% - 24px);
+  padding: 8px 14px; border-radius: 8px; background: var(--sidebar); color: var(--sidebar-tx); font-size: 13px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25); pointer-events: none;
+}
+.sheet { position: absolute; inset: 0; z-index: 50; background: rgba(0, 0, 0, 0.35); }
+.sheet__box {
+  position: absolute; width: min(520px, calc(100% - 24px)); max-height: 80%; overflow: auto;
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+}
+.new-tag {
+  display: inline-block; vertical-align: middle; margin-left: 6px; padding: 0 6px; border-radius: 4px; font-size: 11px;
+  font-weight: 600; text-transform: none; letter-spacing: 0; background: var(--info-bg); border: 1px solid var(--info-bd); color: var(--info-tx);
+}
+
+/* ── Base de formulários e botões (globals.css) ── */
+.device input, .device select, .device textarea, .device button {
+  font-size: 16px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 8px;
+  background: #fff; min-height: 36px; font-family: inherit; color: var(--txt);
+}
+.device input[type='checkbox'], .device input[type='radio'] { min-height: 0; width: 18px; height: 18px; accent-color: var(--primary); }
+.device label { font-size: 12px; color: var(--mut); display: block; margin-bottom: 12px; }
+.device label > input, .device label > select, .device label > textarea { display: block; width: 100%; max-width: 420px; margin-top: 4px; }
+.device button.primary {
+  background: var(--primary); color: #fff; border: none; font-weight: 600; cursor: pointer; padding: 10px 22px; border-radius: 8px;
+}
+.device button.primary:hover { background: var(--primary-hover); }
+.device button.primary:disabled { background: var(--hint); cursor: not-allowed; }
+.device button.secondary { cursor: pointer; background: #fff; }
+.device .btn-row {
+  display: inline-block; font-size: 13px; font-weight: 500; padding: 4px 12px; min-height: 0;
+  border: 1px solid var(--primary); border-radius: 6px; background: #f2faf6; color: var(--primary-hover);
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+}
+.device .btn-row:hover { background: #e3f4ea; }
+.device .btn-row[aria-pressed='true'], .device .btn-row[aria-current='page'] { background: var(--primary); color: #fff; }
+.device .btn-row.btn-row-strong { background: var(--primary); color: #fff; font-weight: 600; }
+.device .btn-row.btn-row-strong:hover { background: var(--primary-hover); }
+.device .btn-row.btn-row-quiet { font-size: 12px; font-weight: 400; border-color: var(--border); background: var(--bg); color: var(--mut); }
+.device .btn-row.btn-row-quiet:hover { background: var(--card); color: var(--txt); }
+.device .btn-row.danger { border-color: #c0392b; color: #c0392b; background: #fdf3f2; }
+.device .btn-row:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Cartões, badges, avisos (globals.css) ── */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.badge-ok, .badge-warn, .badge-err, .badge-info, .badge-mut {
+  font-size: 12px; padding: 2px 8px; border-radius: 4px; white-space: nowrap; border: 1px solid; display: inline-block;
+}
+.badge-ok { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.badge-warn { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); }
+.badge-err { background: var(--er-bg); border-color: var(--er-bd); color: var(--er-tx); }
+.badge-info { background: var(--info-bg); border-color: var(--info-bd); color: var(--info-tx); }
+.badge-mut { background: var(--bg); border-color: var(--border); color: var(--mut); }
+.alert-ok, .alert-warn, .alert-err, .alert-info { border-radius: 8px; padding: 8px 12px; font-size: 14px; border: 1px solid; }
+.alert-ok { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.alert-warn { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); }
+.alert-err { background: var(--er-bg); border-color: var(--er-bd); color: var(--er-tx); }
+.alert-info { background: var(--info-bg); border-color: var(--info-bd); color: var(--info-tx); }
+.toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 12px 0 16px; }
+.toolbar-actions { margin-left: auto; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.muted { color: var(--mut); }
+.small { font-size: 12px; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Separadores de trabalho e filtro segmentado (precedente 2026-09-25) */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin: 4px 0 12px; flex-wrap: wrap; }
+.tabs [role='tab'] {
+  border: 1px solid transparent; border-bottom: none; border-radius: 8px 8px 0 0; background: none; min-height: 0;
+  font-size: 15px; padding: 8px 14px; cursor: pointer; color: var(--mut); margin-bottom: -1px;
+}
+.tabs [role='tab'][aria-selected='true'] { background: var(--card); border-color: var(--border); color: var(--txt); font-weight: 600; }
+.tab-count { display: inline-block; min-width: 20px; padding: 0 6px; border-radius: 10px; background: var(--er-bg); color: var(--er-tx); font-size: 12px; font-weight: 600; text-align: center; }
+.seg { display: inline-flex; border: 1px solid var(--primary); border-radius: 6px; overflow: hidden; }
+.device .seg button { border: none; border-radius: 0; min-height: 0; font-size: 13px; padding: 4px 12px; background: #f2faf6; color: var(--primary-hover); cursor: pointer; }
+.device .seg button[aria-pressed='true'] { background: var(--primary); color: #fff; font-weight: 600; }
+
+/* ── Tabelas (globals.css:492-): base desktop ── */
+.device table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 14px; }
+.device th { text-align: left; font-size: 12px; color: var(--mut); border-bottom: 1px solid var(--border); padding: 6px 8px; }
+.device td { padding: 8px; border-bottom: 1px solid var(--border); }
+.table-scroll-wrap { overflow-x: auto; }
+
+/* ── ≤768px: réplica do bloco @media (max-width: 768px) de globals.css, por container query ── */
+@container app (max-width: 768px) {
+  .app-side {
+    position: absolute; top: 0; left: 0; bottom: 0; z-index: 30; width: 240px;
+    transform: translateX(-100%); visibility: hidden;
+    transition: transform 0.22s ease, visibility 0s linear 0.22s; box-shadow: 4px 0 16px rgba(0, 0, 0, 0.25);
+  }
+  .app[data-menu-open] .app-side { transform: none; visibility: visible; transition: transform 0.22s ease; }
+  .app[data-menu-open] .app-scrim { display: block; position: absolute; inset: 0; z-index: 20; background: rgba(0, 0, 0, 0.4); }
+  .app-top {
+    display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+  .app-top .app-burger { padding: 6px 10px; line-height: 1; cursor: pointer; }
+  .app-top__title { font-weight: 600; font-size: 15px; }
+  .app-content { padding: 16px; }
+  h1 { font-size: 20px; }
+  .card { padding: 12px; }
+  .tabs [role='tab'] { flex: 1; padding: 8px 6px; font-size: 14px; }
+  .toolbar-actions { margin-left: 0; }
+  .sheet__box { padding: 12px; }
+
+  /* Grelha por omissão: a tabela é o próprio contentor de scroll */
+  table:not(.table--cards):not(.table--scroll) { display: block; overflow-x: auto; width: 100%; margin-top: 12px; font-size: 13px; }
+  table:not(.table--cards):not(.table--scroll) th,
+  table:not(.table--cards):not(.table--scroll) td { white-space: nowrap; padding: 4px 8px; font-variant-numeric: tabular-nums; }
+  /* .table--fill: 2–3 colunas, 100% da largura, o nome quebra */
+  table.table--fill:not(.table--cards):not(.table--scroll) { display: table; width: 100%; table-layout: auto; overflow-x: visible; }
+  table.table--fill:not(.table--cards):not(.table--scroll) th,
+  table.table--fill:not(.table--cards):not(.table--scroll) td { white-space: normal; overflow-wrap: anywhere; }
+  /* .table--cards: linhas viram cards; exige data-label em cada td (excepto acções) */
+  table.table--cards thead { display: none; }
+  table.table--cards, table.table--cards tbody, table.table--cards tfoot, table.table--cards tr, table.table--cards td { display: block; width: 100%; }
+  table.table--cards tr { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; padding: 8px 12px; }
+  table.table--cards td { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 4px 0; border-bottom: none; }
+  table.table--cards td[data-label]::before {
+    content: attr(data-label); font-size: 11px; font-weight: 600; color: var(--mut); text-transform: uppercase; letter-spacing: 0.04em; flex-shrink: 0;
+  }
+  table.table--cards td:not([data-label]) { justify-content: flex-end; border-top: 1px solid var(--border); margin-top: 4px; padding-top: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* Página estreita: o dispositivo mantém 375 px, com deslocação na moldura. */
+@media (max-width: 420px) {
+  .mock-main { padding: 12px 0 40px; }
+  .variant-notes { margin-left: 12px; margin-right: 12px; }
+  .stage-cap { padding: 0 12px; }
+  .device-scroll--phone { padding: 0; }
+  .device--phone { border-radius: 0; box-shadow: 0 0 0 1px var(--border); }
+}
+@media (max-width: 700px) {
+  .mock-bar { position: static; padding: 8px 12px; }
+  .mock-back { order: 1; }
+  .mock-view { order: 2; margin-left: auto; }
+  .mock-title { order: 3; flex-basis: 100%; }
+  .mock-tabs { order: 4; flex: 1 1 100%; flex-wrap: nowrap; }
+  .mock-tabs button { flex: 1 1 0; min-width: 0; padding: 4px 4px; font-size: 12px; line-height: 1.25; }
+}
+/* === FIM MOLDURA === */
+
+/* === ESPECÍFICO DESTE MOCKUP === */
+/* Folhas A4: todas as medidas da folha são múltiplos de --u (1 «mm» do ecrã). Em ecrã, --u encolhe para a folha
+   caber na largura do contentor; em «Tamanho real» e na impressão vale 1mm. */
+@page land { size: A4 landscape; margin: 0; }
+@page port { size: A4 portrait; margin: 0; }
+
+.print-page { display: flex; flex-direction: column; gap: 32px; min-width: 0; }
+.print-screen { min-width: 0; }
+.route-tag {
+  display: inline-block; max-width: 100%; margin-bottom: 8px; padding: 2px 8px; font: 12px/1.4 ui-monospace, Consolas, monospace;
+  color: var(--mut); background: var(--card); border: 1px dashed var(--border); border-radius: 6px; overflow-wrap: anywhere;
+}
+.doc-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-bottom: 10px; }
+.doc-bar .grp { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.doc-bar .grp-label { font-size: 12px; color: var(--mut); }
+.doc-hint { flex: 1 1 200px; min-width: 0; font-size: 12px; color: var(--mut); }
+
+.paper-area {
+  container-type: inline-size; display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 14px;
+  background: #d5ddd8; border: 1px solid var(--border); border-radius: 10px; overflow: auto;
+}
+.paper-area[data-zoom='real'] { align-items: flex-start; }
+@container app (max-width: 768px) { .paper-area { padding: 8px; } }
+
+.paper {
+  --u: calc(min(297mm, 100cqw) / 297); --pt: calc(var(--u) * 0.3528);
+  flex: none; display: flex; flex-direction: column; position: relative; overflow: hidden; page: land;
+  width: calc(var(--u) * 297); height: calc(var(--u) * 210); padding: calc(var(--u) * 10);
+  background: #fff; color: #111; font-size: calc(var(--pt) * 9); line-height: 1.25;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+.paper--port { --u: calc(min(210mm, 100cqw) / 210); width: calc(var(--u) * 210); height: calc(var(--u) * 297); padding: calc(var(--u) * 12); page: port; }
+.paper-area[data-zoom='real'] .paper { --u: 1mm; }
+.paper.is-off { display: none; }
+
+/* cabeçalho, rodapé e notas da folha (imitam TipDocumentView) */
+.p-head { display: flex; justify-content: space-between; align-items: center; gap: calc(var(--u) * 4); flex: none; }
+.p-logo {
+  width: calc(var(--u) * 11); height: calc(var(--u) * 11); display: grid; place-items: center; flex: none;
+  border: calc(var(--u) * 0.6) solid var(--primary); border-radius: calc(var(--u) * 2); color: var(--primary);
+  font-weight: 800; font-size: calc(var(--pt) * 10); letter-spacing: 0.05em;
+}
+.p-co { text-align: right; line-height: 1.3; font-size: calc(var(--pt) * 9); }
+.p-co b { display: block; font-size: calc(var(--pt) * 10); }
+h1.p-title { font-size: calc(var(--pt) * 20); font-weight: 700; line-height: 1.1; margin: calc(var(--u) * 3) 0 calc(var(--u) * 1); }
+.p-meta { font-size: calc(var(--pt) * 9); color: #333; }
+.p-meta--c { margin-top: calc(var(--u) * 2); }
+h2.p-sub { font-size: calc(var(--pt) * 11); font-weight: 700; margin: calc(var(--u) * 3) 0 calc(var(--u) * 2); }
+.p-body { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; margin-top: calc(var(--u) * 3); }
+.p-foot {
+  margin-top: auto; flex: none; display: flex; justify-content: space-between; gap: calc(var(--u) * 4); padding-top: calc(var(--u) * 1.5);
+  border-top: calc(var(--u) * 0.25) solid #999; font-size: calc(var(--pt) * 7); color: #444;
+}
+.p-note { margin-top: calc(var(--u) * 2); font-size: calc(var(--pt) * 7.5); color: #333; line-height: 1.35; }
+
+/* tabelas dentro da folha: são impressão, sem data-label; especificidade acima da grelha mobile */
+.device .paper table.pt {
+  display: table; width: 100%; margin: 0; table-layout: fixed; border-collapse: collapse; font-size: calc(var(--pt) * 7); overflow: visible;
+}
+.device .paper table.pt th, .device .paper table.pt td {
+  padding: 0 calc(var(--u) * 0.5); border: calc(var(--u) * 0.2) solid #7d8781; text-align: center; vertical-align: middle;
+  color: #111; background: #fff; font-weight: 400; white-space: normal; line-height: 1.15; overflow: hidden; font-variant-numeric: tabular-nums;
+}
+.device .paper table.pt thead th { background: #e7ece9; font-weight: 600; font-size: calc(var(--pt) * 6.5); }
+.device .paper table.pt thead th.we { background: #d3dbd6; }
+.device .paper table.pt th.nm, .device .paper table.pt td.nm {
+  text-align: left; padding-left: calc(var(--u) * 1.2); font-weight: 600; font-size: calc(var(--pt) * 8); white-space: nowrap;
+}
+.device .paper table.pt td.k-f { background: #e4e4e4; }
+.device .paper table.pt td.k-v { background: repeating-linear-gradient(135deg, #fff 0 calc(var(--u) * 0.9), #cfdad3 calc(var(--u) * 0.9) calc(var(--u) * 1.3)); }
+.device .paper table.pt td.k-i { background: #f1e8cf; font-style: italic; }
+.device .paper table.pt td.k-x, .device .paper table.pt thead th.k-x { background: #8f9994; color: #fff; }
+.device .paper table.pt td.out { opacity: 0.5; }
+.paper .sw { display: inline-block; width: calc(var(--u) * 4); height: calc(var(--u) * 2.6); vertical-align: middle; margin-right: calc(var(--u) * 1); border: calc(var(--u) * 0.2) solid #7d8781; }
+.paper .sw.k-f { background: #e4e4e4; }
+.paper .sw.k-v { background: repeating-linear-gradient(135deg, #fff 0 calc(var(--u) * 0.6), #cfdad3 calc(var(--u) * 0.6) calc(var(--u) * 0.9)); }
+.paper .sw.k-i { background: #f1e8cf; }
+.paper .sw.k-x { background: #8f9994; }
+
+/* A · escala mensal */
+.device .paper table.pt--a tbody td { height: calc(var(--u) * 9.6); font-size: calc(var(--pt) * 6); line-height: 1.1; }
+.device .paper table.pt--a thead tr:first-child th, .device .paper table.pt--a thead tr:last-child th { height: calc(var(--u) * 4.2); }
+.lg { display: flex; gap: calc(var(--u) * 3); margin-top: calc(var(--u) * 3); align-items: stretch; }
+.lg-box { flex: 1 1 0; border: calc(var(--u) * 0.2) solid #9aa49e; border-radius: calc(var(--u) * 1.2); padding: calc(var(--u) * 1.5) calc(var(--u) * 2); font-size: calc(var(--pt) * 7.5); line-height: 1.4; }
+.lg-box b { display: block; font-size: calc(var(--pt) * 8.5); }
+.lg-box--codes { flex: 1.3 1 0; }
+.lg-box .code { font-weight: 600; }
+
+/* A · mapa de férias (linha do tempo anual) */
+.device .paper table.pt--tl tbody td { height: calc(var(--u) * 9.2); padding: 0; }
+.device .paper table.pt--tl th.tot, .device .paper table.pt--tl td.tot { font-weight: 700; font-size: calc(var(--pt) * 8); }
+.tl-m { display: flex; }
+.tl-m span { text-align: center; border-left: calc(var(--u) * 0.2) solid #7d8781; }
+.tl-m span:first-child { border-left: none; }
+.tl-in { position: relative; display: flex; height: calc(var(--u) * 9.2); }
+.tl-in i { display: block; border-left: calc(var(--u) * 0.2) solid #b4bcb7; }
+.tl-in i:first-child { border-left: none; }
+.bar {
+  position: absolute; top: calc(var(--u) * 1.8); bottom: calc(var(--u) * 1.8); display: grid; place-items: center;
+  background: var(--primary-hover); color: #fff; border-radius: calc(var(--u) * 0.8); font-size: calc(var(--pt) * 6.5); font-weight: 700;
+}
+
+/* B · semana a semana */
+.device .paper table.pt--b tbody td { height: calc(var(--u) * 16); }
+.device .paper table.pt--b td b { display: block; font-size: calc(var(--pt) * 7.5); font-weight: 600; }
+.device .paper table.pt--b td small { display: block; font-size: calc(var(--pt) * 6); color: #333; }
+.device .paper table.pt--b td.k-x small { color: #fff; }
+
+/* B · mapa de férias em tabela de períodos */
+.device .paper table.pt--per tbody td { height: calc(var(--u) * 7.4); font-size: calc(var(--pt) * 8.5); }
+.device .paper table.pt--per td.tot { font-weight: 700; }
+
+/* C · por pessoa */
+.pp-wrap { display: flex; flex-direction: column; gap: calc(var(--u) * 4); }
+.pp { border: calc(var(--u) * 0.25) solid #7d8781; border-radius: calc(var(--u) * 1.2); padding: calc(var(--u) * 1.5) calc(var(--u) * 3) calc(var(--u) * 2); }
+.pp h3 { font-size: calc(var(--pt) * 10); margin-bottom: calc(var(--u) * 1.2); }
+.pp-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 calc(var(--u) * 5); }
+.pp ul { list-style: none; }
+.pp li {
+  display: grid; grid-template-columns: calc(var(--u) * 17) 1fr; align-items: center; height: calc(var(--u) * 4);
+  border-bottom: calc(var(--u) * 0.15) solid #c3cac6; font-size: calc(var(--pt) * 7.5); white-space: nowrap;
+}
+.pp li .d { font-weight: 600; font-variant-numeric: tabular-nums; }
+.pp li.we { background: #f1f4f2; }
+.pp li.k-f { background: #e4e4e4; font-weight: 600; }
+.pp li.k-v { background: repeating-linear-gradient(135deg, #fff 0 calc(var(--u) * 0.9), #cfdad3 calc(var(--u) * 0.9) calc(var(--u) * 1.3)); }
+.pp li.k-i { background: #f1e8cf; font-style: italic; }
+.pp li.k-x { background: #8f9994; color: #fff; }
+
+/* C · 12 mini-calendários */
+.mc-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: calc(var(--u) * 3); align-content: start; }
+.mc h3 { font-size: calc(var(--pt) * 8.5); margin-bottom: calc(var(--u) * 0.8); }
+.device .paper table.pt--cal thead th { height: calc(var(--u) * 3.4); }
+.device .paper table.pt--cal tbody td { height: calc(var(--u) * 5.2); vertical-align: top; text-align: left; padding: calc(var(--u) * 0.3) calc(var(--u) * 0.6); }
+.device .paper table.pt--cal td b { display: block; font-size: calc(var(--pt) * 5.6); font-weight: 600; }
+.device .paper table.pt--cal td em { display: block; font-style: normal; font-size: calc(var(--pt) * 4.8); line-height: 1.1; font-weight: 700; }
+.device .paper table.pt--cal td.we { background: #f1f4f2; }
+.device .paper table.pt--cal td.has { background: #cfe9db; }
+.device .paper table.pt--cal td.e { background: #fafafa; }
+.ini-lg { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: calc(var(--u) * 1) calc(var(--u) * 3); margin-top: calc(var(--u) * 3); font-size: calc(var(--pt) * 7.5); }
+.ini-lg b { display: inline-block; min-width: calc(var(--u) * 5.5); }
+
+/* Impressão: só as folhas, a tamanho real, uma por página */
+@media print {
+  html, body { background: #fff; }
+  .mock-bar, .variant-notes, .stage-cap, .stage-item--phone, .app-side, .app-top, .app-scrim, .app-toast, .no-print, .route-tag, .sheet { display: none !important; }
+  .mock-main { padding: 0; }
+  .stage { display: block; }
+  .stage-item--desktop { display: block !important; }
+  .device-scroll { overflow: visible; padding: 0; }
+  .device, .device--desktop { width: auto; overflow: visible; box-shadow: none; border-radius: 0; background: #fff; }
+  .app, .app-main { display: block; min-height: 0; }
+  .app-content { padding: 0; }
+  .print-page { display: block; }
+  .paper-area { container-type: normal; display: block; padding: 0; background: none; border: 0; overflow: visible; }
+  .paper, .paper--port, .paper-area[data-zoom='real'] .paper {
+    --u: 1mm !important; display: flex !important; margin: 0; box-shadow: none; break-after: page; page-break-after: always;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .paper { height: 209.5mm; }
+  .paper--port { height: 296.5mm; }
+  .print-screen:last-child .paper:last-child { break-after: auto; page-break-after: auto; }
+}
+</style>
+</head>
+<body data-view="both">
+
+<header class="mock-bar">
+  <a class="mock-back" href="2026-10-03-escalas-ferias-mockups.html">← Índice</a>
+  <span class="mock-title">8 · Impressões A4: escala do mês e mapa de férias</span>
+  <div class="mock-tabs" role="tablist" aria-label="Variantes">
+    <button type="button" role="tab" id="tab-a" data-variant="a" aria-controls="panel-a" aria-selected="false">A · Mês em grelha</button>
+    <button type="button" role="tab" id="tab-b" data-variant="b" aria-controls="panel-b" aria-selected="false">B · Semana a semana</button>
+    <button type="button" role="tab" id="tab-c" data-variant="c" aria-controls="panel-c" aria-selected="false">C · Por pessoa</button>
+  </div>
+  <div class="mock-view" role="group" aria-label="Dispositivos">
+    <button type="button" data-view="both" aria-pressed="true">Ambos</button>
+    <button type="button" data-view="desktop" aria-pressed="false">Desktop</button>
+    <button type="button" data-view="phone" aria-pressed="false">375 px</button>
+  </div>
+</header>
+
+<main class="mock-main">
+  <section role="tabpanel" id="panel-a" aria-labelledby="tab-a" data-variant="a" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> a escala de Outubro numa só folha A4 paisagem (pessoas × 31 dias, códigos curtos e legenda dos turnos-tipo); o mapa de férias é uma linha do tempo anual com barras e total de dias.</p>
+      <p><b>Vantagens:</b> o mês inteiro numa folha afixável; o mapa mostra de relance as sobreposições de férias.</p>
+      <p><b>Custo:</b> letra pequena (células de 8 mm) e dependência da legenda para ler o horário; a barra não traz as datas exatas.</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-b" aria-labelledby="tab-b" data-variant="b" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> uma folha A4 retrato por semana ISO (W40 a W44), com o horário completo e o intervalo em cada célula; o mapa de férias é uma tabela de períodos por pessoa.</p>
+      <p><b>Vantagens:</b> sem legenda: cada célula diz tudo e lê-se bem em papel; o mapa dá início, fim e dias que contam, com o total anual.</p>
+      <p><b>Custo:</b> 5 folhas para um mês, com semanas a cavalo de Setembro e Novembro; o mapa não mostra sobreposições.</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-c" aria-labelledby="tab-c" data-variant="c" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> uma secção por pessoa (3 por folha retrato) com a lista dos dias de Outubro; o mapa de férias são 12 mini-calendários com as iniciais de quem está de férias em cada dia.</p>
+      <p><b>Vantagens:</b> cada pessoa lê só o seu quadro; o calendário mostra quem está fora em cada dia.</p>
+      <p><b>Custo:</b> não se vê a equipa de um dia; 4 folhas; as iniciais pedem legenda.</p>
+    </div>
+  </section>
+</main>
+
+<!-- Conteúdo de cada variante: clonado por JS para o desktop e para os 375 px. Sem id aqui dentro.
+     O esqueleto do ecrã está aqui; as folhas (tabelas) são geradas por [data-build] a partir dos dados fictícios. -->
+<template data-variant="a" data-active="Escala" data-title="Imprimir" data-user="Carla Videira">
+  <main class="print-page">
+    <section class="print-screen" data-doc="escala">
+      <h2 class="sr-only">Escala de Outubro de 2026</h2>
+      <p class="route-tag" title="Rota (anotação do mockup)">/escala/imprimir?ano=2026&amp;mes=10</p>
+      <div class="no-print doc-bar">
+        <button type="button" class="btn-row btn-row-strong" data-act="export">Exportar PDF</button>
+        <div class="grp"><span class="grp-label">Tamanho</span>
+          <div class="seg" role="group" aria-label="Tamanho da folha no ecrã">
+            <button type="button" data-act="zoom" data-zoom="fit" aria-pressed="true">Ajustar</button>
+            <button type="button" data-act="zoom" data-zoom="real" aria-pressed="false">Real</button>
+          </div>
+        </div>
+        <div class="grp" data-pager hidden></div>
+        <p class="doc-hint">Camada publicada · máscara dos colegas aplicada a todos</p>
+      </div>
+      <div class="paper-area" data-zoom="fit" data-build="escala"></div>
+    </section>
+    <section class="print-screen" data-doc="ferias">
+      <h2 class="sr-only">Mapa de férias de 2026</h2>
+      <p class="route-tag" title="Rota (anotação do mockup)">/ferias/imprimir?ano=2026</p>
+      <div class="no-print doc-bar">
+        <button type="button" class="btn-row btn-row-strong" data-act="export">Exportar PDF</button>
+        <div class="grp"><span class="grp-label">Tamanho</span>
+          <div class="seg" role="group" aria-label="Tamanho da folha no ecrã">
+            <button type="button" data-act="zoom" data-zoom="fit" aria-pressed="true">Ajustar</button>
+            <button type="button" data-act="zoom" data-zoom="real" aria-pressed="false">Real</button>
+          </div>
+        </div>
+        <div class="grp" data-pager hidden></div>
+        <p class="doc-hint">Só períodos aprovados · encerramento de Natal previsto, não incluído</p>
+      </div>
+      <div class="paper-area" data-zoom="fit" data-build="ferias"></div>
+    </section>
+  </main>
+</template>
+
+<template data-variant="b" data-active="Escala" data-title="Imprimir" data-user="Carla Videira">
+  <main class="print-page">
+    <section class="print-screen" data-doc="escala">
+      <h2 class="sr-only">Escala de Outubro de 2026</h2>
+      <p class="route-tag" title="Rota (anotação do mockup)">/escala/imprimir?ano=2026&amp;mes=10</p>
+      <div class="no-print doc-bar">
+        <button type="button" class="btn-row btn-row-strong" data-act="export">Exportar PDF</button>
+        <div class="grp"><span class="grp-label">Tamanho</span>
+          <div class="seg" role="group" aria-label="Tamanho da folha no ecrã">
+            <button type="button" data-act="zoom" data-zoom="fit" aria-pressed="true">Ajustar</button>
+            <button type="button" data-act="zoom" data-zoom="real" aria-pressed="false">Real</button>
+          </div>
+        </div>
+        <div class="grp" data-pager hidden></div>
+        <p class="doc-hint">Camada publicada · máscara dos colegas aplicada a todos</p>
+      </div>
+      <div class="paper-area" data-zoom="fit" data-build="escala"></div>
+    </section>
+    <section class="print-screen" data-doc="ferias">
+      <h2 class="sr-only">Mapa de férias de 2026</h2>
+      <p class="route-tag" title="Rota (anotação do mockup)">/ferias/imprimir?ano=2026</p>
+      <div class="no-print doc-bar">
+        <button type="button" class="btn-row btn-row-strong" data-act="export">Exportar PDF</button>
+        <div class="grp"><span class="grp-label">Tamanho</span>
+          <div class="seg" role="group" aria-label="Tamanho da folha no ecrã">
+            <button type="button" data-act="zoom" data-zoom="fit" aria-pressed="true">Ajustar</button>
+            <button type="button" data-act="zoom" data-zoom="real" aria-pressed="false">Real</button>
+          </div>
+        </div>
+        <div class="grp" data-pager hidden></div>
+        <p class="doc-hint">Só períodos aprovados · encerramento de Natal previsto, não incluído</p>
+      </div>
+      <div class="paper-area" data-zoom="fit" data-build="ferias"></div>
+    </section>
+  </main>
+</template>
+
+<template data-variant="c" data-active="Escala" data-title="Imprimir" data-user="Carla Videira">
+  <main class="print-page">
+    <section class="print-screen" data-doc="escala">
+      <h2 class="sr-only">Escala de Outubro de 2026</h2>
+      <p class="route-tag" title="Rota (anotação do mockup)">/escala/imprimir?ano=2026&amp;mes=10</p>
+      <div class="no-print doc-bar">
+        <button type="button" class="btn-row btn-row-strong" data-act="export">Exportar PDF</button>
+        <div class="grp"><span class="grp-label">Tamanho</span>
+          <div class="seg" role="group" aria-label="Tamanho da folha no ecrã">
+            <button type="button" data-act="zoom" data-zoom="fit" aria-pressed="true">Ajustar</button>
+            <button type="button" data-act="zoom" data-zoom="real" aria-pressed="false">Real</button>
+          </div>
+        </div>
+        <div class="grp" data-pager hidden></div>
+        <p class="doc-hint">Camada publicada · máscara dos colegas aplicada a todos</p>
+      </div>
+      <div class="paper-area" data-zoom="fit" data-build="escala"></div>
+    </section>
+    <section class="print-screen" data-doc="ferias">
+      <h2 class="sr-only">Mapa de férias de 2026</h2>
+      <p class="route-tag" title="Rota (anotação do mockup)">/ferias/imprimir?ano=2026</p>
+      <div class="no-print doc-bar">
+        <button type="button" class="btn-row btn-row-strong" data-act="export">Exportar PDF</button>
+        <div class="grp"><span class="grp-label">Tamanho</span>
+          <div class="seg" role="group" aria-label="Tamanho da folha no ecrã">
+            <button type="button" data-act="zoom" data-zoom="fit" aria-pressed="true">Ajustar</button>
+            <button type="button" data-act="zoom" data-zoom="real" aria-pressed="false">Real</button>
+          </div>
+        </div>
+        <div class="grp" data-pager hidden></div>
+        <p class="doc-hint">Só períodos aprovados · encerramento de Natal previsto, não incluído</p>
+      </div>
+      <div class="paper-area" data-zoom="fit" data-build="ferias"></div>
+    </section>
+  </main>
+</template>
+
+<script>
+/* Feriados nacionais: datas UTC, incluindo os móveis da Páscoa. */
+var nationalHolidayCache = {};
+function nationalHolidays(year) {
+  if (nationalHolidayCache[year]) return nationalHolidayCache[year];
+  var a = year % 19, b = Math.floor(year / 100), c = year % 100, d = Math.floor(b / 4), e = b % 4;
+  var f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
+  var i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451);
+  var easter = new Date(Date.UTC(year, Math.floor((h + l - 7 * m + 114) / 31) - 1, (h + l - 7 * m + 114) % 31 + 1));
+  var result = {}, fixed = { '01-01': 'Ano Novo', '04-25': 'Dia da Liberdade', '05-01': 'Dia do Trabalhador', '06-10': 'Dia de Portugal', '08-15': 'Assunção de Nossa Senhora', '10-05': 'Implantação da República', '11-01': 'Todos os Santos', '12-01': 'Restauração da Independência', '12-08': 'Imaculada Conceição', '12-25': 'Natal' };
+  Object.keys(fixed).forEach(function (key) { result[year + '-' + key] = fixed[key]; });
+  [[-2, 'Sexta-feira Santa'], [0, 'Páscoa'], [60, 'Corpo de Deus']].forEach(function (entry) { result[new Date(easter.getTime() + entry[0] * 864e5).toISOString().slice(0, 10)] = entry[1]; });
+  return nationalHolidayCache[year] = result;
+}
+function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] || ''; }
+</script>
+<script>
+/* === MOLDURA COMUM (copiar) === */
+/* API para o JS específico (script a seguir a este):
+     window.mockInit = (deviceEl, variant, kind) => {}   chamado por cada clone (kind = 'desktop' | 'phone')
+     Mock.on(tipo, seletor, (evento, elemento, deviceEl) => {})   delegação com escopo no .device
+     Mock.toast(deviceEl, texto)   Mock.sheet(deviceEl, html|Node) → caixa   Mock.closeSheet(deviceEl)
+     Mock.state(deviceEl) → objeto por clone   Mock.uid(prefixo) → id único   Mock.$ Mock.$$ Mock.esc
+   No markup dos templates (sem id): data-id="k" → id único por clone; data-for / data-controls /
+   data-labelledby / data-describedby="k" → for / aria-controls / aria-labelledby / aria-describedby.
+   [data-route="/rota"] simula navegação (aviso «Abre /rota»). Atributos do <template>:
+   data-active (item do menu activo), data-title (título da barra a 375 px), data-user (nome na barra lateral). */
+(function () {
+  'use strict';
+  var VIEW_KEY = 'escalas-ferias-mock-view';
+  var MENU = [
+    ['Geral', [['Início', '/']]],
+    ['Operação', [['Horas', '/horas'], ['As minhas horas', '/horas/minhas'], ['Escala', '/escala'], ['A minha escala', '/escala/minha'],
+      ['Férias', '/ferias'], ['As minhas férias', '/ferias/minhas'], ['Gorjetas', '/gorjetas'], ['As minhas gorjetas', '/gorjetas/minhas'],
+      ['Fecho de caixa', '/caixa']]],
+    ['Cadastros', [['Cadastros', '/cadastros']]]
+  ];
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var mk = function (tag, cls) { var n = document.createElement(tag); if (cls) n.className = cls; return n; };
+  var clamp = function (v, lo, hi) { return Math.min(Math.max(v, lo), hi); };
+  var states = new WeakMap();
+  var counter = 0;
+  var uid = function (p) { counter += 1; return (p || 'u') + '-' + counter; };
+  var state = function (dev) { if (!states.has(dev)) states.set(dev, {}); return states.get(dev); };
+
+  /* ids únicos por clone: data-id define, os data-for/controls/labelledby/describedby ligam */
+  function wireIds(root) {
+    var map = {};
+    var get = function (k) { if (!map[k]) map[k] = uid(k); return map[k]; };
+    $$('[data-id]', root).forEach(function (n) { n.id = get(n.getAttribute('data-id')); });
+    [['data-for', 'for'], ['data-controls', 'aria-controls'], ['data-labelledby', 'aria-labelledby'], ['data-describedby', 'aria-describedby']]
+      .forEach(function (p) { $$('[' + p[0] + ']', root).forEach(function (n) { n.setAttribute(p[1], get(n.getAttribute(p[0]))); }); });
+  }
+
+  /* parte visível do dispositivo (para posicionar avisos e diálogos onde o utilizador está a olhar) */
+  function visibleBox(dev) {
+    var r = dev.getBoundingClientRect();
+    var sc = dev.closest('.device-scroll');
+    return {
+      top: clamp(-r.top, 0, r.height), bottom: clamp(window.innerHeight - r.top, 0, r.height),
+      left: sc ? sc.scrollLeft : 0, width: sc ? sc.clientWidth : dev.clientWidth
+    };
+  }
+  function toast(dev, msg) {
+    var app = $('.app', dev); if (!app) return;
+    var t = $('.app-toast', app);
+    if (!t) { t = mk('div', 'app-toast'); t.setAttribute('role', 'status'); app.appendChild(t); }
+    t.textContent = msg; t.hidden = false;
+    var v = visibleBox(dev);
+    t.style.top = Math.max(8, v.bottom - 56) + 'px';
+    t.style.left = (v.left + v.width / 2) + 'px';
+    clearTimeout(t._h); t._h = setTimeout(function () { t.hidden = true; }, 2800);
+  }
+  function sheet(dev, content) {
+    var app = $('.app', dev), s = $('.sheet', app);
+    if (!s) { s = mk('div', 'sheet'); s.innerHTML = '<div class="sheet__box" role="dialog" aria-modal="true"></div>'; app.appendChild(s); }
+    var box = $('.sheet__box', s);
+    if (typeof content === 'string') box.innerHTML = content; else if (content) box.replaceChildren(content);
+    wireIds(box); s.hidden = false;
+    var v = visibleBox(dev);
+    box.style.top = (v.top + 24) + 'px';
+    box.style.left = Math.max(12, v.left + (v.width - box.offsetWidth) / 2) + 'px';
+    var f = $('button, input, select, textarea, a[href]', box); if (f) f.focus();
+    return box;
+  }
+  function closeSheet(dev) { var s = $('.sheet', dev); if (s) s.hidden = true; }
+  function setMenu(dev, open) {
+    var app = $('.app', dev); if (!app) return;
+    app.toggleAttribute('data-menu-open', open);
+    var b = $('.app-burger', dev); if (b) { b.setAttribute('aria-expanded', String(open)); b.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu'); }
+  }
+  function on(type, selector, fn) {
+    document.addEventListener(type, function (e) {
+      var t = e.target && e.target.closest ? e.target.closest(selector) : null; if (!t) return;
+      var dev = t.closest('.device'); if (!dev) return;
+      fn(e, t, dev);
+    });
+  }
+
+  /* mini-app: barra lateral (desktop) / barra superior com ☰ (≤768px, por container query) */
+  function buildApp(tpl) {
+    var active = tpl.dataset.active || document.body.dataset.active || '';
+    var title = tpl.dataset.title || active;
+    var user = tpl.dataset.user || 'Carla Videira';
+    var app = mk('div', 'app');
+    var nav = MENU.map(function (sec) {
+      return '<div class="sidebar-section">' + esc(sec[0]) + '</div>' + sec[1].map(function (it) {
+        var on_ = it[0] === active;
+        return '<a class="sidebar-link' + (on_ ? ' sidebar-link--active' : '') + '" href="#" data-route="' + esc(it[1]) + '"' + (on_ ? ' aria-current="page"' : '') + '>' + esc(it[0]) + '</a>';
+      }).join('');
+    }).join('');
+    app.innerHTML =
+      '<aside class="app-side" aria-label="Menu principal"><div class="app-logo">GIG</div><nav>' + nav + '</nav>' +
+      '<div class="app-user"><span class="app-user__name">' + esc(user) + '</span><button type="button" data-route="/login">Sair</button></div></aside>' +
+      '<div class="app-scrim" data-act-scrim></div>' +
+      '<div class="app-main"><div class="app-top"><button type="button" class="app-burger" aria-expanded="false" aria-label="Abrir menu">☰</button>' +
+      '<span class="app-top__title">' + esc(title) + '</span></div><div class="app-content"></div></div>';
+    $('.app-content', app).appendChild(tpl.content.cloneNode(true));
+    return app;
+  }
+  function fill(dev) {
+    var tpl = $('template[data-variant="' + dev.dataset.variant + '"]');
+    states.delete(dev);
+    dev.replaceChildren(buildApp(tpl));
+    wireIds(dev);
+    if (typeof window.mockInit === 'function') window.mockInit(dev, dev.dataset.variant, dev.dataset.kind);
+  }
+  function mount(panel) {
+    var v = panel.dataset.variant;
+    var stage = $('.stage', panel) || panel.appendChild(mk('div', 'stage'));
+    stage.replaceChildren();
+    [['desktop', 'Desktop'], ['phone', '375 px']].forEach(function (d) {
+      var item = mk('figure', 'stage-item stage-item--' + d[0]);
+      item.innerHTML = '<figcaption class="stage-cap"><span>' + d[1] + '</span><button type="button" class="stage-reset" title="Repor o estado inicial">Repor</button></figcaption>';
+      var dev = mk('div', 'device device--' + d[0]);
+      dev.dataset.variant = v; dev.dataset.kind = d[0];
+      var sc = mk('div', 'device-scroll' + (d[0] === 'phone' ? ' device-scroll--phone' : '')); sc.appendChild(dev); item.appendChild(sc);
+      stage.appendChild(item);
+      fill(dev);
+    });
+    panel.dataset.rendered = '1';
+  }
+
+  /* separadores A/B/C (hash #a/#b/#c) e alternador de dispositivos */
+  var tabs = $$('.mock-bar [role="tab"]'), panels = $$('[role="tabpanel"]');
+  function select(v, focus) {
+    if (!tabs.some(function (t) { return t.dataset.variant === v; })) v = tabs[0].dataset.variant;
+    tabs.forEach(function (t) { var o = t.dataset.variant === v; t.setAttribute('aria-selected', String(o)); t.tabIndex = o ? 0 : -1; if (o && focus) t.focus(); });
+    panels.forEach(function (p) { p.hidden = p.dataset.variant !== v; if (p.dataset.variant === v && !p.dataset.rendered) mount(p); });
+    if (location.hash.slice(1) !== v) { try { history.replaceState(null, '', '#' + v); } catch (e) { /* file:// restrito */ } }
+  }
+  function setView(v) {
+    document.body.dataset.view = v;
+    $$('.mock-view button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.view === v)); });
+    try { localStorage.setItem(VIEW_KEY, v); } catch (e) { /* sem armazenamento */ }
+  }
+  function boot() {
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { select(t.dataset.variant); });
+      t.addEventListener('keydown', function (e) {
+        var j = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }[e.key];
+        if (j === undefined) return; e.preventDefault(); select(tabs[(j + tabs.length) % tabs.length].dataset.variant, true);
+      });
+    });
+    $$('.mock-view button').forEach(function (b) { b.addEventListener('click', function () { setView(b.dataset.view); }); });
+    window.addEventListener('hashchange', function () { select(location.hash.slice(1).toLowerCase()); });
+    var saved = null; try { saved = localStorage.getItem(VIEW_KEY); } catch (e) { /* ignorar */ }
+    setView(['both', 'desktop', 'phone'].indexOf(saved) >= 0 ? saved : 'both');
+    select(location.hash.slice(1).toLowerCase());
+  }
+
+  /* comportamentos da moldura */
+  on('click', '.app-burger', function (e, t, dev) { setMenu(dev, !$('.app', dev).hasAttribute('data-menu-open')); });
+  on('click', '.app-scrim', function (e, t, dev) { setMenu(dev, false); });
+  on('click', '[data-route]', function (e, t, dev) { e.preventDefault(); setMenu(dev, false); toast(dev, 'Abre ' + t.getAttribute('data-route')); });
+  on('click', 'a[href="#"]', function (e) { e.preventDefault(); });
+  on('click', '.sheet', function (e, t, dev) { if (e.target === t || e.target.closest('[data-close-sheet]')) closeSheet(dev); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    $$('.sheet:not([hidden])').forEach(function (s) { closeSheet(s.closest('.device')); });
+    $$('.app[data-menu-open]').forEach(function (a) { setMenu(a.closest('.device'), false); });
+  });
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.stage-reset'); if (!b) return;
+    fill($('.device', b.closest('.stage-item')));
+  });
+
+  window.Mock = { $: $, $$: $$, esc: esc, uid: uid, state: state, on: on, toast: toast, sheet: sheet, closeSheet: closeSheet, setMenu: setMenu };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+/* === FIM MOLDURA === */
+</script>
+<script>
+/* === ESPECÍFICO DESTE MOCKUP === */
+(function () {
+  'use strict';
+  var $$ = Mock.$$;
+  var DAY = 864e5;
+  var CO = { nome: '[Nome da empresa]', nif: 'NIF [n.º]' };
+  var EMITIDO_ESCALA = 'Emitido em 03/10/2026 14:20';
+  var EMITIDO_FERIAS = 'Emitido em 03/10/2026';
+  var NOTA_DESCANSO = 'Classificação do descanso por validar';
+  var NOTA_NATAL = 'Previsto, não incluído: encerramento colectivo de Natal (14/12 a 28/12/2026), por confirmar.';
+  var NOTA_CONTAGEM = 'Dias que contam: segunda a sexta, sem feriados (regra por validar com o contabilista).';
+
+  /* ── Dados fictícios (comuns a todos os mockups) ── */
+  var PEOPLE = ['Beatriz Moura', 'Tiago Fontes', 'Inês Calado', 'Rui Pestana', 'Carla Videira', 'Duarte Sá', 'Marta Leal', 'Hugo Brandão', 'Matilde Teles', 'Nuno Arez', 'Filipa Couto'];
+  var SHIFTS = {
+    D: { nome: 'Dia', ini: '08:00', fim: '17:30', pausa: '12:30–13:30' },
+    C: { nome: 'Dia curto', ini: '08:00', fim: '17:00', pausa: '12:00–13:00' },
+    M: { nome: 'Meio-dia', ini: '09:00', fim: '15:15', pausa: '11:45–12:45' }
+  };
+  /* Períodos de férias aprovados em 2026 (os «dias que contam» calculam-se: seg–sex, sem feriados) */
+  var VAC = {'Beatriz Moura': [['2026-07-20', '2026-07-31']], 'Tiago Fontes': [['2026-04-13', '2026-04-17']], 'Inês Calado': [['2026-05-11', '2026-05-12'], ['2026-11-09', '2026-11-11']], 'Rui Pestana': [['2026-07-06', '2026-07-10'], ['2026-10-19', '2026-10-23']], 'Carla Videira': [['2026-08-03', '2026-08-07']], 'Duarte Sá': [['2026-08-24', '2026-08-28']], 'Marta Leal': [['2026-06-08', '2026-06-12']], 'Hugo Brandão': [['2026-08-03', '2026-08-16'], ['2026-11-02', '2026-11-04']], 'Matilde Teles': [['2026-03-23', '2026-03-27']], 'Nuno Arez': [['2026-09-21', '2026-09-25']], 'Filipa Couto': [['2026-08-17', '2026-08-21'], ['2026-10-26', '2026-10-28']]};
+  var WD = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
+  var WL = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+  var MONTHS = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+  var ROT = [1, 2, 4, 5]; /* folga rotativa: seg, ter, qui, sex */
+
+  function D(s) { var p = s.split('-'); return new Date(Date.UTC(+p[0], +p[1] - 1, +p[2])); }
+  function two(n) { return (n < 10 ? '0' : '') + n; }
+  function dm(d) { return two(d.getUTCDate()) + '/' + two(d.getUTCMonth() + 1); }
+  function dmy(d) { return dm(d) + '/' + d.getUTCFullYear(); }
+  function add(d, n) { return new Date(d.getTime() + n * DAY); }
+  var W40 = D('2026-09-28');
+  var IND0 = D('2026-09-28'), IND1 = D('2026-10-11'); /* Matilde Teles: indisponível (mascarado) */
+
+  function countedDays(a, b) {
+    var n = 0, d;
+    for (d = D(a); d <= D(b); d = add(d, 1)) { if (d.getUTCDay() >= 1 && d.getUTCDay() <= 5 && !nationalHoliday(d.toISOString().slice(0, 10))) n += 1; }
+    return n;
+  }
+  function vacTotal(name) { return VAC[name].reduce(function (s, p) { return s + countedDays(p[0], p[1]); }, 0); }
+  function onVac(name, d) { return VAC[name].some(function (p) { return d >= D(p[0]) && d <= D(p[1]); }); }
+  function initials(name) { var w = name.split(' '); return (w[0][0] + w[w.length - 1][0]).toUpperCase(); }
+
+  /* Camada publicada, já com a máscara: só k = W (trabalho), F (Folga), V (Férias), I (Indisponível), X (Fechado) */
+  function dayState(p, d) {
+    var name = PEOPLE[p], w = d.getUTCDay();
+    if (w === 3) return { k: 'X' };
+    var wk = Math.floor((d - W40) / (7 * DAY));
+    if (w === ROT[(p + wk) % 4]) return { k: 'F' };
+    /* As ausências só substituem dias de trabalho; a folga publicada mantém-se. */
+    if (onVac(name, d)) return { k: 'V' };
+    if (name === 'Matilde Teles' && d >= IND0 && d <= IND1) return { k: 'I' };
+    var s = 'D';
+    if (p >= 9) s = 'M';
+    else if (w === 0) s = 'C';
+    else if (w === 5 && p % 2 === 1) s = 'C';
+    else if (w === 6 && (p === 1 || p === 6)) s = 'M';
+    return { k: 'W', s: s };
+  }
+  function octDays() { var a = [], i; for (i = 0; i < 31; i += 1) a.push(add(D('2026-10-01'), i)); return a; }
+
+  /* ── Estrutura comum da folha ── */
+  function head(first, title, meta) {
+    var brand = '<div class="p-head"><div class="p-logo" aria-hidden="true">GIG</div><div class="p-co"><b>' + CO.nome + '</b>' + CO.nif + '</div></div>';
+    if (first) return brand + '<h1 class="p-title">' + title + '</h1><p class="p-meta">' + meta + '</p>';
+    return brand + '<p class="p-meta p-meta--c"><b>' + title + '</b> · ' + meta + '</p>';
+  }
+  function paper(o) {
+    return '<article class="paper paper--' + o.orient + (o.i ? ' is-off' : '') + '" data-pg="' + o.pg + '" aria-label="' + o.aria + '">' +
+      head(o.i === 0, o.title, o.meta) + '<div class="p-body">' + o.body + '</div>' +
+      '<div class="p-foot"><span>' + o.foot + '</span><span>Folha ' + (o.i + 1) + ' de ' + o.n + '</span></div></article>';
+  }
+  var META_ESCALA = 'Período: 01/10/2026 a 31/10/2026 · ' + EMITIDO_ESCALA;
+  var META_FERIAS = 'Período: 01/01/2026 a 31/12/2026 · ' + EMITIDO_FERIAS;
+  function escalaSheet(o) {
+    return paper({ orient: o.orient, i: o.i, n: o.n, pg: o.pg, aria: 'Escala, folha ' + (o.i + 1) + ' de ' + o.n, title: 'Escala', meta: META_ESCALA, body: o.body, foot: 'Escala · Outubro de 2026 · 05/10: Feriado (aberto). 01/11: Feriado (aberto) quando presente. · ' + NOTA_DESCANSO });
+  }
+  function feriasSheet(o) {
+    return paper({ orient: o.orient, i: 0, n: 1, pg: '1', aria: 'Mapa de férias de 2026', title: 'Mapa de férias', meta: META_FERIAS, body: o.body, foot: 'Mapa de férias · 2026' });
+  }
+  function cols(first, n) { return '<colgroup><col style="width:calc(var(--u)*' + first + ')">' + (n ? '<col span="' + n + '">' : '') + '</colgroup>'; }
+
+  /* ── A · escala do mês (paisagem) ── */
+  function codeA(st) {
+    if (st.k === 'W') { var s = SHIFTS[st.s]; return '<td>' + s.ini.slice(0, 2) + '–<br>' + s.fim + '</td>'; }
+    return { F: '<td class="k-f">F</td>', V: '<td class="k-v">Fé</td>', I: '<td class="k-i">I</td>', X: '<td class="k-x">—</td>' }[st.k];
+  }
+  function escalaA() {
+    var days = octDays(), r1 = '', r2 = '', rows = '';
+    days.forEach(function (d) {
+      var w = d.getUTCDay(), cls = w === 3 ? ' class="k-x"' : (w === 0 || w === 6 ? ' class="we"' : '');
+      r1 += '<th' + cls + '>' + WL[w] + '</th>'; r2 += '<th' + cls + '>' + d.getUTCDate() + (nationalHoliday(d.toISOString().slice(0, 10)) ? '†' : '') + '</th>';
+    });
+    PEOPLE.forEach(function (n, p) { rows += '<tr><td class="nm">' + n + '</td>' + days.map(function (d) { return codeA(dayState(p, d)); }).join('') + '</tr>'; });
+    var legend = '<div class="lg">' + ['D', 'C', 'M'].map(function (k) {
+      var s = SHIFTS[k];
+      return '<div class="lg-box"><b>' + s.nome + '</b>Início ' + s.ini + ' · fim ' + s.fim + '<br>Intervalo ' + s.pausa + '<br>Na grelha: <span class="code">' + s.ini.slice(0, 2) + '–' + s.fim + '</span></div>';
+    }).join('') +
+      '<div class="lg-box lg-box--codes"><b>Códigos</b><span class="sw k-f"></span><span class="code">F</span> Folga · <span class="sw k-v"></span><span class="code">Fé</span> Férias<br>' +
+      '<span class="sw k-i"></span><span class="code">I</span> Indisponível · <span class="sw k-x"></span><span class="code">—</span> Fechado (quarta-feira)<br>S T Q Q S S D = seg a dom</div></div>';
+    var table = '<table class="pt pt--a">' + cols(32, 31) + '<thead><tr><th class="nm" rowspan="2">Funcionário</th>' + r1 + '</tr><tr>' + r2 + '</tr></thead><tbody>' + rows + '</tbody></table>';
+    return escalaSheet({ orient: 'land', i: 0, n: 1, pg: '1', body: table + legend });
+  }
+
+  /* ── A · mapa de férias em linha do tempo ── */
+  var MDAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  function feriasA() {
+    var y0 = D('2026-01-01');
+    var mh = MDAYS.map(function (n, i) { return '<span style="flex:' + n + ' 1 0">' + MONTHS[i].slice(0, 3) + '</span>'; }).join('');
+    var grid = MDAYS.map(function (n) { return '<i style="flex:' + n + ' 1 0"></i>'; }).join('');
+    var rows = PEOPLE.map(function (n) {
+      var bars = VAC[n].map(function (p) {
+        var a = D(p[0]), b = D(p[1]), start = (a - y0) / DAY, len = (b - a) / DAY + 1, c = countedDays(p[0], p[1]);
+        return '<span class="bar" style="left:' + (start / 365 * 100).toFixed(3) + '%;width:' + (len / 365 * 100).toFixed(3) + '%" title="' + dm(a) + ' a ' + dm(b) + ' · ' + c + ' dias que contam">' + c + '</span>';
+      }).join('');
+      return '<tr><td class="nm">' + n + '</td><td><div class="tl-in">' + grid + bars + '</div></td><td class="tot">' + vacTotal(n) + '</td></tr>';
+    }).join('');
+    var table = '<table class="pt pt--tl"><colgroup><col style="width:calc(var(--u)*32)"><col><col style="width:calc(var(--u)*16)"></colgroup>' +
+      '<thead><tr><th class="nm">Funcionário</th><th style="padding:0"><div class="tl-m">' + mh + '</div></th><th>Total (dias)</th></tr></thead><tbody>' + rows + '</tbody></table>';
+    var notes = '<p class="p-note">Cada barra é um período aprovado e o número é o de dias que contam. ' + NOTA_CONTAGEM + '</p><p class="p-note">' + NOTA_NATAL + '</p>';
+    return feriasSheet({ orient: 'land', body: table + notes });
+  }
+
+  /* ── B · escala semana a semana (retrato) ── */
+  function cellB(st, out) {
+    var c = out ? ' out' : '';
+    if (st.k === 'W') { var s = SHIFTS[st.s]; return '<td class="k-w' + c + '"><b>' + s.ini + '–' + s.fim + '</b><small>int. ' + s.pausa + '</small></td>'; }
+    return { F: '<td class="k-f' + c + '">Folga</td>', V: '<td class="k-v' + c + '">Férias</td>', I: '<td class="k-i' + c + '">Indisponível</td>', X: '<td class="k-x' + c + '">Fechado</td>' }[st.k];
+  }
+  function escalaB() {
+    var weeks = [0, 1, 2, 3, 4];
+    return weeks.map(function (wk, i) {
+      var mon = add(W40, wk * 7), days = [], k;
+      for (k = 0; k < 7; k += 1) days.push(add(mon, k));
+      var hasOut = days.some(function (d) { return d.getUTCMonth() !== 9; });
+      var th = days.map(function (d) {
+        var w = d.getUTCDay();
+        return '<th class="' + (w === 3 ? 'k-x' : (w === 0 || w === 6 ? 'we' : '')) + (d.getUTCMonth() !== 9 ? ' out' : '') + '">' + WD[w] + '<br>' + dm(d) + (nationalHoliday(d.toISOString().slice(0, 10)) ? '<br>Feriado (aberto)' : '') + '</th>';
+      }).join('');
+      var rows = PEOPLE.map(function (n, p) { return '<tr><td class="nm">' + n + '</td>' + days.map(function (d) { return cellB(dayState(p, d), d.getUTCMonth() !== 9); }).join('') + '</tr>'; }).join('');
+      var body = '<h2 class="p-sub">Semana ' + (40 + wk) + ' · ' + dmy(days[0]) + ' a ' + dmy(days[6]) + '</h2>' +
+        '<table class="pt pt--b">' + cols(30, 7) + '<thead><tr><th class="nm">Funcionário</th>' + th + '</tr></thead><tbody>' + rows + '</tbody></table>' +
+        '<p class="p-note">int. = intervalo de refeição do turno. Quartas-feiras: Fechado.' + (hasOut ? ' Os dias fora de Outubro aparecem esbatidos.' : '') + '</p>';
+      return escalaSheet({ orient: 'port', i: i, n: weeks.length, pg: 'Sem. ' + (40 + wk), body: body });
+    }).join('');
+  }
+
+  /* ── B · mapa de férias em tabela de períodos ── */
+  function feriasB() {
+    var rows = PEOPLE.map(function (n) {
+      var ps = VAC[n];
+      return ps.map(function (p, i) {
+        return '<tr>' + (i === 0 ? '<td class="nm" rowspan="' + ps.length + '">' + n + '</td>' : '') +
+          '<td>' + dmy(D(p[0])) + '</td><td>' + dmy(D(p[1])) + '</td><td>' + countedDays(p[0], p[1]) + '</td>' +
+          (i === 0 ? '<td class="tot" rowspan="' + ps.length + '">' + vacTotal(n) + '</td>' : '') + '</tr>';
+      }).join('');
+    }).join('');
+    var table = '<table class="pt pt--per"><colgroup><col style="width:calc(var(--u)*50)"><col><col><col><col></colgroup>' +
+      '<thead><tr><th class="nm">Funcionário</th><th>Início</th><th>Fim</th><th>Dias que contam</th><th>Total em 2026</th></tr></thead><tbody>' + rows + '</tbody></table>';
+    return feriasSheet({ orient: 'port', body: table + '<p class="p-note">' + NOTA_CONTAGEM + '</p><p class="p-note">' + NOTA_NATAL + '</p>' });
+  }
+
+  /* ── C · escala por pessoa (retrato, 3 por folha) ── */
+  function liC(d, st) {
+    var w = d.getUTCDay(), cls = st.k === 'W' ? (w === 0 || w === 6 ? 'we' : '') : 'k-' + st.k.toLowerCase();
+    var t;
+    if (st.k === 'W') { var s = SHIFTS[st.s]; t = s.ini + '–' + s.fim + ' · int. ' + s.pausa; }
+    else t = { F: 'Folga', V: 'Férias', I: 'Indisponível', X: 'Fechado' }[st.k];
+    return '<li class="' + cls + '"><span class="d">' + WD[w] + ' ' + dm(d) + (nationalHoliday(d.toISOString().slice(0, 10)) ? ' · Feriado (aberto)' : '') + '</span><span class="t">' + t + '</span></li>';
+  }
+  function escalaC() {
+    var days = octDays(), groups = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9, 10]];
+    return groups.map(function (g, i) {
+      var body = '<div class="pp-wrap">' + g.map(function (p) {
+        var li = days.map(function (d) { return liC(d, dayState(p, d)); });
+        return '<section class="pp"><h3>' + PEOPLE[p] + '</h3><div class="pp-cols"><ul>' + li.slice(0, 16).join('') + '</ul><ul>' + li.slice(16).join('') + '</ul></div></section>';
+      }).join('') + '</div>';
+      return escalaSheet({ orient: 'port', i: i, n: groups.length, pg: String(i + 1), body: body });
+    }).join('');
+  }
+
+  /* ── C · mapa de férias em 12 mini-calendários (paisagem) ── */
+  function feriasC() {
+    var cal = MONTHS.map(function (mn, m) {
+      var first = new Date(Date.UTC(2026, m, 1)), off = (first.getUTCDay() + 6) % 7, cells = '', i, total = off + MDAYS[m], rows = Math.ceil(total / 7);
+      for (i = 0; i < rows * 7; i += 1) {
+        var n = i - off + 1;
+        if (n < 1 || n > MDAYS[m]) { cells += '<td class="e"></td>'; } else {
+          var d = new Date(Date.UTC(2026, m, n)), w = d.getUTCDay();
+          var who = PEOPLE.filter(function (p) { return onVac(p, d); }).map(initials);
+          cells += '<td class="' + (who.length ? 'has' : (w === 0 || w === 6 ? 'we' : '')) + '"><b>' + n + '</b>' + (who.length ? '<em>' + who.join(' ') + '</em>' : '') + '</td>';
+        }
+        if (i % 7 === 6) cells += (i < rows * 7 - 1 ? '</tr><tr>' : '');
+      }
+      return '<div class="mc"><h3>' + MONTHS[m].charAt(0).toUpperCase() + MONTHS[m].slice(1) + '</h3><table class="pt pt--cal"><thead><tr>' +
+        ['S', 'T', 'Q', 'Q', 'S', 'S', 'D'].map(function (l, k) { return '<th class="' + (k > 4 ? 'we' : '') + '">' + l + '</th>'; }).join('') + '</tr></thead><tbody><tr>' + cells + '</tr></tbody></table></div>';
+    }).join('');
+    var lg = '<div class="ini-lg">' + PEOPLE.map(function (n) { return '<span><b>' + initials(n) + '</b>' + n + ' (' + vacTotal(n) + ')</span>'; }).join('') + '</div>';
+    var notes = '<p class="p-note">Em cada dia, as iniciais de quem está de férias aprovadas; entre parênteses, o total de dias que contam em 2026. ' + NOTA_CONTAGEM + ' ' + NOTA_NATAL + '</p>';
+    return feriasSheet({ orient: 'land', body: '<div class="mc-grid">' + cal + '</div>' + lg + notes });
+  }
+
+  var BUILD = { a: { escala: escalaA, ferias: feriasA }, b: { escala: escalaB, ferias: feriasB }, c: { escala: escalaC, ferias: feriasC } };
+
+  window.mockInit = function (dev, variant) {
+    $$('[data-build]', dev).forEach(function (host) {
+      host.innerHTML = BUILD[variant][host.getAttribute('data-build')]();
+      var pager = host.closest('.print-screen').querySelector('[data-pager]');
+      var papers = $$('.paper', host);
+      if (pager && papers.length > 1) {
+        pager.innerHTML = '<span class="grp-label">Folha</span><div class="seg" role="group" aria-label="Folha a mostrar">' + papers.map(function (p, i) {
+          return '<button type="button" data-act="page" data-page="' + i + '" aria-pressed="' + (i === 0) + '">' + p.getAttribute('data-pg') + '</button>';
+        }).join('') + '</div>';
+        pager.hidden = false;
+      }
+    });
+  };
+
+  Mock.on('click', '[data-act="export"]', function (e, t, dev) { Mock.toast(dev, 'Abre o diálogo de impressão: escolher «Guardar como PDF»'); });
+  Mock.on('click', '[data-act="zoom"]', function (e, t) {
+    var scr = t.closest('.print-screen');
+    scr.querySelector('.paper-area').setAttribute('data-zoom', t.getAttribute('data-zoom'));
+    $$('[data-act="zoom"]', scr).forEach(function (b) { b.setAttribute('aria-pressed', String(b === t)); });
+  });
+  Mock.on('click', '[data-act="page"]', function (e, t) {
+    var scr = t.closest('.print-screen'), i = +t.getAttribute('data-page');
+    $$('.paper', scr).forEach(function (p, j) { p.classList.toggle('is-off', j !== i); });
+    $$('[data-act="page"]', scr).forEach(function (b) { b.setAttribute('aria-pressed', String(b === t)); });
+  });
+})();
+</script>
+</body>
+</html>

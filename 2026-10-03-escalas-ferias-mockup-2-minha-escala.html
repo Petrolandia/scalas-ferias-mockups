@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 2 — A minha escala</title>
+<style>
+/* === MOLDURA COMUM (copiar) === */
+/* Tokens copiados de src/app/globals.css:2-33 (tema «Menta») */
+:root {
+  --bg: #f3f6f3;
+  --card: #fff;
+  --border: rgba(0, 0, 0, 0.15);
+  --txt: #1f2a24;
+  --mut: #66736b;
+  --hint: #9aa49e;
+  --sidebar: #2f3a33;
+  --sidebar-tx: #dfeee5;
+  --brand: #7fc9a2;
+  --primary: #2e9e68;
+  --primary-hover: #267f54;
+  --ok-bg: #e2f2e9;
+  --ok-tx: #1f6b44;
+  --ok-bd: #7fc9a2;
+  --row-hover: rgba(127, 201, 162, 0.12);
+  --er-bg: #fcebeb;
+  --er-tx: #a32d2d;
+  --er-bd: #f09595;
+  --warn-bg: #faeeda;
+  --warn-tx: #854f0b;
+  --warn-bd: #e8c44e;
+  --info-tx: #1d4ed8;
+  --info-bg: #e6eefc;
+  --info-bd: #9db7f0;
+  --on-primary: #fff;
+}
+* { box-sizing: border-box; padding: 0; margin: 0; }
+[hidden] { display: none !important; }
+html, body {
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--txt);
+  -webkit-font-smoothing: antialiased;
+}
+body { min-height: 100vh; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+/* ── Barra do mockup (não faz parte do ecrã) ── */
+.mock-bar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+  padding: 8px 16px; background: var(--sidebar); color: var(--sidebar-tx); font-size: 13px;
+}
+.mock-back { padding: 4px 10px; border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 6px; white-space: nowrap; }
+.mock-back:hover { background: rgba(255, 255, 255, 0.12); }
+.mock-title { font-weight: 600; flex: 1 1 200px; min-width: 0; }
+.mock-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+.mock-bar button {
+  font-size: 13px; min-height: 30px; padding: 3px 12px; cursor: pointer; font-family: inherit;
+  background: transparent; color: var(--sidebar-tx); border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 6px;
+}
+.mock-bar button:hover { background: rgba(255, 255, 255, 0.12); }
+.mock-bar [role='tab'][aria-selected='true'],
+.mock-bar [aria-pressed='true'] { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+.mock-view { display: inline-flex; }
+.mock-view button { border-radius: 0; margin-left: -1px; }
+.mock-view button:first-child { border-radius: 6px 0 0 6px; margin-left: 0; }
+.mock-view button:last-child { border-radius: 0 6px 6px 0; }
+
+/* ── Palco: dois dispositivos lado a lado, a quebrar para baixo ── */
+.mock-main { padding: 16px 16px 56px; }
+.variant-notes {
+  max-width: 1180px; margin: 0 auto 16px; padding: 10px 14px; font-size: 14px; line-height: 1.5;
+  background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--primary); border-radius: 8px;
+}
+.variant-notes b { font-weight: 600; }
+.variant-notes .note-extra { margin-top: 4px; font-size: 12px; color: var(--mut); }
+.stage { display: flex; flex-wrap: wrap; gap: 28px 24px; align-items: flex-start; justify-content: center; }
+.stage-item { min-width: 0; max-width: 100%; }
+.stage-cap { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; color: var(--mut); }
+.stage-reset {
+  font-size: 12px; min-height: 0; padding: 2px 10px; cursor: pointer; font-family: inherit;
+  background: var(--card); color: var(--mut); border: 1px solid var(--border); border-radius: 6px;
+}
+.stage-reset:hover { color: var(--txt); }
+.device-scroll { overflow-x: auto; max-width: 100%; padding: 2px; }
+.device-scroll--phone { padding: 8px; }
+body[data-view='desktop'] .stage-item--phone,
+body[data-view='phone'] .stage-item--desktop { display: none; }
+
+/* ── Dispositivos: largura fixa, contentor para as container queries ── */
+.device {
+  container-type: inline-size; container-name: app; position: relative;
+  background: var(--bg); overflow: hidden;
+}
+.device--desktop { width: 1180px; border-radius: 10px; box-shadow: 0 0 0 1px var(--border), 0 4px 18px rgba(0, 0, 0, 0.08); }
+.device--phone { width: 375px; border-radius: 22px; box-shadow: 0 0 0 1px var(--border), 0 0 0 6px #dde5df, 0 6px 22px rgba(0, 0, 0, 0.15); }
+
+/* ── Mini-app: barra lateral + conteúdo (réplica de .shell/.sidebar/.content) ── */
+.app { display: flex; position: relative; min-height: 560px; font-size: 14px; background: var(--bg); color: var(--txt); }
+.app-side {
+  width: 220px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; padding: 20px 12px;
+  background: var(--sidebar); color: var(--sidebar-tx);
+}
+.app-logo {
+  background: #fff; border-radius: 8px; padding: 8px 10px; margin-bottom: 4px; text-align: center;
+  font-weight: 700; font-size: 18px; letter-spacing: 0.04em; color: var(--primary);
+}
+.app-side nav { display: flex; flex-direction: column; gap: 4px; }
+.sidebar-link {
+  display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; font-size: 14px;
+  color: var(--sidebar-tx); opacity: 0.85; flex-shrink: 0;
+}
+.sidebar-link:hover { opacity: 1; background: rgba(255, 255, 255, 0.1); }
+.sidebar-link--active { background: rgba(127, 201, 162, 0.22); color: #bfe8d2; opacity: 1; }
+.sidebar-section { font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.5; padding: 0 10px; margin: 12px 0 2px; }
+.sidebar-section:first-child { margin-top: 4px; }
+.app-user { margin-top: auto; padding-top: 16px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.app-user__name { padding: 0 10px; opacity: 0.8; }
+.app-side .app-user button {
+  width: 100%; text-align: left; background: transparent; border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--sidebar-tx); border-radius: 8px; padding: 8px 10px; font-size: 13px; cursor: pointer; min-height: 0;
+}
+.app-side .app-user button:hover { background: rgba(255, 255, 255, 0.1); }
+.app-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.app-top { display: none; }
+.app-scrim { display: none; }
+.app-content { flex: 1; min-width: 0; padding: 24px; position: relative; }
+.app-toast {
+  position: absolute; z-index: 60; transform: translateX(-50%); width: max-content; max-width: calc(100% - 24px);
+  padding: 8px 14px; border-radius: 8px; background: var(--sidebar); color: var(--sidebar-tx); font-size: 13px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25); pointer-events: none;
+}
+.sheet { position: absolute; inset: 0; z-index: 50; background: rgba(0, 0, 0, 0.35); }
+.sheet__box {
+  position: absolute; width: min(520px, calc(100% - 24px)); max-height: 80%; overflow: auto;
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+}
+.new-tag {
+  display: inline-block; vertical-align: middle; margin-left: 6px; padding: 0 6px; border-radius: 4px; font-size: 11px;
+  font-weight: 600; text-transform: none; letter-spacing: 0; background: var(--info-bg); border: 1px solid var(--info-bd); color: var(--info-tx);
+}
+
+/* ── Base de formulários e botões (globals.css) ── */
+.device input, .device select, .device textarea, .device button {
+  font-size: 16px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 8px;
+  background: #fff; min-height: 36px; font-family: inherit; color: var(--txt);
+}
+.device input[type='checkbox'], .device input[type='radio'] { min-height: 0; width: 18px; height: 18px; accent-color: var(--primary); }
+.device label { font-size: 12px; color: var(--mut); display: block; margin-bottom: 12px; }
+.device label > input, .device label > select, .device label > textarea { display: block; width: 100%; max-width: 420px; margin-top: 4px; }
+.device button.primary {
+  background: var(--primary); color: #fff; border: none; font-weight: 600; cursor: pointer; padding: 10px 22px; border-radius: 8px;
+}
+.device button.primary:hover { background: var(--primary-hover); }
+.device button.primary:disabled { background: var(--hint); cursor: not-allowed; }
+.device button.secondary { cursor: pointer; background: #fff; }
+.device .btn-row {
+  display: inline-block; font-size: 13px; font-weight: 500; padding: 4px 12px; min-height: 0;
+  border: 1px solid var(--primary); border-radius: 6px; background: #f2faf6; color: var(--primary-hover);
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+}
+.device .btn-row:hover { background: #e3f4ea; }
+.device .btn-row[aria-pressed='true'], .device .btn-row[aria-current='page'] { background: var(--primary); color: #fff; }
+.device .btn-row.btn-row-strong { background: var(--primary); color: #fff; font-weight: 600; }
+.device .btn-row.btn-row-strong:hover { background: var(--primary-hover); }
+.device .btn-row.btn-row-quiet { font-size: 12px; font-weight: 400; border-color: var(--border); background: var(--bg); color: var(--mut); }
+.device .btn-row.btn-row-quiet:hover { background: var(--card); color: var(--txt); }
+.device .btn-row.danger { border-color: #c0392b; color: #c0392b; background: #fdf3f2; }
+.device .btn-row:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Cartões, badges, avisos (globals.css) ── */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.badge-ok, .badge-warn, .badge-err, .badge-info, .badge-mut {
+  font-size: 12px; padding: 2px 8px; border-radius: 4px; white-space: nowrap; border: 1px solid; display: inline-block;
+}
+.badge-ok { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.badge-warn { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); }
+.badge-err { background: var(--er-bg); border-color: var(--er-bd); color: var(--er-tx); }
+.badge-info { background: var(--info-bg); border-color: var(--info-bd); color: var(--info-tx); }
+.badge-mut { background: var(--bg); border-color: var(--border); color: var(--mut); }
+.alert-ok, .alert-warn, .alert-err, .alert-info { border-radius: 8px; padding: 8px 12px; font-size: 14px; border: 1px solid; }
+.alert-ok { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.alert-warn { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); }
+.alert-err { background: var(--er-bg); border-color: var(--er-bd); color: var(--er-tx); }
+.alert-info { background: var(--info-bg); border-color: var(--info-bd); color: var(--info-tx); }
+.toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 12px 0 16px; }
+.toolbar-actions { margin-left: auto; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.muted { color: var(--mut); }
+.small { font-size: 12px; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Separadores de trabalho e filtro segmentado (precedente 2026-09-25) */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin: 4px 0 12px; flex-wrap: wrap; }
+.tabs [role='tab'] {
+  border: 1px solid transparent; border-bottom: none; border-radius: 8px 8px 0 0; background: none; min-height: 0;
+  font-size: 15px; padding: 8px 14px; cursor: pointer; color: var(--mut); margin-bottom: -1px;
+}
+.tabs [role='tab'][aria-selected='true'] { background: var(--card); border-color: var(--border); color: var(--txt); font-weight: 600; }
+.tab-count { display: inline-block; min-width: 20px; padding: 0 6px; border-radius: 10px; background: var(--er-bg); color: var(--er-tx); font-size: 12px; font-weight: 600; text-align: center; }
+.seg { display: inline-flex; border: 1px solid var(--primary); border-radius: 6px; overflow: hidden; }
+.device .seg button { border: none; border-radius: 0; min-height: 0; font-size: 13px; padding: 4px 12px; background: #f2faf6; color: var(--primary-hover); cursor: pointer; }
+.device .seg button[aria-pressed='true'] { background: var(--primary); color: #fff; font-weight: 600; }
+
+/* ── Tabelas (globals.css:492-): base desktop ── */
+.device table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 14px; }
+.device th { text-align: left; font-size: 12px; color: var(--mut); border-bottom: 1px solid var(--border); padding: 6px 8px; }
+.device td { padding: 8px; border-bottom: 1px solid var(--border); }
+.table-scroll-wrap { overflow-x: auto; }
+
+/* ── ≤768px: réplica do bloco @media (max-width: 768px) de globals.css, por container query ── */
+@container app (max-width: 768px) {
+  .app-side {
+    position: absolute; top: 0; left: 0; bottom: 0; z-index: 30; width: 240px;
+    transform: translateX(-100%); visibility: hidden;
+    transition: transform 0.22s ease, visibility 0s linear 0.22s; box-shadow: 4px 0 16px rgba(0, 0, 0, 0.25);
+  }
+  .app[data-menu-open] .app-side { transform: none; visibility: visible; transition: transform 0.22s ease; }
+  .app[data-menu-open] .app-scrim { display: block; position: absolute; inset: 0; z-index: 20; background: rgba(0, 0, 0, 0.4); }
+  .app-top {
+    display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+  .app-top .app-burger { padding: 6px 10px; line-height: 1; cursor: pointer; }
+  .app-top__title { font-weight: 600; font-size: 15px; }
+  .app-content { padding: 16px; }
+  h1 { font-size: 20px; }
+  .card { padding: 12px; }
+  .tabs [role='tab'] { flex: 1; padding: 8px 6px; font-size: 14px; }
+  .toolbar-actions { margin-left: 0; }
+  .sheet__box { padding: 12px; }
+
+  /* Grelha por omissão: a tabela é o próprio contentor de scroll */
+  table:not(.table--cards):not(.table--scroll) { display: block; overflow-x: auto; width: 100%; margin-top: 12px; font-size: 13px; }
+  table:not(.table--cards):not(.table--scroll) th,
+  table:not(.table--cards):not(.table--scroll) td { white-space: nowrap; padding: 4px 8px; font-variant-numeric: tabular-nums; }
+  /* .table--fill: 2–3 colunas, 100% da largura, o nome quebra */
+  table.table--fill:not(.table--cards):not(.table--scroll) { display: table; width: 100%; table-layout: auto; overflow-x: visible; }
+  table.table--fill:not(.table--cards):not(.table--scroll) th,
+  table.table--fill:not(.table--cards):not(.table--scroll) td { white-space: normal; overflow-wrap: anywhere; }
+  /* .table--cards: linhas viram cards; exige data-label em cada td (excepto acções) */
+  table.table--cards thead { display: none; }
+  table.table--cards, table.table--cards tbody, table.table--cards tfoot, table.table--cards tr, table.table--cards td { display: block; width: 100%; }
+  table.table--cards tr { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; padding: 8px 12px; }
+  table.table--cards td { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 4px 0; border-bottom: none; }
+  table.table--cards td[data-label]::before {
+    content: attr(data-label); font-size: 11px; font-weight: 600; color: var(--mut); text-transform: uppercase; letter-spacing: 0.04em; flex-shrink: 0;
+  }
+  table.table--cards td:not([data-label]) { justify-content: flex-end; border-top: 1px solid var(--border); margin-top: 4px; padding-top: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* Página estreita: o dispositivo mantém 375 px, com deslocação na moldura. */
+@media (max-width: 420px) {
+  .mock-main { padding: 12px 0 40px; }
+  .variant-notes { margin-left: 12px; margin-right: 12px; }
+  .stage-cap { padding: 0 12px; }
+  .device-scroll--phone { padding: 0; }
+  .device--phone { border-radius: 0; box-shadow: 0 0 0 1px var(--border); }
+}
+@media (max-width: 700px) {
+  .mock-bar { position: static; padding: 8px 12px; }
+  .mock-back { order: 1; }
+  .mock-view { order: 2; margin-left: auto; }
+  .mock-title { order: 3; flex-basis: 100%; }
+  .mock-tabs { order: 4; flex: 1 1 100%; flex-wrap: nowrap; }
+  .mock-tabs button { flex: 1 1 0; min-width: 0; padding: 4px 4px; font-size: 12px; line-height: 1.25; }
+}
+/* === FIM MOLDURA === */
+
+/* === ESPECÍFICO DESTE MOCKUP === */
+.app-content { --pad: 24px; }
+@container app (max-width: 768px) { .app-content { --pad: 16px; } }
+.ms h1 { font-size: 24px; margin-bottom: 12px; }
+.ms-foot { margin-top: 16px; }
+.ms-total { margin: 0 0 12px; font-size: 14px; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #e0a21a; flex-shrink: 0; }
+.nm-full { display: none; }
+@container app (min-width: 769px) { .nm-full { display: inline; } .nm-short { display: none; } }
+
+/* Estados mascarados dos colegas: «Folga», «Férias», «Indisponível» (nunca «Baixa») */
+.st { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 4px; border: 1px solid; white-space: nowrap; }
+.st-folga { background: var(--bg); border-color: var(--border); color: var(--mut); }
+.st-ferias { background: var(--info-bg); border-color: var(--info-bd); color: var(--info-tx); }
+.st-indisp { background: #f1f1ef; border: 1px dashed #b9b9b4; color: #55584f; }
+.ms .btn-row { min-height: 36px; display: inline-flex; align-items: center; }
+
+/* Navegação de semana */
+.ms-weeknav { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.device .ms-weeknav .ms-arrow { position: relative; flex: 0 0 44px; width: 44px; height: 44px; min-height: 44px; padding: 0; font-size: 22px; line-height: 1; cursor: pointer; color: var(--txt); }
+.device .ms-weeknav .ms-arrow:disabled { opacity: 0.4; cursor: not-allowed; }
+.ms-arrow .dot { position: absolute; top: 6px; right: 6px; }
+.ms-weektitle { flex: 1; min-width: 0; text-align: center; line-height: 1.3; }
+.ms-weektitle b { display: block; font-size: 16px; }
+.ms-weektitle .ms-range { font-size: 13px; color: var(--mut); }
+.ms-weektitle .ms-wk-extra { margin-top: 2px; }
+
+/* Aviso «Escala alterada» */
+.ms-banner { display: flex; align-items: flex-start; flex-wrap: wrap; gap: 6px 10px; margin-bottom: 12px; }
+.ms-banner .dot { margin-top: 6px; }
+.ms-banner > span:nth-child(2) { flex: 1 1 200px; min-width: 0; }
+.ms-banner .ms-seen { display: block; margin-top: 2px; font-size: 13px; }
+.device .ms-alertbtn {
+  display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; margin-bottom: 12px; padding: 8px 12px;
+  text-align: left; font-size: 14px; cursor: pointer; background: var(--warn-bg); border: 1px solid var(--warn-bd);
+  color: var(--warn-tx); border-radius: 8px;
+}
+.ms-alertbtn span:nth-child(2) { flex: 1; font-weight: 600; }
+.ms-alertbtn:hover { background: #f5e2bd; }
+
+/* A · selector de colegas */
+.ms-picker { margin-bottom: 12px; }
+.device .ms-picker-btn { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; min-height: 44px; text-align: left; font-size: 15px; cursor: pointer; }
+.ms-picker-panel { margin-top: 6px; padding: 8px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12); }
+.device .ms-picker-panel input { width: 100%; max-width: none; margin: 0 0 6px; }
+.ms-picker-list { list-style: none; max-height: 264px; overflow: auto; }
+.device .ms-picker-list button { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; padding: 4px 8px; border: 0; border-radius: 6px; background: transparent; text-align: left; font-size: 15px; cursor: pointer; }
+.device .ms-picker-list button:hover { background: var(--row-hover); }
+.device .ms-picker-list button[aria-selected='true'] { background: var(--ok-bg); font-weight: 600; }
+.ms-whoami { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.ms-whoami .ms-who-text { flex: 1 1 160px; min-width: 0; line-height: 1.3; }
+.ms-av {
+  display: inline-flex; align-items: center; justify-content: center; flex: 0 0 30px; width: 30px; height: 30px; border-radius: 50%;
+  background: var(--ok-bg); color: var(--ok-tx); border: 1px solid var(--ok-bd); font-size: 11px; font-weight: 600;
+}
+
+/* A · cartões por dia */
+.ms-days { display: grid; gap: 10px; }
+.ms-days-title { grid-column: 1 / -1; margin: 8px 0 0; font-size: 13px; font-weight: 600; color: var(--mut); }
+@container app (min-width: 900px) {
+  .ms-days { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  .ms-days .is-today { grid-column: 1 / -1; }
+}
+.ms-day { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }
+.ms-day.is-today { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); background: #f4fbf7; }
+.ms-day.is-past { background: #f8faf8; }
+.ms-day.is-past .ms-time { color: var(--mut); }
+.ms-day.is-changed { border-color: var(--warn-bd); border-left: 4px solid #e0a21a; background: #fffaf0; }
+.ms-dayhead { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ms-dayhead h3, .ms-dhead h2 { font-size: 15px; font-weight: 600; }
+.ms-shiftline { display: flex; align-items: baseline; gap: 4px 12px; flex-wrap: wrap; margin-top: 4px; }
+.ms-time { font-size: 26px; font-weight: 700; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.ms-day.is-today .ms-time { font-size: 30px; }
+.ms-time--off { color: var(--mut); font-size: 22px; font-weight: 600; }
+.ms-sub { font-size: 13px; color: var(--mut); }
+.ms-break { margin-top: 2px; font-size: 13px; color: var(--mut); }
+.ms-was { margin-top: 4px; font-size: 13px; color: var(--warn-tx); }
+.ms-was s { color: var(--warn-tx); }
+.ms-together { margin-top: 2px; font-size: 13px; color: var(--ok-tx); }
+.device .ms-expand {
+  display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 44px; margin-top: 8px; padding: 6px 0 0;
+  border: 0; border-top: 1px solid var(--border); border-radius: 0; background: transparent; text-align: left;
+  font-size: 15px; font-weight: 600; color: var(--primary-hover); cursor: pointer;
+}
+.ms-expand .chev { transition: transform 0.15s; }
+.ms-expand[aria-expanded='true'] .chev { transform: rotate(180deg); }
+.ms-people { list-style: none; margin: 4px 0 0; }
+.ms-people li { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 6px 0; border-top: 1px solid var(--border); }
+.ms-people li:first-child { border-top: 0; }
+.ms-people .ms-ptime { font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.ms-people .ms-pjoint { display: block; font-size: 12px; font-weight: 400; color: var(--ok-tx); }
+.ms-out { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); font-size: 13px; color: var(--mut); }
+.ms-out ul { list-style: none; display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 4px; }
+.ms-out li { display: inline-flex; align-items: center; gap: 6px; color: var(--txt); }
+
+/* B · tira de dias fixa + detalhe */
+@media (min-width: 0px) {
+  .device--phone[data-variant='b'] .app { height: 780px; min-height: 0; }
+  .device--phone[data-variant='b'] .app-main { min-height: 0; }
+  .device--phone[data-variant='b'] .app-content { overflow-y: auto; overscroll-behavior: contain; }
+}
+.ms-sticky {
+  position: sticky; top: 0; z-index: 10; background: var(--bg); margin: 0 calc(var(--pad) * -1) 12px;
+  padding: 6px var(--pad) 10px; border-bottom: 1px solid var(--border);
+}
+.ms-sticky .ms-weeknav { margin-bottom: 6px; }
+.ms-strip7 { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.device .ms-sd {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 1px; min-height: 72px; padding: 6px 0;
+  border-radius: 10px; font-size: 12px; line-height: 1.2; cursor: pointer; background: var(--card);
+}
+.ms-sd .sd-wd { font-size: 12px; color: var(--mut); }
+.ms-sd .sd-n { font-size: 16px; font-weight: 700; }
+.ms-sd .sd-t i { display: block; font-style: normal; font-variant-numeric: tabular-nums; }
+.ms-sd .sd-tw { display: none; font-variant-numeric: tabular-nums; }
+@container app (min-width: 769px) { .ms-sd .sd-t { display: none; } .ms-sd .sd-tw { display: block; } .device .ms-sd { min-height: 64px; } }
+.ms-sd.is-off .sd-t, .ms-sd.is-off .sd-tw { color: var(--mut); }
+.device .ms-sd.is-today:not(.is-sel) { border: 2px solid var(--primary); }
+.device .ms-sd.is-sel { background: var(--primary-hover); border-color: var(--primary-hover); color: #fff; }
+.ms-sd.is-sel .sd-wd, .ms-sd.is-sel .sd-t, .ms-sd.is-sel .sd-tw { color: #e2f2e9; }
+.ms-sd .dot { position: absolute; top: 4px; right: 4px; }
+.ms-sd .sd-hoje { font-size: 11px; font-weight: 600; color: var(--ok-tx); }
+.ms-sd.is-sel .sd-hoje { color: #fff; }
+.ms-detail .ms-dhead { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ms-h3 { margin-top: 14px; font-size: 15px; font-weight: 600; }
+.ms-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 8px 0 4px; }
+.device .ms-chip {
+  position: relative; width: 44px; height: 44px; min-height: 44px; padding: 0; border-radius: 50%;
+  font-size: 13px; font-weight: 600; cursor: pointer; background: #fff;
+}
+.device .ms-chip[aria-pressed='true'] { background: var(--info-tx); border-color: var(--info-tx); color: #fff; }
+.device .ms-chip.is-off { color: var(--mut); border-style: dashed; }
+.device .ms-chip.is-off[aria-pressed='true'] { color: #fff; border-style: solid; }
+.ms-chip .cd { position: absolute; top: 2px; right: 2px; width: 10px; height: 10px; border-radius: 50%; background: var(--primary); border: 2px solid #fff; }
+.ms-chip.is-off .cd { background: #c9d1cc; }
+.ms-hint { font-size: 13px; color: var(--mut); margin-bottom: 8px; }
+.tl { margin-top: 6px; }
+.tl-axis, .tl-row { display: grid; grid-template-columns: 62px minmax(0, 1fr); column-gap: 6px; align-items: center; }
+@container app (min-width: 769px) { .tl-axis, .tl-row { grid-template-columns: 130px minmax(0, 1fr); } }
+.tl-axis { margin-bottom: 2px; }
+.tl-ticks { position: relative; height: 16px; }
+.tl-ticks span { position: absolute; top: 0; transform: translateX(-50%); font-size: 11px; color: var(--mut); font-variant-numeric: tabular-nums; }
+.tl-ticks span:first-child { transform: none; }
+.tl-ticks span:last-child { transform: translateX(-100%); }
+.tl-row { min-height: 34px; border-top: 1px solid var(--border); }
+.tl-name { font-size: 12px; line-height: 1.25; overflow-wrap: anywhere; }
+.tl-row--me .tl-name { font-weight: 700; }
+.tl-track {
+  position: relative; height: 26px; margin: 4px 0;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px); background-size: calc(100% / 6) 100%; background-repeat: repeat-x;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+.tl-bar { position: absolute; top: 0; bottom: 0; border-radius: 6px; overflow: hidden; background: #e9eeea; border: 1px solid #c8d2cb; }
+.tl-bar--me { background: var(--primary-hover); border-color: var(--primary-hover); }
+.tl-joint { position: absolute; top: 0; bottom: 0; background: #b8e3cc; }
+.tl-txt { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 0 4px; font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--txt); }
+.tl-break { position: absolute; top: 0; bottom: 0; background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.7) 0 3px, rgba(255, 255, 255, 0.15) 3px 6px); border-left: 1px solid #fff; border-right: 1px solid #fff; }
+.tl-row.is-sel .tl-bar { background: var(--info-bg); border-color: var(--info-bd); }
+.tl-row.is-sel .tl-joint { background: #aac4f2; }
+.tl-off { display: flex; align-items: center; height: 100%; }
+.tl-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 8px; font-size: 12px; color: var(--mut); }
+.tl-legend i { display: inline-block; width: 14px; height: 10px; margin-right: 4px; border-radius: 3px; vertical-align: -1px; border: 1px solid #c8d2cb; }
+.tl-legend .lg-me { background: var(--primary-hover); border-color: var(--primary-hover); }
+.tl-legend .lg-joint { background: #b8e3cc; }
+.tl-legend .lg-break { background: repeating-linear-gradient(45deg, #fff 0 2px, #9ccbb2 2px 4px); }
+
+/* C · equipa lado a lado */
+.ms-ctl { display: flex; align-items: center; gap: 8px 12px; flex-wrap: wrap; margin-bottom: 8px; }
+.device .seg.ms-seg button { min-height: 40px; padding: 4px 14px; }
+.ms-gridwrap { max-height: 450px; overflow: auto; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
+.device .ms-grid { width: 100%; min-width: 326px; margin: 0; border-collapse: separate; border-spacing: 0; table-layout: fixed; font-size: 13px; }
+.ms-grid col.g-col-name { width: 82px; }
+@container app (min-width: 769px) { .ms-grid col.g-col-name { width: 150px; } }
+.device .ms-grid th, .device .ms-grid td { padding: 0; text-align: center; vertical-align: middle; border-bottom: 1px solid var(--border); color: var(--txt); font-weight: 400; font-size: 11px; }
+.device .ms-grid thead tr:first-child > * { position: sticky; top: 0; z-index: 3; height: 46px; background: var(--card); }
+.device .ms-grid thead tr.g-me > * { position: sticky; top: 46px; z-index: 3; height: 46px; background: #eef8f2; border-bottom: 2px solid var(--primary); }
+.device .ms-grid tbody tr { height: 40px; }
+.device .ms-grid .g-name { position: sticky; left: 0; z-index: 2; text-align: left; padding: 0 4px 0 6px; background: var(--card); border-right: 1px solid var(--border); }
+.device .ms-grid thead .g-name { z-index: 5; }
+.device .ms-grid tr.g-me .g-name { background: #eef8f2; font-weight: 700; font-size: 13px; }
+.device .ms-grid tr.g-count { height: 34px; }
+.device .ms-grid tr.g-count .g-name { font-size: 11px; color: var(--mut); line-height: 1.2; }
+.device .ms-grid tr.g-count td { font-weight: 600; background: #fafcfa; }
+.device .ms-grid .corner { font-size: 11px; color: var(--mut); line-height: 1.2; }
+.device .ms-grid .is-selcol { background: #eaf5ee; }
+.device .ms-grid tbody td.is-with { background: #cfeadb; font-weight: 600; }
+.device .ms-grid thead th.is-selcol { background: var(--ok-bg); }
+.device .ms-grid tr.g-me td.is-selcol { background: #d3ecdf; }
+.device .ms-grid td.g-c { position: relative; cursor: pointer; padding: 1px; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.g-c i { display: block; font-style: normal; }
+.g-c .t-w { display: none; }
+@container app (min-width: 769px) { .g-c .t-w { display: inline; } .g-c .t-n { display: none; } .device .ms-grid td.g-c, .device .ms-grid th, .device .ms-grid td { font-size: 13px; } }
+.g-c.k-off { color: var(--mut); }
+.g-c.k-ferias { background: var(--info-bg); color: var(--info-tx); }
+.g-c.k-indisp { background: repeating-linear-gradient(45deg, #efefec 0 4px, #e3e3df 4px 8px); color: #55584f; }
+.device .ms-grid td.g-c.k-ferias.is-selcol { background: #d6e3fa; }
+.device .ms-grid td.g-c.k-indisp.is-selcol { background: repeating-linear-gradient(45deg, #e9efe9 0 4px, #dbe3dc 4px 8px); }
+.g-me .g-c { color: var(--ok-tx); font-weight: 700; }
+.g-me .g-c.k-off { color: var(--mut); font-weight: 600; }
+.g-c .dot { position: absolute; top: 3px; right: 3px; }
+.g-c.is-chg { background: var(--warn-bg); }
+.device .ms-grid .g-dh {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; width: 100%; height: 100%; min-height: 0;
+  padding: 2px 0; border: 0; border-radius: 0; background: transparent; font-size: 11px; line-height: 1.2; color: var(--mut); cursor: pointer;
+}
+.g-dh .gd-n { font-size: 13px; font-weight: 700; color: var(--txt); padding: 0 6px; border-radius: 10px; }
+.g-dh.is-today .gd-n { background: var(--primary-hover); color: #fff; }
+.g-dh .gd-hoje { display: none; font-size: 11px; font-weight: 600; color: var(--ok-tx); }
+.g-dh .gd-wd .wd-l { display: none; }
+@container app (min-width: 769px) { .g-dh .gd-hoje { display: block; } .g-dh .gd-wd .wd-l { display: inline; } .g-dh .gd-wd .wd-s { display: none; } .device .ms-grid .g-dh { font-size: 13px; } }
+.device .ms-grid .g-dh:focus-visible { outline-offset: -3px; }
+.device .ms-grid .g-pin { display: flex; align-items: center; gap: 3px; width: 100%; min-height: 36px; padding: 0; border: 0; border-radius: 4px; background: transparent; font-size: 11px; line-height: 1.15; text-align: left; cursor: pointer; color: var(--txt); }
+@container app (min-width: 769px) { .device .ms-grid .g-pin { font-size: 13px; gap: 6px; } }
+.g-pin .g-star { flex: 0 0 auto; color: #b9bfba; font-size: 12px; }
+.g-pin[aria-pressed='true'] .g-star { color: #d99a13; }
+.ms-sum h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.ms-sum p { margin-top: 4px; font-size: 14px; }
+.ms-sumwrap { margin-top: 12px; }
+.ms-legend { margin-top: 8px; font-size: 12px; color: var(--mut); }
+.ms-empty { margin-top: 4px; }
+</style>
+</head>
+<body data-view="both">
+
+<header class="mock-bar">
+  <a class="mock-back" href="2026-10-03-escalas-ferias-mockups.html">← Índice</a>
+  <span class="mock-title">2 · A minha escala (/escala/minha)</span>
+  <div class="mock-tabs" role="tablist" aria-label="Variantes">
+    <button type="button" role="tab" id="tab-a" data-variant="a" aria-controls="panel-a" aria-selected="false">A · Lista por dia</button>
+    <button type="button" role="tab" id="tab-b" data-variant="b" aria-controls="panel-b" aria-selected="false">B · Tira + detalhe</button>
+    <button type="button" role="tab" id="tab-c" data-variant="c" aria-controls="panel-c" aria-selected="false">C · Equipa lado a lado</button>
+  </div>
+  <div class="mock-view" role="group" aria-label="Dispositivos">
+    <button type="button" data-view="both" aria-pressed="true">Ambos</button>
+    <button type="button" data-view="desktop" aria-pressed="false">Desktop</button>
+    <button type="button" data-view="phone" aria-pressed="false">375 px</button>
+  </div>
+</header>
+
+<main class="mock-main">
+  <section role="tabpanel" id="panel-a" aria-labelledby="tab-a" data-variant="a" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> um cartão por dia, empilhados, com hoje no topo e destacado; o selector «A ver» (com filtro instantâneo) troca para a escala de um colega; «Quem trabalha comigo?» abre dentro do próprio dia.</p>
+      <p><b>Vantagens:</b> lê-se de cima para baixo sem aprender nada, ao ritmo do polegar; é a vista que menos muda do telemóvel para o computador; o aviso «Escala alterada» fica sempre no topo.</p>
+      <p><b>Custo:</b> comparar dias ou colegas obriga a deslizar e a abrir cada dia; a semana não se vê de relance.</p>
+      <p class="note-extra">Experimente: abrir a semana 41 (aviso âmbar ou ›) marca-a como vista; «Repor» recomeça. Os colegas aparecem só com horas, «Folga», «Férias» ou «Indisponível».</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-b" aria-labelledby="tab-b" data-variant="b" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> tira de 7 dias fixa no topo e, por baixo, o detalhe do dia com uma linha do tempo 07:00–19:00: a minha barra e as dos colegas sobrepostos, por ordem de entrada; chips de iniciais para comparar colegas.</p>
+      <p><b>Vantagens:</b> responde a «quem entra quando eu saio?» de relance; a semana inteira cabe numa linha e cada dia custa 1 toque.</p>
+      <p><b>Custo:</b> é a vista com mais interface (tira, chips, linha do tempo); a 375 px o detalhe é denso e a hora exata lê-se dentro das barras.</p>
+      <p class="note-extra">Sem chips escolhidos, mostra todos os que trabalham contigo; ao escolher, só os escolhidos (também os que estão de folga, férias ou indisponíveis). A tira só fica fixa no telemóvel, onde o ecrã tem scroll próprio.</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-c" aria-labelledby="tab-c" data-variant="c" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> grelha da semana (dias em colunas) com a minha linha fixa no topo e os colegas por baixo; alternador «Só eu · Eu + escolhidos · Todos»; tocar num dia destaca a coluna e diz quantos trabalham comigo.</p>
+      <p><b>Vantagens:</b> a equipa inteira numa só vista, com a contagem de colegas de cada dia numa linha; folgas e férias dos colegas ficam lado a lado com o meu horário.</p>
+      <p><b>Custo:</b> a 375 px cada célula mostra o horário em duas linhas (entrada/saída) e comparar horas exatas é mais difícil do que na linha do tempo.</p>
+      <p class="note-extra">Em «Todos», toque no nome de um colega para o escolher (★); «Eu + escolhidos» mostra só esses. A grelha tem scroll próprio e a minha linha fica fixa.</p>
+    </div>
+  </section>
+</main>
+
+<!-- Conteúdo de cada variante: clonado por JS para o desktop e para os 375 px. Sem id aqui dentro.
+     A parte dinâmica (semana, selecção, expansões) é desenhada em [data-root] pelo script específico. -->
+<template data-variant="a" data-active="A minha escala" data-title="A minha escala" data-user="Inês Calado">
+  <main class="ms">
+    <h1>A minha escala</h1>
+    <div data-root></div>
+    <p class="ms-foot muted small">Mostra só a versão publicada. Dos colegas vê apenas horas, «Folga», «Férias» ou «Indisponível».</p>
+  </main>
+</template>
+
+<template data-variant="b" data-active="A minha escala" data-title="A minha escala" data-user="Inês Calado">
+  <main class="ms">
+    <h1>A minha escala</h1>
+    <div data-root></div>
+    <p class="ms-foot muted small">Mostra só a versão publicada. Dos colegas vê apenas horas, «Folga», «Férias» ou «Indisponível».</p>
+  </main>
+</template>
+
+<template data-variant="c" data-active="A minha escala" data-title="A minha escala" data-user="Inês Calado">
+  <main class="ms">
+    <h1>A minha escala</h1>
+    <div data-root></div>
+    <p class="ms-foot muted small">Mostra só a versão publicada. Dos colegas vê apenas horas, «Folga», «Férias» ou «Indisponível».</p>
+  </main>
+</template>
+
+<script>
+/* Feriados nacionais: datas UTC, incluindo os móveis da Páscoa. */
+var nationalHolidayCache = {};
+function nationalHolidays(year) {
+  if (nationalHolidayCache[year]) return nationalHolidayCache[year];
+  var a = year % 19, b = Math.floor(year / 100), c = year % 100, d = Math.floor(b / 4), e = b % 4;
+  var f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
+  var i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451);
+  var easter = new Date(Date.UTC(year, Math.floor((h + l - 7 * m + 114) / 31) - 1, (h + l - 7 * m + 114) % 31 + 1));
+  var result = {}, fixed = { '01-01': 'Ano Novo', '04-25': 'Dia da Liberdade', '05-01': 'Dia do Trabalhador', '06-10': 'Dia de Portugal', '08-15': 'Assunção de Nossa Senhora', '10-05': 'Implantação da República', '11-01': 'Todos os Santos', '12-01': 'Restauração da Independência', '12-08': 'Imaculada Conceição', '12-25': 'Natal' };
+  Object.keys(fixed).forEach(function (key) { result[year + '-' + key] = fixed[key]; });
+  [[-2, 'Sexta-feira Santa'], [0, 'Páscoa'], [60, 'Corpo de Deus']].forEach(function (entry) { result[new Date(easter.getTime() + entry[0] * 864e5).toISOString().slice(0, 10)] = entry[1]; });
+  return nationalHolidayCache[year] = result;
+}
+function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] || ''; }
+</script>
+<script>
+/* === MOLDURA COMUM (copiar) === */
+/* API para o JS específico (script a seguir a este):
+     window.mockInit = (deviceEl, variant, kind) => {}   chamado por cada clone (kind = 'desktop' | 'phone')
+     Mock.on(tipo, seletor, (evento, elemento, deviceEl) => {})   delegação com escopo no .device
+     Mock.toast(deviceEl, texto)   Mock.sheet(deviceEl, html|Node) → caixa   Mock.closeSheet(deviceEl)
+     Mock.state(deviceEl) → objeto por clone   Mock.uid(prefixo) → id único   Mock.$ Mock.$$ Mock.esc
+   No markup dos templates (sem id): data-id="k" → id único por clone; data-for / data-controls /
+   data-labelledby / data-describedby="k" → for / aria-controls / aria-labelledby / aria-describedby.
+   [data-route="/rota"] simula navegação (aviso «Abre /rota»). Atributos do <template>:
+   data-active (item do menu activo), data-title (título da barra a 375 px), data-user (nome na barra lateral). */
+(function () {
+  'use strict';
+  var VIEW_KEY = 'escalas-ferias-mock-view';
+  var MENU = [
+    ['Geral', [['Início', '/']]],
+    ['Operação', [['Horas', '/horas'], ['As minhas horas', '/horas/minhas'], ['Escala', '/escala'], ['A minha escala', '/escala/minha'],
+      ['Férias', '/ferias'], ['As minhas férias', '/ferias/minhas'], ['Gorjetas', '/gorjetas'], ['As minhas gorjetas', '/gorjetas/minhas'],
+      ['Fecho de caixa', '/caixa']]],
+    ['Cadastros', [['Cadastros', '/cadastros']]]
+  ];
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var mk = function (tag, cls) { var n = document.createElement(tag); if (cls) n.className = cls; return n; };
+  var clamp = function (v, lo, hi) { return Math.min(Math.max(v, lo), hi); };
+  var states = new WeakMap();
+  var counter = 0;
+  var uid = function (p) { counter += 1; return (p || 'u') + '-' + counter; };
+  var state = function (dev) { if (!states.has(dev)) states.set(dev, {}); return states.get(dev); };
+
+  /* ids únicos por clone: data-id define, os data-for/controls/labelledby/describedby ligam */
+  function wireIds(root) {
+    var map = {};
+    var get = function (k) { if (!map[k]) map[k] = uid(k); return map[k]; };
+    $$('[data-id]', root).forEach(function (n) { n.id = get(n.getAttribute('data-id')); });
+    [['data-for', 'for'], ['data-controls', 'aria-controls'], ['data-labelledby', 'aria-labelledby'], ['data-describedby', 'aria-describedby']]
+      .forEach(function (p) { $$('[' + p[0] + ']', root).forEach(function (n) { n.setAttribute(p[1], get(n.getAttribute(p[0]))); }); });
+  }
+
+  /* parte visível do dispositivo (para posicionar avisos e diálogos onde o utilizador está a olhar) */
+  function visibleBox(dev) {
+    var r = dev.getBoundingClientRect();
+    var sc = dev.closest('.device-scroll');
+    return {
+      top: clamp(-r.top, 0, r.height), bottom: clamp(window.innerHeight - r.top, 0, r.height),
+      left: sc ? sc.scrollLeft : 0, width: sc ? sc.clientWidth : dev.clientWidth
+    };
+  }
+  function toast(dev, msg) {
+    var app = $('.app', dev); if (!app) return;
+    var t = $('.app-toast', app);
+    if (!t) { t = mk('div', 'app-toast'); t.setAttribute('role', 'status'); app.appendChild(t); }
+    t.textContent = msg; t.hidden = false;
+    var v = visibleBox(dev);
+    t.style.top = Math.max(8, v.bottom - 56) + 'px';
+    t.style.left = (v.left + v.width / 2) + 'px';
+    clearTimeout(t._h); t._h = setTimeout(function () { t.hidden = true; }, 2800);
+  }
+  function sheet(dev, content) {
+    var app = $('.app', dev), s = $('.sheet', app);
+    if (!s) { s = mk('div', 'sheet'); s.innerHTML = '<div class="sheet__box" role="dialog" aria-modal="true"></div>'; app.appendChild(s); }
+    var box = $('.sheet__box', s);
+    if (typeof content === 'string') box.innerHTML = content; else if (content) box.replaceChildren(content);
+    wireIds(box); s.hidden = false;
+    var v = visibleBox(dev);
+    box.style.top = (v.top + 24) + 'px';
+    box.style.left = Math.max(12, v.left + (v.width - box.offsetWidth) / 2) + 'px';
+    var f = $('button, input, select, textarea, a[href]', box); if (f) f.focus();
+    return box;
+  }
+  function closeSheet(dev) { var s = $('.sheet', dev); if (s) s.hidden = true; }
+  function setMenu(dev, open) {
+    var app = $('.app', dev); if (!app) return;
+    app.toggleAttribute('data-menu-open', open);
+    var b = $('.app-burger', dev); if (b) { b.setAttribute('aria-expanded', String(open)); b.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu'); }
+  }
+  function on(type, selector, fn) {
+    document.addEventListener(type, function (e) {
+      var t = e.target && e.target.closest ? e.target.closest(selector) : null; if (!t) return;
+      var dev = t.closest('.device'); if (!dev) return;
+      fn(e, t, dev);
+    });
+  }
+
+  /* mini-app: barra lateral (desktop) / barra superior com ☰ (≤768px, por container query) */
+  function buildApp(tpl) {
+    var active = tpl.dataset.active || document.body.dataset.active || '';
+    var title = tpl.dataset.title || active;
+    var user = tpl.dataset.user || 'Carla Videira';
+    var app = mk('div', 'app');
+    var nav = MENU.map(function (sec) {
+      return '<div class="sidebar-section">' + esc(sec[0]) + '</div>' + sec[1].map(function (it) {
+        var on_ = it[0] === active;
+        return '<a class="sidebar-link' + (on_ ? ' sidebar-link--active' : '') + '" href="#" data-route="' + esc(it[1]) + '"' + (on_ ? ' aria-current="page"' : '') + '>' + esc(it[0]) + '</a>';
+      }).join('');
+    }).join('');
+    app.innerHTML =
+      '<aside class="app-side" aria-label="Menu principal"><div class="app-logo">GIG</div><nav>' + nav + '</nav>' +
+      '<div class="app-user"><span class="app-user__name">' + esc(user) + '</span><button type="button" data-route="/login">Sair</button></div></aside>' +
+      '<div class="app-scrim" data-act-scrim></div>' +
+      '<div class="app-main"><div class="app-top"><button type="button" class="app-burger" aria-expanded="false" aria-label="Abrir menu">☰</button>' +
+      '<span class="app-top__title">' + esc(title) + '</span></div><div class="app-content"></div></div>';
+    $('.app-content', app).appendChild(tpl.content.cloneNode(true));
+    return app;
+  }
+  function fill(dev) {
+    var tpl = $('template[data-variant="' + dev.dataset.variant + '"]');
+    states.delete(dev);
+    dev.replaceChildren(buildApp(tpl));
+    wireIds(dev);
+    if (typeof window.mockInit === 'function') window.mockInit(dev, dev.dataset.variant, dev.dataset.kind);
+  }
+  function mount(panel) {
+    var v = panel.dataset.variant;
+    var stage = $('.stage', panel) || panel.appendChild(mk('div', 'stage'));
+    stage.replaceChildren();
+    [['desktop', 'Desktop'], ['phone', '375 px']].forEach(function (d) {
+      var item = mk('figure', 'stage-item stage-item--' + d[0]);
+      item.innerHTML = '<figcaption class="stage-cap"><span>' + d[1] + '</span><button type="button" class="stage-reset" title="Repor o estado inicial">Repor</button></figcaption>';
+      var dev = mk('div', 'device device--' + d[0]);
+      dev.dataset.variant = v; dev.dataset.kind = d[0];
+      var sc = mk('div', 'device-scroll' + (d[0] === 'phone' ? ' device-scroll--phone' : '')); sc.appendChild(dev); item.appendChild(sc);
+      stage.appendChild(item);
+      fill(dev);
+    });
+    panel.dataset.rendered = '1';
+  }
+
+  /* separadores A/B/C (hash #a/#b/#c) e alternador de dispositivos */
+  var tabs = $$('.mock-bar [role="tab"]'), panels = $$('[role="tabpanel"]');
+  function select(v, focus) {
+    if (!tabs.some(function (t) { return t.dataset.variant === v; })) v = tabs[0].dataset.variant;
+    tabs.forEach(function (t) { var o = t.dataset.variant === v; t.setAttribute('aria-selected', String(o)); t.tabIndex = o ? 0 : -1; if (o && focus) t.focus(); });
+    panels.forEach(function (p) { p.hidden = p.dataset.variant !== v; if (p.dataset.variant === v && !p.dataset.rendered) mount(p); });
+    if (location.hash.slice(1) !== v) { try { history.replaceState(null, '', '#' + v); } catch (e) { /* file:// restrito */ } }
+  }
+  function setView(v) {
+    document.body.dataset.view = v;
+    $$('.mock-view button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.view === v)); });
+    try { localStorage.setItem(VIEW_KEY, v); } catch (e) { /* sem armazenamento */ }
+  }
+  function boot() {
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { select(t.dataset.variant); });
+      t.addEventListener('keydown', function (e) {
+        var j = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }[e.key];
+        if (j === undefined) return; e.preventDefault(); select(tabs[(j + tabs.length) % tabs.length].dataset.variant, true);
+      });
+    });
+    $$('.mock-view button').forEach(function (b) { b.addEventListener('click', function () { setView(b.dataset.view); }); });
+    window.addEventListener('hashchange', function () { select(location.hash.slice(1).toLowerCase()); });
+    var saved = null; try { saved = localStorage.getItem(VIEW_KEY); } catch (e) { /* ignorar */ }
+    setView(['both', 'desktop', 'phone'].indexOf(saved) >= 0 ? saved : 'both');
+    select(location.hash.slice(1).toLowerCase());
+  }
+
+  /* comportamentos da moldura */
+  on('click', '.app-burger', function (e, t, dev) { setMenu(dev, !$('.app', dev).hasAttribute('data-menu-open')); });
+  on('click', '.app-scrim', function (e, t, dev) { setMenu(dev, false); });
+  on('click', '[data-route]', function (e, t, dev) { e.preventDefault(); setMenu(dev, false); toast(dev, 'Abre ' + t.getAttribute('data-route')); });
+  on('click', 'a[href="#"]', function (e) { e.preventDefault(); });
+  on('click', '.sheet', function (e, t, dev) { if (e.target === t || e.target.closest('[data-close-sheet]')) closeSheet(dev); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    $$('.sheet:not([hidden])').forEach(function (s) { closeSheet(s.closest('.device')); });
+    $$('.app[data-menu-open]').forEach(function (a) { setMenu(a.closest('.device'), false); });
+  });
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.stage-reset'); if (!b) return;
+    fill($('.device', b.closest('.stage-item')));
+  });
+
+  window.Mock = { $: $, $$: $$, esc: esc, uid: uid, state: state, on: on, toast: toast, sheet: sheet, closeSheet: closeSheet, setMenu: setMenu };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+/* === FIM MOLDURA === */
+</script>
+<script>
+/* === ESPECÍFICO DESTE MOCKUP === */
+(function () {
+  'use strict';
+  var $ = Mock.$;
+
+  /* ───────── Dados fictícios (briefing comum) ───────── */
+  var BASE = Date.UTC(2026, 8, 28); // seg 28/09/2026 = início da semana 40
+  var TODAY_WEEK = 40, TODAY_DAY = 5; // sáb 03/10/2026
+  var FIRST_WEEK = 39, LAST_WEEK = 42;
+  var DAYS = ['seg', 'ter', 'qua', 'qui', 'sex', 'sáb', 'dom'];
+  var LONG = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'];
+  var CLOSED_DAY = 2; // quarta-feira: restaurante fechado
+  // Turnos-tipo (Dia, Dia curto, Meio-dia) e dois horários manuais dos colegas (T, S). S tem 5 h: sem intervalo.
+  var SH = {
+    D1: { n: 'Dia', s: '08:00', e: '17:30', b: ['12:30', '13:30'] },
+    D2: { n: 'Dia curto', s: '08:00', e: '17:00', b: ['12:00', '13:00'] },
+    M: { n: 'Meio-dia', s: '09:00', e: '15:15', b: ['11:45', '12:45'] },
+    T: { n: 'Tarde', s: '10:00', e: '19:00', b: ['14:00', '15:00'] },
+    S: { n: 'Tarde curta', s: '14:00', e: '19:00', b: null }
+  };
+  // F folga · V férias · I ausência (mostrada como «Indisponível») · restantes códigos = turnos. Semana 40 | semana 41.
+  var P = [
+    { id: 'beatriz', name: 'Beatriz Moura', w: 'D1 M F F D1 D1 D2 | F D1 F D2 D1 D1 M' },
+    { id: 'tiago', name: 'Tiago Fontes', w: 'D2 D2 F D1 F D1 M | D1 F F D1 D2 D2 D1' },
+    { id: 'ines', name: 'Inês Calado', w: 'M M F F D2 D1 D2 | D1 M F F D2 M D2' },
+    { id: 'rui', name: 'Rui Pestana', w: 'F D1 F D2 D2 T D1 | D2 D2 F F D1 T D2' },
+    { id: 'carla', name: 'Carla Videira', w: 'D1 D1 F D2 D2 F D1 | D1 D1 F D1 D2 F D2' },
+    { id: 'duarte', name: 'Duarte Sá', w: 'T T F F T T D1 | T T F T F T T' },
+    { id: 'marta', name: 'Marta Leal', w: 'D2 F F D2 D1 M D2 | D2 D2 F F D2 D1 D1' },
+    { id: 'hugo', name: 'Hugo Brandão', w: 'V V F F V V V | V V F F V V V' },
+    { id: 'matilde', name: 'Matilde Teles', w: 'D2 D2 F I I I I | I I F I I I I' },
+    { id: 'nuno', name: 'Nuno Arez', w: 'M F F M S M S | F M F M S M S' },
+    { id: 'filipa', name: 'Filipa Couto', w: 'S M F M M F M | M S F M M F M' }
+  ];
+  P.forEach(function (p) {
+    p.d = p.w.split('|').map(function (s) { return s.trim().split(/\s+/); });
+    var parts = p.name.split(' ');
+    p.ini = parts[0].charAt(0) + parts[parts.length - 1].charAt(0);
+    p.short = parts[0] + ' ' + parts[parts.length - 1].charAt(0) + '.';
+  });
+  var ME = byId('ines');
+  var COL = P.filter(function (p) { return p !== ME; });
+  var CHG = { week: 41, day: 0, before: 'F' }; // versão 3 da semana 41: seg 05/10, Folga → 08:00–17:30
+
+  function byId(id) { return P.filter(function (p) { return p.id === id; })[0]; }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function toMin(t) { var a = t.split(':'); return +a[0] * 60 + +a[1]; }
+  function hm(m) { return pad(Math.floor(m / 60)) + ':' + pad(m % 60); }
+  function dm(wk, d) { var t = new Date(BASE + ((wk - 40) * 7 + d) * 864e5); return pad(t.getUTCDate()) + '/' + pad(t.getUTCMonth() + 1); }
+  function dayNum(wk, d) { return dm(wk, d).slice(0, 2); }
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+  function published(wk) { return wk === 40 || wk === 41; }
+  function isToday(wk, d) { return wk === TODAY_WEEK && d === TODAY_DAY; }
+  function isPast(wk, d) { return wk < TODAY_WEEK || (wk === TODAY_WEEK && d < TODAY_DAY); }
+  function code(p, wk, d) { return published(wk) ? p.d[wk - 40][d] : null; }
+  function isWork(c) { return !!(c && SH[c]); }
+  function range(c) { return SH[c].s + '–' + SH[c].e; }
+  function dur(c) { return toMin(SH[c].e) - toMin(SH[c].s); } // fim − início, sem desconto do intervalo
+  function weekTotal(wk) { var t = 0; for (var d = 0; d < 7; d++) { var c = code(ME, wk, d); if (isWork(c)) t += dur(c); } return t; }
+  function workDays(wk) { var n = 0; for (var d = 0; d < 7; d++) if (isWork(code(ME, wk, d))) n++; return n; }
+  function overlap(a, b) {
+    var s = Math.max(toMin(SH[a].s), toMin(SH[b].s)), e = Math.min(toMin(SH[a].e), toMin(SH[b].e));
+    return e > s ? [s, e] : null;
+  }
+  function norm(s) { return String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
+  // Máscara dos colegas: folga → «Folga», férias → «Férias», qualquer outra ausência → «Indisponível»
+  function maskLabel(c) { return c === 'F' ? 'Folga' : c === 'V' ? 'Férias' : 'Indisponível'; }
+  function maskShort(c) { return c === 'F' ? 'Folga' : c === 'V' ? 'Fér.' : 'Indisp.'; }
+  function maskCls(c) { return c === 'F' ? 'st-folga' : c === 'V' ? 'st-ferias' : 'st-indisp'; }
+  function pill(c) { return '<span class="st ' + maskCls(c) + '">' + maskLabel(c) + '</span>'; }
+  function holidayAt(wk, d) { return nationalHoliday(new Date(BASE + ((wk - 40) * 7 + d) * 864e5).toISOString().slice(0, 10)); }
+  function dayTitle(wk, d) { return cap(DAYS[d]) + ' ' + dm(wk, d) + (holidayAt(wk, d) ? ' · Feriado (aberto)' : ''); }
+  function defaultDay(wk) { return wk === TODAY_WEEK ? TODAY_DAY : 0; }
+
+  /* quem trabalha com a Inês nesse dia (turnos sobrepostos) e quem não trabalha */
+  function peers(wk, d) {
+    var mine = code(ME, wk, d), w = [], off = [];
+    COL.forEach(function (p) {
+      var c = code(p, wk, d);
+      if (isWork(c)) { var ov = isWork(mine) ? overlap(mine, c) : null; if (ov) w.push({ p: p, c: c, ov: ov }); } else off.push({ p: p, c: c });
+    });
+    w.sort(function (a, b) { return toMin(SH[a.c].s) - toMin(SH[b.c].s) || toMin(SH[a.c].e) - toMin(SH[b.c].e) || (a.p.name < b.p.name ? -1 : 1); });
+    return { w: w, off: off };
+  }
+  function ovText(ov) { return hm(ov[0]) + '–' + hm(ov[1]); }
+
+  /* ───────── Partilhado: navegação de semana e aviso «Escala alterada» ───────── */
+  function navHTML(st) {
+    var wk = st.week, dotNext = wk === 40 && !st.seen41;
+    return '<div class="ms-weeknav">' +
+      '<button type="button" class="ms-arrow" data-act="week-prev" aria-label="Semana anterior"' + (wk <= FIRST_WEEK ? ' disabled' : '') + '>‹</button>' +
+      '<div class="ms-weektitle"><b>Semana ' + wk + '</b><span class="ms-range">' + dm(wk, 0) + '–' + dm(wk, 6) + '</span>' +
+      '<div class="ms-wk-extra">' + (wk === TODAY_WEEK ? '<span class="badge-ok">Esta semana</span>' : '<button type="button" class="btn-row" data-act="goto" data-week="40">Voltar a esta semana</button>') + '</div></div>' +
+      '<button type="button" class="ms-arrow" data-act="week-next" aria-label="Semana seguinte' + (dotNext ? ' (escala alterada)' : '') + '"' + (wk >= LAST_WEEK ? ' disabled' : '') + '>›' + (dotNext ? '<span class="dot" aria-hidden="true"></span>' : '') + '</button>' +
+      '</div>';
+  }
+  function bannerHTML(st, v) {
+    var diff = 'seg 05/10: <s>Folga</s> → <b>' + range('D1') + '</b>';
+    if (st.week !== 41 && !st.seen41) {
+      if (v === 'a') return '<button type="button" class="ms-alertbtn" data-act="goto" data-week="41"><span class="dot" aria-hidden="true"></span><span>Escala alterada na semana 41 — ver o que mudou</span><span aria-hidden="true">›</span></button>';
+      return '<div class="ms-banner alert-warn"><span class="dot" aria-hidden="true"></span><span><b>Escala alterada na semana 41:</b> ' + diff + '</span><button type="button" class="btn-row btn-row-strong" data-act="goto" data-week="41">Ver semana 41</button></div>';
+    }
+    if (st.week === 41 && st.hl41) {
+      return '<div class="ms-banner alert-warn" role="status"><span class="dot" aria-hidden="true"></span><span><b>Escala alterada</b> (versão 3): ' + diff + '.<span class="ms-seen">Semana marcada como vista ao abrir esta página.</span></span></div>';
+    }
+    return '';
+  }
+  function emptyWeek(wk) {
+    return '<div class="alert-info ms-empty" role="status"><b>Sem escala publicada para a semana ' + wk + '.</b> Quando o gestor a publicar, aparece aqui.</div>';
+  }
+  function goWeek(dev, n) {
+    var st = Mock.state(dev), first = false;
+    st.week = Math.max(FIRST_WEEK, Math.min(LAST_WEEK, n));
+    st.hl41 = false; st.pick = false;
+    if (st.week === 41 && !st.seen41) { st.hl41 = true; st.seen41 = true; first = true; }
+    st.day = defaultDay(st.week);
+    render(dev);
+    if (first) Mock.toast(dev, 'Semana 41 marcada como vista');
+  }
+
+  /* ───────── A · Lista por dia ───────── */
+  function pickerHTML(st) {
+    var cur = st.who === 'ines' ? 'a minha escala' : byId(st.who).name;
+    var pid = Mock.uid('pk');
+    var items = '<li><button type="button" role="option" data-act="who" data-who="ines" aria-selected="' + (st.who === 'ines') + '"><span class="ms-av" aria-hidden="true">IC</span>A minha escala</button></li>' +
+      COL.map(function (p) {
+        return '<li data-name="' + Mock.esc(norm(p.name)) + '"><button type="button" role="option" data-act="who" data-who="' + p.id + '" aria-selected="' + (st.who === p.id) + '"><span class="ms-av" aria-hidden="true">' + p.ini + '</span>' + Mock.esc(p.name) + '</button></li>';
+      }).join('');
+    return '<div class="ms-picker"><button type="button" class="ms-picker-btn" data-act="picker" aria-expanded="' + !!st.pick + '" aria-controls="' + pid + '"><span>A ver: <b>' + Mock.esc(cur) + '</b></span><span aria-hidden="true">▾</span></button>' +
+      '<div class="ms-picker-panel" id="' + pid + '"' + (st.pick ? '' : ' hidden') + '>' +
+      '<input type="search" data-filter placeholder="Procurar colega" aria-label="Procurar colega" autocomplete="off">' +
+      '<ul class="ms-picker-list" role="listbox" aria-label="Colegas">' + items + '</ul>' +
+      '<p class="muted small" data-none hidden>Nenhum colega encontrado.</p></div></div>';
+  }
+  function peopleListHTML(pe) {
+    var h = '<ul class="ms-people">' + pe.w.map(function (x) {
+      var whole = x.ov[0] === toMin(SH[x.c].s) && x.ov[1] === toMin(SH[x.c].e);
+      return '<li><span class="ms-av" aria-hidden="true">' + x.p.ini + '</span><span>' + Mock.esc(x.p.name) + '</span><span class="ms-ptime">' + range(x.c) + (whole ? '' : '<span class="ms-pjoint">juntos ' + ovText(x.ov) + '</span>') + '</span></li>';
+    }).join('') + '</ul>';
+    if (pe.off.length) {
+      h += '<div class="ms-out">Não trabalham neste dia (' + pe.off.length + ')<ul>' + pe.off.map(function (x) { return '<li>' + Mock.esc(x.p.short) + ' ' + pill(x.c) + '</li>'; }).join('') + '</ul></div>';
+    }
+    return h;
+  }
+  function dayCardA(st, wk, d) {
+    var isMe = st.who === 'ines', p = byId(st.who), c = code(p, wk, d), mine = code(ME, wk, d);
+    var today = isToday(wk, d), chg = isMe && st.hl41 && wk === CHG.week && d === CHG.day;
+    var cls = 'ms-day' + (today ? ' is-today' : '') + (isPast(wk, d) ? ' is-past' : '') + (chg ? ' is-changed' : '') + (isWork(c) ? '' : ' is-off');
+    var h = '<article class="' + cls + '"' + (today ? ' aria-current="date"' : '') + '><div class="ms-dayhead"><h3>' + dayTitle(wk, d) + '</h3>' +
+      (today ? '<span class="badge-ok">Hoje</span>' : '') + (chg ? '<span class="badge-warn">Alterado</span>' : '') + '</div>';
+    if (!isWork(c)) {
+      h += '<p class="ms-shiftline"><span class="ms-time ms-time--off">' + (isMe ? 'Folga' : maskLabel(c)) + '</span></p>';
+      if (d === CLOSED_DAY) h += '<p class="ms-break">Dia fechado: o restaurante não abre à quarta.</p>';
+      return h + '</article>';
+    }
+    h += '<p class="ms-shiftline"><span class="ms-time">' + range(c) + '</span>' + (isMe ? '<span class="ms-sub">' + SH[c].n + ' · ' + hm(dur(c)) + '</span>' : '') + '</p>';
+    if (isMe) {
+      if (SH[c].b) h += '<p class="ms-break">Almoço ' + SH[c].b[0] + '–' + SH[c].b[1] + ', incluído nas horas</p>';
+      if (chg) h += '<p class="ms-was">Antes: <s>Folga</s></p>';
+      var pe = peers(wk, d), key = wk + '-' + d, open = !!st.open[key], xid = Mock.uid('wc');
+      h += '<button type="button" class="ms-expand" data-act="expand" data-key="' + key + '" aria-expanded="' + open + '" aria-controls="' + xid + '"><span>Quem trabalha comigo? (' + pe.w.length + ')</span><span class="chev" aria-hidden="true">▾</span></button>' +
+        '<div id="' + xid + '"' + (open ? '' : ' hidden') + '>' + peopleListHTML(pe) + '</div>';
+    } else if (isWork(mine)) {
+      var ov = overlap(mine, c);
+      if (ov) h += '<p class="ms-together">Trabalham juntos ' + ovText(ov) + '</p>';
+    }
+    return h + '</article>';
+  }
+  function htmlA(st) {
+    var wk = st.week, h = bannerHTML(st, 'a') + navHTML(st) + pickerHTML(st);
+    if (!published(wk)) return h + emptyWeek(wk);
+    var isMe = st.who === 'ines';
+    if (!isMe) {
+      var p = byId(st.who);
+      h += '<div class="card ms-whoami"><span class="ms-av" aria-hidden="true">' + p.ini + '</span><span class="ms-who-text"><b>' + Mock.esc(p.name) + '</b><br><span class="muted small">Só horas e estado do dia, sem notas nem motivos.</span></span><button type="button" class="btn-row" data-act="who" data-who="ines">Voltar à minha</button></div>';
+    } else {
+      h += '<p class="ms-total"><b>Total da semana ' + hm(weekTotal(wk)) + '</b> · ' + workDays(wk) + ' dias de trabalho · almoços incluídos nas horas</p>';
+    }
+    var order = wk === TODAY_WEEK ? { main: [5, 6], past: [0, 1, 2, 3, 4] } : { main: [0, 1, 2, 3, 4, 5, 6], past: [] };
+    h += '<div class="ms-days">' + order.main.map(function (d) { return dayCardA(st, wk, d); }).join('');
+    if (order.past.length) h += '<h2 class="ms-days-title">Dias anteriores desta semana</h2>' + order.past.map(function (d) { return dayCardA(st, wk, d); }).join('');
+    return h + '</div>';
+  }
+
+  /* ───────── B · Tira de dias + detalhe com linha do tempo ───────── */
+  var T0 = 7 * 60, SPAN = 12 * 60; // 07:00–19:00
+  function pc(m) { return (m - T0) / SPAN * 100; }
+  function f2(n) { return n.toFixed(2); }
+  function stripHTML(st) {
+    var wk = st.week, h = '<div class="ms-strip7" role="group" aria-label="Dias da semana ' + wk + '">';
+    for (var d = 0; d < 7; d++) {
+      var c = code(ME, wk, d), w = isWork(c), today = isToday(wk, d), sel = st.day === d, chg = st.hl41 && wk === CHG.week && d === CHG.day;
+      var lab = DAYS[d] + ' ' + dm(wk, d) + ', ' + (w ? range(c) : 'folga') + (today ? ', hoje' : '') + (chg ? ', alterado' : '');
+      h += '<button type="button" class="ms-sd' + (sel ? ' is-sel' : '') + (today ? ' is-today' : '') + (w ? '' : ' is-off') + '" data-act="day" data-day="' + d + '" aria-pressed="' + sel + '" aria-label="' + lab + '">' +
+        '<span class="sd-wd">' + DAYS[d] + '</span><span class="sd-n">' + dayNum(wk, d) + '</span>' +
+        (w ? '<span class="sd-t"><i>' + SH[c].s + '</i><i>' + SH[c].e + '</i></span><span class="sd-tw">' + range(c) + '</span>' : '<span class="sd-t">Folga</span><span class="sd-tw">Folga</span>') +
+        (today ? '<span class="sd-hoje">hoje</span>' : '') + (chg ? '<span class="dot" aria-hidden="true"></span>' : '') + '</button>';
+    }
+    return h + '</div>';
+  }
+  function nameCell(p) { return '<span class="tl-name"><span class="nm-short">' + Mock.esc(p.short) + '</span><span class="nm-full">' + Mock.esc(p.name) + '</span></span>'; }
+  function barHTML(c, ov) {
+    var s = toMin(SH[c].s), e = toMin(SH[c].e), len = e - s;
+    var joint = ov ? '<span class="tl-joint" style="left:' + f2((ov[0] - s) / len * 100) + '%;width:' + f2((ov[1] - ov[0]) / len * 100) + '%"></span>' : '';
+    return '<div class="tl-bar" style="left:' + f2(pc(s)) + '%;width:' + f2(pc(e) - pc(s)) + '%">' + joint + '<span class="tl-txt">' + range(c) + '</span></div>';
+  }
+  function timelineHTML(st, mine, pe) {
+    var ticks = '';
+    for (var i = 0; i < 7; i++) ticks += '<span style="left:' + f2(i * 100 / 6) + '%">' + pad(7 + i * 2) + 'h</span>';
+    var s = toMin(SH[mine].s), e = toMin(SH[mine].e), br = SH[mine].b;
+    var h = '<div class="tl"><div class="tl-axis"><span></span><div class="tl-ticks" aria-hidden="true">' + ticks + '</div></div>';
+    h += '<div class="tl-row tl-row--me"><span class="tl-name">Eu</span><div class="tl-track"><div class="tl-bar tl-bar--me" style="left:' + f2(pc(s)) + '%;width:' + f2(pc(e) - pc(s)) + '%" title="Eu ' + range(mine) + '"></div>' +
+      (br ? '<div class="tl-break" style="left:' + f2(pc(toMin(br[0]))) + '%;width:' + f2(pc(toMin(br[1])) - pc(toMin(br[0]))) + '%" title="Almoço ' + br[0] + '–' + br[1] + '"></div>' : '') + '</div></div>';
+    var rows = st.sel.length ? COL.filter(function (p) { return st.sel.indexOf(p.id) >= 0; }) : pe.w.map(function (x) { return x.p; });
+    rows.forEach(function (p) {
+      var c = code(p, st.week, st.day), sel = st.sel.length > 0;
+      h += '<div class="tl-row' + (sel ? ' is-sel' : '') + '">' + nameCell(p) + '<div class="tl-track">' +
+        (isWork(c) ? barHTML(c, overlap(mine, c)) : '<div class="tl-off">' + pill(c) + '</div>') + '</div></div>';
+    });
+    h += '</div><div class="tl-legend"><span><i class="lg-me"></i>Eu</span><span><i class="lg-joint"></i>tempo em comum</span>' + (br ? '<span><i class="lg-break"></i>almoço ' + br[0] + '–' + br[1] + ' (incluído nas horas)</span>' : '') + '</div>';
+    return h;
+  }
+  function detailB(st) {
+    var wk = st.week, d = st.day, c = code(ME, wk, d), today = isToday(wk, d), chg = st.hl41 && wk === CHG.week && d === CHG.day;
+    var h = '<section class="card ms-detail" aria-live="polite"><div class="ms-dhead"><h2>' + LONG[d] + ', ' + dm(wk, d) + '</h2>' + (holidayAt(wk, d) ? '<span class="badge-info">Feriado (aberto)</span>' : '') + (today ? '<span class="badge-ok">Hoje</span>' : '') + (chg ? '<span class="badge-warn">Alterado</span>' : '') + '</div>';
+    if (!isWork(c)) {
+      return h + '<p class="ms-shiftline"><span class="ms-time ms-time--off">Folga</span></p>' + (d === CLOSED_DAY ? '<p class="ms-break">Dia fechado: o restaurante não abre à quarta.</p>' : '') + '</section>';
+    }
+    var pe = peers(wk, d);
+    h += '<p class="ms-shiftline"><span class="ms-time">' + range(c) + '</span><span class="ms-sub">' + SH[c].n + ' · ' + hm(dur(c)) + '</span></p>';
+    if (SH[c].b) h += '<p class="ms-break">Almoço ' + SH[c].b[0] + '–' + SH[c].b[1] + ', incluído nas horas</p>';
+    if (chg) h += '<p class="ms-was">Antes: <s>Folga</s></p>';
+    h += '<h3 class="ms-h3">Quem trabalha comigo? (' + pe.w.length + ')</h3><div class="ms-chips" role="group" aria-label="Colegas a comparar">' +
+      COL.map(function (p) {
+        var cc = code(p, wk, d), on = st.sel.indexOf(p.id) >= 0, w = isWork(cc);
+        return '<button type="button" class="ms-chip' + (w ? '' : ' is-off') + '" data-act="chip" data-id="' + p.id + '" aria-pressed="' + on + '" title="' + Mock.esc(p.name + ' — ' + (w ? range(cc) : maskLabel(cc))) + '">' +
+          '<span class="sr-only">' + Mock.esc(p.name) + ', ' + (w ? range(cc) : maskLabel(cc)) + '</span><span aria-hidden="true">' + p.ini + '</span><span class="cd" aria-hidden="true"></span></button>';
+      }).join('') + (st.sel.length ? '<button type="button" class="btn-row btn-row-quiet" data-act="chip-clear">Limpar</button>' : '') + '</div>';
+    h += '<p class="ms-hint">' + (st.sel.length ? 'A comparar ' + st.sel.length + (st.sel.length === 1 ? ' colega.' : ' colegas.') : 'A mostrar quem trabalha contigo (' + pe.w.length + '). Toque num colega para o comparar.') + '</p>';
+    h += timelineHTML(st, c, pe);
+    if (!st.sel.length && pe.off.length) h += '<div class="ms-out">Não trabalham neste dia (' + pe.off.length + ')<ul>' + pe.off.map(function (x) { return '<li>' + Mock.esc(x.p.short) + ' ' + pill(x.c) + '</li>'; }).join('') + '</ul></div>';
+    return h + '</section>';
+  }
+  function htmlB(st) {
+    var h = bannerHTML(st, 'b');
+    if (!published(st.week)) return h + navHTML(st) + emptyWeek(st.week);
+    return h + '<div class="ms-sticky">' + navHTML(st) + stripHTML(st) + '</div>' + detailB(st);
+  }
+
+  /* ───────── C · Equipa lado a lado ───────── */
+  function cellC(c, withCls) {
+    var cls = 'g-c';
+    if (!isWork(c)) cls += c === 'V' ? ' k-ferias' : c === 'I' ? ' k-indisp' : ' k-off';
+    return { cls: cls + (withCls || ''), html: isWork(c) ? '<span class="t-w">' + range(c) + '</span><span class="t-n"><i>' + SH[c].s + '</i><i>' + SH[c].e + '</i></span>' : '<span class="t-w">' + maskLabel(c) + '</span><span class="t-n">' + maskShort(c) + '</span>' };
+  }
+  function gridC(st) {
+    var wk = st.week, h = '<div class="ms-gridwrap"><table class="table--scroll ms-grid" aria-label="Escala da semana ' + wk + '"><colgroup><col class="g-col-name">' + '<col>'.repeat(7) + '</colgroup>';
+    h += '<thead><tr><th scope="col" class="g-name corner">Semana ' + wk + '</th>';
+    for (var d = 0; d < 7; d++) {
+      var today = isToday(wk, d);
+      h += '<th scope="col" class="' + (st.day === d ? 'is-selcol' : '') + '"><button type="button" class="g-dh' + (today ? ' is-today' : '') + '" data-act="day" data-day="' + d + '" aria-pressed="' + (st.day === d) + '" aria-label="' + LONG[d] + ' ' + dm(wk, d) + (today ? ', hoje' : '') + '">' +
+        '<span class="gd-wd"><span class="wd-s">' + DAYS[d] + '</span><span class="wd-l">' + cap(DAYS[d]) + '</span></span><span class="gd-n">' + dayNum(wk, d) + '</span><span class="gd-hoje">' + (today ? 'hoje' : holidayAt(wk, d) ? 'Feriado (aberto)' : '') + '</span>' + (holidayAt(wk, d) ? '<span class="small">Feriado (aberto)</span>' : '') + '</button></th>';
+    }
+    h += '</tr><tr class="g-me"><th scope="row" class="g-name">Eu</th>';
+    for (d = 0; d < 7; d++) {
+      var c = code(ME, wk, d), chg = st.hl41 && wk === CHG.week && d === CHG.day, x = cellC(c === 'F' ? 'F' : c);
+      h += '<td class="' + x.cls + (st.day === d ? ' is-selcol' : '') + (chg ? ' is-chg' : '') + '" data-act="day" data-day="' + d + '">' + x.html + (chg ? '<span class="dot" title="Alterado" aria-label="Alterado"></span>' : '') + '</td>';
+    }
+    h += '</tr></thead><tbody><tr class="g-count"><th scope="row" class="g-name">Contigo</th>';
+    for (d = 0; d < 7; d++) { var n = isWork(code(ME, wk, d)) ? peers(wk, d).w.length : '—'; h += '<td class="' + (st.day === d ? 'is-selcol' : '') + '" data-act="day" data-day="' + d + '">' + n + '</td>'; }
+    h += '</tr>';
+    if (st.mode !== 'eu') {
+      COL.forEach(function (p) {
+        var pinned = st.pins.indexOf(p.id) >= 0;
+        if (st.mode === 'esc' && !pinned) return;
+        h += '<tr><th scope="row" class="g-name"><button type="button" class="g-pin" data-act="pin" data-id="' + p.id + '" aria-pressed="' + pinned + '" title="' + (pinned ? 'Deixar de escolher ' : 'Escolher ') + Mock.esc(p.name) + '"><span class="g-star" aria-hidden="true">' + (pinned ? '★' : '☆') + '</span><span class="nm-short">' + Mock.esc(p.short) + '</span><span class="nm-full">' + Mock.esc(p.name) + '</span></button></th>';
+        for (var k = 0; k < 7; k++) {
+          var cc = code(p, wk, k), mine = code(ME, wk, k), w = isWork(cc) && isWork(mine) && overlap(mine, cc);
+          var y = cellC(cc, st.day === k ? ' is-selcol' + (w ? ' is-with' : '') : '');
+          h += '<td class="' + y.cls + '" data-act="day" data-day="' + k + '">' + y.html + '</td>';
+        }
+        h += '</tr>';
+      });
+    }
+    return h + '</tbody></table></div>';
+  }
+  function sumC(st) {
+    var wk = st.week, d = st.day, c = code(ME, wk, d), today = isToday(wk, d);
+    var h = '<section class="card ms-sum ms-sumwrap" aria-live="polite"><h3>' + LONG[d] + ', ' + dm(wk, d) + (today ? ' · hoje' : '') + (holidayAt(wk, d) ? ' · Feriado (aberto)' : '') + '</h3>';
+    if (!isWork(c)) return h + '<p>Tem folga neste dia.' + (d === CLOSED_DAY ? ' O restaurante está fechado à quarta.' : '') + '</p></section>';
+    var pe = peers(wk, d);
+    h += '<p>Eu: <b>' + range(c) + '</b> · ' + SH[c].n + ' · ' + hm(dur(c)) + '</p><p><b>A trabalhar contigo: ' + pe.w.length + '</b></p>';
+    if (st.mode === 'eu') h += '<p class="muted small">Mude para «Todos» para ver as horas de cada colega.</p>';
+    else h += '<p class="muted">' + pe.w.map(function (x) { return Mock.esc(x.p.short); }).join(', ') + '</p>' + (pe.off.length ? '<p class="muted small">Fora: ' + pe.off.map(function (x) { return Mock.esc(x.p.short) + ' (' + maskLabel(x.c) + ')'; }).join(', ') + '</p>' : '');
+    return h + '</section>';
+  }
+  function htmlC(st) {
+    var h = bannerHTML(st, 'c') + navHTML(st);
+    if (!published(st.week)) return h + emptyWeek(st.week);
+    var modes = [['eu', 'Só eu'], ['esc', 'Eu + escolhidos'], ['todos', 'Todos']];
+    h += '<div class="ms-ctl"><div class="seg ms-seg" role="group" aria-label="Quem mostrar">' + modes.map(function (m) { return '<button type="button" data-act="mode" data-mode="' + m[0] + '" aria-pressed="' + (st.mode === m[0]) + '">' + m[1] + '</button>'; }).join('') + '</div>' +
+      '<span class="muted small"><b>Total ' + hm(weekTotal(st.week)) + '</b> · almoços incluídos</span></div>';
+    if (st.mode === 'esc' && !st.pins.length) h += '<div class="alert-info ms-empty">Ainda não escolheu colegas. Em «Todos», toque no nome de um colega (★).</div>';
+    h += gridC(st);
+    h += '<p class="ms-legend">' + (st.mode === 'eu' ? '' : 'Toque no nome de um colega para o escolher (★). ') + 'Quarta: restaurante fechado. «Indisp.» = indisponível.</p>';
+    return h + sumC(st);
+  }
+
+  /* ───────── Render e interacção ───────── */
+  function activeKey(root) {
+    var a = document.activeElement; if (!a || !root.contains(a)) return null;
+    var el = a.closest('[data-act]'); if (!el) return null;
+    var s = '[data-act="' + el.dataset.act + '"]';
+    ['week', 'day', 'id', 'who', 'mode', 'key'].forEach(function (k) { if (el.dataset[k] !== undefined) s += '[data-' + k + '="' + el.dataset[k] + '"]'; });
+    return s;
+  }
+  function render(dev) {
+    var st = Mock.state(dev), root = $('[data-root]', dev), v = dev.dataset.variant;
+    var key = activeKey(root);
+    root.innerHTML = { a: htmlA, b: htmlB, c: htmlC }[v](st);
+    if (st.pick && v === 'a') { var i = $('[data-filter]', root); if (i) i.focus({ preventScroll: true }); }
+    else if (st.focusPicker) { var pb = $('.ms-picker-btn', root); if (pb) pb.focus({ preventScroll: true }); }
+    else if (key) { var n = $(key, root); if (n) n.focus({ preventScroll: true }); }
+    st.focusPicker = false;
+  }
+
+  window.mockInit = function (dev, variant) {
+    var st = Mock.state(dev);
+    st.week = 40; st.seen41 = false; st.hl41 = false; st.day = defaultDay(40);
+    st.who = 'ines'; st.pick = false; st.open = { '40-5': true };
+    st.sel = []; st.mode = 'todos'; st.pins = ['rui', 'marta'];
+    render(dev);
+  };
+
+  Mock.on('click', '[data-act="week-prev"]', function (e, t, dev) { goWeek(dev, Mock.state(dev).week - 1); });
+  Mock.on('click', '[data-act="week-next"]', function (e, t, dev) { goWeek(dev, Mock.state(dev).week + 1); });
+  Mock.on('click', '[data-act="goto"]', function (e, t, dev) { goWeek(dev, +t.dataset.week); });
+  Mock.on('click', '[data-act="day"]', function (e, t, dev) { var st = Mock.state(dev); st.day = +t.dataset.day; render(dev); });
+
+  /* A */
+  Mock.on('click', '[data-act="picker"]', function (e, t, dev) { var st = Mock.state(dev); st.pick = !st.pick; render(dev); });
+  Mock.on('click', '[data-act="who"]', function (e, t, dev) { var st = Mock.state(dev); st.who = t.dataset.who; st.pick = false; st.focusPicker = true; render(dev); });
+  Mock.on('click', '[data-act="expand"]', function (e, t, dev) {
+    var st = Mock.state(dev), open = t.getAttribute('aria-expanded') !== 'true';
+    st.open[t.dataset.key] = open;
+    t.setAttribute('aria-expanded', String(open));
+    document.getElementById(t.getAttribute('aria-controls')).hidden = !open;
+  });
+  Mock.on('input', '[data-filter]', function (e, t) {
+    var q = norm(t.value.trim()), panel = t.closest('.ms-picker-panel'), any = false;
+    Mock.$$('li[data-name]', panel).forEach(function (li) { var hit = li.dataset.name.indexOf(q) >= 0; li.hidden = !hit; if (hit) any = true; });
+    $('[data-none]', panel).hidden = any;
+  });
+  Mock.on('keydown', '.ms-picker', function (e, t, dev) {
+    if (e.key !== 'Escape') return;
+    var st = Mock.state(dev); if (!st.pick) return;
+    e.stopPropagation(); st.pick = false; st.focusPicker = true; render(dev);
+  });
+
+  /* B */
+  Mock.on('click', '[data-act="chip"]', function (e, t, dev) {
+    var st = Mock.state(dev), i = st.sel.indexOf(t.dataset.id);
+    if (i >= 0) st.sel.splice(i, 1); else st.sel.push(t.dataset.id);
+    render(dev);
+  });
+  Mock.on('click', '[data-act="chip-clear"]', function (e, t, dev) { Mock.state(dev).sel = []; render(dev); });
+
+  /* C */
+  Mock.on('click', '[data-act="mode"]', function (e, t, dev) { Mock.state(dev).mode = t.dataset.mode; render(dev); });
+  Mock.on('click', '[data-act="pin"]', function (e, t, dev) {
+    var st = Mock.state(dev), i = st.pins.indexOf(t.dataset.id);
+    if (i >= 0) st.pins.splice(i, 1); else st.pins.push(t.dataset.id);
+    render(dev);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 6 — As minhas férias</title>
+<style>
+/* === MOLDURA COMUM (copiar) === */
+/* Tokens copiados de src/app/globals.css:2-33 (tema «Menta») */
+:root {
+  --bg: #f3f6f3;
+  --card: #fff;
+  --border: rgba(0, 0, 0, 0.15);
+  --txt: #1f2a24;
+  --mut: #66736b;
+  --hint: #9aa49e;
+  --sidebar: #2f3a33;
+  --sidebar-tx: #dfeee5;
+  --brand: #7fc9a2;
+  --primary: #2e9e68;
+  --primary-hover: #267f54;
+  --ok-bg: #e2f2e9;
+  --ok-tx: #1f6b44;
+  --ok-bd: #7fc9a2;
+  --row-hover: rgba(127, 201, 162, 0.12);
+  --er-bg: #fcebeb;
+  --er-tx: #a32d2d;
+  --er-bd: #f09595;
+  --warn-bg: #faeeda;
+  --warn-tx: #854f0b;
+  --warn-bd: #e8c44e;
+  --info-tx: #1d4ed8;
+  --info-bg: #e6eefc;
+  --info-bd: #9db7f0;
+  --on-primary: #fff;
+}
+* { box-sizing: border-box; padding: 0; margin: 0; }
+[hidden] { display: none !important; }
+html, body {
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--txt);
+  -webkit-font-smoothing: antialiased;
+}
+body { min-height: 100vh; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+/* ── Barra do mockup (não faz parte do ecrã) ── */
+.mock-bar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+  padding: 8px 16px; background: var(--sidebar); color: var(--sidebar-tx); font-size: 13px;
+}
+.mock-back { padding: 4px 10px; border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 6px; white-space: nowrap; }
+.mock-back:hover { background: rgba(255, 255, 255, 0.12); }
+.mock-title { font-weight: 600; flex: 1 1 200px; min-width: 0; }
+.mock-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+.mock-bar button {
+  font-size: 13px; min-height: 30px; padding: 3px 12px; cursor: pointer; font-family: inherit;
+  background: transparent; color: var(--sidebar-tx); border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 6px;
+}
+.mock-bar button:hover { background: rgba(255, 255, 255, 0.12); }
+.mock-bar [role='tab'][aria-selected='true'],
+.mock-bar [aria-pressed='true'] { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+.mock-view { display: inline-flex; }
+.mock-view button { border-radius: 0; margin-left: -1px; }
+.mock-view button:first-child { border-radius: 6px 0 0 6px; margin-left: 0; }
+.mock-view button:last-child { border-radius: 0 6px 6px 0; }
+
+/* ── Palco: dois dispositivos lado a lado, a quebrar para baixo ── */
+.mock-main { padding: 16px 16px 56px; }
+.variant-notes {
+  max-width: 1180px; margin: 0 auto 16px; padding: 10px 14px; font-size: 14px; line-height: 1.5;
+  background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--primary); border-radius: 8px;
+}
+.variant-notes b { font-weight: 600; }
+.variant-notes .note-extra { margin-top: 4px; font-size: 12px; color: var(--mut); }
+.stage { display: flex; flex-wrap: wrap; gap: 28px 24px; align-items: flex-start; justify-content: center; }
+.stage-item { min-width: 0; max-width: 100%; }
+.stage-cap { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; color: var(--mut); }
+.stage-reset {
+  font-size: 12px; min-height: 0; padding: 2px 10px; cursor: pointer; font-family: inherit;
+  background: var(--card); color: var(--mut); border: 1px solid var(--border); border-radius: 6px;
+}
+.stage-reset:hover { color: var(--txt); }
+.device-scroll { overflow-x: auto; max-width: 100%; padding: 2px; }
+.device-scroll--phone { padding: 8px; }
+body[data-view='desktop'] .stage-item--phone,
+body[data-view='phone'] .stage-item--desktop { display: none; }
+
+/* ── Dispositivos: largura fixa, contentor para as container queries ── */
+.device {
+  container-type: inline-size; container-name: app; position: relative;
+  background: var(--bg); overflow: hidden;
+}
+.device--desktop { width: 1180px; border-radius: 10px; box-shadow: 0 0 0 1px var(--border), 0 4px 18px rgba(0, 0, 0, 0.08); }
+.device--phone { width: 375px; border-radius: 22px; box-shadow: 0 0 0 1px var(--border), 0 0 0 6px #dde5df, 0 6px 22px rgba(0, 0, 0, 0.15); }
+
+/* ── Mini-app: barra lateral + conteúdo (réplica de .shell/.sidebar/.content) ── */
+.app { display: flex; position: relative; min-height: 560px; font-size: 14px; background: var(--bg); color: var(--txt); }
+.app-side {
+  width: 220px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; padding: 20px 12px;
+  background: var(--sidebar); color: var(--sidebar-tx);
+}
+.app-logo {
+  background: #fff; border-radius: 8px; padding: 8px 10px; margin-bottom: 4px; text-align: center;
+  font-weight: 700; font-size: 18px; letter-spacing: 0.04em; color: var(--primary);
+}
+.app-side nav { display: flex; flex-direction: column; gap: 4px; }
+.sidebar-link {
+  display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; font-size: 14px;
+  color: var(--sidebar-tx); opacity: 0.85; flex-shrink: 0;
+}
+.sidebar-link:hover { opacity: 1; background: rgba(255, 255, 255, 0.1); }
+.sidebar-link--active { background: rgba(127, 201, 162, 0.22); color: #bfe8d2; opacity: 1; }
+.sidebar-section { font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.5; padding: 0 10px; margin: 12px 0 2px; }
+.sidebar-section:first-child { margin-top: 4px; }
+.app-user { margin-top: auto; padding-top: 16px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.app-user__name { padding: 0 10px; opacity: 0.8; }
+.app-side .app-user button {
+  width: 100%; text-align: left; background: transparent; border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--sidebar-tx); border-radius: 8px; padding: 8px 10px; font-size: 13px; cursor: pointer; min-height: 0;
+}
+.app-side .app-user button:hover { background: rgba(255, 255, 255, 0.1); }
+.app-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.app-top { display: none; }
+.app-scrim { display: none; }
+.app-content { flex: 1; min-width: 0; padding: 24px; position: relative; }
+.app-toast {
+  position: absolute; z-index: 60; transform: translateX(-50%); width: max-content; max-width: calc(100% - 24px);
+  padding: 8px 14px; border-radius: 8px; background: var(--sidebar); color: var(--sidebar-tx); font-size: 13px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25); pointer-events: none;
+}
+.sheet { position: absolute; inset: 0; z-index: 50; background: rgba(0, 0, 0, 0.35); }
+.sheet__box {
+  position: absolute; width: min(520px, calc(100% - 24px)); max-height: 80%; overflow: auto;
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+}
+.new-tag {
+  display: inline-block; vertical-align: middle; margin-left: 6px; padding: 0 6px; border-radius: 4px; font-size: 11px;
+  font-weight: 600; text-transform: none; letter-spacing: 0; background: var(--info-bg); border: 1px solid var(--info-bd); color: var(--info-tx);
+}
+
+/* ── Base de formulários e botões (globals.css) ── */
+.device input, .device select, .device textarea, .device button {
+  font-size: 16px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 8px;
+  background: #fff; min-height: 36px; font-family: inherit; color: var(--txt);
+}
+.device input[type='checkbox'], .device input[type='radio'] { min-height: 0; width: 18px; height: 18px; accent-color: var(--primary); }
+.device label { font-size: 12px; color: var(--mut); display: block; margin-bottom: 12px; }
+.device label > input, .device label > select, .device label > textarea { display: block; width: 100%; max-width: 420px; margin-top: 4px; }
+.device button.primary {
+  background: var(--primary); color: #fff; border: none; font-weight: 600; cursor: pointer; padding: 10px 22px; border-radius: 8px;
+}
+.device button.primary:hover { background: var(--primary-hover); }
+.device button.primary:disabled { background: var(--hint); cursor: not-allowed; }
+.device button.secondary { cursor: pointer; background: #fff; }
+.device .btn-row {
+  display: inline-block; font-size: 13px; font-weight: 500; padding: 4px 12px; min-height: 0;
+  border: 1px solid var(--primary); border-radius: 6px; background: #f2faf6; color: var(--primary-hover);
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+}
+.device .btn-row:hover { background: #e3f4ea; }
+.device .btn-row[aria-pressed='true'], .device .btn-row[aria-current='page'] { background: var(--primary); color: #fff; }
+.device .btn-row.btn-row-strong { background: var(--primary); color: #fff; font-weight: 600; }
+.device .btn-row.btn-row-strong:hover { background: var(--primary-hover); }
+.device .btn-row.btn-row-quiet { font-size: 12px; font-weight: 400; border-color: var(--border); background: var(--bg); color: var(--mut); }
+.device .btn-row.btn-row-quiet:hover { background: var(--card); color: var(--txt); }
+.device .btn-row.danger { border-color: #c0392b; color: #c0392b; background: #fdf3f2; }
+.device .btn-row:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Cartões, badges, avisos (globals.css) ── */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.badge-ok, .badge-warn, .badge-err, .badge-info, .badge-mut {
+  font-size: 12px; padding: 2px 8px; border-radius: 4px; white-space: nowrap; border: 1px solid; display: inline-block;
+}
+.badge-ok { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.badge-warn { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); }
+.badge-err { background: var(--er-bg); border-color: var(--er-bd); color: var(--er-tx); }
+.badge-info { background: var(--info-bg); border-color: var(--info-bd); color: var(--info-tx); }
+.badge-mut { background: var(--bg); border-color: var(--border); color: var(--mut); }
+.alert-ok, .alert-warn, .alert-err, .alert-info { border-radius: 8px; padding: 8px 12px; font-size: 14px; border: 1px solid; }
+.alert-ok { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.alert-warn { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); }
+.alert-err { background: var(--er-bg); border-color: var(--er-bd); color: var(--er-tx); }
+.alert-info { background: var(--info-bg); border-color: var(--info-bd); color: var(--info-tx); }
+.toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 12px 0 16px; }
+.toolbar-actions { margin-left: auto; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.muted { color: var(--mut); }
+.small { font-size: 12px; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Separadores de trabalho e filtro segmentado (precedente 2026-09-25) */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin: 4px 0 12px; flex-wrap: wrap; }
+.tabs [role='tab'] {
+  border: 1px solid transparent; border-bottom: none; border-radius: 8px 8px 0 0; background: none; min-height: 0;
+  font-size: 15px; padding: 8px 14px; cursor: pointer; color: var(--mut); margin-bottom: -1px;
+}
+.tabs [role='tab'][aria-selected='true'] { background: var(--card); border-color: var(--border); color: var(--txt); font-weight: 600; }
+.tab-count { display: inline-block; min-width: 20px; padding: 0 6px; border-radius: 10px; background: var(--er-bg); color: var(--er-tx); font-size: 12px; font-weight: 600; text-align: center; }
+.seg { display: inline-flex; border: 1px solid var(--primary); border-radius: 6px; overflow: hidden; }
+.device .seg button { border: none; border-radius: 0; min-height: 0; font-size: 13px; padding: 4px 12px; background: #f2faf6; color: var(--primary-hover); cursor: pointer; }
+.device .seg button[aria-pressed='true'] { background: var(--primary); color: #fff; font-weight: 600; }
+
+/* ── Tabelas (globals.css:492-): base desktop ── */
+.device table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 14px; }
+.device th { text-align: left; font-size: 12px; color: var(--mut); border-bottom: 1px solid var(--border); padding: 6px 8px; }
+.device td { padding: 8px; border-bottom: 1px solid var(--border); }
+.table-scroll-wrap { overflow-x: auto; }
+
+/* ── ≤768px: réplica do bloco @media (max-width: 768px) de globals.css, por container query ── */
+@container app (max-width: 768px) {
+  .app-side {
+    position: absolute; top: 0; left: 0; bottom: 0; z-index: 30; width: 240px;
+    transform: translateX(-100%); visibility: hidden;
+    transition: transform 0.22s ease, visibility 0s linear 0.22s; box-shadow: 4px 0 16px rgba(0, 0, 0, 0.25);
+  }
+  .app[data-menu-open] .app-side { transform: none; visibility: visible; transition: transform 0.22s ease; }
+  .app[data-menu-open] .app-scrim { display: block; position: absolute; inset: 0; z-index: 20; background: rgba(0, 0, 0, 0.4); }
+  .app-top {
+    display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+  .app-top .app-burger { padding: 6px 10px; line-height: 1; cursor: pointer; }
+  .app-top__title { font-weight: 600; font-size: 15px; }
+  .app-content { padding: 16px; }
+  h1 { font-size: 20px; }
+  .card { padding: 12px; }
+  .tabs [role='tab'] { flex: 1; padding: 8px 6px; font-size: 14px; }
+  .toolbar-actions { margin-left: 0; }
+  .sheet__box { padding: 12px; }
+
+  /* Grelha por omissão: a tabela é o próprio contentor de scroll */
+  table:not(.table--cards):not(.table--scroll) { display: block; overflow-x: auto; width: 100%; margin-top: 12px; font-size: 13px; }
+  table:not(.table--cards):not(.table--scroll) th,
+  table:not(.table--cards):not(.table--scroll) td { white-space: nowrap; padding: 4px 8px; font-variant-numeric: tabular-nums; }
+  /* .table--fill: 2–3 colunas, 100% da largura, o nome quebra */
+  table.table--fill:not(.table--cards):not(.table--scroll) { display: table; width: 100%; table-layout: auto; overflow-x: visible; }
+  table.table--fill:not(.table--cards):not(.table--scroll) th,
+  table.table--fill:not(.table--cards):not(.table--scroll) td { white-space: normal; overflow-wrap: anywhere; }
+  /* .table--cards: linhas viram cards; exige data-label em cada td (excepto acções) */
+  table.table--cards thead { display: none; }
+  table.table--cards, table.table--cards tbody, table.table--cards tfoot, table.table--cards tr, table.table--cards td { display: block; width: 100%; }
+  table.table--cards tr { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; padding: 8px 12px; }
+  table.table--cards td { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 4px 0; border-bottom: none; }
+  table.table--cards td[data-label]::before {
+    content: attr(data-label); font-size: 11px; font-weight: 600; color: var(--mut); text-transform: uppercase; letter-spacing: 0.04em; flex-shrink: 0;
+  }
+  table.table--cards td:not([data-label]) { justify-content: flex-end; border-top: 1px solid var(--border); margin-top: 4px; padding-top: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* Página estreita: o dispositivo mantém 375 px, com deslocação na moldura. */
+@media (max-width: 420px) {
+  .mock-main { padding: 12px 0 40px; }
+  .variant-notes { margin-left: 12px; margin-right: 12px; }
+  .stage-cap { padding: 0 12px; }
+  .device-scroll--phone { padding: 0; }
+  .device--phone { border-radius: 0; box-shadow: 0 0 0 1px var(--border); }
+}
+@media (max-width: 700px) {
+  .mock-bar { position: static; padding: 8px 12px; }
+  .mock-back { order: 1; }
+  .mock-view { order: 2; margin-left: auto; }
+  .mock-title { order: 3; flex-basis: 100%; }
+  .mock-tabs { order: 4; flex: 1 1 100%; flex-wrap: nowrap; }
+  .mock-tabs button { flex: 1 1 0; min-width: 0; padding: 4px 4px; font-size: 12px; line-height: 1.25; }
+}
+/* === FIM MOLDURA === */
+
+/* === ESPECÍFICO DESTE MOCKUP === */
+.mf { --g-done: #5f7d6c; --g-res: #7fc9a2; }
+@container app (min-width: 769px) { h1 { font-size: 24px; font-weight: 600; } }
+@container app (max-width: 768px) { h1 { font-size: 20px; font-weight: 600; } }
+.mf-head { margin-bottom: 12px; }
+.mf-head p { font-size: 13px; color: var(--mut); margin-top: 2px; }
+.mf h2, .mf h3 { font-size: 15px; font-weight: 600; }
+.btn-line { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.mf .stack > * + * { margin-top: 12px; }
+
+/* Mosaicos de saldo (A) */
+.bal { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 16px 0 12px; }
+@container app (min-width: 800px) { .bal { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.bal-tile { padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--card); }
+.bal-tile .lbl { font-size: 13px; font-weight: 600; color: var(--mut); }
+.bal-tile .val { font-size: 32px; font-weight: 700; line-height: 1.15; font-variant-numeric: tabular-nums; margin: 2px 0; }
+.bal-tile .sub { font-size: 12px; color: var(--mut); }
+.bal-tile--avail { background: var(--ok-bg); border-color: var(--ok-bd); }
+.bal-tile--avail .lbl, .bal-tile--avail .val { color: var(--ok-tx); }
+.bal-tile--pend { border-style: dashed; border-color: var(--warn-bd); background: #fffdf7; }
+.bal-tile--pend .val { color: var(--warn-tx); }
+
+/* Encerramento previsto */
+.prev-note {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; padding: 8px 12px; margin-bottom: 16px;
+  border: 1px dashed var(--info-bd); border-radius: 8px; background: var(--info-bg); color: var(--info-tx); font-size: 14px;
+}
+.prev-note .small { color: var(--info-tx); }
+
+/* Colunas de A */
+.mf-cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: start; }
+@container app (min-width: 800px) {
+  .mf-cols { grid-template-columns: minmax(0, 1fr) 340px; }
+  .mf-cols .req-form { grid-column: 2; grid-row: 1; }
+  .mf-cols .req-list { grid-column: 1; grid-row: 1; }
+}
+
+/* Formulário de pedido (A, C) */
+.form-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.form-head .btn-row { margin-left: auto; }
+.date-pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0 12px; }
+.date-pair label { margin-bottom: 12px; }
+.device .date-pair input { max-width: none; }
+.pv { min-height: 84px; margin-bottom: 12px; }
+.pv > * + * { margin-top: 8px; }
+.pv-hint { font-size: 13px; }
+.pv-count { font-size: 15px; }
+.pv-count b { font-size: 34px; font-weight: 700; line-height: 1; margin: 0 4px 0 2px; font-variant-numeric: tabular-nums; color: var(--primary-hover); }
+.pv-sub { font-size: 13px; color: var(--mut); }
+.pv-left { font-size: 15px; }
+.pv-left b { font-variant-numeric: tabular-nums; }
+.strip-days { display: flex; flex-wrap: wrap; gap: 4px; list-style: none; }
+.strip-days li {
+  width: 38px; padding: 3px 0; text-align: center; border-radius: 6px; border: 1px solid var(--primary);
+  background: var(--ok-bg); color: var(--ok-tx); font-size: 11px; line-height: 1.25;
+}
+.strip-days li b { display: block; font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.strip-days li.off {
+  border: 1px dashed var(--hint); color: var(--mut);
+  background: repeating-linear-gradient(135deg, transparent 0 4px, rgba(0, 0, 0, 0.05) 4px 5px);
+}
+
+/* Lista de pedidos (.table--cards) */
+.req-list h2 { margin-bottom: 4px; }
+.req-list .grp + .grp { margin-top: 20px; }
+.req-list .grp h3 { font-size: 14px; display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+.mf table td b { font-weight: 600; }
+.mf table .small { display: block; }
+.mf table td.act:empty { padding: 0; }
+@container app (max-width: 768px) { table.table--cards td.act:empty { display: none; } }
+.mf table tr.is-new td { background: var(--warn-bg); }
+@container app (max-width: 768px) {
+  table.table--cards tr.is-new { background: var(--warn-bg); border-color: var(--warn-bd); }
+  table.table--cards tr.is-new td { background: transparent; }
+  table.table--cards td { text-align: right; }
+  table.table--cards td .small { text-align: right; }
+}
+
+/* B · barra de saldo segmentada */
+.seg-card { margin: 12px 0; }
+.seg-bar { display: flex; gap: 2px; height: 30px; margin: 10px 0 8px; }
+.sg { min-width: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; border-radius: 4px; font-variant-numeric: tabular-nums; }
+.sg--g { background: var(--g-done); color: #fff; }
+.sg--r { background: var(--g-res); color: var(--txt); }
+.sg--a { background: var(--ok-bg); border: 1px solid var(--ok-bd); color: var(--ok-tx); }
+.sg--p {
+  margin-left: 10px; border: 1px dashed var(--warn-bd); color: var(--warn-tx);
+  background: repeating-linear-gradient(135deg, var(--warn-bg) 0 4px, #fff 4px 8px);
+}
+.seg-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13px; color: var(--mut); }
+.seg-legend span::before { content: ''; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; background: var(--c, var(--hint)); border: 1px solid var(--bd, transparent); }
+.seg-legend .l-g { --c: var(--g-done); }
+.seg-legend .l-r { --c: var(--g-res); }
+.seg-legend .l-a { --c: var(--ok-bg); --bd: var(--ok-bd); }
+.seg-legend .l-p { --c: var(--warn-bg); --bd: var(--warn-bd); }
+.seg-legend b { color: var(--txt); font-variant-numeric: tabular-nums; }
+
+/* B · calendário */
+.cal-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; align-items: start; margin-bottom: 16px; }
+@container app (min-width: 800px) {
+  .cal-layout { grid-template-columns: minmax(0, 1fr) 300px; }
+  .cal-card { grid-column: 1; grid-row: 1 / span 2; }
+  .cal-summary { grid-column: 2; grid-row: 1; }
+  .cal-legend { grid-column: 2; grid-row: 2; }
+}
+.cal-nav { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+.cal-nav h2 { font-size: 18px; }
+.device .cal-nav button { min-width: 44px; min-height: 40px; font-size: 20px; line-height: 1; cursor: pointer; padding: 0 12px; }
+.device .cal-nav button:disabled { opacity: 0.4; cursor: not-allowed; }
+.cal-hint { font-size: 13px; color: var(--mut); margin-bottom: 8px; min-height: 20px; }
+.cal-dow, .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.cal-dow span { text-align: center; font-size: 12px; color: var(--mut); padding: 2px 0 4px; }
+.device button.day {
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 2px;
+  min-height: 48px; padding: 4px 2px; font-size: 15px; font-weight: 600; cursor: pointer; font-variant-numeric: tabular-nums;
+  border: 1px solid var(--border); border-radius: 8px; background: #fff; color: var(--txt);
+}
+.device button.day:hover:not(:disabled) { background: var(--row-hover); }
+.day .dl { font-size: 10px; font-weight: 500; color: var(--mut); line-height: 1.1; white-space: nowrap; }
+.device button.day.day--blank { visibility: hidden; border: none; background: none; cursor: default; }
+@container app (min-width: 800px) { .device button.day { min-height: 76px; padding: 6px 8px; align-items: flex-start; font-size: 16px; } .day .dl { font-size: 11px; } }
+@container app (max-width: 768px) { .day .dl { display: none; } .day.is-ok::after, .day.is-pend::after, .day.is-prev::after { content: ''; position: absolute; left: 6px; right: 6px; bottom: 4px; height: 4px; border-radius: 2px; } }
+.device button.day.is-off {
+  border-style: dashed; color: var(--mut); font-weight: 500;
+  background: repeating-linear-gradient(135deg, #fff 0 5px, rgba(0, 0, 0, 0.045) 5px 6px);
+}
+.device button.day.is-past { opacity: 0.45; cursor: not-allowed; }
+.device button.day.is-ok { background: var(--ok-bg); border-color: var(--ok-bd); }
+.device button.day.is-ok .dl { color: var(--ok-tx); }
+.device button.day.is-pend { background: var(--warn-bg); border-color: var(--warn-bd); }
+.device button.day.is-pend .dl { color: var(--warn-tx); }
+.device button.day.is-prev { border: 1px dashed var(--info-bd); background: var(--info-bg); }
+.device button.day.is-prev .dl { color: var(--info-tx); }
+.day.is-ok::after { background: var(--g-res); }
+.day.is-pend::after { background: var(--warn-bd); }
+.day.is-prev::after { background: var(--info-bd); }
+.device button.day.is-today { box-shadow: inset 0 0 0 2px var(--txt); }
+.device button.day.sel-on { background: var(--primary); border: 1px solid var(--primary); color: #fff; }
+.device button.day.sel-on .dl { color: #fff; }
+.device button.day.sel-off { background: #fff; border: 2px dashed var(--primary); color: var(--primary-hover); }
+.device button.day.is-start, .device button.day.is-end { box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--primary-hover); z-index: 1; }
+.cal-summary { padding: 14px; }
+.cal-summary > * + * { margin-top: 8px; }
+.sum-main { font-size: 16px; }
+.sum-main b { font-size: 24px; font-variant-numeric: tabular-nums; color: var(--primary-hover); }
+.sum-hint { font-size: 14px; }
+/* clip (e não hidden) para o sticky do resumo funcionar no telemóvel */
+.device--phone { overflow: clip; }
+@container app (max-width: 768px) {
+  .cal-summary { position: sticky; bottom: 8px; z-index: 5; box-shadow: 0 -2px 14px rgba(0, 0, 0, 0.18); border-color: var(--primary); }
+}
+.cal-legend { padding: 12px 14px; }
+.cal-legend ul { list-style: none; display: grid; gap: 6px; margin-top: 8px; font-size: 13px; }
+.cal-legend li { display: flex; align-items: center; gap: 8px; }
+.sw { flex: 0 0 22px; height: 16px; border-radius: 4px; border: 1px solid var(--border); }
+.sw--on { background: var(--primary); border-color: var(--primary); }
+.sw--off { border: 1px dashed var(--hint); background: repeating-linear-gradient(135deg, #fff 0 4px, rgba(0, 0, 0, 0.08) 4px 5px); }
+.sw--ok { background: var(--ok-bg); border-color: var(--ok-bd); }
+.sw--pend { background: var(--warn-bg); border-color: var(--warn-bd); }
+.sw--prev { background: var(--info-bg); border: 1px dashed var(--info-bd); }
+.cal-legend .small { margin-top: 8px; }
+
+/* C · linha do tempo */
+.stats { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin: 12px 0; }
+.stats .st { font-size: 13px; color: var(--mut); }
+.stats .st b { display: block; font-size: 20px; line-height: 1.2; color: var(--txt); font-variant-numeric: tabular-nums; }
+.stats .st--avail b { color: var(--ok-tx); }
+.stats .btn-open { margin-left: auto; }
+.device .stats button.primary { padding: 8px 18px; }
+.tl-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: start; }
+@container app (min-width: 800px) { .tl-layout.has-panel { grid-template-columns: minmax(0, 1fr) 340px; } }
+.tl { position: relative; padding-top: 22px; }
+.tl-track { position: relative; height: 48px; border: 1px solid var(--border); border-radius: 8px; background: #fff; }
+.tl-bg { position: absolute; inset: 0; display: flex; border-radius: 7px; overflow: hidden; }
+.tl-m { border-left: 1px solid var(--border); min-width: 0; }
+.tl-m:first-child { border-left: none; }
+.tl-m:nth-child(odd) { background: rgba(127, 201, 162, 0.07); }
+.tl-m.y27 { border-left: 2px solid var(--txt); }
+.tl-labels { display: flex; margin-top: 4px; }
+.tl-labels span { min-width: 0; text-align: center; font-size: 12px; color: var(--mut); overflow: hidden; }
+.tl-labels .m-short { display: none; }
+@container app (max-width: 768px) { .tl-labels .m-long { display: none; } .tl-labels .m-short { display: inline; } }
+.tl-today { position: absolute; top: -4px; bottom: -4px; width: 0; border-left: 2px solid var(--txt); z-index: 3; pointer-events: none; }
+.tl-today i { position: absolute; top: -17px; left: 0; transform: translateX(-50%); font-size: 11px; font-style: normal; font-weight: 600; background: var(--txt); color: #fff; padding: 0 5px; border-radius: 4px; }
+.device button.blk {
+  position: absolute; top: 8px; height: 30px; min-height: 0; min-width: 14px; padding: 0; border-radius: 5px; cursor: pointer;
+  border: 1px solid transparent; z-index: 2;
+}
+.blk::after { content: ''; position: absolute; inset: -9px -5px; }
+.device button.blk--g { background: var(--g-done); border-color: var(--g-done); }
+.device button.blk--r { background: var(--g-res); border-color: #4fa87b; }
+.device button.blk--p { border: 1px solid var(--warn-bd); background: repeating-linear-gradient(135deg, var(--warn-bd) 0 4px, var(--warn-bg) 4px 8px); }
+.device button.blk--x { border: 2px dashed var(--info-tx); background: var(--info-bg); }
+.device button.blk.is-sel { outline: 3px solid var(--txt); outline-offset: 2px; z-index: 4; }
+.tl-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 12px; font-size: 13px; color: var(--mut); }
+.tl-legend .sw { display: inline-block; width: 18px; height: 12px; vertical-align: -1px; margin-right: 5px; }
+.sw--g { background: var(--g-done); border-color: var(--g-done); }
+.sw--r { background: var(--g-res); border-color: #4fa87b; }
+.sw--p { border-color: var(--warn-bd); background: repeating-linear-gradient(135deg, var(--warn-bd) 0 3px, var(--warn-bg) 3px 6px); }
+.sw--x { border: 2px dashed var(--info-tx); background: var(--info-bg); }
+.tl-detail { margin-top: 12px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); font-size: 14px; min-height: 64px; }
+.tl-detail > * + * { margin-top: 6px; }
+.tl-detail .head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.tl-detail .head b { font-size: 15px; }
+.req-panel { position: relative; }
+.sheet__box--dock { border-radius: 16px 16px 0 0; }
+.tl-sec { margin-top: 16px; }
+</style>
+</head>
+<body data-view="both">
+
+<header class="mock-bar">
+  <a class="mock-back" href="2026-10-03-escalas-ferias-mockups.html">← Índice</a>
+  <span class="mock-title">6 · As minhas férias</span>
+  <div class="mock-tabs" role="tablist" aria-label="Variantes">
+    <button type="button" role="tab" id="tab-a" data-variant="a" aria-controls="panel-a" aria-selected="false">A · Mosaicos e formulário</button>
+    <button type="button" role="tab" id="tab-b" data-variant="b" aria-controls="panel-b" aria-selected="false">B · Escolher no calendário</button>
+    <button type="button" role="tab" id="tab-c" data-variant="c" aria-controls="panel-c" aria-selected="false">C · Linha do tempo</button>
+  </div>
+  <div class="mock-view" role="group" aria-label="Dispositivos">
+    <button type="button" data-view="both" aria-pressed="true">Ambos</button>
+    <button type="button" data-view="desktop" aria-pressed="false">Desktop</button>
+    <button type="button" data-view="phone" aria-pressed="false">375 px</button>
+  </div>
+</header>
+
+<main class="mock-main">
+  <section role="tabpanel" id="panel-a" aria-labelledby="tab-a" data-variant="a" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> quatro mosaicos de saldo no topo (o disponível em destaque), os pedidos em lista e, ao lado, o cartão «Pedir férias» com duas datas e o «conta N dias» que se atualiza a cada mudança, com a tira dos dias que contam e dos que não.</p>
+      <p><b>Vantagens:</b> tudo num ecrã e 3 gestos (início, fim, «Pedir férias»): o fim preenche-se sozinho com o início, e vê-se logo o que não conta e o saldo que fica.</p>
+      <p><b>Custo:</b> dois seletores de data nativos (no telemóvel abrem duas vezes o calendário do sistema) e não mostra os dias já ocupados.</p>
+      <p class="note-extra">Conta sem ficha de funcionário: o ecrã mostra «A sua conta não tem ficha de funcionário» e não mostra saldo, pedidos nem formulário. Quartas de folga contam: a regra é seg–sex sem feriados. Experimente 04/01–08/01/2027 (conta 5, no saldo de 2027) ou 14/12–28/12 (sobrepõe-se ao encerramento previsto).</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-b" aria-labelledby="tab-b" data-variant="b" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> um calendário mensal grande (Outubro a Janeiro, a abrir em Novembro): toque no primeiro e no último dia; os dias que contam ficam a cheio, fins de semana e feriados a tracejado; a barra de saldo segmentada fica no topo.</p>
+      <p><b>Vantagens:</b> vê-se o que já está ocupado (férias, pendentes, encerramento previsto) ao escolher, sem escrever datas; 3 toques: início, fim, «Pedir».</p>
+      <p><b>Custo:</b> mais altura a 375 px e, num período que passa de um mês ao seguinte, é preciso navegar (a seleção mantém-se).</p>
+      <p class="note-extra">Conta sem ficha de funcionário: o ecrã mostra «A sua conta não tem ficha de funcionário» e não mostra saldo, pedidos nem calendário. Quartas de folga contam: a regra é seg–sex sem feriados.</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-c" aria-labelledby="tab-c" data-variant="c" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> uma linha do tempo do ano com os períodos gozados, reservados, pendentes e o encerramento previsto a tracejado; tocar num período mostra o detalhe; «Pedir férias» abre uma folha inferior no telemóvel e um painel ao lado no desktop.</p>
+      <p><b>Vantagens:</b> o ano e o saldo lidos numa linha, com as lacunas à vista; os pedidos ficam agrupados por estado, e o pedido novo aparece logo na linha do tempo.</p>
+      <p><b>Custo:</b> a 375 px os períodos curtos ficam estreitos (3 dias ≈ 14 px) e as datas escolhem-se em dois seletores, sem calendário.</p>
+      <p class="note-extra">Conta sem ficha de funcionário: o ecrã mostra «A sua conta não tem ficha de funcionário» e não mostra saldo, linha do tempo nem pedidos. A linha do tempo vai até Janeiro de 2027 para mostrar o pedido pendente.</p>
+    </div>
+  </section>
+</main>
+
+<!-- Conteúdo de cada variante: clonado por JS para o desktop e para os 375 px. Sem id aqui dentro. -->
+<template data-variant="a" data-active="As minhas férias" data-title="As minhas férias" data-user="Inês Calado">
+  <main class="mf">
+    <header class="mf-head">
+      <h1>As minhas férias</h1>
+      <p>Saldo de 2026 · direito anual de 22 dias · data de referência 01/10/2026</p>
+    </header>
+    <section class="bal" data-slot="tiles" aria-label="Saldo de 2026"></section>
+    <div data-slot="previsto"></div>
+    <div class="mf-cols">
+      <div class="card req-form" data-slot="formbox" data-form-kind="inline"></div>
+      <section class="card req-list" aria-label="Os meus pedidos">
+        <h2>Os meus pedidos</h2>
+        <div data-slot="list"></div>
+      </section>
+    </div>
+  </main>
+</template>
+
+<template data-variant="b" data-active="As minhas férias" data-title="As minhas férias" data-user="Inês Calado">
+  <main class="mf">
+    <header class="mf-head">
+      <h1>As minhas férias</h1>
+      <p>Saldo de 2026 · direito anual de 22 dias · data de referência 01/10/2026</p>
+    </header>
+    <section class="card seg-card" aria-label="Saldo de 2026">
+      <h2>Saldo de 2026</h2>
+      <div data-slot="segbar"></div>
+    </section>
+    <div data-slot="previsto"></div>
+    <div class="cal-layout">
+      <section class="card cal-card" aria-label="Calendário de pedido">
+        <div class="cal-nav">
+          <button type="button" class="secondary" data-act="month" data-dir="-1" aria-label="Mês anterior">‹</button>
+          <h2 data-slot="monthname" aria-live="polite"></h2>
+          <button type="button" class="secondary" data-act="month" data-dir="1" aria-label="Mês seguinte">›</button>
+        </div>
+        <p class="cal-hint" data-slot="hint" aria-live="polite"></p>
+        <div class="cal-dow" aria-hidden="true"><span>seg</span><span>ter</span><span>qua</span><span>qui</span><span>sex</span><span>sáb</span><span>dom</span></div>
+        <div class="cal-grid" data-slot="grid"></div>
+      </section>
+      <section class="card cal-summary" data-slot="summary" aria-live="polite" aria-label="Resumo do pedido"></section>
+      <section class="card cal-legend" aria-label="Legenda">
+        <h3>Legenda</h3>
+        <ul>
+          <li><span class="sw sw--on"></span>Dia que conta</li>
+          <li><span class="sw sw--off"></span>Não conta (fim de semana ou feriado)</li>
+          <li><span class="sw sw--ok"></span>Férias aprovadas</li>
+          <li><span class="sw sw--pend"></span>Pedido pendente</li>
+          <li><span class="sw sw--prev"></span>Encerramento previsto</li>
+        </ul>
+        <p class="small muted">As quartas de folga contam como dias úteis (regra seg–sex, por validar).</p>
+      </section>
+    </div>
+    <section class="card req-list" aria-label="Os meus pedidos">
+      <h2>Os meus pedidos</h2>
+      <div data-slot="list"></div>
+    </section>
+  </main>
+</template>
+
+<template data-variant="c" data-active="As minhas férias" data-title="As minhas férias" data-user="Inês Calado">
+  <main class="mf">
+    <header class="mf-head">
+      <h1>As minhas férias</h1>
+      <p>Ano de 2026 · saldo inicial de 15 dias · data de referência 01/10/2026</p>
+    </header>
+    <div class="stats" data-slot="stats"></div>
+    <div class="tl-layout" data-slot="layout">
+      <div>
+        <section class="card" aria-label="Linha do tempo das férias">
+          <h2>O meu ano</h2>
+          <div class="tl" data-slot="timeline"></div>
+          <div class="tl-legend" aria-hidden="true">
+            <span><span class="sw sw--g"></span>Gozado</span>
+            <span><span class="sw sw--r"></span>Reservado</span>
+            <span><span class="sw sw--p"></span>Pendente</span>
+            <span><span class="sw sw--x"></span>Encerramento previsto</span>
+          </div>
+          <div class="tl-detail" data-slot="detail" aria-live="polite"></div>
+        </section>
+        <section class="card req-list tl-sec" aria-label="Os meus pedidos">
+          <h2>Os meus pedidos</h2>
+          <div data-slot="list"></div>
+        </section>
+      </div>
+      <aside class="card req-form req-panel" data-slot="formbox" data-form-kind="panel" aria-label="Pedir férias" hidden></aside>
+    </div>
+  </main>
+</template>
+
+<script>
+/* Feriados nacionais: datas UTC, incluindo os móveis da Páscoa. */
+var nationalHolidayCache = {};
+function nationalHolidays(year) {
+  if (nationalHolidayCache[year]) return nationalHolidayCache[year];
+  var a = year % 19, b = Math.floor(year / 100), c = year % 100, d = Math.floor(b / 4), e = b % 4;
+  var f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
+  var i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451);
+  var easter = new Date(Date.UTC(year, Math.floor((h + l - 7 * m + 114) / 31) - 1, (h + l - 7 * m + 114) % 31 + 1));
+  var result = {}, fixed = { '01-01': 'Ano Novo', '04-25': 'Dia da Liberdade', '05-01': 'Dia do Trabalhador', '06-10': 'Dia de Portugal', '08-15': 'Assunção de Nossa Senhora', '10-05': 'Implantação da República', '11-01': 'Todos os Santos', '12-01': 'Restauração da Independência', '12-08': 'Imaculada Conceição', '12-25': 'Natal' };
+  Object.keys(fixed).forEach(function (key) { result[year + '-' + key] = fixed[key]; });
+  [[-2, 'Sexta-feira Santa'], [0, 'Páscoa'], [60, 'Corpo de Deus']].forEach(function (entry) { result[new Date(easter.getTime() + entry[0] * 864e5).toISOString().slice(0, 10)] = entry[1]; });
+  return nationalHolidayCache[year] = result;
+}
+function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] || ''; }
+</script>
+<script>
+/* === MOLDURA COMUM (copiar) === */
+/* API para o JS específico (script a seguir a este):
+     window.mockInit = (deviceEl, variant, kind) => {}   chamado por cada clone (kind = 'desktop' | 'phone')
+     Mock.on(tipo, seletor, (evento, elemento, deviceEl) => {})   delegação com escopo no .device
+     Mock.toast(deviceEl, texto)   Mock.sheet(deviceEl, html|Node) → caixa   Mock.closeSheet(deviceEl)
+     Mock.state(deviceEl) → objeto por clone   Mock.uid(prefixo) → id único   Mock.$ Mock.$$ Mock.esc
+   No markup dos templates (sem id): data-id="k" → id único por clone; data-for / data-controls /
+   data-labelledby / data-describedby="k" → for / aria-controls / aria-labelledby / aria-describedby.
+   [data-route="/rota"] simula navegação (aviso «Abre /rota»). Atributos do <template>:
+   data-active (item do menu activo), data-title (título da barra a 375 px), data-user (nome na barra lateral). */
+(function () {
+  'use strict';
+  var VIEW_KEY = 'escalas-ferias-mock-view';
+  var MENU = [
+    ['Geral', [['Início', '/']]],
+    ['Operação', [['Horas', '/horas'], ['As minhas horas', '/horas/minhas'], ['Escala', '/escala'], ['A minha escala', '/escala/minha'],
+      ['Férias', '/ferias'], ['As minhas férias', '/ferias/minhas'], ['Gorjetas', '/gorjetas'], ['As minhas gorjetas', '/gorjetas/minhas'],
+      ['Fecho de caixa', '/caixa']]],
+    ['Cadastros', [['Cadastros', '/cadastros']]]
+  ];
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var mk = function (tag, cls) { var n = document.createElement(tag); if (cls) n.className = cls; return n; };
+  var clamp = function (v, lo, hi) { return Math.min(Math.max(v, lo), hi); };
+  var states = new WeakMap();
+  var counter = 0;
+  var uid = function (p) { counter += 1; return (p || 'u') + '-' + counter; };
+  var state = function (dev) { if (!states.has(dev)) states.set(dev, {}); return states.get(dev); };
+
+  /* ids únicos por clone: data-id define, os data-for/controls/labelledby/describedby ligam */
+  function wireIds(root) {
+    var map = {};
+    var get = function (k) { if (!map[k]) map[k] = uid(k); return map[k]; };
+    $$('[data-id]', root).forEach(function (n) { n.id = get(n.getAttribute('data-id')); });
+    [['data-for', 'for'], ['data-controls', 'aria-controls'], ['data-labelledby', 'aria-labelledby'], ['data-describedby', 'aria-describedby']]
+      .forEach(function (p) { $$('[' + p[0] + ']', root).forEach(function (n) { n.setAttribute(p[1], get(n.getAttribute(p[0]))); }); });
+  }
+
+  /* parte visível do dispositivo (para posicionar avisos e diálogos onde o utilizador está a olhar) */
+  function visibleBox(dev) {
+    var r = dev.getBoundingClientRect();
+    var sc = dev.closest('.device-scroll');
+    return {
+      top: clamp(-r.top, 0, r.height), bottom: clamp(window.innerHeight - r.top, 0, r.height),
+      left: sc ? sc.scrollLeft : 0, width: sc ? sc.clientWidth : dev.clientWidth
+    };
+  }
+  function toast(dev, msg) {
+    var app = $('.app', dev); if (!app) return;
+    var t = $('.app-toast', app);
+    if (!t) { t = mk('div', 'app-toast'); t.setAttribute('role', 'status'); app.appendChild(t); }
+    t.textContent = msg; t.hidden = false;
+    var v = visibleBox(dev);
+    t.style.top = Math.max(8, v.bottom - 56) + 'px';
+    t.style.left = (v.left + v.width / 2) + 'px';
+    clearTimeout(t._h); t._h = setTimeout(function () { t.hidden = true; }, 2800);
+  }
+  function sheet(dev, content) {
+    var app = $('.app', dev), s = $('.sheet', app);
+    if (!s) { s = mk('div', 'sheet'); s.innerHTML = '<div class="sheet__box" role="dialog" aria-modal="true"></div>'; app.appendChild(s); }
+    var box = $('.sheet__box', s);
+    if (typeof content === 'string') box.innerHTML = content; else if (content) box.replaceChildren(content);
+    wireIds(box); s.hidden = false;
+    var v = visibleBox(dev);
+    box.style.top = (v.top + 24) + 'px';
+    box.style.left = Math.max(12, v.left + (v.width - box.offsetWidth) / 2) + 'px';
+    var f = $('button, input, select, textarea, a[href]', box); if (f) f.focus();
+    return box;
+  }
+  function closeSheet(dev) { var s = $('.sheet', dev); if (s) s.hidden = true; }
+  function setMenu(dev, open) {
+    var app = $('.app', dev); if (!app) return;
+    app.toggleAttribute('data-menu-open', open);
+    var b = $('.app-burger', dev); if (b) { b.setAttribute('aria-expanded', String(open)); b.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu'); }
+  }
+  function on(type, selector, fn) {
+    document.addEventListener(type, function (e) {
+      var t = e.target && e.target.closest ? e.target.closest(selector) : null; if (!t) return;
+      var dev = t.closest('.device'); if (!dev) return;
+      fn(e, t, dev);
+    });
+  }
+
+  /* mini-app: barra lateral (desktop) / barra superior com ☰ (≤768px, por container query) */
+  function buildApp(tpl) {
+    var active = tpl.dataset.active || document.body.dataset.active || '';
+    var title = tpl.dataset.title || active;
+    var user = tpl.dataset.user || 'Carla Videira';
+    var app = mk('div', 'app');
+    var nav = MENU.map(function (sec) {
+      return '<div class="sidebar-section">' + esc(sec[0]) + '</div>' + sec[1].map(function (it) {
+        var on_ = it[0] === active;
+        return '<a class="sidebar-link' + (on_ ? ' sidebar-link--active' : '') + '" href="#" data-route="' + esc(it[1]) + '"' + (on_ ? ' aria-current="page"' : '') + '>' + esc(it[0]) + '</a>';
+      }).join('');
+    }).join('');
+    app.innerHTML =
+      '<aside class="app-side" aria-label="Menu principal"><div class="app-logo">GIG</div><nav>' + nav + '</nav>' +
+      '<div class="app-user"><span class="app-user__name">' + esc(user) + '</span><button type="button" data-route="/login">Sair</button></div></aside>' +
+      '<div class="app-scrim" data-act-scrim></div>' +
+      '<div class="app-main"><div class="app-top"><button type="button" class="app-burger" aria-expanded="false" aria-label="Abrir menu">☰</button>' +
+      '<span class="app-top__title">' + esc(title) + '</span></div><div class="app-content"></div></div>';
+    $('.app-content', app).appendChild(tpl.content.cloneNode(true));
+    return app;
+  }
+  function fill(dev) {
+    var tpl = $('template[data-variant="' + dev.dataset.variant + '"]');
+    states.delete(dev);
+    dev.replaceChildren(buildApp(tpl));
+    wireIds(dev);
+    if (typeof window.mockInit === 'function') window.mockInit(dev, dev.dataset.variant, dev.dataset.kind);
+  }
+  function mount(panel) {
+    var v = panel.dataset.variant;
+    var stage = $('.stage', panel) || panel.appendChild(mk('div', 'stage'));
+    stage.replaceChildren();
+    [['desktop', 'Desktop'], ['phone', '375 px']].forEach(function (d) {
+      var item = mk('figure', 'stage-item stage-item--' + d[0]);
+      item.innerHTML = '<figcaption class="stage-cap"><span>' + d[1] + '</span><button type="button" class="stage-reset" title="Repor o estado inicial">Repor</button></figcaption>';
+      var dev = mk('div', 'device device--' + d[0]);
+      dev.dataset.variant = v; dev.dataset.kind = d[0];
+      var sc = mk('div', 'device-scroll' + (d[0] === 'phone' ? ' device-scroll--phone' : '')); sc.appendChild(dev); item.appendChild(sc);
+      stage.appendChild(item);
+      fill(dev);
+    });
+    panel.dataset.rendered = '1';
+  }
+
+  /* separadores A/B/C (hash #a/#b/#c) e alternador de dispositivos */
+  var tabs = $$('.mock-bar [role="tab"]'), panels = $$('[role="tabpanel"]');
+  function select(v, focus) {
+    if (!tabs.some(function (t) { return t.dataset.variant === v; })) v = tabs[0].dataset.variant;
+    tabs.forEach(function (t) { var o = t.dataset.variant === v; t.setAttribute('aria-selected', String(o)); t.tabIndex = o ? 0 : -1; if (o && focus) t.focus(); });
+    panels.forEach(function (p) { p.hidden = p.dataset.variant !== v; if (p.dataset.variant === v && !p.dataset.rendered) mount(p); });
+    if (location.hash.slice(1) !== v) { try { history.replaceState(null, '', '#' + v); } catch (e) { /* file:// restrito */ } }
+  }
+  function setView(v) {
+    document.body.dataset.view = v;
+    $$('.mock-view button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.view === v)); });
+    try { localStorage.setItem(VIEW_KEY, v); } catch (e) { /* sem armazenamento */ }
+  }
+  function boot() {
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { select(t.dataset.variant); });
+      t.addEventListener('keydown', function (e) {
+        var j = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }[e.key];
+        if (j === undefined) return; e.preventDefault(); select(tabs[(j + tabs.length) % tabs.length].dataset.variant, true);
+      });
+    });
+    $$('.mock-view button').forEach(function (b) { b.addEventListener('click', function () { setView(b.dataset.view); }); });
+    window.addEventListener('hashchange', function () { select(location.hash.slice(1).toLowerCase()); });
+    var saved = null; try { saved = localStorage.getItem(VIEW_KEY); } catch (e) { /* ignorar */ }
+    setView(['both', 'desktop', 'phone'].indexOf(saved) >= 0 ? saved : 'both');
+    select(location.hash.slice(1).toLowerCase());
+  }
+
+  /* comportamentos da moldura */
+  on('click', '.app-burger', function (e, t, dev) { setMenu(dev, !$('.app', dev).hasAttribute('data-menu-open')); });
+  on('click', '.app-scrim', function (e, t, dev) { setMenu(dev, false); });
+  on('click', '[data-route]', function (e, t, dev) { e.preventDefault(); setMenu(dev, false); toast(dev, 'Abre ' + t.getAttribute('data-route')); });
+  on('click', 'a[href="#"]', function (e) { e.preventDefault(); });
+  on('click', '.sheet', function (e, t, dev) { if (e.target === t || e.target.closest('[data-close-sheet]')) closeSheet(dev); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    $$('.sheet:not([hidden])').forEach(function (s) { closeSheet(s.closest('.device')); });
+    $$('.app[data-menu-open]').forEach(function (a) { setMenu(a.closest('.device'), false); });
+  });
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.stage-reset'); if (!b) return;
+    fill($('.device', b.closest('.stage-item')));
+  });
+
+  window.Mock = { $: $, $$: $$, esc: esc, uid: uid, state: state, on: on, toast: toast, sheet: sheet, closeSheet: closeSheet, setMenu: setMenu };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+/* === FIM MOLDURA === */
+</script>
+<script>
+/* === ESPECÍFICO DESTE MOCKUP === */
+(function () {
+  'use strict';
+  var $ = Mock.$, $$ = Mock.$$, esc = Mock.esc;
+
+  /* ── Dados fictícios (briefing comum) ── */
+  var TODAY = '2026-10-03', YEAR = '2026', BASE = 15, REFERENCE = '2026-10-01';
+  var WD = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
+  var MONTHS = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  var MON3 = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+  var PREV = { name: 'Natal', start: '2026-12-14', end: '2026-12-28' };
+  var NAV_MONTHS = ['2026-10', '2026-11', '2026-12', '2027-01'];
+  var STATUS_ORDER = { Pendente: 0, Aprovado: 1, Recusado: 2, Cancelado: 3 };
+  var BADGE = { Aprovado: 'badge-ok', Pendente: 'badge-warn', Recusado: 'badge-err', Cancelado: 'badge-mut' };
+  var INITIAL = [
+    { id: 'a3', start: '2026-05-11', end: '2026-05-12', status: 'Aprovado' },
+    { id: 'a4', start: '2026-11-09', end: '2026-11-11', status: 'Aprovado' },
+    { id: 'p3', start: '2027-01-04', end: '2027-01-08', status: 'Pendente', at: '2026-10-02' }
+  ];
+
+  /* ── Datas (UTC, sem fuso) ── */
+  function dt(s) { var p = s.split('-'); return new Date(Date.UTC(+p[0], +p[1] - 1, +p[2])); }
+  function iso(x) { return x.toISOString().slice(0, 10); }
+  function addDays(s, n) { var t = dt(s); t.setUTCDate(t.getUTCDate() + n); return iso(t); }
+  function dow(s) { return dt(s).getUTCDay(); }
+  function diff(a, b) { return Math.round((dt(b) - dt(a)) / 864e5); }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function dm(s) { return s.slice(8, 10) + '/' + s.slice(5, 7); }
+  function dmy(s) { return dm(s) + '/' + s.slice(0, 4); }
+  function wdl(s) { return WD[dow(s)] + ' ' + dm(s); }
+  function period(a, b) {
+    if (a === b) return dmy(a);
+    return a.slice(0, 4) === b.slice(0, 4) ? dm(a) + '–' + dm(b) + '/' + b.slice(0, 4) : dmy(a) + '–' + dmy(b);
+  }
+  function plural(n, s, p) { return n + ' ' + (n === 1 ? s : p); }
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+
+  /* ── Contagem: dias úteis seg–sex, sem feriados ── */
+  function count(a, b) {
+    var days = [], counted = [], skipped = [];
+    for (var s = a; s <= b; s = addDays(s, 1)) {
+      var w = dow(s), kind = 'on';
+      if (w === 0 || w === 6) kind = 'fds'; else if (nationalHoliday(s)) kind = 'feriado';
+      days.push({ iso: s, kind: kind });
+      if (kind === 'on') counted.push(s); else skipped.push({ iso: s, kind: kind });
+    }
+    return { days: days, counted: counted, skipped: skipped };
+  }
+  function isOpen(q) { return q.status === 'Aprovado' || q.status === 'Pendente'; }
+  function balance(reqs) {
+    var g = 0, r = 0, p = 0, pOther = 0, pendingByYear = {};
+    reqs.forEach(function (q) {
+      var c = count(q.start, q.end).counted;
+      if (q.status === 'Aprovado') c.forEach(function (x) { if (x.slice(0, 4) === YEAR && x >= REFERENCE) { if (x <= TODAY) g++; else r++; } });
+      if (q.status === 'Pendente') { c.forEach(function (x) { var y = x.slice(0, 4); pendingByYear[y] = (pendingByYear[y] || 0) + 1; }); p += c.filter(function (x) { return x.slice(0, 4) === YEAR; }).length; pOther += c.filter(function (x) { return x.slice(0, 4) !== YEAR; }).length; }
+    });
+    return { base: BASE, g: g, r: r, p: p, pOther: pOther, pendingByYear: pendingByYear, avail: BASE - g - r };
+  }
+  function otherPending(b) { return Object.keys(b.pendingByYear).filter(function (y) { return y !== YEAR; }).sort().map(function (y) { return b.pendingByYear[y] + ' em ' + y; }).join(' · '); }
+  function analyse(a, b, st) {
+    if (!a || !b) return { kind: 'empty' };
+    if (a <= TODAY) return { kind: 'past' };
+    if (b < a) return { kind: 'order' };
+    if (diff(a, b) > 200) return { kind: 'long' };
+    var c = count(a, b), bal = balance(st.reqs);
+    var n26 = c.counted.filter(function (x) { return x.slice(0, 4) === YEAR; }).length;
+    return {
+      kind: 'ok', n: c.counted.length, n26: n26, other: c.counted.length - n26, span: c.days.length, c: c,
+      avail: bal.avail, after: bal.avail - n26, exceeds: n26 > bal.avail,
+      over: st.reqs.filter(function (q) { return isOpen(q) && q.start <= b && q.end >= a; }),
+      prev: PREV.start <= b && PREV.end >= a
+    };
+  }
+
+  /* ── Blocos de HTML partilhados ── */
+  function skippedText(c) {
+    return c.skipped.map(function (x) { return x.kind === 'feriado' ? wdl(x.iso) + ' · Feriado (aberto)' : wdl(x.iso); }).join(', ');
+  }
+  function stripHtml(c) {
+    if (c.days.length > 21) return '';
+    return '<ul class="strip-days" aria-label="Dias do pedido">' + c.days.map(function (x) {
+      var off = x.kind !== 'on';
+      return '<li class="' + (off ? 'off' : 'on') + '" title="' + esc(off ? (x.kind === 'feriado' ? nationalHoliday(x.iso) + ': não conta' : 'Fim de semana: não conta') : 'Conta') + '">' +
+        WD[dow(x.iso)] + '<b>' + x.iso.slice(8, 10) + '</b></li>';
+    }).join('') + '</ul>';
+  }
+  function warnHtml(an) {
+    var h = '';
+    if (an.exceeds) h += '<p class="alert-warn">Excede o disponível (' + an.avail + ' em 2026): pode pedir na mesma, a decisão é do gestor.</p>';
+    an.over.forEach(function (q) { h += '<p class="alert-warn">Sobrepõe-se ao pedido de ' + period(q.start, q.end) + ' (' + q.status + ').</p>'; });
+    if (an.prev) h += '<p class="alert-info">Sobrepõe-se ao encerramento previsto «' + PREV.name + '» (' + period(PREV.start, PREV.end) + ').</p>';
+    return h;
+  }
+  function leftHtml(an) {
+    var h = '';
+    if (an.n26 > 0 && !an.exceeds) h += '<p class="pv-left">Fica com <b>' + an.after + '</b> disponíveis em 2026.</p>';
+    if (an.other > 0) h += '<p class="pv-left"><b>' + an.other + '</b> ' + (an.other === 1 ? 'dia conta' : 'dias contam') + ' no saldo de 2027 <span class="muted small">(direito de 2027 ainda por confirmar)</span>.</p>';
+    return h;
+  }
+  function previewHtml(an, a, b) {
+    switch (an.kind) {
+      case 'empty': return '<p class="pv-hint muted">Escolha o primeiro e o último dia. Contam só os dias úteis, de segunda a sexta, sem feriados.</p>';
+      case 'past': return '<p class="alert-err">O primeiro dia tem de ser depois de hoje (03/10/2026).</p>';
+      case 'order': return '<p class="alert-err">O último dia é anterior ao primeiro.</p>';
+      case 'long': return '<p class="alert-err">Período demasiado longo: confirme as datas.</p>';
+    }
+    var h = '<p class="pv-count" role="status">Conta <b>' + an.n + '</b> ' + (an.n === 1 ? 'dia' : 'dias') + '</p>';
+    h += '<p class="pv-sub">' + period(a, b) + ' · ' + plural(an.span, 'dia seguido', 'dias seguidos') +
+      (an.c.skipped.length ? ' · não conta: ' + esc(skippedText(an.c)) : '') + '</p>';
+    h += stripHtml(an.c);
+    if (an.n === 0) h += '<p class="alert-warn">Só fins de semana e feriados: não há dias a descontar.</p>';
+    return h + leftHtml(an) + warnHtml(an);
+  }
+
+  var FORM_INNER = function (closable) {
+    return '<div class="form-head"><h2>Pedir férias</h2><span class="badge-warn" title="Dias úteis (seg–sex, sem feriados). A confirmar com o contabilista.">Regra de contagem por validar</span>' +
+      (closable ? '<button type="button" class="btn-row btn-row-quiet" data-act="close-form" data-close-sheet>Fechar</button>' : '') + '</div>' +
+      '<div class="date-pair"><label>Início<input type="date" data-field="start" min="2026-10-04" max="2027-12-31"></label>' +
+      '<label>Fim<input type="date" data-field="end" min="2026-10-04" max="2027-12-31"></label></div>' +
+      '<div class="pv" data-slot="preview" aria-live="polite"></div>' +
+      '<div class="btn-line"><button type="button" class="primary" data-act="submit" disabled>Pedir férias</button>' +
+      '<button type="button" class="btn-row btn-row-quiet" data-act="clear">Limpar</button></div>';
+  };
+
+  /* ── Lista de pedidos (.table--cards, data-label em cada td, menos na acção) ── */
+  function sortReqs(list) {
+    return list.slice().sort(function (x, y) { return (STATUS_ORDER[x.status] - STATUS_ORDER[y.status]) || (x.start < y.start ? -1 : 1); });
+  }
+  function decisionHtml(q) {
+    switch (q.status) {
+      case 'Aprovado': return q.by && q.decided ? 'Aprovado por ' + esc(q.by) + ' em ' + dmy(q.decided) : 'Pedido aprovado';
+      case 'Pendente': return 'Pedido em ' + dmy(q.at) + ' · aguarda decisão';
+      case 'Recusado': return '«' + esc(q.reason) + '»<span class="small muted">' + esc(q.by) + ' · ' + dmy(q.decided) + '</span>';
+      default: return 'Cancelado por si em ' + dmy(q.decided);
+    }
+  }
+  function reqRow(q) {
+    var c = count(q.start, q.end), hol = c.skipped.filter(function (x) { return x.kind === 'feriado'; });
+    var sub = q.status === 'Aprovado' ? (q.end < REFERENCE ? 'Histórico anterior à referência' : q.end <= TODAY ? 'Gozado' : (q.start > TODAY ? 'Reservado' : 'A decorrer')) : '';
+    return '<tr' + (q.fresh ? ' class="is-new"' : '') + ' data-rid="' + q.id + '">' +
+      '<td data-label="Período"><b>' + period(q.start, q.end) + '</b></td>' +
+      '<td data-label="Conta">' + plural(c.counted.length, 'dia', 'dias') +
+      (hol.length ? '<span class="small muted">' + hol.map(function (x) { return dm(x.iso) + ' é feriado'; }).join(', ') + '</span>' : '') + '</td>' +
+      '<td data-label="Estado"><span class="' + BADGE[q.status] + '">' + q.status + '</span>' + (sub ? '<span class="small muted">' + sub + '</span>' : '') + '</td>' +
+      '<td data-label="Decisão">' + decisionHtml(q) + '</td>' +
+      '<td class="act">' + (q.status === 'Pendente' ? '<button type="button" class="btn-row danger" data-act="cancel" data-rid="' + q.id + '">Cancelar pedido</button>' : '') + '</td></tr>';
+  }
+  function reqTable(list) {
+    return '<table class="table--cards"><thead><tr><th>Período</th><th>Conta</th><th>Estado</th><th>Decisão</th><th><span class="sr-only">Ações</span></th></tr></thead><tbody>' +
+      list.map(reqRow).join('') + '</tbody></table>';
+  }
+  function listFlat(st) { return reqTable(sortReqs(st.reqs)); }
+  function listGrouped(st) {
+    return ['Pendente', 'Aprovado', 'Recusado', 'Cancelado'].map(function (s) {
+      var l = sortReqs(st.reqs.filter(function (q) { return q.status === s; }));
+      return l.length ? '<div class="grp"><h3><span class="' + BADGE[s] + '">' + s + '</span><span class="muted small">' + plural(l.length, 'pedido', 'pedidos') + '</span></h3>' + reqTable(l) + '</div>' : '';
+    }).join('');
+  }
+
+  /* ── A · mosaicos e previsto ── */
+  function tile(cls, lbl, val, sub) {
+    return '<div class="bal-tile bal-tile--' + cls + '"><div class="lbl">' + lbl + '</div><div class="val">' + val + '</div><div class="sub">' + sub + '</div></div>';
+  }
+  function tilesHtml(st) {
+    var b = balance(st.reqs);
+    return tile('avail', 'Disponível', b.avail, 'de ' + b.base + ' dias de saldo inicial') +
+      tile('res', 'Reservado', b.r, 'aprovados, ainda por gozar') +
+      tile('goz', 'Gozado', b.g, 'desde 01/10 até hoje') +
+      tile('pend', 'Pendente', b.p, 'em 2026, sem descontar' + (b.pOther ? ' · ' + otherPending(b) : ''));
+  }
+  function previstoHtml(st) {
+    var n = count(PREV.start, PREV.end).counted.length, after = balance(st.reqs).avail - n;
+    return '<div class="prev-note"><span class="badge-info">Previsto</span><b>Encerramento «' + PREV.name + '» ' + period(PREV.start, PREV.end) + '</b>' +
+      '<span>Previsto: conta ' + n + ' dias se confirmado, sem descontar já. ' +
+      (after >= 0 ? 'Ficaria com ' + after + ' disponíveis.' : 'Faltariam ' + (-after) + ' dias.') + '</span></div>';
+  }
+
+  /* ── B · barra segmentada e calendário ── */
+  function segbarHtml(st) {
+    var b = balance(st.reqs);
+    return '<div class="seg-bar" role="img" aria-label="Gozado ' + b.g + ', reservado ' + b.r + ', disponível ' + b.avail + ', pendente ' + b.p + ' à parte">' +
+      '<span class="sg sg--g" style="flex:' + b.g + ' 1 0">' + b.g + '</span><span class="sg sg--r" style="flex:' + b.r + ' 1 0">' + b.r + '</span>' +
+      '<span class="sg sg--a" style="flex:' + b.avail + ' 1 0">' + b.avail + '</span>' +
+      (b.p ? '<span class="sg sg--p" style="flex:' + b.p + ' 1 0">' + b.p + '</span>' : '') + '</div>' +
+      '<p class="seg-legend"><span class="l-g">Gozado <b>' + b.g + '</b></span><span class="l-r">Reservado <b>' + b.r + '</b></span><span class="l-a">Disponível <b>' + b.avail + '</b> de ' + b.base + '</span>' +
+      '<span class="l-p">Pendente <b>' + b.p + '</b> (à parte, sem descontar' + (b.pOther ? '; ' + otherPending(b) : '') + ')</span></p>';
+  }
+  function calHtml(st) {
+    var y = +st.month.slice(0, 4), m = +st.month.slice(5, 7), first = st.month + '-01';
+    var lead = (dow(first) + 6) % 7, nd = new Date(Date.UTC(y, m, 0)).getUTCDate(), sel = st.sel;
+    var an = sel.start && sel.end ? analyse(sel.start, sel.end, st) : null;
+    var cnt = {};
+    if (an && an.kind === 'ok') an.c.counted.forEach(function (x) { cnt[x] = 1; });
+    var h = '', i;
+    for (i = 0; i < lead; i++) h += '<button type="button" class="day day--blank" tabindex="-1" aria-hidden="true"></button>';
+    for (i = 1; i <= nd; i++) {
+      var s = st.month + '-' + pad(i), w = dow(s), cls = ['day'], lab = '', tip = [];
+      var bk = null;
+      st.reqs.forEach(function (q) { if (isOpen(q) && q.start <= s && q.end >= s) bk = q; });
+      var off = w === 0 || w === 6 || !!nationalHoliday(s);
+      if (s <= TODAY) cls.push('is-past');
+      if (off) cls.push('is-off');
+      if (s === TODAY) { cls.push('is-today'); lab = 'hoje'; }
+      if (nationalHoliday(s)) { if (!lab) lab = 'feriado'; tip.push(nationalHoliday(s) + ' · Feriado (aberto)'); }
+      if (bk) { cls.push(bk.status === 'Aprovado' ? 'is-ok' : 'is-pend'); lab = bk.status === 'Aprovado' ? 'férias' : 'pendente'; tip.push(bk.status === 'Aprovado' ? 'Férias aprovadas' : 'Pedido pendente'); }
+      else if (PREV.start <= s && s <= PREV.end) { cls.push('is-prev'); if (!nationalHoliday(s) && s !== TODAY) lab = 'encerr.'; tip.push('Encerramento previsto «' + PREV.name + '»'); }
+      var inRange = sel.start && s >= sel.start && s <= (sel.end || sel.start);
+      if (inRange) {
+        var counts = sel.end ? !!cnt[s] : !off;
+        cls.push(counts ? 'sel-on' : 'sel-off');
+        tip.push(counts ? 'Conta' : 'Não conta');
+      }
+      if (sel.start === s) cls.push('is-start');
+      if ((sel.end || sel.start) === s && sel.start) cls.push('is-end');
+      h += '<button type="button" class="' + cls.join(' ') + '" data-act="day" data-iso="' + s + '"' + (s <= TODAY ? ' disabled' : '') +
+        ' aria-pressed="' + (inRange ? 'true' : 'false') + '" aria-label="' + esc(wdl(s) + (tip.length ? ', ' + tip.join(', ') : '')) + '" title="' + esc(tip.join(' · ')) + '">' +
+        '<span class="dn">' + i + '</span><span class="dl">' + lab + '</span></button>';
+    }
+    return h;
+  }
+  function hintText(st) {
+    var s = st.sel;
+    if (!s.start) return 'Toque no primeiro dia das férias.';
+    if (!s.end) return 'Início ' + wdl(s.start) + '. Toque no último dia (ou no mesmo dia).';
+    return 'Toque noutro dia para recomeçar, ou em «Limpar».';
+  }
+  function summaryHtml(st) {
+    var s = st.sel, btns = function (ok) {
+      return '<div class="btn-line"><button type="button" class="primary" data-act="submit"' + (ok ? '' : ' disabled') + '>Pedir</button>' +
+        '<button type="button" class="btn-row btn-row-quiet" data-act="clear"' + (s.start ? '' : ' disabled') + '>Limpar</button></div>';
+    };
+    if (!s.start) return '<p class="sum-hint">Toque no <b>primeiro dia</b> das férias.</p>' + btns(false);
+    if (!s.end) return '<p class="sum-hint">Início <b>' + wdl(s.start) + '</b>. Toque no <b>último dia</b>.</p>' + btns(false);
+    var an = analyse(s.start, s.end, st);
+    if (an.kind !== 'ok') return previewHtml(an, s.start, s.end) + btns(false);
+    var main = an.n26 > 0 || an.other === 0
+      ? 'Conta <b>' + an.n + '</b> ' + (an.n === 1 ? 'dia' : 'dias') + (an.exceeds ? ' · excede o disponível (' + an.avail + ')' : (an.n26 > 0 ? ' · fica com <b>' + an.after + '</b> disponíveis' : ''))
+      : 'Conta <b>' + an.n + '</b> ' + (an.n === 1 ? 'dia' : 'dias') + ' no saldo de 2027';
+    return '<p class="sum-main" role="status">' + main + '</p>' +
+      '<p class="small muted">' + period(s.start, s.end) + (an.c.skipped.length ? ' · não conta: ' + esc(skippedText(an.c)) : '') + '</p>' +
+      (an.n === 0 ? '<p class="alert-warn">Só fins de semana e feriados: não há dias a descontar.</p>' : '') +
+      (an.exceeds ? '' : (an.other > 0 && an.n26 > 0 ? leftHtml({ n26: 0, other: an.other }) : '')) + warnHtml(an) + btns(an.n > 0);
+  }
+
+  /* ── C · linha do tempo ── */
+  var T0 = '2026-01-01', T1 = '2027-01-31', TOT = diff(T0, T1) + 1;
+  function pos(s) { return diff(T0, s) / TOT * 100; }
+  function wid(a, b) { return (diff(a, b) + 1) / TOT * 100; }
+  function monthList() {
+    var out = [], y = 2026, m = 1;
+    while (y < 2027 || m <= 1) {
+      out.push({ ym: y + '-' + pad(m), days: new Date(Date.UTC(y, m, 0)).getUTCDate(), m: m, y: y });
+      m++; if (m > 12) { m = 1; y++; }
+    }
+    return out;
+  }
+  function blockKind(q) { return q.status === 'Pendente' ? 'p' : (q.end <= TODAY ? 'g' : 'r'); }
+  function blockLabel(q) {
+    var n = count(q.start, q.end).counted.length;
+    return (q.status === 'Pendente' ? 'Pendente' : (q.end < REFERENCE ? 'Histórico anterior à referência' : q.end <= TODAY ? 'Gozado' : 'Reservado')) + ', ' + period(q.start, q.end) + ', ' + plural(n, 'dia', 'dias');
+  }
+  function timelineHtml(st) {
+    var ms = monthList(), h = '<div class="tl-track"><div class="tl-bg">';
+    ms.forEach(function (x) { h += '<div class="tl-m' + (x.y === 2027 ? ' y27' : '') + '" style="flex:' + x.days + ' 1 0"></div>'; });
+    h += '</div><span class="tl-today" style="left:' + pos(TODAY).toFixed(3) + '%"><i>hoje</i></span>';
+    st.reqs.filter(isOpen).forEach(function (q) {
+      h += '<button type="button" class="blk blk--' + blockKind(q) + (st.pick === q.id ? ' is-sel' : '') + '" data-act="pick" data-rid="' + q.id + '" style="left:' + pos(q.start).toFixed(3) + '%;width:' + wid(q.start, q.end).toFixed(3) + '%" aria-label="' + esc(blockLabel(q)) + '" aria-pressed="' + (st.pick === q.id) + '" title="' + esc(blockLabel(q)) + '"></button>';
+    });
+    h += '<button type="button" class="blk blk--x' + (st.pick === 'prev' ? ' is-sel' : '') + '" data-act="pick" data-rid="prev" style="left:' + pos(PREV.start).toFixed(3) + '%;width:' + wid(PREV.start, PREV.end).toFixed(3) + '%" aria-label="Encerramento previsto «Natal», ' + period(PREV.start, PREV.end) + '" aria-pressed="' + (st.pick === 'prev') + '" title="Encerramento previsto «Natal»"></button>';
+    h += '</div><div class="tl-labels" aria-hidden="true">';
+    ms.forEach(function (x) {
+      h += '<span style="flex:' + x.days + ' 1 0"><span class="m-long">' + MON3[x.m - 1] + (x.y === 2027 ? ' 27' : '') + '</span><span class="m-short">' + MON3[x.m - 1].charAt(0) + '</span></span>';
+    });
+    return h + '</div>';
+  }
+  function detailHtml(st) {
+    if (!st.pick) return '<p class="muted">Toque num período da linha do tempo para ver o detalhe.</p>';
+    if (st.pick === 'prev') {
+      var n = count(PREV.start, PREV.end).counted.length, after = balance(st.reqs).avail - n;
+      return '<div class="head"><b>Encerramento «' + PREV.name + '»</b><span class="badge-info">Previsto</span></div>' +
+        '<p>' + period(PREV.start, PREV.end) + ' · ' + plural(diff(PREV.start, PREV.end) + 1, 'dia seguido', 'dias seguidos') + '. Ainda não confirmado.</p>' +
+        '<p>Previsto: conta <b>' + n + '</b> dias se confirmado, sem descontar já. ' + (after >= 0 ? 'Ficaria com ' + after + ' disponíveis.' : 'Faltariam ' + (-after) + ' dias.') + '</p>';
+    }
+    var q = st.reqs.filter(function (x) { return x.id === st.pick; })[0];
+    if (!q) return '';
+    var c = count(q.start, q.end), sub = q.status === 'Aprovado' ? (q.end < REFERENCE ? 'Histórico anterior à referência' : q.end <= TODAY ? 'Gozado' : 'Reservado') : q.status;
+    return '<div class="head"><b>' + period(q.start, q.end) + '</b><span class="' + BADGE[q.status] + '">' + sub + '</span></div>' +
+      '<p>Conta <b>' + c.counted.length + '</b> ' + (c.counted.length === 1 ? 'dia' : 'dias') + (c.skipped.length ? ' · não conta: ' + esc(skippedText(c)) : '') + '</p>' +
+      '<p class="muted small">' + decisionHtml(q).replace(/<span class="small muted">/g, ' · ').replace(/<\/span>/g, '') + '</p>' +
+      (q.status === 'Pendente' ? '<div class="btn-line"><button type="button" class="btn-row danger" data-act="cancel" data-rid="' + q.id + '">Cancelar pedido</button></div>' : '');
+  }
+  function statsHtml(st) {
+    var b = balance(st.reqs);
+    return '<div class="st st--avail">Disponível<b>' + b.avail + ' <span class="small muted">de ' + b.base + '</span></b></div>' +
+      '<div class="st">Reservado<b>' + b.r + '</b></div><div class="st">Gozado<b>' + b.g + '</b></div>' +
+      '<div class="st">Pendente em 2026<b>' + b.p + '</b>' + (b.pOther ? '<small>' + otherPending(b) + ', sem descontar</small>' : '') + '</div>' +
+      '<div class="btn-open"><button type="button" class="primary" data-act="open-form" aria-expanded="' + (!!st.panel) + '">Pedir férias</button></div>';
+  }
+
+  /* ── Render por variante ── */
+  function setSlot(dev, name, html) { $$('[data-slot="' + name + '"]', dev).forEach(function (n) { n.innerHTML = html; }); }
+  function render(dev) {
+    var st = Mock.state(dev), v = dev.dataset.variant;
+    setSlot(dev, 'previsto', previstoHtml(st));
+    if (v === 'a') { setSlot(dev, 'tiles', tilesHtml(st)); setSlot(dev, 'list', listFlat(st)); }
+    if (v === 'b') {
+      setSlot(dev, 'segbar', segbarHtml(st)); setSlot(dev, 'list', listFlat(st));
+      setSlot(dev, 'monthname', MONTHS[+st.month.slice(5, 7) - 1] + ' ' + st.month.slice(0, 4));
+      setSlot(dev, 'hint', hintText(st)); setSlot(dev, 'summary', summaryHtml(st));
+      var f = document.activeElement, keep = f && f.getAttribute ? f.getAttribute('data-iso') : null;
+      setSlot(dev, 'grid', calHtml(st));
+      if (keep) { var again = $('[data-iso="' + keep + '"]', dev); if (again && !again.disabled) again.focus(); }
+      var i = NAV_MONTHS.indexOf(st.month), nav = $$('[data-act="month"]', dev);
+      nav[0].disabled = i <= 0; nav[1].disabled = i >= NAV_MONTHS.length - 1;
+    }
+    if (v === 'c') {
+      setSlot(dev, 'stats', statsHtml(st)); setSlot(dev, 'timeline', timelineHtml(st));
+      setSlot(dev, 'detail', detailHtml(st)); setSlot(dev, 'list', listGrouped(st));
+    }
+  }
+
+  /* ── Formulário (A, e C no painel e na folha) ── */
+  function refreshForm(f, dev) {
+    var st = Mock.state(dev), a = $('[data-field="start"]', f).value, b = $('[data-field="end"]', f).value;
+    var an = analyse(a, b, st);
+    $('[data-slot="preview"]', f).innerHTML = previewHtml(an, a, b);
+    $('[data-act="submit"]', f).disabled = !(an.kind === 'ok' && an.n > 0);
+    dock(dev);
+  }
+  function mountForm(box, dev, closable) {
+    box.setAttribute('data-form', '');
+    box.innerHTML = FORM_INNER(closable);
+    refreshForm(box, dev);
+  }
+  function dock(dev) {
+    var sh = $('.sheet', dev), box = sh && $('.sheet__box', sh);
+    if (!box || sh.hidden || !box.classList.contains('sheet__box--dock')) return;
+    var r = dev.getBoundingClientRect(), bottom = Math.min(r.height, Math.max(0, window.innerHeight - r.top));
+    box.style.left = '0'; box.style.width = '100%'; box.style.maxHeight = Math.max(240, window.innerHeight - 16) + 'px';
+    box.style.top = Math.max(0, bottom - box.offsetHeight) + 'px';
+  }
+  function addRequest(dev, a, b) {
+    var st = Mock.state(dev), n = count(a, b).counted.length;
+    st.reqs.forEach(function (q) { q.fresh = false; });
+    st.seq += 1;
+    st.reqs.push({ id: 'n' + st.seq, start: a, end: b, status: 'Pendente', at: TODAY, fresh: true });
+    render(dev);
+    Mock.toast(dev, 'Pedido enviado: ' + plural(n, 'dia', 'dias') + ', pendente');
+  }
+
+  window.mockInit = function (dev, v) {
+    var st = Mock.state(dev);
+    st.reqs = clone(INITIAL); st.seq = 0; st.month = '2026-11'; st.sel = { start: null, end: null }; st.pick = null; st.panel = false;
+    $$('[data-slot="formbox"]', dev).forEach(function (box) { mountForm(box, dev, box.getAttribute('data-form-kind') === 'panel'); });
+    render(dev);
+  };
+
+  /* ── Interação ── */
+  Mock.on('change', '[data-form] [data-field]', function (e, t, dev) {
+    var f = t.closest('[data-form]'), s = $('[data-field="start"]', f), en = $('[data-field="end"]', f);
+    if (t === s && s.value && (!en.value || en.value < s.value)) en.value = s.value;
+    refreshForm(f, dev);
+  });
+  Mock.on('input', '[data-form] [data-field]', function (e, t, dev) { refreshForm(t.closest('[data-form]'), dev); });
+
+  Mock.on('click', '[data-act="submit"]', function (e, t, dev) {
+    var st = Mock.state(dev), f = t.closest('[data-form]'), a, b;
+    if (f) { a = $('[data-field="start"]', f).value; b = $('[data-field="end"]', f).value; } else { a = st.sel.start; b = st.sel.end; }
+    var an = analyse(a, b, st);
+    if (an.kind !== 'ok' || an.n === 0) return;
+    if (f) {
+      $('[data-field="start"]', f).value = ''; $('[data-field="end"]', f).value = '';
+      refreshForm(f, dev); Mock.closeSheet(dev);
+      if (st.panel) { st.panel = false; $('[data-slot="layout"]', dev).classList.remove('has-panel'); $('[data-form-kind="panel"]', dev).hidden = true; }
+    } else { st.sel = { start: null, end: null }; }
+    addRequest(dev, a, b);
+  });
+  Mock.on('click', '[data-act="clear"]', function (e, t, dev) {
+    var st = Mock.state(dev), f = t.closest('[data-form]');
+    if (f) { $('[data-field="start"]', f).value = ''; $('[data-field="end"]', f).value = ''; refreshForm(f, dev); }
+    else { st.sel = { start: null, end: null }; render(dev); }
+  });
+  Mock.on('click', '[data-act="cancel"]', function (e, t, dev) {
+    var st = Mock.state(dev);
+    st.reqs.forEach(function (q) { q.fresh = false; if (q.id === t.getAttribute('data-rid')) { q.status = 'Cancelado'; q.decided = TODAY; } });
+    st.pick = null; render(dev); Mock.toast(dev, 'Pedido cancelado');
+  });
+  Mock.on('click', '[data-act="month"]', function (e, t, dev) {
+    var st = Mock.state(dev), i = NAV_MONTHS.indexOf(st.month) + (+t.getAttribute('data-dir'));
+    if (i < 0 || i >= NAV_MONTHS.length) return;
+    st.month = NAV_MONTHS[i]; render(dev);
+  });
+  Mock.on('click', '[data-act="day"]', function (e, t, dev) {
+    var st = Mock.state(dev), s = t.getAttribute('data-iso'), sel = st.sel;
+    if (s <= TODAY) return;
+    if (!sel.start || sel.end) st.sel = { start: s, end: null };
+    else if (s < sel.start) st.sel = { start: s, end: sel.start };
+    else st.sel = { start: sel.start, end: s };
+    render(dev);
+  });
+  Mock.on('click', '[data-act="pick"]', function (e, t, dev) {
+    var st = Mock.state(dev), id = t.getAttribute('data-rid');
+    st.pick = st.pick === id ? null : id; render(dev);
+  });
+  Mock.on('click', '[data-act="open-form"]', function (e, t, dev) {
+    var st = Mock.state(dev);
+    if (dev.dataset.kind === 'phone') {
+      var box = Mock.sheet(dev, '<div data-form-kind="sheet"></div>'), host = $('[data-form-kind="sheet"]', box);
+      box.classList.add('sheet__box--dock');
+      mountForm(host, dev, true);
+      dock(dev);
+      return;
+    }
+    st.panel = !st.panel;
+    var panel = $('[data-form-kind="panel"]', dev);
+    panel.hidden = !st.panel; $('[data-slot="layout"]', dev).classList.toggle('has-panel', st.panel);
+    t.setAttribute('aria-expanded', String(st.panel));
+    if (st.panel) { var first = $('[data-field="start"]', panel); if (first) first.focus(); }
+  });
+  Mock.on('click', '[data-act="close-form"]', function (e, t, dev) {
+    var st = Mock.state(dev), panel = $('[data-form-kind="panel"]', dev);
+    if (panel && !panel.hidden) { st.panel = false; panel.hidden = true; $('[data-slot="layout"]', dev).classList.remove('has-panel'); var o = $('[data-act="open-form"]', dev); if (o) o.setAttribute('aria-expanded', 'false'); }
+  });
+  window.addEventListener('resize', function () { $$('.device--phone').forEach(dock); });
+  window.addEventListener('scroll', function () { $$('.device--phone').forEach(dock); }, { passive: true });
+})();
+</script>
+</body>
+</html>

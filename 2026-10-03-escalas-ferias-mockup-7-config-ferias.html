@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 7 — Configuração das férias</title>
+<style>
+/* === MOLDURA COMUM (copiar) === */
+/* Tokens copiados de src/app/globals.css:2-33 (tema «Menta») */
+:root {
+  --bg: #f3f6f3;
+  --card: #fff;
+  --border: rgba(0, 0, 0, 0.15);
+  --txt: #1f2a24;
+  --mut: #66736b;
+  --hint: #9aa49e;
+  --sidebar: #2f3a33;
+  --sidebar-tx: #dfeee5;
+  --brand: #7fc9a2;
+  --primary: #2e9e68;
+  --primary-hover: #267f54;
+  --ok-bg: #e2f2e9;
+  --ok-tx: #1f6b44;
+  --ok-bd: #7fc9a2;
+  --row-hover: rgba(127, 201, 162, 0.12);
+  --er-bg: #fcebeb;
+  --er-tx: #a32d2d;
+  --er-bd: #f09595;
+  --warn-bg: #faeeda;
+  --warn-tx: #854f0b;
+  --warn-bd: #e8c44e;
+  --info-tx: #1d4ed8;
+  --info-bg: #e6eefc;
+  --info-bd: #9db7f0;
+  --on-primary: #fff;
+}
+* { box-sizing: border-box; padding: 0; margin: 0; }
+[hidden] { display: none !important; }
+html, body {
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--txt);
+  -webkit-font-smoothing: antialiased;
+}
+body { min-height: 100vh; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+/* ── Barra do mockup (não faz parte do ecrã) ── */
+.mock-bar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+  padding: 8px 16px; background: var(--sidebar); color: var(--sidebar-tx); font-size: 13px;
+}
+.mock-back { padding: 4px 10px; border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 6px; white-space: nowrap; }
+.mock-back:hover { background: rgba(255, 255, 255, 0.12); }
+.mock-title { font-weight: 600; flex: 1 1 200px; min-width: 0; }
+.mock-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+.mock-bar button {
+  font-size: 13px; min-height: 30px; padding: 3px 12px; cursor: pointer; font-family: inherit;
+  background: transparent; color: var(--sidebar-tx); border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 6px;
+}
+.mock-bar button:hover { background: rgba(255, 255, 255, 0.12); }
+.mock-bar [role='tab'][aria-selected='true'],
+.mock-bar [aria-pressed='true'] { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+.mock-view { display: inline-flex; }
+.mock-view button { border-radius: 0; margin-left: -1px; }
+.mock-view button:first-child { border-radius: 6px 0 0 6px; margin-left: 0; }
+.mock-view button:last-child { border-radius: 0 6px 6px 0; }
+
+/* ── Palco: dois dispositivos lado a lado, a quebrar para baixo ── */
+.mock-main { padding: 16px 16px 56px; }
+.variant-notes {
+  max-width: 1180px; margin: 0 auto 16px; padding: 10px 14px; font-size: 14px; line-height: 1.5;
+  background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--primary); border-radius: 8px;
+}
+.variant-notes b { font-weight: 600; }
+.variant-notes .note-extra { margin-top: 4px; font-size: 12px; color: var(--mut); }
+.stage { display: flex; flex-wrap: wrap; gap: 28px 24px; align-items: flex-start; justify-content: center; }
+.stage-item { min-width: 0; max-width: 100%; }
+.stage-cap { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; color: var(--mut); }
+.stage-reset {
+  font-size: 12px; min-height: 0; padding: 2px 10px; cursor: pointer; font-family: inherit;
+  background: var(--card); color: var(--mut); border: 1px solid var(--border); border-radius: 6px;
+}
+.stage-reset:hover { color: var(--txt); }
+.device-scroll { overflow-x: auto; max-width: 100%; padding: 2px; }
+.device-scroll--phone { padding: 8px; }
+body[data-view='desktop'] .stage-item--phone,
+body[data-view='phone'] .stage-item--desktop { display: none; }
+
+/* ── Dispositivos: largura fixa, contentor para as container queries ── */
+.device {
+  container-type: inline-size; container-name: app; position: relative;
+  background: var(--bg); overflow: hidden;
+}
+.device--desktop { width: 1180px; border-radius: 10px; box-shadow: 0 0 0 1px var(--border), 0 4px 18px rgba(0, 0, 0, 0.08); }
+.device--phone { width: 375px; border-radius: 22px; box-shadow: 0 0 0 1px var(--border), 0 0 0 6px #dde5df, 0 6px 22px rgba(0, 0, 0, 0.15); }
+
+/* ── Mini-app: barra lateral + conteúdo (réplica de .shell/.sidebar/.content) ── */
+.app { display: flex; position: relative; min-height: 560px; font-size: 14px; background: var(--bg); color: var(--txt); }
+.app-side {
+  width: 220px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; padding: 20px 12px;
+  background: var(--sidebar); color: var(--sidebar-tx);
+}
+.app-logo {
+  background: #fff; border-radius: 8px; padding: 8px 10px; margin-bottom: 4px; text-align: center;
+  font-weight: 700; font-size: 18px; letter-spacing: 0.04em; color: var(--primary);
+}
+.app-side nav { display: flex; flex-direction: column; gap: 4px; }
+.sidebar-link {
+  display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; font-size: 14px;
+  color: var(--sidebar-tx); opacity: 0.85; flex-shrink: 0;
+}
+.sidebar-link:hover { opacity: 1; background: rgba(255, 255, 255, 0.1); }
+.sidebar-link--active { background: rgba(127, 201, 162, 0.22); color: #bfe8d2; opacity: 1; }
+.sidebar-section { font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.5; padding: 0 10px; margin: 12px 0 2px; }
+.sidebar-section:first-child { margin-top: 4px; }
+.app-user { margin-top: auto; padding-top: 16px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.app-user__name { padding: 0 10px; opacity: 0.8; }
+.app-side .app-user button {
+  width: 100%; text-align: left; background: transparent; border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--sidebar-tx); border-radius: 8px; padding: 8px 10px; font-size: 13px; cursor: pointer; min-height: 0;
+}
+.app-side .app-user button:hover { background: rgba(255, 255, 255, 0.1); }
+.app-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.app-top { display: none; }
+.app-scrim { display: none; }
+.app-content { flex: 1; min-width: 0; padding: 24px; position: relative; }
+.app-toast {
+  position: absolute; z-index: 60; transform: translateX(-50%); width: max-content; max-width: calc(100% - 24px);
+  padding: 8px 14px; border-radius: 8px; background: var(--sidebar); color: var(--sidebar-tx); font-size: 13px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25); pointer-events: none;
+}
+.sheet { position: absolute; inset: 0; z-index: 50; background: rgba(0, 0, 0, 0.35); }
+.sheet__box {
+  position: absolute; width: min(520px, calc(100% - 24px)); max-height: 80%; overflow: auto;
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+}
+.new-tag {
+  display: inline-block; vertical-align: middle; margin-left: 6px; padding: 0 6px; border-radius: 4px; font-size: 11px;
+  font-weight: 600; text-transform: none; letter-spacing: 0; background: var(--info-bg); border: 1px solid var(--info-bd); color: var(--info-tx);
+}
+
+/* ── Base de formulários e botões (globals.css) ── */
+.device input, .device select, .device textarea, .device button {
+  font-size: 16px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 8px;
+  background: #fff; min-height: 36px; font-family: inherit; color: var(--txt);
+}
+.device input[type='checkbox'], .device input[type='radio'] { min-height: 0; width: 18px; height: 18px; accent-color: var(--primary); }
+.device label { font-size: 12px; color: var(--mut); display: block; margin-bottom: 12px; }
+.device label > input, .device label > select, .device label > textarea { display: block; width: 100%; max-width: 420px; margin-top: 4px; }
+.device button.primary {
+  background: var(--primary); color: #fff; border: none; font-weight: 600; cursor: pointer; padding: 10px 22px; border-radius: 8px;
+}
+.device button.primary:hover { background: var(--primary-hover); }
+.device button.primary:disabled { background: var(--hint); cursor: not-allowed; }
+.device button.secondary { cursor: pointer; background: #fff; }
+.device .btn-row {
+  display: inline-block; font-size: 13px; font-weight: 500; padding: 4px 12px; min-height: 0;
+  border: 1px solid var(--primary); border-radius: 6px; background: #f2faf6; color: var(--primary-hover);
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+}
+.device .btn-row:hover { background: #e3f4ea; }
+.device .btn-row[aria-pressed='true'], .device .btn-row[aria-current='page'] { background: var(--primary); color: #fff; }
+.device .btn-row.btn-row-strong { background: var(--primary); color: #fff; font-weight: 600; }
+.device .btn-row.btn-row-strong:hover { background: var(--primary-hover); }
+.device .btn-row.btn-row-quiet { font-size: 12px; font-weight: 400; border-color: var(--border); background: var(--bg); color: var(--mut); }
+.device .btn-row.btn-row-quiet:hover { background: var(--card); color: var(--txt); }
+.device .btn-row.danger { border-color: #c0392b; color: #c0392b; background: #fdf3f2; }
+.device .btn-row:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Cartões, badges, avisos (globals.css) ── */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.badge-ok, .badge-warn, .badge-err, .badge-info, .badge-mut {
+  font-size: 12px; padding: 2px 8px; border-radius: 4px; white-space: nowrap; border: 1px solid; display: inline-block;
+}
+.badge-ok { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.badge-warn { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); }
+.badge-err { background: var(--er-bg); border-color: var(--er-bd); color: var(--er-tx); }
+.badge-info { background: var(--info-bg); border-color: var(--info-bd); color: var(--info-tx); }
+.badge-mut { background: var(--bg); border-color: var(--border); color: var(--mut); }
+.alert-ok, .alert-warn, .alert-err, .alert-info { border-radius: 8px; padding: 8px 12px; font-size: 14px; border: 1px solid; }
+.alert-ok { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.alert-warn { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); }
+.alert-err { background: var(--er-bg); border-color: var(--er-bd); color: var(--er-tx); }
+.alert-info { background: var(--info-bg); border-color: var(--info-bd); color: var(--info-tx); }
+.toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 12px 0 16px; }
+.toolbar-actions { margin-left: auto; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.muted { color: var(--mut); }
+.small { font-size: 12px; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Separadores de trabalho e filtro segmentado (precedente 2026-09-25) */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin: 4px 0 12px; flex-wrap: wrap; }
+.tabs [role='tab'] {
+  border: 1px solid transparent; border-bottom: none; border-radius: 8px 8px 0 0; background: none; min-height: 0;
+  font-size: 15px; padding: 8px 14px; cursor: pointer; color: var(--mut); margin-bottom: -1px;
+}
+.tabs [role='tab'][aria-selected='true'] { background: var(--card); border-color: var(--border); color: var(--txt); font-weight: 600; }
+.tab-count { display: inline-block; min-width: 20px; padding: 0 6px; border-radius: 10px; background: var(--er-bg); color: var(--er-tx); font-size: 12px; font-weight: 600; text-align: center; }
+.seg { display: inline-flex; border: 1px solid var(--primary); border-radius: 6px; overflow: hidden; }
+.device .seg button { border: none; border-radius: 0; min-height: 0; font-size: 13px; padding: 4px 12px; background: #f2faf6; color: var(--primary-hover); cursor: pointer; }
+.device .seg button[aria-pressed='true'] { background: var(--primary); color: #fff; font-weight: 600; }
+
+/* ── Tabelas (globals.css:492-): base desktop ── */
+.device table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 14px; }
+.device th { text-align: left; font-size: 12px; color: var(--mut); border-bottom: 1px solid var(--border); padding: 6px 8px; }
+.device td { padding: 8px; border-bottom: 1px solid var(--border); }
+.table-scroll-wrap { overflow-x: auto; }
+
+/* ── ≤768px: réplica do bloco @media (max-width: 768px) de globals.css, por container query ── */
+@container app (max-width: 768px) {
+  .app-side {
+    position: absolute; top: 0; left: 0; bottom: 0; z-index: 30; width: 240px;
+    transform: translateX(-100%); visibility: hidden;
+    transition: transform 0.22s ease, visibility 0s linear 0.22s; box-shadow: 4px 0 16px rgba(0, 0, 0, 0.25);
+  }
+  .app[data-menu-open] .app-side { transform: none; visibility: visible; transition: transform 0.22s ease; }
+  .app[data-menu-open] .app-scrim { display: block; position: absolute; inset: 0; z-index: 20; background: rgba(0, 0, 0, 0.4); }
+  .app-top {
+    display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+  .app-top .app-burger { padding: 6px 10px; line-height: 1; cursor: pointer; }
+  .app-top__title { font-weight: 600; font-size: 15px; }
+  .app-content { padding: 16px; }
+  h1 { font-size: 20px; }
+  .card { padding: 12px; }
+  .tabs [role='tab'] { flex: 1; padding: 8px 6px; font-size: 14px; }
+  .toolbar-actions { margin-left: 0; }
+  .sheet__box { padding: 12px; }
+
+  /* Grelha por omissão: a tabela é o próprio contentor de scroll */
+  table:not(.table--cards):not(.table--scroll) { display: block; overflow-x: auto; width: 100%; margin-top: 12px; font-size: 13px; }
+  table:not(.table--cards):not(.table--scroll) th,
+  table:not(.table--cards):not(.table--scroll) td { white-space: nowrap; padding: 4px 8px; font-variant-numeric: tabular-nums; }
+  /* .table--fill: 2–3 colunas, 100% da largura, o nome quebra */
+  table.table--fill:not(.table--cards):not(.table--scroll) { display: table; width: 100%; table-layout: auto; overflow-x: visible; }
+  table.table--fill:not(.table--cards):not(.table--scroll) th,
+  table.table--fill:not(.table--cards):not(.table--scroll) td { white-space: normal; overflow-wrap: anywhere; }
+  /* .table--cards: linhas viram cards; exige data-label em cada td (excepto acções) */
+  table.table--cards thead { display: none; }
+  table.table--cards, table.table--cards tbody, table.table--cards tfoot, table.table--cards tr, table.table--cards td { display: block; width: 100%; }
+  table.table--cards tr { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; padding: 8px 12px; }
+  table.table--cards td { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 4px 0; border-bottom: none; }
+  table.table--cards td[data-label]::before {
+    content: attr(data-label); font-size: 11px; font-weight: 600; color: var(--mut); text-transform: uppercase; letter-spacing: 0.04em; flex-shrink: 0;
+  }
+  table.table--cards td:not([data-label]) { justify-content: flex-end; border-top: 1px solid var(--border); margin-top: 4px; padding-top: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* Página estreita: o dispositivo mantém 375 px, com deslocação na moldura. */
+@media (max-width: 420px) {
+  .mock-main { padding: 12px 0 40px; }
+  .variant-notes { margin-left: 12px; margin-right: 12px; }
+  .stage-cap { padding: 0 12px; }
+  .device-scroll--phone { padding: 0; }
+  .device--phone { border-radius: 0; box-shadow: 0 0 0 1px var(--border); }
+}
+@media (max-width: 700px) {
+  .mock-bar { position: static; padding: 8px 12px; }
+  .mock-back { order: 1; }
+  .mock-view { order: 2; margin-left: auto; }
+  .mock-title { order: 3; flex-basis: 100%; }
+  .mock-tabs { order: 4; flex: 1 1 100%; flex-wrap: nowrap; }
+  .mock-tabs button { flex: 1 1 0; min-width: 0; padding: 4px 4px; font-size: 12px; line-height: 1.25; }
+}
+/* === FIM MOLDURA === */
+
+/* === ESPECÍFICO DESTE MOCKUP === */
+.cfg-title { font-size: 24px; font-weight: 600; margin-bottom: 12px; }
+.cfg-card { margin-bottom: 16px; }
+.cfg-card > h2, .wiz-card > h2 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.lead { font-size: 13px; color: var(--mut); margin-bottom: 12px; }
+.cfg-nav { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stack { display: flex; flex-direction: column; gap: 8px; margin: 10px 0; }
+.stack > div { font-size: 13px; }
+.actions { display: flex; gap: 8px 12px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
+.actions .grow { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.btn-line { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+
+/* Formulários */
+.field-row { display: flex; gap: 4px 20px; flex-wrap: wrap; align-items: flex-end; margin-top: 12px; }
+.device .field-row label > input, .device .field-row label > select { width: 190px; max-width: 100%; }
+fieldset.rule { border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px 4px; margin: 4px 0 10px; min-width: 0; }
+fieldset.rule legend { font-size: 12px; color: var(--mut); padding: 0 6px; }
+.device label.opt { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; color: var(--txt); margin: 0 0 8px; }
+.device label.opt > input { display: inline-block; width: 18px; max-width: none; margin: 2px 0 0; flex-shrink: 0; }
+.device label.opt small { display: block; color: var(--mut); font-size: 12px; }
+.device label.inl { display: inline-flex; align-items: center; gap: 6px; margin: 0; font-size: 13px; color: var(--txt); white-space: nowrap; }
+.device label.inl > input { display: inline-block; width: 18px; max-width: none; margin: 0; }
+.device .cell-in { font-size: 14px; padding: 4px 8px; min-height: 32px; border-radius: 6px; }
+.device .cell-in.num-in { width: 84px; text-align: right; }
+.device .cell-in.in-note { min-width: 230px; }
+.device .cell-in.is-invalid { border-color: var(--er-bd); background: var(--er-bg); }
+.device .cell-in:disabled { background: var(--bg); color: var(--hint); }
+.device .flt { width: 220px; max-width: 100%; }
+.device textarea { width: 100%; }
+
+/* Grelhas editáveis (.table--scroll) */
+.table-scroll-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
+.table-scroll-wrap table { margin-top: 0; }
+table.t-bal { min-width: 860px; }
+table.t-ent { min-width: 900px; }
+table.t-grid { min-width: 1080px; }
+.table--scroll thead th { background: #f4f8f5; white-space: nowrap; }
+.table--scroll .sticky { position: sticky; left: 0; z-index: 1; background: var(--card); box-shadow: 1px 0 0 var(--border); white-space: nowrap; }
+.table--scroll thead .sticky { z-index: 3; background: #f4f8f5; }
+.table--scroll tr.is-dirty td, .table--scroll tr.is-dirty .sticky { background: #fffbea; }
+.table--scroll td.small { white-space: normal; min-width: 200px; color: var(--mut); }
+.empty-note { padding: 12px; font-size: 13px; color: var(--mut); }
+
+/* Encerramento colectivo */
+.cl-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px 12px; flex-wrap: wrap; margin-top: 4px; }
+.cl-name { font-size: 15px; }
+.cl-badges { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.cl-prev { margin-top: 10px; }
+tr.is-excl td { opacity: 0.55; }
+tr.is-excl td:last-child { opacity: 1; }
+table.cl-table td small { color: var(--mut); }
+.actions-cell { display: flex; gap: 8px 12px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
+
+/* Regras legais */
+.lg-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; padding: 10px 0; border-top: 1px solid var(--border); }
+.lg-row:first-of-type { border-top: none; }
+.lg-row code { font-size: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 0 5px; }
+.lg-row p { font-size: 13px; color: var(--mut); }
+.lg-form { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.lg-form .cell-in { flex: 1 1 220px; min-width: 0; }
+.sheet__box h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+.sheet__box p { font-size: 13px; color: var(--mut); margin-bottom: 8px; }
+
+/* B · assistente */
+.steps { display: flex; gap: 6px; list-style: none; flex-wrap: wrap; margin-bottom: 10px; }
+.steps li { flex: 1 1 150px; min-width: 0; }
+.device .step-btn {
+  width: 100%; display: flex; align-items: center; gap: 8px; text-align: left; cursor: pointer; background: var(--card);
+  border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; font-size: 13px; min-height: 44px; line-height: 1.25;
+}
+.device .step-btn[aria-current='step'] { border-color: var(--primary); background: var(--ok-bg); font-weight: 600; }
+.step-n {
+  flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700;
+  background: var(--bg); border: 1px solid var(--border); color: var(--mut);
+}
+.step-btn[aria-current='step'] .step-n { background: var(--primary); border-color: var(--primary); color: #fff; }
+.step-btn.is-done .step-n { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.progress { height: 6px; border-radius: 3px; background: #dfe7e2; overflow: hidden; }
+.progress span { display: block; height: 100%; background: var(--primary); transition: width 0.25s ease; }
+.wiz-meta { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin: 6px 0 14px; font-size: 12px; color: var(--mut); }
+.wiz-card { padding: 16px 20px; }
+.wiz-foot { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border); }
+.wiz-foot .grow { display: flex; gap: 8px; flex-wrap: wrap; margin-left: auto; }
+dl.sum { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 8px 16px; margin: 12px 0; font-size: 14px; }
+dl.sum dt { color: var(--mut); font-size: 13px; }
+.sum-h { font-size: 14px; font-weight: 600; margin: 16px 0 4px; }
+
+/* C · grelha única por pessoa */
+.c-shell { display: flex; flex-direction: column; height: 800px; border: 1px solid var(--border); border-radius: 12px; background: var(--card); overflow: hidden; }
+.c-defs { padding: 10px 14px; border-bottom: 1px solid var(--border); flex: none; max-height: 45%; overflow-y: auto; }
+.defs-line { display: flex; gap: 6px 16px; align-items: center; flex-wrap: wrap; font-size: 13px; }
+.defs-line .grow { margin-left: auto; }
+.defs-form { display: flex; gap: 4px 14px; flex-wrap: wrap; align-items: flex-end; margin-top: 10px; }
+.defs-form label { margin-bottom: 4px; }
+.device .defs-form label > input, .device .defs-form label > select { width: 200px; max-width: 100%; }
+.c-defs .stack { margin: 8px 0 0; }
+.c-tools { display: flex; gap: 8px 12px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+.c-tools .toolbar-actions { margin-left: auto; }
+.c-grid { flex: 1; min-height: 0; overflow: auto; }
+.c-grid table { margin-top: 0; }
+table.t-grid thead tr.grp th { position: sticky; top: 0; z-index: 2; height: 30px; }
+table.t-grid thead tr.grp th.sticky { z-index: 4; }
+table.t-grid thead tr.sub th { position: sticky; top: 30px; z-index: 2; }
+table.t-grid thead th.grp-cl { text-align: center; background: var(--info-bg); color: var(--info-tx); border-left: 1px solid var(--info-bd); }
+table.t-grid td.cl-first, table.t-grid th.cl-first { border-left: 1px solid var(--info-bd); }
+.dir { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
+.dir .sug { font-size: 11px; }
+.dir .in-mot { width: 150px; }
+.c-bar { display: flex; gap: 8px 12px; align-items: center; flex-wrap: wrap; padding: 10px 14px; border-top: 1px solid var(--border); background: #f4f8f5; flex: none; }
+.c-bar .grow { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+
+@container app (max-width: 768px) {
+  .cfg-title { font-size: 20px; }
+  .wiz-card { padding: 12px; }
+  .steps li { flex: 0 0 auto; }
+  .steps li.is-cur { flex: 1 1 auto; }
+  .device .step-btn { padding: 8px; }
+  .step-btn .step-lbl { display: none; }
+  .step-btn[aria-current='step'] .step-lbl { display: inline; }
+  dl.sum { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  dl.sum dd { margin-bottom: 8px; }
+  .c-shell { height: 640px; }
+  .c-defs { padding: 8px 10px; }
+  .c-bar { padding: 8px 10px; }
+  .actions .grow, .wiz-foot .grow { margin-left: 0; }
+  .device .flt { width: 100%; }
+}
+/* === FIM ESPECÍFICO === */
+</style>
+</head>
+<body data-view="both">
+
+<header class="mock-bar">
+  <a class="mock-back" href="2026-10-03-escalas-ferias-mockups.html">← Índice</a>
+  <span class="mock-title">7 · Configuração das férias</span>
+  <div class="mock-tabs" role="tablist" aria-label="Variantes">
+    <button type="button" role="tab" id="tab-a" data-variant="a" aria-controls="panel-a" aria-selected="false">A · Página única</button>
+    <button type="button" role="tab" id="tab-b" data-variant="b" aria-controls="panel-b" aria-selected="false">B · Assistente de arranque</button>
+    <button type="button" role="tab" id="tab-c" data-variant="c" aria-controls="panel-c" aria-selected="false">C · Grelha por pessoa</button>
+  </div>
+  <div class="mock-view" role="group" aria-label="Dispositivos">
+    <button type="button" data-view="both" aria-pressed="true">Ambos</button>
+    <button type="button" data-view="desktop" aria-pressed="false">Desktop</button>
+    <button type="button" data-view="phone" aria-pressed="false">375 px</button>
+  </div>
+</header>
+
+<main class="mock-main">
+  <section role="tabpanel" id="panel-a" aria-labelledby="tab-a" data-variant="a" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> uma só página de cartões empilhados (referência e regra, saldos iniciais, direitos, encerramento colectivo, regras legais), cada um com a sua gravação, mais atalhos no topo para saltar de secção.</p>
+      <p><b>Vantagens:</b> tudo visível e editável sem trocar de ecrã; cada secção grava sozinha e a pré-visualização do encerramento fica ao lado dos saldos que a alimentam.</p>
+      <p><b>Custo:</b> página longa e quatro gravações separadas no arranque; ao ler um saldo é preciso rolar até ao encerramento para ver o efeito.</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-b" aria-labelledby="tab-b" data-variant="b" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> assistente de 4 passos (referência e regra, saldos, direitos 2026/2027, encerramento de Dezembro) com progresso, tudo pré-preenchido e «Gravar e seguir»; no fim, um resumo. Depois do arranque, a manutenção abre no passo pedido (<code>?passo=saldos</code>).</p>
+      <p><b>Vantagens:</b> guia quem nunca configurou o módulo e cada passo tem um único assunto, bom em telemóvel; os valores sugeridos poupam a escrita.</p>
+      <p><b>Custo:</b> o arranque completo são 4 gravações em sequência; para acertar uma só pessoa é preciso abrir o passo certo.</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-c" aria-labelledby="tab-c" data-variant="c" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> uma grelha com uma linha por pessoa (saldo inicial, direito 2026, direito 2027 e o efeito do encerramento), definições compactas no topo e uma barra inferior fixa com «Gravar alterações (N)» e «Confirmar encerramento».</p>
+      <p><b>Vantagens:</b> uma só gravação para tudo e a pessoa inteira numa linha: o saldo, o direito e o problema do encerramento vêem-se juntos; filtro por nome e «Só com problemas».</p>
+      <p><b>Custo:</b> grelha larga (rola na horizontal no telemóvel); o motivo e as regras legais ficam fora da grelha.</p>
+    </div>
+  </section>
+</main>
+
+<!-- Conteúdo de cada variante: clonado por JS para o desktop e para os 375 px. Sem id aqui dentro; as zonas [data-slot] são preenchidas pelo JS específico. -->
+<template data-variant="a" data-active="Férias" data-title="Configuração das férias" data-user="Carla Videira">
+  <main class="cfg">
+    <h1 class="cfg-title">Configuração das férias</h1>
+    <div class="cfg-nav" role="group" aria-label="Ir para a secção">
+      <button type="button" class="btn-row btn-row-quiet" data-act="goto" data-sec="ref">Referência e regra</button>
+      <button type="button" class="btn-row btn-row-quiet" data-act="goto" data-sec="bal">Saldos iniciais</button>
+      <button type="button" class="btn-row btn-row-quiet" data-act="goto" data-sec="ent">Direitos</button>
+      <button type="button" class="btn-row btn-row-quiet" data-act="goto" data-sec="cl">Encerramento colectivo</button>
+      <button type="button" class="btn-row btn-row-quiet" data-act="goto" data-sec="legal">Regras legais</button>
+    </div>
+    <section class="card cfg-card" data-sec="ref"><h2>Referência e regra de contagem</h2><div data-slot="ref"></div></section>
+    <section class="card cfg-card" data-sec="bal"><h2>Saldos iniciais</h2><div data-slot="bal"></div></section>
+    <section class="card cfg-card" data-sec="ent"><h2>Direitos por ano</h2><div data-slot="ent"></div></section>
+    <section class="card cfg-card" data-sec="cl"><h2>Encerramento colectivo</h2><div data-slot="closure"></div></section>
+    <section class="card cfg-card" data-sec="legal"><h2>Regras legais por validar</h2><div data-slot="legal"></div></section>
+  </main>
+</template>
+
+<template data-variant="b" data-active="Férias" data-title="Configuração das férias" data-user="Carla Videira">
+  <main class="cfg">
+    <h1 class="cfg-title">Configuração das férias</h1>
+    <div data-slot="wizard"></div>
+  </main>
+</template>
+
+<template data-variant="c" data-active="Férias" data-title="Configuração das férias" data-user="Carla Videira">
+  <main class="cfg">
+    <h1 class="cfg-title">Configuração das férias</h1>
+    <div class="c-shell">
+      <div class="c-defs" data-slot="defs"></div>
+      <div class="c-grid" data-slot="grid"></div>
+      <div class="c-bar" data-slot="bar"></div>
+    </div>
+  </main>
+</template>
+
+<script>
+/* Feriados nacionais: datas UTC, incluindo os móveis da Páscoa. */
+var nationalHolidayCache = {};
+function nationalHolidays(year) {
+  if (nationalHolidayCache[year]) return nationalHolidayCache[year];
+  var a = year % 19, b = Math.floor(year / 100), c = year % 100, d = Math.floor(b / 4), e = b % 4;
+  var f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
+  var i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451);
+  var easter = new Date(Date.UTC(year, Math.floor((h + l - 7 * m + 114) / 31) - 1, (h + l - 7 * m + 114) % 31 + 1));
+  var result = {}, fixed = { '01-01': 'Ano Novo', '04-25': 'Dia da Liberdade', '05-01': 'Dia do Trabalhador', '06-10': 'Dia de Portugal', '08-15': 'Assunção de Nossa Senhora', '10-05': 'Implantação da República', '11-01': 'Todos os Santos', '12-01': 'Restauração da Independência', '12-08': 'Imaculada Conceição', '12-25': 'Natal' };
+  Object.keys(fixed).forEach(function (key) { result[year + '-' + key] = fixed[key]; });
+  [[-2, 'Sexta-feira Santa'], [0, 'Páscoa'], [60, 'Corpo de Deus']].forEach(function (entry) { result[new Date(easter.getTime() + entry[0] * 864e5).toISOString().slice(0, 10)] = entry[1]; });
+  return nationalHolidayCache[year] = result;
+}
+function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] || ''; }
+</script>
+<script>
+/* === MOLDURA COMUM (copiar) === */
+/* API para o JS específico (script a seguir a este):
+     window.mockInit = (deviceEl, variant, kind) => {}   chamado por cada clone (kind = 'desktop' | 'phone')
+     Mock.on(tipo, seletor, (evento, elemento, deviceEl) => {})   delegação com escopo no .device
+     Mock.toast(deviceEl, texto)   Mock.sheet(deviceEl, html|Node) → caixa   Mock.closeSheet(deviceEl)
+     Mock.state(deviceEl) → objeto por clone   Mock.uid(prefixo) → id único   Mock.$ Mock.$$ Mock.esc
+   No markup dos templates (sem id): data-id="k" → id único por clone; data-for / data-controls /
+   data-labelledby / data-describedby="k" → for / aria-controls / aria-labelledby / aria-describedby.
+   [data-route="/rota"] simula navegação (aviso «Abre /rota»). Atributos do <template>:
+   data-active (item do menu activo), data-title (título da barra a 375 px), data-user (nome na barra lateral). */
+(function () {
+  'use strict';
+  var VIEW_KEY = 'escalas-ferias-mock-view';
+  var MENU = [
+    ['Geral', [['Início', '/']]],
+    ['Operação', [['Horas', '/horas'], ['As minhas horas', '/horas/minhas'], ['Escala', '/escala'], ['A minha escala', '/escala/minha'],
+      ['Férias', '/ferias'], ['As minhas férias', '/ferias/minhas'], ['Gorjetas', '/gorjetas'], ['As minhas gorjetas', '/gorjetas/minhas'],
+      ['Fecho de caixa', '/caixa']]],
+    ['Cadastros', [['Cadastros', '/cadastros']]]
+  ];
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var mk = function (tag, cls) { var n = document.createElement(tag); if (cls) n.className = cls; return n; };
+  var clamp = function (v, lo, hi) { return Math.min(Math.max(v, lo), hi); };
+  var states = new WeakMap();
+  var counter = 0;
+  var uid = function (p) { counter += 1; return (p || 'u') + '-' + counter; };
+  var state = function (dev) { if (!states.has(dev)) states.set(dev, {}); return states.get(dev); };
+
+  /* ids únicos por clone: data-id define, os data-for/controls/labelledby/describedby ligam */
+  function wireIds(root) {
+    var map = {};
+    var get = function (k) { if (!map[k]) map[k] = uid(k); return map[k]; };
+    $$('[data-id]', root).forEach(function (n) { n.id = get(n.getAttribute('data-id')); });
+    [['data-for', 'for'], ['data-controls', 'aria-controls'], ['data-labelledby', 'aria-labelledby'], ['data-describedby', 'aria-describedby']]
+      .forEach(function (p) { $$('[' + p[0] + ']', root).forEach(function (n) { n.setAttribute(p[1], get(n.getAttribute(p[0]))); }); });
+  }
+
+  /* parte visível do dispositivo (para posicionar avisos e diálogos onde o utilizador está a olhar) */
+  function visibleBox(dev) {
+    var r = dev.getBoundingClientRect();
+    var sc = dev.closest('.device-scroll');
+    return {
+      top: clamp(-r.top, 0, r.height), bottom: clamp(window.innerHeight - r.top, 0, r.height),
+      left: sc ? sc.scrollLeft : 0, width: sc ? sc.clientWidth : dev.clientWidth
+    };
+  }
+  function toast(dev, msg) {
+    var app = $('.app', dev); if (!app) return;
+    var t = $('.app-toast', app);
+    if (!t) { t = mk('div', 'app-toast'); t.setAttribute('role', 'status'); app.appendChild(t); }
+    t.textContent = msg; t.hidden = false;
+    var v = visibleBox(dev);
+    t.style.top = Math.max(8, v.bottom - 56) + 'px';
+    t.style.left = (v.left + v.width / 2) + 'px';
+    clearTimeout(t._h); t._h = setTimeout(function () { t.hidden = true; }, 2800);
+  }
+  function sheet(dev, content) {
+    var app = $('.app', dev), s = $('.sheet', app);
+    if (!s) { s = mk('div', 'sheet'); s.innerHTML = '<div class="sheet__box" role="dialog" aria-modal="true"></div>'; app.appendChild(s); }
+    var box = $('.sheet__box', s);
+    if (typeof content === 'string') box.innerHTML = content; else if (content) box.replaceChildren(content);
+    wireIds(box); s.hidden = false;
+    var v = visibleBox(dev);
+    box.style.top = (v.top + 24) + 'px';
+    box.style.left = Math.max(12, v.left + (v.width - box.offsetWidth) / 2) + 'px';
+    var f = $('button, input, select, textarea, a[href]', box); if (f) f.focus();
+    return box;
+  }
+  function closeSheet(dev) { var s = $('.sheet', dev); if (s) s.hidden = true; }
+  function setMenu(dev, open) {
+    var app = $('.app', dev); if (!app) return;
+    app.toggleAttribute('data-menu-open', open);
+    var b = $('.app-burger', dev); if (b) { b.setAttribute('aria-expanded', String(open)); b.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu'); }
+  }
+  function on(type, selector, fn) {
+    document.addEventListener(type, function (e) {
+      var t = e.target && e.target.closest ? e.target.closest(selector) : null; if (!t) return;
+      var dev = t.closest('.device'); if (!dev) return;
+      fn(e, t, dev);
+    });
+  }
+
+  /* mini-app: barra lateral (desktop) / barra superior com ☰ (≤768px, por container query) */
+  function buildApp(tpl) {
+    var active = tpl.dataset.active || document.body.dataset.active || '';
+    var title = tpl.dataset.title || active;
+    var user = tpl.dataset.user || 'Carla Videira';
+    var app = mk('div', 'app');
+    var nav = MENU.map(function (sec) {
+      return '<div class="sidebar-section">' + esc(sec[0]) + '</div>' + sec[1].map(function (it) {
+        var on_ = it[0] === active;
+        return '<a class="sidebar-link' + (on_ ? ' sidebar-link--active' : '') + '" href="#" data-route="' + esc(it[1]) + '"' + (on_ ? ' aria-current="page"' : '') + '>' + esc(it[0]) + '</a>';
+      }).join('');
+    }).join('');
+    app.innerHTML =
+      '<aside class="app-side" aria-label="Menu principal"><div class="app-logo">GIG</div><nav>' + nav + '</nav>' +
+      '<div class="app-user"><span class="app-user__name">' + esc(user) + '</span><button type="button" data-route="/login">Sair</button></div></aside>' +
+      '<div class="app-scrim" data-act-scrim></div>' +
+      '<div class="app-main"><div class="app-top"><button type="button" class="app-burger" aria-expanded="false" aria-label="Abrir menu">☰</button>' +
+      '<span class="app-top__title">' + esc(title) + '</span></div><div class="app-content"></div></div>';
+    $('.app-content', app).appendChild(tpl.content.cloneNode(true));
+    return app;
+  }
+  function fill(dev) {
+    var tpl = $('template[data-variant="' + dev.dataset.variant + '"]');
+    states.delete(dev);
+    dev.replaceChildren(buildApp(tpl));
+    wireIds(dev);
+    if (typeof window.mockInit === 'function') window.mockInit(dev, dev.dataset.variant, dev.dataset.kind);
+  }
+  function mount(panel) {
+    var v = panel.dataset.variant;
+    var stage = $('.stage', panel) || panel.appendChild(mk('div', 'stage'));
+    stage.replaceChildren();
+    [['desktop', 'Desktop'], ['phone', '375 px']].forEach(function (d) {
+      var item = mk('figure', 'stage-item stage-item--' + d[0]);
+      item.innerHTML = '<figcaption class="stage-cap"><span>' + d[1] + '</span><button type="button" class="stage-reset" title="Repor o estado inicial">Repor</button></figcaption>';
+      var dev = mk('div', 'device device--' + d[0]);
+      dev.dataset.variant = v; dev.dataset.kind = d[0];
+      var sc = mk('div', 'device-scroll' + (d[0] === 'phone' ? ' device-scroll--phone' : '')); sc.appendChild(dev); item.appendChild(sc);
+      stage.appendChild(item);
+      fill(dev);
+    });
+    panel.dataset.rendered = '1';
+  }
+
+  /* separadores A/B/C (hash #a/#b/#c) e alternador de dispositivos */
+  var tabs = $$('.mock-bar [role="tab"]'), panels = $$('[role="tabpanel"]');
+  function select(v, focus) {
+    if (!tabs.some(function (t) { return t.dataset.variant === v; })) v = tabs[0].dataset.variant;
+    tabs.forEach(function (t) { var o = t.dataset.variant === v; t.setAttribute('aria-selected', String(o)); t.tabIndex = o ? 0 : -1; if (o && focus) t.focus(); });
+    panels.forEach(function (p) { p.hidden = p.dataset.variant !== v; if (p.dataset.variant === v && !p.dataset.rendered) mount(p); });
+    if (location.hash.slice(1) !== v) { try { history.replaceState(null, '', '#' + v); } catch (e) { /* file:// restrito */ } }
+  }
+  function setView(v) {
+    document.body.dataset.view = v;
+    $$('.mock-view button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.view === v)); });
+    try { localStorage.setItem(VIEW_KEY, v); } catch (e) { /* sem armazenamento */ }
+  }
+  function boot() {
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { select(t.dataset.variant); });
+      t.addEventListener('keydown', function (e) {
+        var j = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }[e.key];
+        if (j === undefined) return; e.preventDefault(); select(tabs[(j + tabs.length) % tabs.length].dataset.variant, true);
+      });
+    });
+    $$('.mock-view button').forEach(function (b) { b.addEventListener('click', function () { setView(b.dataset.view); }); });
+    window.addEventListener('hashchange', function () { select(location.hash.slice(1).toLowerCase()); });
+    var saved = null; try { saved = localStorage.getItem(VIEW_KEY); } catch (e) { /* ignorar */ }
+    setView(['both', 'desktop', 'phone'].indexOf(saved) >= 0 ? saved : 'both');
+    select(location.hash.slice(1).toLowerCase());
+  }
+
+  /* comportamentos da moldura */
+  on('click', '.app-burger', function (e, t, dev) { setMenu(dev, !$('.app', dev).hasAttribute('data-menu-open')); });
+  on('click', '.app-scrim', function (e, t, dev) { setMenu(dev, false); });
+  on('click', '[data-route]', function (e, t, dev) { e.preventDefault(); setMenu(dev, false); toast(dev, 'Abre ' + t.getAttribute('data-route')); });
+  on('click', 'a[href="#"]', function (e) { e.preventDefault(); });
+  on('click', '.sheet', function (e, t, dev) { if (e.target === t || e.target.closest('[data-close-sheet]')) closeSheet(dev); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    $$('.sheet:not([hidden])').forEach(function (s) { closeSheet(s.closest('.device')); });
+    $$('.app[data-menu-open]').forEach(function (a) { setMenu(a.closest('.device'), false); });
+  });
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.stage-reset'); if (!b) return;
+    fill($('.device', b.closest('.stage-item')));
+  });
+
+  window.Mock = { $: $, $$: $$, esc: esc, uid: uid, state: state, on: on, toast: toast, sheet: sheet, closeSheet: closeSheet, setMenu: setMenu };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+/* === FIM MOLDURA === */
+</script>
+<script>
+/* === ESPECÍFICO DESTE MOCKUP === */
+(function () {
+  'use strict';
+  var $ = Mock.$, $$ = Mock.$$, esc = Mock.esc;
+  var MINUS = '−';
+  var ORIGINS = ['Folha de férias 2026', 'Contabilista', 'Carta da gestão', 'Outra'];
+  var YEARS = [2026, 2027];
+  var RULES = { UTEIS_SEG_SEX: 'Dias úteis seg–sex, sem feriados', DIAS_DO_PADRAO: 'Dias do padrão da pessoa' };
+  var LEGAL = [
+    { k: 'ENCERRAMENTO_FERIAS', t: 'Encerramento colectivo fora de Maio–Outubro', d: 'Base legal para encerrar 15 dias fora do período habitual (art. 242.º).' },
+    { k: 'CONTAGEM_FERIAS', t: 'Contagem dos dias de férias', d: 'Dias úteis seg–sex (art. 238.º, n.º 2) ou dias do padrão da pessoa (leitura do n.º 3).' },
+    { k: 'DIREITO_ADMISSAO', t: 'Direito no ano de admissão', d: '2 dias por mês completo, até 20 (art. 239.º).' }
+  ];
+  var PEOPLE = [
+    { n: 'Beatriz Moura', adm: '2019-03-11', open: 18, res: 0, origin: ORIGINS[0], note: '', end: null, appr: [] },
+    { n: 'Tiago Fontes', adm: '2021-05-03', open: 14, res: 0, origin: ORIGINS[0], note: '', end: null, appr: [] },
+    { n: 'Inês Calado', adm: '2022-02-14', open: 15, res: 3, origin: ORIGINS[0], note: '3 dias futuros lançados como pedido aprovado', end: null, appr: [['2026-11-09', '2026-11-11']] },
+    { n: 'Rui Pestana', adm: '2018-09-17', open: 20, res: 5, origin: ORIGINS[0], note: '5 dias futuros lançados como pedido aprovado', end: null, appr: [['2026-10-19', '2026-10-23']] },
+    { n: 'Carla Videira', adm: '2017-04-03', open: 22, res: 0, origin: ORIGINS[2], note: '', end: null, appr: [] },
+    { n: 'Duarte Sá', adm: '2023-06-05', open: 13, res: 0, origin: ORIGINS[0], note: '', end: null, appr: [] },
+    { n: 'Marta Leal', adm: '2020-01-13', open: 16, res: 0, origin: ORIGINS[0], note: '', end: null, appr: [] },
+    { n: 'Hugo Brandão', adm: '2022-10-03', open: 12, res: 3, origin: ORIGINS[0], note: '3 dias futuros lançados como pedido aprovado', end: null, appr: [['2026-11-02', '2026-11-04']] },
+    { n: 'Matilde Teles', adm: '2026-08-01', open: 10, res: 0, origin: ORIGINS[1], note: 'Admitida a 01/08/2026', end: null, appr: [] },
+    { n: 'Nuno Arez', adm: '2020-03-02', open: 6, res: 0, origin: ORIGINS[0], note: 'Contrato termina a 30/11/2026', end: '2026-11-30', appr: [] },
+    { n: 'Filipa Couto', adm: '2021-09-06', open: 8, res: 3, origin: ORIGINS[0], note: 'Carga semanal 30:00 · 3 dias futuros lançados como pedido aprovado', end: null, appr: [['2026-10-26', '2026-10-28']] }
+  ];
+
+  /* ── utilitários ── */
+  var P = function (n) { return PEOPLE.filter(function (p) { return p.n === n; })[0]; };
+  var clone = function (o) { return JSON.parse(JSON.stringify(o)); };
+  var pd = function (iso) { var a = iso.split('-'); return Date.UTC(+a[0], +a[1] - 1, +a[2]); };
+  var fmt = function (iso) { var a = iso.split('-'); return a[2] + '/' + a[1] + '/' + a[0]; };
+  var fmtS = function (iso) { var a = iso.split('-'); return a[2] + '/' + a[1]; };
+  var sgn = function (n) { return n < 0 ? MINUS + Math.abs(n) : String(n); };
+  var validNum = function (v) { return /^\d{1,2}$/.test(String(v).trim()); };
+  var norm = function (s) { return String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); };
+  var plural = function (n, one, many) { return n + ' ' + (n === 1 ? one : many); };
+  function countDays(s, e) {
+    var n = 0;
+    for (var t = pd(s); t <= pd(e); t += 864e5) {
+      var d = new Date(t), w = d.getUTCDay();
+      if (w > 0 && w < 6 && !nationalHoliday(d.toISOString().slice(0, 10))) n += 1;
+    }
+    return n;
+  }
+  function spanDays(s, e) { return Math.max(0, (pd(e) - pd(s)) / 864e5 + 1); }
+  function overlap(a, b, c, d) { return pd(a) <= pd(d) && pd(c) <= pd(b); }
+  function period(s, e) { return fmtS(s) + '–' + fmt(e); }
+
+  /* ── estado ── */
+  function legalOk(st, k) { return st.legal[k].ok; }
+  function suggest(p, y, st) {
+    var admY = +p.adm.slice(0, 4), endY = p.end ? +p.end.slice(0, 4) : null;
+    if (endY === y) return { v: null, rule: 'Cessação a ' + fmt(p.end) + ': rever' };
+    if (endY && y > endY) return { v: null, none: true, rule: 'Cessa em ' + endY + ': sem direito' };
+    if (admY === y) {
+      var m = +p.adm.slice(5, 7), d = +p.adm.slice(8, 10), months = d === 1 ? 13 - m : 12 - m, v = Math.min(20, 2 * months);
+      return { v: v, rule: 'Ano de admissão: 2 dias × ' + months + ' meses = ' + v + (legalOk(st, 'DIREITO_ADMISSAO') ? '' : ' (a validar)') };
+    }
+    return { v: st.annualSaved, rule: st.annualSaved + ' dias (direito anual)' };
+  }
+  function snapshot(st) {
+    var c = st.cl, cnt = countDays(c.start, c.end);
+    var rows = PEOPLE.map(function (p) {
+      var saldo = +st.balSaved[p.n].days - p.res, r = { n: p.n, conta: cnt, saldo: saldo, depois: saldo - cnt, prob: null, info: '' };
+      if (p.end && c.end > p.end) { r.prob = 'NAO_ELEGIVEL'; r.info = 'cessa a ' + fmtS(p.end); }
+      else {
+        var ov = p.appr.filter(function (a) { return overlap(c.start, c.end, a[0], a[1]); })[0];
+        if (ov) { r.prob = 'SOBREPOSICAO'; r.info = period(ov[0], ov[1]).replace(/\/\d{4}$/, ''); }
+        else if (saldo < cnt) r.prob = 'SALDO_INSUFICIENTE';
+      }
+      return r;
+    });
+    var token = [c.version, c.start, c.end, st.ruleSaved].concat(rows.map(function (r) { return r.n + ':' + r.conta + ':' + r.saldo + ':' + (r.prob || ''); })).join('|');
+    return { rows: rows, start: c.start, end: c.end, version: c.version, rule: st.ruleSaved, token: token };
+  }
+  function initState(dev) {
+    var st = Mock.state(dev);
+    st.rn = Mock.uid('rule');
+    st.ref = st.refSaved = '2026-10-01'; st.rule = st.ruleSaved = 'UTEIS_SEG_SEX'; st.annual = st.annualSaved = 22;
+    st.bal = {};
+    PEOPLE.forEach(function (p) { st.bal[p.n] = { days: String(p.open), origin: p.origin, note: p.note }; });
+    st.balSaved = clone(st.bal);
+    st.ent = { 2026: {}, 2027: {} };
+    PEOPLE.forEach(function (p) { st.ent[2026][p.n] = { days: '22', motivo: '' }; st.ent[2027][p.n] = { days: '', motivo: '' }; });
+    st.ent[2026]['Matilde Teles'] = { days: '10', motivo: '' };
+    st.ent[2026]['Carla Videira'] = { days: '25', motivo: 'Acordado na admissão' };
+    st.ent[2026]['Nuno Arez'] = { days: '', motivo: '' };
+    st.ent[2027]['Rui Pestana'] = { days: '23', motivo: 'Dia adicional por acordo' };
+    st.entSaved = clone(st.ent); st.entErr = 0; st.year = 2026;
+    st.flt = { bal: '', grid: '' }; st.onlyProb = false;
+    st.legal = {}; LEGAL.forEach(function (l) { st.legal[l.k] = { ok: false, note: '' }; });
+    st.cl = { name: 'Natal', start: '2026-12-14', end: '2026-12-28', version: 2, status: 'PREVISTO', excl: {}, acc: {}, created: {}, err: false, snap: null };
+    st.cl.snap = snapshot(st);
+    st.step = 1; st.stepDone = {}; st.done = false; st.defsOpen = true;
+    return st;
+  }
+
+  /* ── derivados ── */
+  function balRowDirty(st, n) { var a = st.bal[n], b = st.balSaved[n]; return a.days !== b.days || a.origin !== b.origin || a.note !== b.note; }
+  function entCellDirty(st, y, n) { var a = st.ent[y][n], b = st.entSaved[y][n]; return a.days !== b.days || a.motivo !== b.motivo; }
+  function entRowDirty(st, n) { return YEARS.some(function (y) { return entCellDirty(st, y, n); }); }
+  function dirtyRef(st) { return (st.ref !== st.refSaved ? 1 : 0) + (st.rule !== st.ruleSaved ? 1 : 0) + (+st.annual !== +st.annualSaved ? 1 : 0); }
+  function dirtyBal(st) { return PEOPLE.filter(function (p) { return balRowDirty(st, p.n); }).length; }
+  function dirtyEnt(st) { var n = 0; YEARS.forEach(function (y) { PEOPLE.forEach(function (p) { if (entCellDirty(st, y, p.n)) n += 1; }); }); return n; }
+  function needsMotivo(st, p, y) {
+    var e = st.ent[y][p.n], s = suggest(p, y, st);
+    return !s.none && e.days !== '' && (s.v === null || +e.days !== s.v);
+  }
+  function entState(st, p, y) {
+    var e = st.ent[y][p.n], s = suggest(p, y, st);
+    if (s.none) return ['mut', 'Sem direito'];
+    if (e.days === '') return s.v === null ? ['warn', 'Cessação — rever'] : ['mut', 'Por confirmar'];
+    if (entCellDirty(st, y, p.n)) return ['info', 'Alterado'];
+    return ['ok', 'Confirmado'];
+  }
+  function snapRow(st, n) { return st.cl.snap.rows.filter(function (r) { return r.n === n; })[0]; }
+  function canCreate(st, r) {
+    var c = st.cl;
+    return !c.excl[r.n] && !c.created[r.n] && (!r.prob || (r.prob === 'SALDO_INSUFICIENTE' && c.acc[r.n]));
+  }
+  function clCounts(st) {
+    var c = st.cl, o = { create: 0, resolve: 0, excl: 0, created: 0 };
+    c.snap.rows.forEach(function (r) {
+      if (c.excl[r.n]) o.excl += 1; else if (c.created[r.n]) o.created += 1; else if (canCreate(st, r)) o.create += 1; else o.resolve += 1;
+    });
+    return o;
+  }
+  function unres(st) { return st.cl.snap.rows.filter(function (r) { return !st.cl.excl[r.n] && !st.cl.created[r.n]; }); }
+  function reason(r) { return r.prob === 'SOBREPOSICAO' ? 'sobreposição a férias aprovadas' : r.prob === 'NAO_ELEGIVEL' ? 'não elegível' : 'saldo insuficiente, não aceite'; }
+  function hasProblem(st, n) {
+    var r = snapRow(st, n), c = st.cl, p = P(n);
+    if (!c.excl[n] && !c.created[n] && r.prob) return true;
+    return YEARS.some(function (y) { return entState(st, p, y)[0] === 'warn'; });
+  }
+  function probCount(st) { return PEOPLE.filter(function (p) { return hasProblem(st, p.n); }).length; }
+
+  /* ── commits (devolvem texto de erro ou '') ── */
+  function commitRef(st) {
+    if (!st.ref) return 'Indique a data de referência.';
+    if (!validNum(st.annual)) return 'Direito anual inválido.';
+    st.refSaved = st.ref; st.ruleSaved = st.rule; st.annualSaved = +st.annual; st.annual = +st.annual; return '';
+  }
+  function commitBal(st) {
+    var bad = PEOPLE.filter(function (p) { return !validNum(st.bal[p.n].days); }).length;
+    if (bad) return 'Saldo inválido em ' + plural(bad, 'pessoa', 'pessoas') + '.';
+    st.balSaved = clone(st.bal); return '';
+  }
+  function entMissing(st) {
+    var n = 0;
+    YEARS.forEach(function (y) { PEOPLE.forEach(function (p) { var e = st.ent[y][p.n]; if (e.days !== '' && !validNum(e.days)) n += 1; else if (needsMotivo(st, p, y) && !e.motivo.trim()) n += 1; }); });
+    return n;
+  }
+  function commitEnt(st) {
+    var m = entMissing(st);
+    if (m) { st.entErr = m; return 'Falta o motivo (ou o valor é inválido) em ' + plural(m, 'linha', 'linhas') + '.'; }
+    st.entErr = 0; st.entSaved = clone(st.ent); return '';
+  }
+
+  /* ── HTML: partilhado ── */
+  function legalBadge(st) {
+    return legalOk(st, 'CONTAGEM_FERIAS') ? '<span class="badge-ok">Regra confirmada pelo contabilista</span>' : '<span class="badge-warn">Regra por validar com o contabilista</span>';
+  }
+  function refHtml(st, o) {
+    var r = function (v, t, s) { return '<label class="opt"><input type="radio" class="in-rule" name="' + st.rn + '" value="' + v + '"' + (st.rule === v ? ' checked' : '') + '><span>' + t + '<small>' + s + '</small></span></label>'; };
+    return '<div class="field-row"><label>Data de referência<input type="date" class="in-ref" value="' + st.ref + '"></label>' +
+      '<label>Direito anual (dias)<input type="number" class="in-annual" min="0" max="40" value="' + st.annual + '"></label></div>' +
+      '<fieldset class="rule"><legend>Regra de contagem &nbsp;' + legalBadge(st) + '</legend>' +
+      r('UTEIS_SEG_SEX', RULES.UTEIS_SEG_SEX, 'Segunda a sexta, sem feriados (art. 238.º, n.º 2). Por omissão.') +
+      r('DIAS_DO_PADRAO', RULES.DIAS_DO_PADRAO, 'Os dias que a pessoa trabalharia pelo seu padrão, sem feriados (leitura do n.º 3).') + '</fieldset>' +
+      '<p class="small muted">A data de referência é o dia a partir do qual o módulo desconta férias; a regra vale para pedidos e encerramentos.</p>' +
+      '<div class="actions">' + (o && o.noSave ? '' : '<button type="button" class="btn-row btn-row-strong" data-act="save-ref" data-count-for="ref" data-base="Gravar definições">Gravar definições</button>') +
+      '<span class="small muted" data-dirty="ref"></span></div>';
+  }
+  function originSel(n, v) {
+    return '<select class="cell-in in-origin" data-n="' + esc(n) + '" aria-label="Origem do saldo de ' + esc(n) + '">' + ORIGINS.map(function (o) { return '<option' + (o === v ? ' selected' : '') + '>' + o + '</option>'; }).join('') + '</select>';
+  }
+  function balHtml(st, o) {
+    var rows = PEOPLE.map(function (p) {
+      var b = st.bal[p.n];
+      return '<tr data-name="' + esc(p.n) + '" data-scope="bal"' + (balRowDirty(st, p.n) ? ' class="is-dirty"' : '') + '><td class="sticky"><b>' + esc(p.n) + '</b></td><td>' + fmt(p.adm) + '</td>' +
+        '<td><input type="number" min="0" max="99" class="cell-in num-in in-bal' + (validNum(b.days) ? '' : ' is-invalid') + '" data-n="' + esc(p.n) + '" value="' + esc(b.days) + '" aria-label="Dias disponíveis de ' + esc(p.n) + '"></td>' +
+        '<td>' + originSel(p.n, b.origin) + '</td>' +
+        '<td><input type="text" class="cell-in in-note" data-n="' + esc(p.n) + '" value="' + esc(b.note) + '" placeholder="Observação" aria-label="Observação de ' + esc(p.n) + '"></td></tr>';
+    }).join('');
+    return '<p class="small muted">Dias disponíveis a ' + fmt(st.refSaved) + ', sem descontar férias futuras: as já combinadas lançam-se como pedidos aprovados.</p>' +
+      '<div class="toolbar"><input type="search" class="cell-in flt" data-flt="bal" placeholder="Filtrar por nome" aria-label="Filtrar saldos por nome" value="' + esc(st.flt.bal) + '">' +
+      '<button type="button" class="btn-row" data-act="fill-all">Preencher todos com ' + st.annualSaved + '</button><span class="small muted" data-flt-count="bal"></span>' +
+      '<span class="toolbar-actions"><span class="small muted" data-dirty="bal"></span>' +
+      (o && o.noSave ? '' : '<button type="button" class="btn-row btn-row-strong" data-act="save-bal" data-count-for="bal" data-base="Gravar saldos iniciais">Gravar saldos iniciais</button>') + '</span></div>' +
+      '<div class="table-scroll-wrap"><table class="table--scroll t-bal" data-filter="bal"><thead><tr><th class="sticky">Pessoa</th><th>Admissão</th><th class="num">Disponíveis a ' + fmt(st.refSaved) + '</th><th>Origem</th><th>Observação</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+      '<p class="empty-note" data-empty="bal" hidden>Nenhuma pessoa corresponde ao filtro.</p></div>';
+  }
+  function entBadge(st, p, y) { var s = entState(st, p, y); return '<span class="badge-' + s[0] + '">' + s[1] + '</span>'; }
+  function entHtml(st, o) {
+    var y = st.year;
+    var rows = PEOPLE.map(function (p) {
+      var s = suggest(p, y, st), e = st.ent[y][p.n], need = needsMotivo(st, p, y), key = ' data-n="' + esc(p.n) + '" data-y="' + y + '"';
+      var inv = need && !e.motivo.trim() && st.entErr;
+      return '<tr data-name="' + esc(p.n) + '" data-scope="ent"' + (entRowDirty(st, p.n) ? ' class="is-dirty"' : '') + '><td class="sticky"><b>' + esc(p.n) + '</b></td>' +
+        '<td class="small">' + esc(s.rule) + '</td>' +
+        '<td class="num">' + (s.none ? '—' : s.v === null ? '<span class="badge-warn">rever</span>' : s.v) + '</td>' +
+        '<td><input type="number" min="0" max="60" class="cell-in num-in in-ent"' + key + ' value="' + esc(e.days) + '"' + (s.none ? ' disabled' : '') + ' aria-label="Direito ' + y + ' de ' + esc(p.n) + '"></td>' +
+        '<td><input type="text" class="cell-in in-mot' + (inv ? ' is-invalid' : '') + '"' + key + ' value="' + esc(e.motivo) + '" placeholder="' + (need ? 'Motivo obrigatório' : '—') + '"' + (need ? '' : ' disabled') + ' aria-label="Motivo do direito ' + y + ' de ' + esc(p.n) + '"></td>' +
+        '<td><span class="ent-state"' + key + '>' + entBadge(st, p, y) + '</span></td></tr>';
+    }).join('');
+    var seg = '<div class="seg" role="group" aria-label="Ano">' + YEARS.map(function (yy) { return '<button type="button" data-act="year" data-y="' + yy + '" aria-pressed="' + (yy === y) + '">' + yy + '</button>'; }).join('') + '</div>';
+    return '<p class="small muted">22 dias por ano; no ano de admissão, 2 dias por mês completo, até 20 (art. 239.º' + (legalOk(st, 'DIREITO_ADMISSAO') ? '' : ', a validar') + '). O ano de cessação aparece como «rever», sem cálculo. O confirmado é sempre decisão do gestor.</p>' +
+      (st.entErr ? '<div class="alert-err" role="alert" style="margin-top:8px">Falta o motivo (ou o valor é inválido) em ' + plural(st.entErr, 'linha', 'linhas') + ': o confirmado difere do sugerido.</div>' : '') +
+      '<div class="toolbar">' + seg + '<button type="button" class="btn-row" data-act="accept-sug" title="Preenche só as linhas ainda sem valor">Aceitar sugeridos</button>' +
+      '<span class="toolbar-actions"><span class="small muted" data-dirty="ent"></span>' +
+      (o && o.noSave ? '' : '<button type="button" class="btn-row btn-row-strong" data-act="save-ent" data-count-for="ent" data-base="Gravar direitos">Gravar direitos</button>') + '</span></div>' +
+      '<div class="table-scroll-wrap"><table class="table--scroll t-ent" data-filter-none><thead><tr><th class="sticky">Pessoa</th><th>Regra usada</th><th class="num">Sugerido</th><th class="num">Confirmado</th><th>Motivo (se difere)</th><th>Estado</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+      (y === 2026 ? '<p class="small muted" style="margin-top:8px">Em 2026 o saldo de quem já trabalhava a ' + fmt(st.refSaved) + ' parte do saldo inicial; o direito de 2026 só conta para admissões posteriores.</p>' : '');
+  }
+  function depoisHtml(st, r) {
+    var c = st.cl;
+    if (c.excl[r.n]) return '—';
+    if (c.created[r.n]) return sgn(r.depois);
+    if (!r.prob) return sgn(r.depois);
+    if (r.prob === 'SALDO_INSUFICIENTE') return c.acc[r.n] ? sgn(r.depois) + ' (aceite)' : '<span class="muted">se aceitar:</span> ' + sgn(r.depois);
+    return '<span class="muted">sem desconto</span>';
+  }
+  function probHtml(st, r) {
+    var c = st.cl, conf = c.status === 'CONFIRMADO';
+    if (c.excl[r.n]) return '<span class="badge-mut">' + (c.cancel && c.cancel[r.n] ? 'Cancelado' : 'Excluída') + '</span>';
+    if (c.created[r.n]) return '<span class="badge-ok">Pedido criado</span>';
+    var b = r.prob === 'SALDO_INSUFICIENTE' ? '<span class="badge-warn">Saldo insuficiente</span>' :
+      r.prob === 'SOBREPOSICAO' ? '<span class="badge-err">Sobreposição a férias aprovadas</span> <small>' + r.info + '</small>' :
+      r.prob === 'NAO_ELEGIVEL' ? '<span class="badge-err">Não elegível</span> <small>' + r.info + '</small>' : '<span class="muted">—</span>';
+    return (conf ? '<span class="badge-warn">A resolver</span> ' : '') + b;
+  }
+  function actionsHtml(st, r, short) {
+    var c = st.cl, n = esc(r.n), conf = c.status === 'CONFIRMADO';
+    if (c.excl[r.n]) return (c.cancel && c.cancel[r.n]) ? '' : '<button type="button" class="btn-row btn-row-quiet" data-act="unexcl" data-n="' + n + '">Repor</button>';
+    var h = '';
+    if (r.prob === 'SALDO_INSUFICIENTE' && !c.created[r.n]) h += '<label class="inl"><input type="checkbox" data-act="accept" data-n="' + n + '"' + (c.acc[r.n] ? ' checked' : '') + ' aria-label="Aceitar saldo insuficiente de ' + n + '"> aceitar</label>';
+    h += '<button type="button" class="btn-row btn-row-quiet" data-act="excl" data-n="' + n + '" title="Excluir pessoa do encerramento' + (conf && c.created[r.n] ? ' (cancela o pedido)' : '') + '">' + (short ? 'Excluir' : 'Excluir pessoa') + '</button>';
+    return h;
+  }
+  function clAlerts(st) {
+    var c = st.cl, s = c.snap, h = '', month = +c.start.slice(5, 7), n = spanDays(c.start, c.end);
+    if (!legalOk(st, 'ENCERRAMENTO_FERIAS') && n >= 15 && (month < 5 || month > 10)) h += '<div class="alert-warn">Encerramento de ' + n + ' dias fora de Maio–Outubro: confirmar a base legal com o contabilista (art. 242.º)</div>';
+    if (c.status !== 'CONFIRMADO' && (s.version !== c.version || s.start !== c.start || s.end !== c.end)) h += '<div class="alert-info">A pré-visualização é da versão ' + s.version + ' (' + period(s.start, s.end) + '); o encerramento está na versão ' + c.version + '. Actualize antes de confirmar.</div>';
+    if (c.err) h += '<div class="alert-err" role="alert">A pré-visualização mudou: reveja antes de confirmar. Foi actualizada com os valores actuais.</div>';
+    if (c.status === 'CONFIRMADO') {
+      var k = clCounts(st), u = unres(st);
+      h += '<div class="alert-ok" role="status">Encerramento confirmado: ' + plural(k.created, 'pedido de férias aprovado criado', 'pedidos de férias aprovados criados') + '.</div>';
+      if (u.length) h += '<div class="alert-warn"><b>A resolver (' + u.length + '):</b> ' + u.map(function (r) { return esc(r.n) + ' (' + reason(r) + ')'; }).join('; ') + '. Resolva e use «Confirmar os que faltam»: só cria os pedidos em falta.</div>';
+    }
+    return h ? '<div class="stack">' + h + '</div>' : '';
+  }
+  function clSummary(st) {
+    var k = clCounts(st);
+    if (st.cl.status === 'CONFIRMADO') return plural(k.created, 'pedido criado', 'pedidos criados') + ' · ' + k.resolve + ' a resolver' + (k.excl ? ' · ' + k.excl + ' excluída(s)' : '');
+    return k.create + ' criam pedido · ' + k.resolve + ' a resolver' + (k.excl ? ' · ' + k.excl + ' excluída(s)' : '');
+  }
+  function confirmLabel(st) { return st.cl.status === 'CONFIRMADO' ? 'Confirmar os que faltam' : 'Confirmar encerramento'; }
+  function clHtml(st) {
+    var c = st.cl, s = c.snap, conf = c.status === 'CONFIRMADO';
+    var rows = s.rows.map(function (r) {
+      return '<tr class="' + (c.excl[r.n] ? 'is-excl' : '') + '" data-n="' + esc(r.n) + '"><td data-label="Pessoa"><b>' + esc(r.n) + '</b></td><td data-label="Dias que contam" class="num">' + r.conta + '</td>' +
+        '<td data-label="Saldo actual" class="num">' + r.saldo + '</td><td data-label="Saldo depois" class="num">' + depoisHtml(st, r) + '</td>' +
+        '<td data-label="Problema">' + probHtml(st, r) + '</td><td><div class="actions-cell">' + actionsHtml(st, r) + '</div></td></tr>';
+    }).join('');
+    var u = unres(st).length;
+    return '<div class="cl-head"><div><p class="cl-name"><b>' + esc(c.name) + '</b> ' + period(c.start, c.end) + '</p><p class="small muted">Previsto: aparece no mapa e no saldo, sem descontar.</p></div>' +
+      '<div class="cl-badges"><span class="' + (conf ? 'badge-ok' : 'badge-info') + '">' + c.status + '</span><span class="badge-mut">versão ' + c.version + '</span>' +
+      (conf ? '' : '<button type="button" class="btn-row btn-row-quiet" data-act="edit-cl">Editar</button>') + '</div></div>' +
+      clAlerts(st) +
+      '<p class="small muted cl-prev">Pré-visualização de ' + period(s.start, s.end) + ' · versão ' + s.version + ' · ' + spanDays(s.start, s.end) + ' dias seguidos · conta ' + s.rows[0].conta + ' dias · regra: ' + RULES[s.rule] + '</p>' +
+      '<table class="table--cards cl-table"><thead><tr><th>Pessoa</th><th class="num">Dias que contam</th><th class="num">Saldo actual</th><th class="num">Saldo depois</th><th>Problema</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>' +
+      '<div class="actions"><span class="small muted">' + clSummary(st) + '</span><span class="grow">' +
+      (conf ? '' : '<button type="button" class="btn-row btn-row-quiet" data-act="mock-concurrent" title="Controlo do mockup: simula outro gestor a alterar um saldo inicial">Mockup: simular alteração concorrente</button><button type="button" class="btn-row" data-act="refresh-prev">Actualizar pré-visualização</button>') +
+      '<button type="button" class="btn-row btn-row-strong" data-act="confirm"' + (conf && !u ? ' disabled' : '') + '>' + confirmLabel(st) + '</button></span></div>';
+  }
+  function legalHtml(st) {
+    var pend = LEGAL.filter(function (l) { return !st.legal[l.k].ok; }).length;
+    return '<p class="small muted">A funcionalidade trabalha na mesma; mostra «por validar» onde a regra é usada. Confirmar exige nota (fonte e regime) e fica na auditoria. ' + (pend ? '<b>' + pend + ' por validar.</b>' : 'Todas confirmadas.') + '</p>' +
+      LEGAL.map(function (l) {
+        var g = st.legal[l.k];
+        return '<div class="lg-row"><div><code>' + l.k + '</code> <b>' + l.t + '</b> ' + (g.ok ? '<span class="badge-ok">Confirmada</span>' : '<span class="badge-warn">Por validar</span>') + '</div><p>' + l.d + '</p>' +
+          (g.ok ? '<p><b>Nota:</b> ' + esc(g.note) + ' · Carla Videira, 03/10/2026</p>' :
+            '<div class="lg-form"><input type="text" class="cell-in lg-note" data-k="' + l.k + '" value="' + esc(g.note) + '" placeholder="Nota obrigatória: fonte e regime" aria-label="Nota de ' + l.k + '"><button type="button" class="btn-row btn-row-strong" data-act="legal-ok" data-k="' + l.k + '"' + (g.note.trim() ? '' : ' disabled') + '>Confirmar</button></div>') + '</div>';
+      }).join('');
+  }
+
+  /* ── B · assistente ── */
+  var STEPS = [['Data de referência e regra', 'referencia'], ['Saldos iniciais', 'saldos'], ['Direitos 2026/2027', 'direitos'], ['Encerramento de Dezembro', 'encerramento']];
+  var STEP_INTRO = [
+    'A data a partir da qual o módulo desconta férias e a regra que conta os dias.',
+    'Dias disponíveis de cada pessoa activa. Já vêm preenchidos: ajuste só as excepções.',
+    'Confirme o direito anual de cada pessoa; justifique o que difere do sugerido.',
+    'Pré-visualize o efeito por pessoa antes de confirmar.'
+  ];
+  function doneCount(st) { return [1, 2, 3, 4].filter(function (i) { return st.stepDone[i]; }).length; }
+  function sumHtml(st) {
+    var ent = function (y) {
+      var eligible = PEOPLE.filter(function (p) { return !suggest(p, y, st).none; }), ok = eligible.filter(function (p) { return st.entSaved[y][p.n].days !== ''; }).length;
+      return y + ': ' + ok + ' de ' + eligible.length + ' confirmados';
+    };
+    var cl = st.cl, k = clCounts(st);
+    return '<h2>Resumo</h2><p class="lead">' + (st.done ? 'Arranque concluído. Daqui em diante a manutenção abre directamente no passo pedido.' : 'Reveja o que ficou gravado antes de concluir o arranque.') + '</p>' +
+      '<dl class="sum"><dt>Data de referência</dt><dd>' + fmt(st.refSaved) + ' · direito anual ' + st.annualSaved + ' dias</dd>' +
+      '<dt>Regra de contagem</dt><dd>' + RULES[st.ruleSaved] + ' ' + legalBadge(st) + '</dd>' +
+      '<dt>Saldos iniciais</dt><dd>' + PEOPLE.length + ' de ' + PEOPLE.length + ' pessoas activas com saldo</dd>' +
+      '<dt>Direitos</dt><dd>' + ent(2026) + ' · ' + ent(2027) + '</dd>' +
+      '<dt>Encerramento</dt><dd>' + esc(cl.name) + ' ' + period(cl.start, cl.end) + ' · <span class="' + (cl.status === 'CONFIRMADO' ? 'badge-ok' : 'badge-info') + '">' + cl.status + '</span> · versão ' + cl.version +
+      (cl.status === 'CONFIRMADO' ? ' · ' + plural(k.created, 'pedido criado', 'pedidos criados') + ', ' + k.resolve + ' a resolver' : '') + '</dd></dl>' +
+      '<div class="btn-line" style="margin-top:0">' + STEPS.map(function (s, i) { return '<button type="button" class="btn-row" data-act="goto-step" data-n="' + (i + 1) + '">Rever: ' + s[0] + '</button>'; }).join('') + '</div>' +
+      '<h3 class="sum-h">Regras legais por validar</h3>' + legalHtml(st);
+  }
+  function wizardHtml(st) {
+    var s = st.step, nd = doneCount(st);
+    var lis = STEPS.map(function (x, i) {
+      var n = i + 1, cur = s === n;
+      return '<li class="' + (cur ? 'is-cur' : '') + '"><button type="button" class="step-btn' + (st.stepDone[n] ? ' is-done' : '') + '" data-act="goto-step" data-n="' + n + '"' + (cur ? ' aria-current="step"' : '') + '><span class="step-n">' + (st.stepDone[n] ? '✓' : n) + '</span><span class="step-lbl">' + x[0] + '</span></button></li>';
+    }).join('') + '<li class="' + (s === 5 ? 'is-cur' : '') + '"><button type="button" class="step-btn" data-act="goto-step" data-n="5"' + (s === 5 ? ' aria-current="step"' : '') + '><span class="step-n">★</span><span class="step-lbl">Resumo</span></button></li>';
+    var body, foot = '';
+    if (s === 5) body = sumHtml(st);
+    else {
+      var inner = s === 1 ? refHtml(st, { noSave: 1 }) : s === 2 ? balHtml(st, { noSave: 1 }) : s === 3 ? entHtml(st, { noSave: 1 }) : clHtml(st);
+      body = '<h2>' + (s === 4 ? 'Encerramento de Dezembro' : STEPS[s - 1][0]) + '</h2><p class="lead">' + STEP_INTRO[s - 1] + '</p>' + inner;
+      foot = '<div class="wiz-foot"><span>' + (s > 1 ? '<button type="button" class="btn-row" data-act="wiz-prev">← Anterior</button>' : '') + '</span><span class="grow">' +
+        (st.done ? '<button type="button" class="btn-row" data-act="goto-step" data-n="5">Voltar ao resumo</button><button type="button" class="btn-row btn-row-strong" data-act="wiz-next">Gravar</button>' :
+          '<button type="button" class="btn-row btn-row-strong" data-act="wiz-next">' + (s === 4 ? 'Gravar e concluir' : 'Gravar e seguir') + '</button>') + '</span></div>';
+    }
+    return '<ol class="steps" aria-label="Passos do arranque">' + lis + '</ol>' +
+      '<div class="progress" role="progressbar" aria-label="Passos gravados" aria-valuemin="0" aria-valuemax="4" aria-valuenow="' + nd + '"><span style="width:' + (nd * 25) + '%"></span></div>' +
+      '<div class="wiz-meta"><span>' + (s === 5 ? 'Resumo' : 'Passo ' + s + ' de 4') + ' · ' + nd + ' de 4 gravados</span><span><span class="badge-' + (st.done ? 'ok' : 'info') + '">' + (st.done ? 'Manutenção' : 'Arranque') + '</span> <code>/ferias/configuracao?passo=' + (s === 5 ? 'resumo' : STEPS[s - 1][1]) + '</code></span></div>' +
+      '<div class="card wiz-card">' + body + foot + '</div>';
+  }
+
+  /* ── C · grelha ── */
+  function defsHtml(st) {
+    var c = st.cl, pend = LEGAL.filter(function (l) { return !st.legal[l.k].ok; }).length;
+    var line = '<div class="defs-line"><span><b>Referência</b> ' + fmt(st.refSaved) + ' · ' + RULES[st.ruleSaved] + ' ' + (legalOk(st, 'CONTAGEM_FERIAS') ? '' : '<span class="badge-warn">por validar</span>') + '</span>' +
+      '<span><b>Encerramento</b> ' + esc(c.name) + ' ' + period(c.start, c.end) + ' <span class="' + (c.status === 'CONFIRMADO' ? 'badge-ok' : 'badge-info') + '">' + c.status + '</span> v' + c.version + '</span>' +
+      '<button type="button" class="btn-row grow" data-act="defs-toggle" aria-expanded="' + st.defsOpen + '">' + (st.defsOpen ? 'Esconder definições' : 'Definições') + '</button></div>';
+    var form = st.defsOpen ? '<div class="defs-form"><label>Data de referência<input type="date" class="in-ref" value="' + st.ref + '"></label>' +
+      '<label>Regra de contagem<select class="in-rule-sel"><option value="UTEIS_SEG_SEX"' + (st.rule === 'UTEIS_SEG_SEX' ? ' selected' : '') + '>' + RULES.UTEIS_SEG_SEX + '</option><option value="DIAS_DO_PADRAO"' + (st.rule === 'DIAS_DO_PADRAO' ? ' selected' : '') + '>' + RULES.DIAS_DO_PADRAO + '</option></select></label>' +
+      '<label>Encerramento seleccionado<select class="in-cl"><option>' + esc(c.name) + ' ' + period(c.start, c.end) + ' · ' + c.status + '</option><option value="new">Novo encerramento…</option></select></label>' +
+      (c.status === 'CONFIRMADO' ? '' : '<button type="button" class="btn-row" data-act="edit-cl" style="margin-bottom:4px">Editar período</button>') + '</div>' : '';
+    var tools = '<div class="c-tools"><input type="search" class="cell-in flt" data-flt="grid" placeholder="Filtrar por nome" aria-label="Filtrar por nome" value="' + esc(st.flt.grid) + '">' +
+      '<div class="seg"><button type="button" data-act="only-problems" aria-pressed="' + st.onlyProb + '">Só com problemas (' + probCount(st) + ')</button></div><span class="small muted" data-flt-count="grid"></span>' +
+      '<span class="toolbar-actions"><button type="button" class="btn-row btn-row-quiet" data-act="legal-open">Regras legais por validar (' + pend + ')</button></span></div>';
+    return line + form + clAlerts(st) + tools;
+  }
+  function gridHtml(st) {
+    var c = st.cl;
+    var rows = PEOPLE.map(function (p) {
+      var b = st.bal[p.n], r = snapRow(st, p.n), key = function (y) { return ' data-n="' + esc(p.n) + '" data-y="' + y + '"'; };
+      var dirty = balRowDirty(st, p.n) || entRowDirty(st, p.n);
+      var dir = YEARS.map(function (y) {
+        var s = suggest(p, y, st), e = st.ent[y][p.n], need = needsMotivo(st, p, y), inv = need && !e.motivo.trim() && st.entErr;
+        return '<td><div class="dir"><span class="sug muted">' + (s.none ? 'sem direito' : s.v === null ? 'cessação — rever' : 'sug. ' + s.v) + '</span>' +
+          '<input type="number" min="0" max="60" class="cell-in num-in in-ent"' + key(y) + ' value="' + esc(e.days) + '"' + (s.none ? ' disabled' : '') + ' aria-label="Direito ' + y + ' de ' + esc(p.n) + '">' +
+          '<input type="text" class="cell-in in-mot' + (inv ? ' is-invalid' : '') + '" data-hide-idle' + key(y) + ' value="' + esc(e.motivo) + '" placeholder="Motivo"' + (need ? '' : ' hidden disabled') + ' aria-label="Motivo do direito ' + y + ' de ' + esc(p.n) + '"></div></td>';
+      }).join('');
+      return '<tr data-name="' + esc(p.n) + '" data-scope="all"' + (c.excl[p.n] ? ' class="' + (dirty ? 'is-dirty ' : '') + 'is-excl"' : dirty ? ' class="is-dirty"' : '') + '>' +
+        '<td class="sticky"><b>' + esc(p.n) + '</b>' + (p.end ? '<br><small class="muted">cessa a ' + fmtS(p.end) + '</small>' : '') + '</td>' +
+        '<td><input type="number" min="0" max="99" class="cell-in num-in in-bal' + (validNum(b.days) ? '' : ' is-invalid') + '" data-n="' + esc(p.n) + '" value="' + esc(b.days) + '" aria-label="Saldo inicial de ' + esc(p.n) + '"></td>' + dir +
+        '<td class="num cl-first">' + r.conta + '</td><td class="num">' + depoisHtml(st, r) + '</td><td>' + probHtml(st, r) + '</td>' +
+        '<td>' + (r.prob === 'SALDO_INSUFICIENTE' && !c.excl[p.n] && !c.created[p.n] ? '<label class="inl"><input type="checkbox" data-act="accept" data-n="' + esc(p.n) + '"' + (c.acc[p.n] ? ' checked' : '') + ' aria-label="Aceitar saldo insuficiente de ' + esc(p.n) + '"> aceitar</label>' : '') + '</td>' +
+        '<td>' + actionsHtml(st, r, true).replace(/<label class="inl">.*?<\/label>/, '') + '</td></tr>';
+    }).join('');
+    return '<table class="table--scroll t-grid" data-filter="grid"><thead>' +
+      '<tr class="grp"><th class="sticky" rowspan="2">Pessoa</th><th rowspan="2" class="num">Saldo inicial</th><th rowspan="2" class="num">Direito 2026</th><th rowspan="2" class="num">Direito 2027</th><th class="grp-cl" colspan="5">Encerramento ' + esc(c.name) + ' · ' + period(c.start, c.end) + '</th></tr>' +
+      '<tr class="sub"><th class="num cl-first">Conta</th><th class="num">Saldo depois</th><th>Problema</th><th>Aceitar</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>' +
+      '<p class="empty-note" data-empty="grid" hidden>Nenhuma pessoa corresponde ao filtro.</p>';
+  }
+  function barHtml(st) {
+    var conf = st.cl.status === 'CONFIRMADO', u = unres(st).length;
+    return '<span class="small muted" data-dirty="all"></span><span class="small">' + clSummary(st) + '</span><span class="grow">' +
+      '<button type="button" class="btn-row btn-row-strong" data-act="save-all" data-count-for="all" data-base="Gravar alterações">Gravar alterações</button>' +
+      '<button type="button" class="btn-row btn-row-strong" data-act="confirm"' + (conf && !u ? ' disabled' : '') + '>' + confirmLabel(st) + '</button></span>';
+  }
+
+  var R = {
+    ref: function (st) { return refHtml(st); },
+    bal: function (st) { return balHtml(st); },
+    ent: function (st) { return entHtml(st); },
+    closure: clHtml, legal: legalHtml, wizard: wizardHtml, defs: defsHtml, grid: gridHtml, bar: barHtml
+  };
+
+  /* ── render e actualizações no sítio ── */
+  function updateDirty(dev) {
+    var st = Mock.state(dev), n = { ref: dirtyRef(st), bal: dirtyBal(st), ent: dirtyEnt(st) };
+    n.all = n.ref + n.bal + n.ent;
+    $$('[data-dirty]', dev).forEach(function (el) { var v = n[el.dataset.dirty]; el.textContent = v ? plural(v, 'alteração por gravar', 'alterações por gravar') : 'Sem alterações por gravar'; });
+    $$('[data-count-for]', dev).forEach(function (b) { var v = n[b.dataset.countFor]; b.textContent = b.dataset.base + (v ? ' (' + v + ')' : ''); b.disabled = !v; });
+  }
+  function applyFilter(dev) {
+    var st = Mock.state(dev);
+    $$('table[data-filter]', dev).forEach(function (tb) {
+      var k = tb.dataset.filter, q = norm(st.flt[k] || ''), vis = 0, tot = 0;
+      $$('tbody tr[data-name]', tb).forEach(function (tr) {
+        var show = norm(tr.dataset.name).indexOf(q) >= 0;
+        if (show && k === 'grid' && st.onlyProb) show = hasProblem(st, tr.dataset.name);
+        tr.hidden = !show; tot += 1; if (show) vis += 1;
+      });
+      var c = $('[data-flt-count="' + k + '"]', dev); if (c) c.textContent = vis + ' de ' + tot;
+      var em = $('[data-empty="' + k + '"]', dev); if (em) em.hidden = vis > 0;
+    });
+  }
+  function renderAll(dev) {
+    var st = Mock.state(dev), ae = document.activeElement, key = null;
+    if (ae && dev.contains(ae) && ae.dataset && ae.dataset.act) key = '[data-act="' + ae.dataset.act + '"]' + (ae.dataset.n ? '[data-n="' + ae.dataset.n + '"]' : '') + (ae.dataset.y ? '[data-y="' + ae.dataset.y + '"]' : '');
+    var scr = $$('.c-grid,.table-scroll-wrap', dev).map(function (e) { return [e.scrollLeft, e.scrollTop]; });
+    $$('[data-slot]', dev).forEach(function (el) { el.innerHTML = R[el.dataset.slot](st, el.dataset); });
+    $$('.c-grid,.table-scroll-wrap', dev).forEach(function (e, i) { if (scr[i]) { e.scrollLeft = scr[i][0]; e.scrollTop = scr[i][1]; } });
+    updateDirty(dev); applyFilter(dev);
+    if (key) { var el = $(key, dev); if (el) el.focus(); }
+  }
+  function markRow(tr, st) {
+    var n = tr.dataset.name, sc = tr.dataset.scope;
+    tr.classList.toggle('is-dirty', sc === 'bal' ? balRowDirty(st, n) : sc === 'ent' ? entRowDirty(st, n) : balRowDirty(st, n) || entRowDirty(st, n));
+  }
+  function refreshEnt(dev, n, y) {
+    var st = Mock.state(dev), p = P(n), e = st.ent[y][n], need = needsMotivo(st, p, y);
+    var mot = $('.in-mot[data-n="' + n + '"][data-y="' + y + '"]', dev);
+    if (mot) {
+      mot.disabled = !need; mot.placeholder = need ? 'Motivo obrigatório' : '—';
+      if (mot.hasAttribute('data-hide-idle')) mot.hidden = !need;
+      mot.classList.toggle('is-invalid', !!(need && !e.motivo.trim() && st.entErr));
+    }
+    var b = $('.ent-state[data-n="' + n + '"][data-y="' + y + '"]', dev); if (b) b.innerHTML = entBadge(st, p, y);
+  }
+  function refresh(st) { st.cl.snap = snapshot(st); st.cl.err = false; }
+  function say(dev, msg) { Mock.toast(dev, msg); }
+
+  /* ── acções ── */
+  function doConfirm(dev) {
+    var st = Mock.state(dev), c = st.cl, cur = snapshot(st);
+    if (cur.token !== c.snap.token) { c.snap = cur; c.err = true; renderAll(dev); say(dev, 'A pré-visualização mudou: reveja antes de confirmar'); return; }
+    c.err = false; var n = 0;
+    c.snap.rows.forEach(function (r) { if (canCreate(st, r)) { c.created[r.n] = true; n += 1; } });
+    c.status = 'CONFIRMADO'; renderAll(dev);
+    say(dev, n ? plural(n, 'pedido de férias criado', 'pedidos de férias criados') : 'Nada de novo para criar');
+  }
+  function openEdit(dev) {
+    var st = Mock.state(dev), c = st.cl;
+    Mock.sheet(dev, '<h3>Editar encerramento</h3><p>Ao gravar, a versão passa de ' + c.version + ' a ' + (c.version + 1) + ' (actualização condicionada à versão mostrada). Depois é preciso actualizar a pré-visualização.</p>' +
+      '<label>Nome<input type="text" class="sh-name" value="' + esc(c.name) + '"></label><label>Início<input type="date" class="sh-start" value="' + c.start + '"></label><label>Fim<input type="date" class="sh-end" value="' + c.end + '"></label>' +
+      '<div class="btn-line"><button type="button" class="btn-row btn-row-strong" data-act="edit-save">Gravar</button><button type="button" class="btn-row" data-close-sheet>Cancelar</button></div>');
+  }
+  function openLegal(dev) {
+    Mock.sheet(dev, '<h3>Regras legais por validar</h3><div data-slot="legal"></div><div class="btn-line"><button type="button" class="btn-row" data-close-sheet>Fechar</button></div>');
+    renderAll(dev);
+  }
+  function save(dev, fn, okMsg, after) {
+    var st = Mock.state(dev), err = fn(st);
+    if (err) { renderAll(dev); say(dev, err); return false; }
+    if (after) after(st);
+    renderAll(dev); say(dev, okMsg); return true;
+  }
+
+  Mock.on('click', '[data-act]', function (e, t, dev) {
+    if (t.type === 'checkbox') return;
+    var st = Mock.state(dev), a = t.dataset.act, n = t.dataset.n;
+    switch (a) {
+      case 'goto': { var tg = $('[data-sec="' + t.dataset.sec + '"]', dev); if (tg) tg.scrollIntoView({ behavior: 'smooth', block: 'start' }); break; }
+      case 'save-ref': save(dev, commitRef, 'Definições gravadas'); break;
+      case 'save-bal': save(dev, commitBal, 'Saldos iniciais gravados'); break;
+      case 'save-ent': save(dev, commitEnt, 'Direitos gravados'); break;
+      case 'save-all': {
+        var cnt = dirtyRef(st) + dirtyBal(st) + dirtyEnt(st);
+        var err = (st.ref ? '' : 'Indique a data de referência.') || (PEOPLE.some(function (p) { return !validNum(st.bal[p.n].days); }) ? 'Há saldos inválidos: corrija os campos a vermelho.' : '') || (entMissing(st) ? (st.entErr = entMissing(st), 'Falta o motivo em ' + plural(st.entErr, 'linha', 'linhas') + '.') : '');
+        if (err) { renderAll(dev); say(dev, err); break; }
+        commitRef(st); commitBal(st); commitEnt(st); renderAll(dev); say(dev, plural(cnt, 'alteração gravada', 'alterações gravadas')); break;
+      }
+      case 'fill-all': PEOPLE.forEach(function (p) { st.bal[p.n].days = String(st.annualSaved); }); renderAll(dev); say(dev, 'Todos preenchidos com ' + st.annualSaved + ' (por gravar)'); break;
+      case 'year': st.year = +t.dataset.y; renderAll(dev); break;
+      case 'accept-sug': {
+        var y = st.year, k = 0;
+        PEOPLE.forEach(function (p) { var s = suggest(p, y, st); if (s.v !== null && !s.none && st.ent[y][p.n].days === '') { st.ent[y][p.n] = { days: String(s.v), motivo: '' }; k += 1; } });
+        renderAll(dev); say(dev, k ? plural(k, 'sugerido aceite', 'sugeridos aceites') + ' em ' + y + ' (por gravar)' : 'Nada por aceitar em ' + y); break;
+      }
+      case 'confirm': doConfirm(dev); break;
+      case 'refresh-prev': refresh(st); renderAll(dev); say(dev, 'Pré-visualização actualizada'); break;
+      case 'mock-concurrent': {
+        var b = st.balSaved['Rui Pestana']; b.days = String(+b.days - 1); st.bal['Rui Pestana'].days = b.days;
+        renderAll(dev); say(dev, 'Outro gestor gravou o saldo de Rui Pestana: ' + b.days + ' dias'); break;
+      }
+      case 'edit-cl': openEdit(dev); break;
+      case 'edit-save': {
+        var s = $('.sh-start', dev).value, en = $('.sh-end', dev).value, nm = $('.sh-name', dev).value.trim();
+        if (!s || !en || en < s || !nm) { say(dev, 'Período inválido: o fim não pode ser anterior ao início.'); break; }
+        st.cl.name = nm; st.cl.start = s; st.cl.end = en; st.cl.version += 1; Mock.closeSheet(dev); renderAll(dev); say(dev, 'Encerramento gravado: versão ' + st.cl.version); break;
+      }
+      case 'excl':
+        if (st.cl.status === 'CONFIRMADO' && st.cl.created[n]) {
+          Mock.sheet(dev, '<h3>Excluir ' + esc(n) + '</h3><p>Cancela só o pedido de férias desta pessoa no encerramento. O motivo é obrigatório.</p><label>Motivo<textarea class="sh-motivo" rows="3"></textarea></label>' +
+            '<div class="btn-line"><button type="button" class="btn-row danger" data-act="cancel-save" data-n="' + esc(n) + '" disabled>Cancelar o pedido</button><button type="button" class="btn-row" data-close-sheet>Voltar</button></div>');
+        } else { st.cl.excl[n] = true; renderAll(dev); say(dev, n + ' excluída do encerramento'); }
+        break;
+      case 'cancel-save': delete st.cl.created[n]; st.cl.excl[n] = true; st.cl.cancel = st.cl.cancel || {}; st.cl.cancel[n] = $('.sh-motivo', dev).value.trim(); Mock.closeSheet(dev); renderAll(dev); say(dev, 'Pedido de ' + n + ' cancelado'); break;
+      case 'unexcl': delete st.cl.excl[n]; renderAll(dev); break;
+      case 'legal-ok': {
+        var g = st.legal[t.dataset.k]; if (!g.note.trim()) break; g.ok = true; renderAll(dev); say(dev, 'Regra confirmada e registada na auditoria'); break;
+      }
+      case 'goto-step': st.step = +n; renderAll(dev); break;
+      case 'wiz-prev': st.step = Math.max(1, st.step - 1); renderAll(dev); break;
+      case 'wiz-next': {
+        var fn = st.step === 1 ? commitRef : st.step === 2 ? commitBal : st.step === 3 ? commitEnt : function () { return ''; };
+        var msg = ['', 'Definições gravadas', 'Saldos iniciais gravados', 'Direitos gravados', 'Encerramento previsto gravado'][st.step];
+        var er = fn(st);
+        if (er) { renderAll(dev); say(dev, er); break; }
+        st.stepDone[st.step] = true;
+        if (!st.done) { if (st.step < 4) st.step += 1; else { st.step = 5; st.done = true; msg = 'Arranque concluído'; } }
+        renderAll(dev); say(dev, msg); break;
+      }
+      case 'defs-toggle': st.defsOpen = !st.defsOpen; renderAll(dev); break;
+      case 'only-problems': st.onlyProb = !st.onlyProb; renderAll(dev); break;
+      case 'legal-open': openLegal(dev); break;
+    }
+  });
+  Mock.on('change', 'input[data-act="accept"]', function (e, t, dev) { var st = Mock.state(dev); st.cl.acc[t.dataset.n] = t.checked; renderAll(dev); });
+  Mock.on('change', '.in-rule', function (e, t, dev) { Mock.state(dev).rule = t.value; updateDirty(dev); });
+  Mock.on('change', '.in-rule-sel', function (e, t, dev) { Mock.state(dev).rule = t.value; updateDirty(dev); });
+  Mock.on('change', '.in-cl', function (e, t, dev) { if (t.value === 'new') { say(dev, 'Abre o formulário de novo encerramento'); renderAll(dev); } });
+  Mock.on('input', '.in-ref', function (e, t, dev) { Mock.state(dev).ref = t.value; updateDirty(dev); });
+  Mock.on('input', '.in-annual', function (e, t, dev) { Mock.state(dev).annual = t.value; updateDirty(dev); });
+  Mock.on('input', '.in-bal,.in-origin,.in-note', function (e, t, dev) {
+    var st = Mock.state(dev), f = t.classList.contains('in-bal') ? 'days' : t.classList.contains('in-origin') ? 'origin' : 'note';
+    st.bal[t.dataset.n][f] = t.value;
+    if (f === 'days') t.classList.toggle('is-invalid', !validNum(t.value));
+    markRow(t.closest('tr'), st); updateDirty(dev);
+  });
+  Mock.on('input', '.in-ent,.in-mot', function (e, t, dev) {
+    var st = Mock.state(dev), y = t.dataset.y, n = t.dataset.n;
+    st.ent[y][n][t.classList.contains('in-ent') ? 'days' : 'motivo'] = t.value;
+    refreshEnt(dev, n, y);
+    markRow(t.closest('tr'), st); updateDirty(dev);
+  });
+  Mock.on('input', '.flt', function (e, t, dev) { Mock.state(dev).flt[t.dataset.flt] = t.value; applyFilter(dev); });
+  Mock.on('input', '.lg-note', function (e, t, dev) {
+    var st = Mock.state(dev); st.legal[t.dataset.k].note = t.value;
+    $$('.lg-form', dev).forEach(function (f) { var i = $('.lg-note', f); if (i === t) $('button', f).disabled = !t.value.trim(); });
+  });
+  Mock.on('input', '.sh-motivo', function (e, t, dev) { $('[data-act="cancel-save"]', dev).disabled = !t.value.trim(); });
+
+  window.mockInit = function (dev, variant, kind) {
+    var st = initState(dev);
+    st.defsOpen = !(variant === 'c' && kind === 'phone');
+    renderAll(dev);
+  };
+})();
+</script>
+</body>
+</html>

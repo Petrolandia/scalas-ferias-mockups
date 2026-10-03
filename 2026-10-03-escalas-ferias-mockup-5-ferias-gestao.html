@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 5 — Férias: gestão</title>
+<style>
+/* === MOLDURA COMUM (copiar) === */
+/* Tokens copiados de src/app/globals.css:2-33 (tema «Menta») */
+:root {
+  --bg: #f3f6f3;
+  --card: #fff;
+  --border: rgba(0, 0, 0, 0.15);
+  --txt: #1f2a24;
+  --mut: #66736b;
+  --hint: #9aa49e;
+  --sidebar: #2f3a33;
+  --sidebar-tx: #dfeee5;
+  --brand: #7fc9a2;
+  --primary: #2e9e68;
+  --primary-hover: #267f54;
+  --ok-bg: #e2f2e9;
+  --ok-tx: #1f6b44;
+  --ok-bd: #7fc9a2;
+  --row-hover: rgba(127, 201, 162, 0.12);
+  --er-bg: #fcebeb;
+  --er-tx: #a32d2d;
+  --er-bd: #f09595;
+  --warn-bg: #faeeda;
+  --warn-tx: #854f0b;
+  --warn-bd: #e8c44e;
+  --info-tx: #1d4ed8;
+  --info-bg: #e6eefc;
+  --info-bd: #9db7f0;
+  --on-primary: #fff;
+}
+* { box-sizing: border-box; padding: 0; margin: 0; }
+[hidden] { display: none !important; }
+html, body {
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--txt);
+  -webkit-font-smoothing: antialiased;
+}
+body { min-height: 100vh; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+/* ── Barra do mockup (não faz parte do ecrã) ── */
+.mock-bar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+  padding: 8px 16px; background: var(--sidebar); color: var(--sidebar-tx); font-size: 13px;
+}
+.mock-back { padding: 4px 10px; border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 6px; white-space: nowrap; }
+.mock-back:hover { background: rgba(255, 255, 255, 0.12); }
+.mock-title { font-weight: 600; flex: 1 1 200px; min-width: 0; }
+.mock-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+.mock-bar button {
+  font-size: 13px; min-height: 30px; padding: 3px 12px; cursor: pointer; font-family: inherit;
+  background: transparent; color: var(--sidebar-tx); border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 6px;
+}
+.mock-bar button:hover { background: rgba(255, 255, 255, 0.12); }
+.mock-bar [role='tab'][aria-selected='true'],
+.mock-bar [aria-pressed='true'] { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+.mock-view { display: inline-flex; }
+.mock-view button { border-radius: 0; margin-left: -1px; }
+.mock-view button:first-child { border-radius: 6px 0 0 6px; margin-left: 0; }
+.mock-view button:last-child { border-radius: 0 6px 6px 0; }
+
+/* ── Palco: dois dispositivos lado a lado, a quebrar para baixo ── */
+.mock-main { padding: 16px 16px 56px; }
+.variant-notes {
+  max-width: 1180px; margin: 0 auto 16px; padding: 10px 14px; font-size: 14px; line-height: 1.5;
+  background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--primary); border-radius: 8px;
+}
+.variant-notes b { font-weight: 600; }
+.variant-notes .note-extra { margin-top: 4px; font-size: 12px; color: var(--mut); }
+.stage { display: flex; flex-wrap: wrap; gap: 28px 24px; align-items: flex-start; justify-content: center; }
+.stage-item { min-width: 0; max-width: 100%; }
+.stage-cap { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; color: var(--mut); }
+.stage-reset {
+  font-size: 12px; min-height: 0; padding: 2px 10px; cursor: pointer; font-family: inherit;
+  background: var(--card); color: var(--mut); border: 1px solid var(--border); border-radius: 6px;
+}
+.stage-reset:hover { color: var(--txt); }
+.device-scroll { overflow-x: auto; max-width: 100%; padding: 2px; }
+.device-scroll--phone { padding: 8px; }
+body[data-view='desktop'] .stage-item--phone,
+body[data-view='phone'] .stage-item--desktop { display: none; }
+
+/* ── Dispositivos: largura fixa, contentor para as container queries ── */
+.device {
+  container-type: inline-size; container-name: app; position: relative;
+  background: var(--bg); overflow: hidden;
+}
+.device--desktop { width: 1180px; border-radius: 10px; box-shadow: 0 0 0 1px var(--border), 0 4px 18px rgba(0, 0, 0, 0.08); }
+.device--phone { width: 375px; border-radius: 22px; box-shadow: 0 0 0 1px var(--border), 0 0 0 6px #dde5df, 0 6px 22px rgba(0, 0, 0, 0.15); }
+
+/* ── Mini-app: barra lateral + conteúdo (réplica de .shell/.sidebar/.content) ── */
+.app { display: flex; position: relative; min-height: 560px; font-size: 14px; background: var(--bg); color: var(--txt); }
+.app-side {
+  width: 220px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; padding: 20px 12px;
+  background: var(--sidebar); color: var(--sidebar-tx);
+}
+.app-logo {
+  background: #fff; border-radius: 8px; padding: 8px 10px; margin-bottom: 4px; text-align: center;
+  font-weight: 700; font-size: 18px; letter-spacing: 0.04em; color: var(--primary);
+}
+.app-side nav { display: flex; flex-direction: column; gap: 4px; }
+.sidebar-link {
+  display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; font-size: 14px;
+  color: var(--sidebar-tx); opacity: 0.85; flex-shrink: 0;
+}
+.sidebar-link:hover { opacity: 1; background: rgba(255, 255, 255, 0.1); }
+.sidebar-link--active { background: rgba(127, 201, 162, 0.22); color: #bfe8d2; opacity: 1; }
+.sidebar-section { font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.5; padding: 0 10px; margin: 12px 0 2px; }
+.sidebar-section:first-child { margin-top: 4px; }
+.app-user { margin-top: auto; padding-top: 16px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.app-user__name { padding: 0 10px; opacity: 0.8; }
+.app-side .app-user button {
+  width: 100%; text-align: left; background: transparent; border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--sidebar-tx); border-radius: 8px; padding: 8px 10px; font-size: 13px; cursor: pointer; min-height: 0;
+}
+.app-side .app-user button:hover { background: rgba(255, 255, 255, 0.1); }
+.app-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.app-top { display: none; }
+.app-scrim { display: none; }
+.app-content { flex: 1; min-width: 0; padding: 24px; position: relative; }
+.app-toast {
+  position: absolute; z-index: 60; transform: translateX(-50%); width: max-content; max-width: calc(100% - 24px);
+  padding: 8px 14px; border-radius: 8px; background: var(--sidebar); color: var(--sidebar-tx); font-size: 13px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25); pointer-events: none;
+}
+.sheet { position: absolute; inset: 0; z-index: 50; background: rgba(0, 0, 0, 0.35); }
+.sheet__box {
+  position: absolute; width: min(520px, calc(100% - 24px)); max-height: 80%; overflow: auto;
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+}
+.new-tag {
+  display: inline-block; vertical-align: middle; margin-left: 6px; padding: 0 6px; border-radius: 4px; font-size: 11px;
+  font-weight: 600; text-transform: none; letter-spacing: 0; background: var(--info-bg); border: 1px solid var(--info-bd); color: var(--info-tx);
+}
+
+/* ── Base de formulários e botões (globals.css) ── */
+.device input, .device select, .device textarea, .device button {
+  font-size: 16px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 8px;
+  background: #fff; min-height: 36px; font-family: inherit; color: var(--txt);
+}
+.device input[type='checkbox'], .device input[type='radio'] { min-height: 0; width: 18px; height: 18px; accent-color: var(--primary); }
+.device label { font-size: 12px; color: var(--mut); display: block; margin-bottom: 12px; }
+.device label > input, .device label > select, .device label > textarea { display: block; width: 100%; max-width: 420px; margin-top: 4px; }
+.device button.primary {
+  background: var(--primary); color: #fff; border: none; font-weight: 600; cursor: pointer; padding: 10px 22px; border-radius: 8px;
+}
+.device button.primary:hover { background: var(--primary-hover); }
+.device button.primary:disabled { background: var(--hint); cursor: not-allowed; }
+.device button.secondary { cursor: pointer; background: #fff; }
+.device .btn-row {
+  display: inline-block; font-size: 13px; font-weight: 500; padding: 4px 12px; min-height: 0;
+  border: 1px solid var(--primary); border-radius: 6px; background: #f2faf6; color: var(--primary-hover);
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+}
+.device .btn-row:hover { background: #e3f4ea; }
+.device .btn-row[aria-pressed='true'], .device .btn-row[aria-current='page'] { background: var(--primary); color: #fff; }
+.device .btn-row.btn-row-strong { background: var(--primary); color: #fff; font-weight: 600; }
+.device .btn-row.btn-row-strong:hover { background: var(--primary-hover); }
+.device .btn-row.btn-row-quiet { font-size: 12px; font-weight: 400; border-color: var(--border); background: var(--bg); color: var(--mut); }
+.device .btn-row.btn-row-quiet:hover { background: var(--card); color: var(--txt); }
+.device .btn-row.danger { border-color: #c0392b; color: #c0392b; background: #fdf3f2; }
+.device .btn-row:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Cartões, badges, avisos (globals.css) ── */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.badge-ok, .badge-warn, .badge-err, .badge-info, .badge-mut {
+  font-size: 12px; padding: 2px 8px; border-radius: 4px; white-space: nowrap; border: 1px solid; display: inline-block;
+}
+.badge-ok { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.badge-warn { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); }
+.badge-err { background: var(--er-bg); border-color: var(--er-bd); color: var(--er-tx); }
+.badge-info { background: var(--info-bg); border-color: var(--info-bd); color: var(--info-tx); }
+.badge-mut { background: var(--bg); border-color: var(--border); color: var(--mut); }
+.alert-ok, .alert-warn, .alert-err, .alert-info { border-radius: 8px; padding: 8px 12px; font-size: 14px; border: 1px solid; }
+.alert-ok { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.alert-warn { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); }
+.alert-err { background: var(--er-bg); border-color: var(--er-bd); color: var(--er-tx); }
+.alert-info { background: var(--info-bg); border-color: var(--info-bd); color: var(--info-tx); }
+.toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 12px 0 16px; }
+.toolbar-actions { margin-left: auto; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.muted { color: var(--mut); }
+.small { font-size: 12px; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Separadores de trabalho e filtro segmentado (precedente 2026-09-25) */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin: 4px 0 12px; flex-wrap: wrap; }
+.tabs [role='tab'] {
+  border: 1px solid transparent; border-bottom: none; border-radius: 8px 8px 0 0; background: none; min-height: 0;
+  font-size: 15px; padding: 8px 14px; cursor: pointer; color: var(--mut); margin-bottom: -1px;
+}
+.tabs [role='tab'][aria-selected='true'] { background: var(--card); border-color: var(--border); color: var(--txt); font-weight: 600; }
+.tab-count { display: inline-block; min-width: 20px; padding: 0 6px; border-radius: 10px; background: var(--er-bg); color: var(--er-tx); font-size: 12px; font-weight: 600; text-align: center; }
+.seg { display: inline-flex; border: 1px solid var(--primary); border-radius: 6px; overflow: hidden; }
+.device .seg button { border: none; border-radius: 0; min-height: 0; font-size: 13px; padding: 4px 12px; background: #f2faf6; color: var(--primary-hover); cursor: pointer; }
+.device .seg button[aria-pressed='true'] { background: var(--primary); color: #fff; font-weight: 600; }
+
+/* ── Tabelas (globals.css:492-): base desktop ── */
+.device table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 14px; }
+.device th { text-align: left; font-size: 12px; color: var(--mut); border-bottom: 1px solid var(--border); padding: 6px 8px; }
+.device td { padding: 8px; border-bottom: 1px solid var(--border); }
+.table-scroll-wrap { overflow-x: auto; }
+
+/* ── ≤768px: réplica do bloco @media (max-width: 768px) de globals.css, por container query ── */
+@container app (max-width: 768px) {
+  .app-side {
+    position: absolute; top: 0; left: 0; bottom: 0; z-index: 30; width: 240px;
+    transform: translateX(-100%); visibility: hidden;
+    transition: transform 0.22s ease, visibility 0s linear 0.22s; box-shadow: 4px 0 16px rgba(0, 0, 0, 0.25);
+  }
+  .app[data-menu-open] .app-side { transform: none; visibility: visible; transition: transform 0.22s ease; }
+  .app[data-menu-open] .app-scrim { display: block; position: absolute; inset: 0; z-index: 20; background: rgba(0, 0, 0, 0.4); }
+  .app-top {
+    display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+  .app-top .app-burger { padding: 6px 10px; line-height: 1; cursor: pointer; }
+  .app-top__title { font-weight: 600; font-size: 15px; }
+  .app-content { padding: 16px; }
+  h1 { font-size: 20px; }
+  .card { padding: 12px; }
+  .tabs [role='tab'] { flex: 1; padding: 8px 6px; font-size: 14px; }
+  .toolbar-actions { margin-left: 0; }
+  .sheet__box { padding: 12px; }
+
+  /* Grelha por omissão: a tabela é o próprio contentor de scroll */
+  table:not(.table--cards):not(.table--scroll) { display: block; overflow-x: auto; width: 100%; margin-top: 12px; font-size: 13px; }
+  table:not(.table--cards):not(.table--scroll) th,
+  table:not(.table--cards):not(.table--scroll) td { white-space: nowrap; padding: 4px 8px; font-variant-numeric: tabular-nums; }
+  /* .table--fill: 2–3 colunas, 100% da largura, o nome quebra */
+  table.table--fill:not(.table--cards):not(.table--scroll) { display: table; width: 100%; table-layout: auto; overflow-x: visible; }
+  table.table--fill:not(.table--cards):not(.table--scroll) th,
+  table.table--fill:not(.table--cards):not(.table--scroll) td { white-space: normal; overflow-wrap: anywhere; }
+  /* .table--cards: linhas viram cards; exige data-label em cada td (excepto acções) */
+  table.table--cards thead { display: none; }
+  table.table--cards, table.table--cards tbody, table.table--cards tfoot, table.table--cards tr, table.table--cards td { display: block; width: 100%; }
+  table.table--cards tr { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; padding: 8px 12px; }
+  table.table--cards td { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 4px 0; border-bottom: none; }
+  table.table--cards td[data-label]::before {
+    content: attr(data-label); font-size: 11px; font-weight: 600; color: var(--mut); text-transform: uppercase; letter-spacing: 0.04em; flex-shrink: 0;
+  }
+  table.table--cards td:not([data-label]) { justify-content: flex-end; border-top: 1px solid var(--border); margin-top: 4px; padding-top: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* Página estreita: o dispositivo mantém 375 px, com deslocação na moldura. */
+@media (max-width: 420px) {
+  .mock-main { padding: 12px 0 40px; }
+  .variant-notes { margin-left: 12px; margin-right: 12px; }
+  .stage-cap { padding: 0 12px; }
+  .device-scroll--phone { padding: 0; }
+  .device--phone { border-radius: 0; box-shadow: 0 0 0 1px var(--border); }
+}
+@media (max-width: 700px) {
+  .mock-bar { position: static; padding: 8px 12px; }
+  .mock-back { order: 1; }
+  .mock-view { order: 2; margin-left: auto; }
+  .mock-title { order: 3; flex-basis: 100%; }
+  .mock-tabs { order: 4; flex: 1 1 100%; flex-wrap: nowrap; }
+  .mock-tabs button { flex: 1 1 0; min-width: 0; padding: 4px 4px; font-size: 12px; line-height: 1.25; }
+}
+/* === FIM MOLDURA === */
+
+/* === ESPECÍFICO DESTE MOCKUP === */
+.fer-head { display: flex; align-items: baseline; gap: 4px 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.fer-title { font-size: 24px; font-weight: 600; }
+.fer-summary {
+  display: flex; align-items: center; gap: 6px 14px; flex-wrap: wrap; padding: 10px 14px; margin-bottom: 6px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+}
+.fer-summary .sum-main { font-size: 16px; font-weight: 600; }
+.fer-summary .sum-rule { font-size: 12px; color: var(--mut); }
+.url-sim { font-size: 12px; color: var(--mut); margin: 4px 0 12px; overflow-wrap: anywhere; }
+.url-sim code { background: #e6ede7; padding: 1px 6px; border-radius: 4px; color: var(--txt); font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
+.sec-h { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.panel { margin-bottom: 20px; }
+.device .panel table { margin-top: 8px; }
+.empty { padding: 14px 4px; color: var(--mut); font-size: 14px; }
+.tab-count.zero { background: var(--ok-bg); color: var(--ok-tx); }
+.btn-line { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+/* Caixas de selecção em linha */
+.device .chk { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 14px; color: var(--txt); cursor: pointer; }
+.device .chk > input { display: inline-block; margin: 0; width: 18px; max-width: none; flex-shrink: 0; }
+.device .toolbar .chk { margin-right: 4px; }
+.device .filter-in { width: 200px; max-width: 100%; min-height: 34px; font-size: 14px; }
+.fer-table td .person { font-weight: 600; }
+.fer-table td .arrow { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.device tr.is-sel { background: var(--row-hover); }
+
+/* Mapa anual */
+.legend { list-style: none; display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12px; color: var(--mut); margin: 4px 0 8px; }
+.legend-note { font-size: 12px; color: var(--mut); margin-bottom: 8px; }
+.sw { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px; margin-right: 6px; border: 1px solid rgba(0, 0, 0, 0.12); }
+.s-appr { background: #1f7a4f; color: #fff; }
+.s-pend { background: var(--warn-bg); color: var(--warn-tx); outline: 1.5px dashed #b07410; outline-offset: -2px; }
+.s-prev { background: repeating-linear-gradient(135deg, #e1eafc 0 3px, #c7d7f8 3px 6px); color: var(--info-tx); }
+.s-conf { background: #2f55c0; color: #fff; }
+.sw.s-pend { outline: none; border: 1.5px dashed #b07410; }
+.sw.s-off { background: #eef2ee; }
+.sw.s-ho { background: #f4e6e6; }
+.map-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; background: var(--card); }
+.device .leave-map { margin-top: 0; table-layout: fixed; width: 100%; border-collapse: separate; border-spacing: 0; }
+.device .leave-map th, .device .leave-map td { padding: 0; border-bottom: 1px solid #e4ebe5; border-right: 1px solid #edf1ed; text-align: center; }
+.device .leave-map thead th { border-bottom: 1px solid var(--border); background: #f7faf7; font-weight: 500; color: var(--mut); }
+.device .leave-map .nm {
+  position: sticky; left: 0; z-index: 2; background: var(--card); text-align: left; white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis; padding: 0 8px; font-size: 12px; font-weight: 500; color: var(--txt); border-right: 1px solid var(--border);
+}
+.device .leave-map thead .nm { background: #f7faf7; z-index: 3; }
+.device .leave-map td.c { height: 26px; font-size: 10px; line-height: 1; font-variant-numeric: tabular-nums; }
+.device .leave-map th.wk { font-size: 9px; height: 18px; }
+.device .leave-map th.dh { font-size: 10px; height: 18px; }
+.device .leave-map th.today { box-shadow: inset 0 -3px 0 var(--primary); color: var(--txt); font-weight: 700; }
+.device .leave-map td.off { background: #eef2ee; }
+.device .leave-map td.ho { background: #f4e6e6; }
+.device .leave-map td.ov { font-weight: 800; box-shadow: inset 0 0 0 2px #1f2a24; }
+.device .leave-map td.rq { outline: 2px solid #1f2a24; outline-offset: -2px; }
+.device .leave-map td.sel { box-shadow: inset 0 0 0 2px #1f2a24; }
+.device .leave-map tr.foot th, .device .leave-map tr.foot td { background: #f7faf7; height: 22px; font-size: 10px; color: var(--mut); border-top: 1px solid var(--border); }
+.device .leave-map tr.foot td.ov { color: var(--txt); box-shadow: none; background: #e6ede7; }
+.device .leave-map tr.me th.nm { font-weight: 800; }
+.device .mth { min-height: 0; width: 100%; padding: 3px 2px; font-size: 12px; font-weight: 600; border: none; border-radius: 0; background: transparent; cursor: pointer; color: var(--txt); }
+.device .mth:hover { background: var(--row-hover); }
+.device .cell-btn {
+  display: block; width: 100%; height: 100%; min-height: 0; padding: 0; border: none; border-radius: 0; background: transparent;
+  font: inherit; font-size: 10px; font-weight: inherit; color: inherit; cursor: pointer;
+}
+.device .cell-btn:hover { background: rgba(133, 79, 11, 0.18); }
+.device .cell-btn:focus-visible { outline: 2px solid var(--txt); outline-offset: -2px; }
+.zoom-lbl { font-size: 14px; min-width: 120px; text-align: center; }
+.toolbar .zoom { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+/* Decisão (diálogo, painel, detalhe) */
+.sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.sheet-head h2 { font-size: 17px; font-weight: 600; }
+.decision .dec-head h3 { font-size: 16px; font-weight: 600; }
+.decision .dec-head p { font-size: 13px; margin-bottom: 8px; }
+.device .dec-days { border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px 10px; margin: 8px 0; min-width: 0; }
+.dec-days legend { font-size: 13px; font-weight: 600; padding: 0 6px; }
+.day-list { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(126px, 1fr)); gap: 2px 12px; margin: 4px 0 6px; }
+.day-list li { min-height: 28px; display: flex; align-items: center; }
+.day-list li.off { justify-content: space-between; gap: 6px; color: var(--hint); font-size: 13px; }
+.dec-count { font-size: 14px; margin: 6px 0; }
+.dec-others { font-size: 13px; margin: 6px 0 10px; padding: 6px 10px; background: var(--info-bg); border: 1px solid var(--info-bd); border-radius: 8px; color: var(--info-tx); }
+.dec-others.none { background: var(--bg); border-color: var(--border); color: var(--mut); }
+.dec-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
+.device .dec-actions button.primary { padding: 8px 20px; }
+.dec-hint { color: var(--warn-tx); min-height: 16px; margin-top: 4px; }
+.refuse-box { display: none; margin-top: 8px; }
+.decision.is-refusing .refuse-box, .decision[data-mode='refuse'] .refuse-box { display: block; }
+.decision.is-refusing [data-when='approve'], .decision[data-mode='refuse'] [data-when='approve'] { display: none; }
+.device .reason textarea, .device .refuse-box textarea { max-width: none; }
+.bulk-list { list-style: none; margin: 4px 0 8px; font-size: 14px; }
+.bulk-list li { padding: 5px 0; border-bottom: 1px solid var(--border); }
+
+/* B · mapa protagonista */
+.b-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: start; }
+.b-grid.has-panel { grid-template-columns: minmax(0, 1fr) 330px; }
+.decision-panel { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+.panel-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.panel-top h3 { font-size: 16px; font-weight: 600; }
+.b-lists .tabs { margin-top: 0; }
+
+/* C · caixa de entrada */
+.c-inbox { display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 16px; align-items: start; }
+.c-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.device .c-item {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 1px; width: 100%; text-align: left; min-height: 56px;
+  padding: 9px 12px; border: 1px solid var(--border); border-radius: 10px; background: #fff; cursor: pointer;
+}
+.device .c-item:hover { background: var(--row-hover); }
+.device .c-item[aria-current='true'] { border-color: var(--primary); background: var(--ok-bg); box-shadow: inset 3px 0 0 var(--primary); }
+.c-item .ci-name { font-size: 14px; font-weight: 600; }
+.c-item .ci-sub { font-size: 12px; color: var(--mut); }
+.c-detail { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; min-width: 0; }
+.cd-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.cd-head h3 { font-size: 17px; font-weight: 600; }
+.c-detail .meta { font-size: 13px; color: var(--mut); margin: 2px 0 10px; }
+.mini-h { font-size: 13px; font-weight: 600; margin: 8px 0 4px; }
+.device .c-back { display: none; margin-bottom: 8px; }
+.c-detail dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 12px; font-size: 14px; margin: 8px 0; }
+.c-detail dt { color: var(--mut); }
+.c-detail dd { margin: 0; }
+.c-page-tools { margin: 4px 0 12px; }
+
+@container app (max-width: 768px) {
+  .fer-title { font-size: 20px; }
+  .fer-summary { padding: 8px 10px; }
+  .panel { padding: 12px; }
+  .day-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .device .filter-in { width: 100%; }
+  .toolbar .zoom { width: 100%; }
+  .c-inbox { grid-template-columns: minmax(0, 1fr); }
+  .c-inbox[data-screen='list'] .c-detail { display: none; }
+  .c-inbox[data-screen='detail'] .c-list { display: none; }
+  .device .c-back { display: inline-block; }
+  .c-detail { padding: 12px; }
+}
+</style>
+</head>
+<body data-view="both">
+
+<header class="mock-bar">
+  <a class="mock-back" href="2026-10-03-escalas-ferias-mockups.html">← Índice</a>
+  <span class="mock-title">5 · Férias — gestão (/ferias?ano=2026)</span>
+  <div class="mock-tabs" role="tablist" aria-label="Variantes">
+    <button type="button" role="tab" id="tab-a" data-variant="a" aria-controls="panel-a" aria-selected="false">A · Separadores e mapa</button>
+    <button type="button" role="tab" id="tab-b" data-variant="b" aria-controls="panel-b" aria-selected="false">B · Mapa protagonista</button>
+    <button type="button" role="tab" id="tab-c" data-variant="c" aria-controls="panel-c" aria-selected="false">C · Caixa de entrada</button>
+  </div>
+  <div class="mock-view" role="group" aria-label="Dispositivos">
+    <button type="button" data-view="both" aria-pressed="true">Ambos</button>
+    <button type="button" data-view="desktop" aria-pressed="false">Desktop</button>
+    <button type="button" data-view="phone" aria-pressed="false">375 px</button>
+  </div>
+</header>
+
+<main class="mock-main">
+  <section role="tabpanel" id="panel-a" aria-labelledby="tab-a" data-variant="a" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> resumo e separadores no topo; os pedidos decidem-se na própria tabela (um a um ou em lote, com «Aprovar selecionados») e o mapa anual fica logo abaixo, com zoom ao mês e alternativa em lista.</p>
+      <p><b>Vantagens:</b> é o desenho mais próximo do precedente de Folga e subsídio; decidir é 2 cliques (Aprovar, confirmar no diálogo) e o diálogo mostra datas, saldo e colegas ausentes.</p>
+      <p><b>Custo:</b> o mapa fica abaixo da dobra, por isso decide-se sem o ver; só o diálogo diz quem mais está ausente.</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-b" aria-labelledby="tab-b" data-variant="b" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> o mapa é o ecrã. Os pedidos pendentes aparecem a tracejado; clicar num (no mapa ou na lista abaixo) abre um painel lateral de decisão (folha inferior a 375 px).</p>
+      <p><b>Vantagens:</b> vê-se a sobreposição antes de decidir, sem sair do mapa; 2 cliques (pedido, Aprovar).</p>
+      <p><b>Custo:</b> com o painel aberto o mapa estreita e passa a deslizar na horizontal; a 375 px a folha tapa o mapa.</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-c" aria-labelledby="tab-c" data-variant="c" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> caixa de entrada mestre-detalhe: lista à esquerda, detalhe à direita com mini-mapa do mês do pedido, saldo antes → depois e decisão. «Mapa e saldos» fica numa vista própria; a 375 px a lista e o detalhe são ecrãs sucessivos.</p>
+      <p><b>Vantagens:</b> despacha vários pedidos seguidos («Seguinte pedido»), cada um com o contexto certo e sem rolar.</p>
+      <p><b>Custo:</b> o mapa anual e os saldos ficam a um clique de distância e o mini-mapa só mostra um mês.</p>
+    </div>
+  </section>
+</main>
+<template data-variant="a" data-active="Férias" data-title="Férias" data-user="Carla Videira">
+  <main><div data-root></div></main>
+</template>
+
+<template data-variant="b" data-active="Férias" data-title="Férias" data-user="Carla Videira">
+  <main><div data-root></div></main>
+</template>
+
+<template data-variant="c" data-active="Férias" data-title="Férias" data-user="Carla Videira">
+  <main><div data-root></div></main>
+</template>
+
+<script>
+/* Feriados nacionais: datas UTC, incluindo os móveis da Páscoa. */
+var nationalHolidayCache = {};
+function nationalHolidays(year) {
+  if (nationalHolidayCache[year]) return nationalHolidayCache[year];
+  var a = year % 19, b = Math.floor(year / 100), c = year % 100, d = Math.floor(b / 4), e = b % 4;
+  var f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
+  var i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451);
+  var easter = new Date(Date.UTC(year, Math.floor((h + l - 7 * m + 114) / 31) - 1, (h + l - 7 * m + 114) % 31 + 1));
+  var result = {}, fixed = { '01-01': 'Ano Novo', '04-25': 'Dia da Liberdade', '05-01': 'Dia do Trabalhador', '06-10': 'Dia de Portugal', '08-15': 'Assunção de Nossa Senhora', '10-05': 'Implantação da República', '11-01': 'Todos os Santos', '12-01': 'Restauração da Independência', '12-08': 'Imaculada Conceição', '12-25': 'Natal' };
+  Object.keys(fixed).forEach(function (key) { result[year + '-' + key] = fixed[key]; });
+  [[-2, 'Sexta-feira Santa'], [0, 'Páscoa'], [60, 'Corpo de Deus']].forEach(function (entry) { result[new Date(easter.getTime() + entry[0] * 864e5).toISOString().slice(0, 10)] = entry[1]; });
+  return nationalHolidayCache[year] = result;
+}
+function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] || ''; }
+</script>
+<script>
+/* === MOLDURA COMUM (copiar) === */
+/* API para o JS específico (script a seguir a este):
+     window.mockInit = (deviceEl, variant, kind) => {}   chamado por cada clone (kind = 'desktop' | 'phone')
+     Mock.on(tipo, seletor, (evento, elemento, deviceEl) => {})   delegação com escopo no .device
+     Mock.toast(deviceEl, texto)   Mock.sheet(deviceEl, html|Node) → caixa   Mock.closeSheet(deviceEl)
+     Mock.state(deviceEl) → objeto por clone   Mock.uid(prefixo) → id único   Mock.$ Mock.$$ Mock.esc
+   No markup dos templates (sem id): data-id="k" → id único por clone; data-for / data-controls /
+   data-labelledby / data-describedby="k" → for / aria-controls / aria-labelledby / aria-describedby.
+   [data-route="/rota"] simula navegação (aviso «Abre /rota»). Atributos do <template>:
+   data-active (item do menu activo), data-title (título da barra a 375 px), data-user (nome na barra lateral). */
+(function () {
+  'use strict';
+  var VIEW_KEY = 'escalas-ferias-mock-view';
+  var MENU = [
+    ['Geral', [['Início', '/']]],
+    ['Operação', [['Horas', '/horas'], ['As minhas horas', '/horas/minhas'], ['Escala', '/escala'], ['A minha escala', '/escala/minha'],
+      ['Férias', '/ferias'], ['As minhas férias', '/ferias/minhas'], ['Gorjetas', '/gorjetas'], ['As minhas gorjetas', '/gorjetas/minhas'],
+      ['Fecho de caixa', '/caixa']]],
+    ['Cadastros', [['Cadastros', '/cadastros']]]
+  ];
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var mk = function (tag, cls) { var n = document.createElement(tag); if (cls) n.className = cls; return n; };
+  var clamp = function (v, lo, hi) { return Math.min(Math.max(v, lo), hi); };
+  var states = new WeakMap();
+  var counter = 0;
+  var uid = function (p) { counter += 1; return (p || 'u') + '-' + counter; };
+  var state = function (dev) { if (!states.has(dev)) states.set(dev, {}); return states.get(dev); };
+
+  /* ids únicos por clone: data-id define, os data-for/controls/labelledby/describedby ligam */
+  function wireIds(root) {
+    var map = {};
+    var get = function (k) { if (!map[k]) map[k] = uid(k); return map[k]; };
+    $$('[data-id]', root).forEach(function (n) { n.id = get(n.getAttribute('data-id')); });
+    [['data-for', 'for'], ['data-controls', 'aria-controls'], ['data-labelledby', 'aria-labelledby'], ['data-describedby', 'aria-describedby']]
+      .forEach(function (p) { $$('[' + p[0] + ']', root).forEach(function (n) { n.setAttribute(p[1], get(n.getAttribute(p[0]))); }); });
+  }
+
+  /* parte visível do dispositivo (para posicionar avisos e diálogos onde o utilizador está a olhar) */
+  function visibleBox(dev) {
+    var r = dev.getBoundingClientRect();
+    var sc = dev.closest('.device-scroll');
+    return {
+      top: clamp(-r.top, 0, r.height), bottom: clamp(window.innerHeight - r.top, 0, r.height),
+      left: sc ? sc.scrollLeft : 0, width: sc ? sc.clientWidth : dev.clientWidth
+    };
+  }
+  function toast(dev, msg) {
+    var app = $('.app', dev); if (!app) return;
+    var t = $('.app-toast', app);
+    if (!t) { t = mk('div', 'app-toast'); t.setAttribute('role', 'status'); app.appendChild(t); }
+    t.textContent = msg; t.hidden = false;
+    var v = visibleBox(dev);
+    t.style.top = Math.max(8, v.bottom - 56) + 'px';
+    t.style.left = (v.left + v.width / 2) + 'px';
+    clearTimeout(t._h); t._h = setTimeout(function () { t.hidden = true; }, 2800);
+  }
+  function sheet(dev, content) {
+    var app = $('.app', dev), s = $('.sheet', app);
+    if (!s) { s = mk('div', 'sheet'); s.innerHTML = '<div class="sheet__box" role="dialog" aria-modal="true"></div>'; app.appendChild(s); }
+    var box = $('.sheet__box', s);
+    if (typeof content === 'string') box.innerHTML = content; else if (content) box.replaceChildren(content);
+    wireIds(box); s.hidden = false;
+    var v = visibleBox(dev);
+    box.style.top = (v.top + 24) + 'px';
+    box.style.left = Math.max(12, v.left + (v.width - box.offsetWidth) / 2) + 'px';
+    var f = $('button, input, select, textarea, a[href]', box); if (f) f.focus();
+    return box;
+  }
+  function closeSheet(dev) { var s = $('.sheet', dev); if (s) s.hidden = true; }
+  function setMenu(dev, open) {
+    var app = $('.app', dev); if (!app) return;
+    app.toggleAttribute('data-menu-open', open);
+    var b = $('.app-burger', dev); if (b) { b.setAttribute('aria-expanded', String(open)); b.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu'); }
+  }
+  function on(type, selector, fn) {
+    document.addEventListener(type, function (e) {
+      var t = e.target && e.target.closest ? e.target.closest(selector) : null; if (!t) return;
+      var dev = t.closest('.device'); if (!dev) return;
+      fn(e, t, dev);
+    });
+  }
+
+  /* mini-app: barra lateral (desktop) / barra superior com ☰ (≤768px, por container query) */
+  function buildApp(tpl) {
+    var active = tpl.dataset.active || document.body.dataset.active || '';
+    var title = tpl.dataset.title || active;
+    var user = tpl.dataset.user || 'Carla Videira';
+    var app = mk('div', 'app');
+    var nav = MENU.map(function (sec) {
+      return '<div class="sidebar-section">' + esc(sec[0]) + '</div>' + sec[1].map(function (it) {
+        var on_ = it[0] === active;
+        return '<a class="sidebar-link' + (on_ ? ' sidebar-link--active' : '') + '" href="#" data-route="' + esc(it[1]) + '"' + (on_ ? ' aria-current="page"' : '') + '>' + esc(it[0]) + '</a>';
+      }).join('');
+    }).join('');
+    app.innerHTML =
+      '<aside class="app-side" aria-label="Menu principal"><div class="app-logo">GIG</div><nav>' + nav + '</nav>' +
+      '<div class="app-user"><span class="app-user__name">' + esc(user) + '</span><button type="button" data-route="/login">Sair</button></div></aside>' +
+      '<div class="app-scrim" data-act-scrim></div>' +
+      '<div class="app-main"><div class="app-top"><button type="button" class="app-burger" aria-expanded="false" aria-label="Abrir menu">☰</button>' +
+      '<span class="app-top__title">' + esc(title) + '</span></div><div class="app-content"></div></div>';
+    $('.app-content', app).appendChild(tpl.content.cloneNode(true));
+    return app;
+  }
+  function fill(dev) {
+    var tpl = $('template[data-variant="' + dev.dataset.variant + '"]');
+    states.delete(dev);
+    dev.replaceChildren(buildApp(tpl));
+    wireIds(dev);
+    if (typeof window.mockInit === 'function') window.mockInit(dev, dev.dataset.variant, dev.dataset.kind);
+  }
+  function mount(panel) {
+    var v = panel.dataset.variant;
+    var stage = $('.stage', panel) || panel.appendChild(mk('div', 'stage'));
+    stage.replaceChildren();
+    [['desktop', 'Desktop'], ['phone', '375 px']].forEach(function (d) {
+      var item = mk('figure', 'stage-item stage-item--' + d[0]);
+      item.innerHTML = '<figcaption class="stage-cap"><span>' + d[1] + '</span><button type="button" class="stage-reset" title="Repor o estado inicial">Repor</button></figcaption>';
+      var dev = mk('div', 'device device--' + d[0]);
+      dev.dataset.variant = v; dev.dataset.kind = d[0];
+      var sc = mk('div', 'device-scroll' + (d[0] === 'phone' ? ' device-scroll--phone' : '')); sc.appendChild(dev); item.appendChild(sc);
+      stage.appendChild(item);
+      fill(dev);
+    });
+    panel.dataset.rendered = '1';
+  }
+
+  /* separadores A/B/C (hash #a/#b/#c) e alternador de dispositivos */
+  var tabs = $$('.mock-bar [role="tab"]'), panels = $$('[role="tabpanel"]');
+  function select(v, focus) {
+    if (!tabs.some(function (t) { return t.dataset.variant === v; })) v = tabs[0].dataset.variant;
+    tabs.forEach(function (t) { var o = t.dataset.variant === v; t.setAttribute('aria-selected', String(o)); t.tabIndex = o ? 0 : -1; if (o && focus) t.focus(); });
+    panels.forEach(function (p) { p.hidden = p.dataset.variant !== v; if (p.dataset.variant === v && !p.dataset.rendered) mount(p); });
+    if (location.hash.slice(1) !== v) { try { history.replaceState(null, '', '#' + v); } catch (e) { /* file:// restrito */ } }
+  }
+  function setView(v) {
+    document.body.dataset.view = v;
+    $$('.mock-view button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.view === v)); });
+    try { localStorage.setItem(VIEW_KEY, v); } catch (e) { /* sem armazenamento */ }
+  }
+  function boot() {
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { select(t.dataset.variant); });
+      t.addEventListener('keydown', function (e) {
+        var j = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }[e.key];
+        if (j === undefined) return; e.preventDefault(); select(tabs[(j + tabs.length) % tabs.length].dataset.variant, true);
+      });
+    });
+    $$('.mock-view button').forEach(function (b) { b.addEventListener('click', function () { setView(b.dataset.view); }); });
+    window.addEventListener('hashchange', function () { select(location.hash.slice(1).toLowerCase()); });
+    var saved = null; try { saved = localStorage.getItem(VIEW_KEY); } catch (e) { /* ignorar */ }
+    setView(['both', 'desktop', 'phone'].indexOf(saved) >= 0 ? saved : 'both');
+    select(location.hash.slice(1).toLowerCase());
+  }
+
+  /* comportamentos da moldura */
+  on('click', '.app-burger', function (e, t, dev) { setMenu(dev, !$('.app', dev).hasAttribute('data-menu-open')); });
+  on('click', '.app-scrim', function (e, t, dev) { setMenu(dev, false); });
+  on('click', '[data-route]', function (e, t, dev) { e.preventDefault(); setMenu(dev, false); toast(dev, 'Abre ' + t.getAttribute('data-route')); });
+  on('click', 'a[href="#"]', function (e) { e.preventDefault(); });
+  on('click', '.sheet', function (e, t, dev) { if (e.target === t || e.target.closest('[data-close-sheet]')) closeSheet(dev); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    $$('.sheet:not([hidden])').forEach(function (s) { closeSheet(s.closest('.device')); });
+    $$('.app[data-menu-open]').forEach(function (a) { setMenu(a.closest('.device'), false); });
+  });
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.stage-reset'); if (!b) return;
+    fill($('.device', b.closest('.stage-item')));
+  });
+
+  window.Mock = { $: $, $$: $$, esc: esc, uid: uid, state: state, on: on, toast: toast, sheet: sheet, closeSheet: closeSheet, setMenu: setMenu };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+/* === FIM MOLDURA === */
+</script>
+<script>
+/* === ESPECÍFICO DESTE MOCKUP === */
+(function () {
+  'use strict';
+  var $ = Mock.$, $$ = Mock.$$, esc = Mock.esc, st = Mock.state;
+
+  /* ── Dados fictícios (iguais em todos os mockups) ── */
+  var TODAY = '2026-10-03', YEAR = 2026, ANNUAL = 22, REFERENCE = '2026-10-01';
+  var OPENING = {"Beatriz Moura": 18, "Tiago Fontes": 14, "Inês Calado": 15, "Rui Pestana": 20, "Carla Videira": 22, "Duarte Sá": 13, "Marta Leal": 16, "Hugo Brandão": 12, "Matilde Teles": 10, "Nuno Arez": 6, "Filipa Couto": 8};
+  var MES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  var MES3 = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+  var DOW = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
+  var DOWL = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+  var EMP = ['Beatriz Moura', 'Tiago Fontes', 'Inês Calado', 'Rui Pestana', 'Carla Videira', 'Duarte Sá', 'Marta Leal', 'Hugo Brandão', 'Matilde Teles', 'Nuno Arez', 'Filipa Couto'];
+  var COLL = [
+    { name: 'Natal', start: '2026-12-14', end: '2026-12-28', st: 'prev' }
+  ];
+  var DIVS = [];
+  var BASE = [
+    { id: 'a1', who: 'Beatriz Moura', start: '2026-07-20', end: '2026-07-31', st: 'appr' },
+    { id: 'a2', who: 'Tiago Fontes', start: '2026-04-13', end: '2026-04-17', st: 'appr' },
+    { id: 'a3', who: 'Inês Calado', start: '2026-05-11', end: '2026-05-12', st: 'appr' },
+    { id: 'a4', who: 'Inês Calado', start: '2026-11-09', end: '2026-11-11', st: 'appr' },
+    { id: 'a5', who: 'Rui Pestana', start: '2026-07-06', end: '2026-07-10', st: 'appr' },
+    { id: 'a6', who: 'Rui Pestana', start: '2026-10-19', end: '2026-10-23', st: 'appr' },
+    { id: 'a7', who: 'Carla Videira', start: '2026-08-03', end: '2026-08-07', st: 'appr' },
+    { id: 'a8', who: 'Duarte Sá', start: '2026-08-24', end: '2026-08-28', st: 'appr' },
+    { id: 'a9', who: 'Marta Leal', start: '2026-06-08', end: '2026-06-12', st: 'appr' },
+    { id: 'a10', who: 'Hugo Brandão', start: '2026-08-03', end: '2026-08-16', st: 'appr' },
+    { id: 'a11', who: 'Hugo Brandão', start: '2026-11-02', end: '2026-11-04', st: 'appr' },
+    { id: 'a12', who: 'Matilde Teles', start: '2026-03-23', end: '2026-03-27', st: 'appr' },
+    { id: 'a13', who: 'Nuno Arez', start: '2026-09-21', end: '2026-09-25', st: 'appr' },
+    { id: 'a14', who: 'Filipa Couto', start: '2026-08-17', end: '2026-08-21', st: 'appr' },
+    { id: 'a15', who: 'Filipa Couto', start: '2026-10-26', end: '2026-10-28', st: 'appr' },
+    { id: 'p1', who: 'Tiago Fontes', start: '2026-11-02', end: '2026-11-06', st: 'pend', asked: '2026-09-28' },
+    { id: 'p2', who: 'Marta Leal', start: '2026-11-23', end: '2026-11-27', st: 'pend', asked: '2026-09-30' },
+    { id: 'p3', who: 'Inês Calado', start: '2027-01-04', end: '2027-01-08', st: 'pend', asked: '2026-10-02' }
+  ];
+  var PRI = { conf: 4, appr: 3, pend: 2, prev: 1 };
+  var GLYPH = { appr: 'F', pend: '?', prev: 'C', conf: 'C' };
+
+  /* ── Datas ── */
+  function parse(iso) { return new Date(iso + 'T00:00:00Z'); }
+  function add(iso, n) { var d = parse(iso); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
+  function dow(iso) { return parse(iso).getUTCDay(); }
+  function range(a, b) { var r = [], x = a; while (x <= b) { r.push(x); x = add(x, 1); } return r; }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function fmt(iso) { return iso.slice(8, 10) + '/' + iso.slice(5, 7); }
+  function fmtY(iso) { return fmt(iso) + '/' + iso.slice(0, 4); }
+  function isHoliday(iso) { return !!nationalHoliday(iso); }
+  function countable(iso) { var w = dow(iso); return w > 0 && w < 6 && !isHoliday(iso); }
+  function proposed(a, b) { return range(a, b).filter(countable); }
+  function plural(n, one, many) { return n + ' ' + (n === 1 ? one : many); }
+  function norm(t) { return String(t).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
+  function short(name) { var p = name.split(' '); return p[0] + ' ' + p[p.length - 1].charAt(0) + '.'; }
+  function periodTxt(r) { return fmt(r.start) + '–' + fmt(r.end) + (r.start.slice(0, 4) !== String(YEAR) ? '/' + r.end.slice(0, 4) : ''); }
+  function weekStart(k) { return add('2025-12-29', 7 * k); }
+  function monthDays(y, m) {
+    var d = y + '-' + pad(m + 1) + '-01', out = [];
+    while (d.slice(5, 7) === pad(m + 1)) { out.push(d); d = add(d, 1); }
+    return out;
+  }
+
+  /* ── Estado e cálculo ── */
+  function find(s, id) { return s.reqs.filter(function (r) { return r.id === id; })[0]; }
+  function pend(s) { return s.reqs.filter(function (r) { return r.st === 'pend'; }); }
+  function saldo(s, w, y) {
+    y = String(y || YEAR);
+    var g = 0, rsv = 0, pen = 0;
+    function acc(d) { if (d.slice(0, 4) !== y || (y === String(YEAR) && d < REFERENCE)) return; if (d <= TODAY) g++; else rsv++; }
+    s.reqs.forEach(function (r) {
+      if (r.who !== w) return;
+      if (r.st === 'appr') r.counted.forEach(acc);
+      else if (r.st === 'pend') pen += proposed(r.start, r.end).filter(function (d) { return d.slice(0, 4) === y; }).length;
+    });
+    COLL.forEach(function (c) { if (c.st === 'conf') proposed(c.start, c.end).forEach(acc); });
+    return { g: g, rsv: rsv, pen: pen, disp: (y === String(YEAR) ? OPENING[w] : ANNUAL) - g - rsv };
+  }
+  function others(s, r) {
+    var days = proposed(r.start, r.end), out = [];
+    s.reqs.forEach(function (o) {
+      if (o.who === r.who || o.id === r.id || (o.st !== 'appr' && o.st !== 'pend')) return;
+      var od = o.st === 'appr' ? o.counted : proposed(o.start, o.end);
+      if (od.some(function (d) { return days.indexOf(d) >= 0; })) out.push({ who: o.who, kind: o.st === 'appr' ? 'férias' : 'pedido pendente' });
+    });
+    return out;
+  }
+  /* mapa pessoa×dia: cm['Nome|aaaa-mm-dd'] → {st, req, start, end, label}; abs[dia] = pessoas ausentes a título individual */
+  function calc(s) {
+    var cm = {}, abs = {};
+    function put(w, d, o) { var k = w + '|' + d; if (!cm[k] || PRI[o.st] > PRI[cm[k].st]) cm[k] = o; }
+    s.reqs.forEach(function (r) {
+      if (r.st !== 'appr' && r.st !== 'pend') return;
+      var days = r.st === 'appr' ? r.counted : proposed(r.start, r.end);
+      days.forEach(function (d) { put(r.who, d, { st: r.st, req: r.id, start: r.start, end: r.end, label: r.st === 'appr' ? 'férias aprovadas' : 'pedido pendente' }); });
+    });
+    COLL.forEach(function (c) {
+      proposed(c.start, c.end).forEach(function (d) {
+        EMP.forEach(function (w) { put(w, d, { st: c.st, start: c.start, end: c.end, label: 'encerramento colectivo ' + (c.st === 'conf' ? 'confirmado' : 'previsto') + ' «' + c.name + '»' }); });
+      });
+    });
+    Object.keys(cm).forEach(function (k) {
+      if (cm[k].st === 'appr' || cm[k].st === 'pend') { var d = k.split('|')[1]; abs[d] = (abs[d] || 0) + 1; }
+    });
+    return { s: s, cm: cm, abs: abs };
+  }
+
+  /* ── Blocos comuns ── */
+  function summary(s) {
+    var n = pend(s).length, m = DIVS.length;
+    return '<div class="fer-summary"><p class="sum-main" role="status">' + plural(n, 'pedido pendente', 'pedidos pendentes') + ' · ' + plural(m, 'divergência', 'divergências') + '</p>' +
+      '<span class="badge-warn">Regra de contagem por validar com o contabilista</span>' +
+      '<span class="sum-rule">Contagem: dias úteis (seg–sex, sem feriados) · Direito anual 22 dias · Data de referência 01/10/2026</span></div>';
+  }
+  function urlLine(s) {
+    var q = '?ano=' + YEAR;
+    if (!(s.v === 'c' && s.page === 'map')) q += '&separador=' + s.tab;
+    if (s.zoom != null && s.view === 'cal' && !(s.v === 'c' && s.page === 'inbox')) q += '&mes=' + (s.zoom + 1);
+    return '<p class="url-sim">URL simulada: <code>/ferias' + q.replace(/&/g, '&amp;') + '</code></p>';
+  }
+  function head() { return '<div class="fer-head"><h1 class="fer-title">Férias</h1><span class="muted">Gestão · ' + YEAR + '</span></div>'; }
+  function tabsBlock(s, inner, bare) {
+    var u = s.uid, nP = pend(s).length, nD = DIVS.length;
+    var tabs = [['pedidos', 'Pedidos pendentes', nP], ['divergencias', 'Divergências', nD]];
+    return '<div class="tabs" role="tablist" aria-label="Listas de trabalho">' + tabs.map(function (t) {
+      var on = s.tab === t[0];
+      return '<button type="button" role="tab" id="tab-' + t[0] + '-' + u + '" aria-selected="' + on + '" aria-controls="pnl-' + u + '" tabindex="' + (on ? 0 : -1) + '" data-act="tab" data-tab="' + t[0] + '" data-fk="tab-' + t[0] + '">' +
+        t[1] + ' <span class="tab-count' + (t[2] ? '' : ' zero') + '">' + t[2] + '</span></button>';
+    }).join('') + '</div>' +
+      '<p class="alert-info" role="status"' + (s.cleared ? '' : ' hidden') + '>Seleção limpa ao mudar de separador.</p>' +
+      '<div role="tabpanel" id="pnl-' + u + '" aria-labelledby="tab-' + s.tab + '-' + u + '"' + (bare ? '' : ' class="card panel"') + '>' + inner + '</div>';
+  }
+
+  /* ── Pedidos pendentes e divergências ── */
+  function pendingHTML(s, mode) {
+    var list = pend(s);
+    if (!list.length) return '<p class="empty">Sem pedidos pendentes. Todos decididos.</p>';
+    var nSel = list.filter(function (r) { return s.sel[r.id]; }).length;
+    var tool = '';
+    if (mode === 'a') {
+      tool = '<div class="toolbar"><label class="chk"><input type="checkbox" data-act="sel-all" data-fk="sel-all"' + (nSel === list.length ? ' checked' : '') + '> Selecionar todos</label>' +
+        '<span class="muted small" aria-live="polite">' + plural(nSel, 'selecionado', 'selecionados') + '</span>' +
+        '<div class="toolbar-actions"><button type="button" class="btn-row btn-row-strong" data-act="bulk-open" data-fk="bulk"' + (nSel ? '' : ' disabled') + '>Aprovar selecionados (' + nSel + ')</button></div></div>';
+    }
+    var rows = list.map(function (r) {
+      var y = +r.start.slice(0, 4), b = saldo(s, r.who, y), n = proposed(r.start, r.end).length;
+      var who = mode === 'a'
+        ? '<label class="chk"><input type="checkbox" data-act="sel" data-id="' + r.id + '" data-fk="sel-' + r.id + '"' + (s.sel[r.id] ? ' checked' : '') + '><span class="person">' + esc(r.who) + '</span></label>'
+        : '<span class="person">' + esc(r.who) + '</span>';
+      var act = mode === 'a'
+        ? '<button type="button" class="btn-row btn-row-strong" data-act="approve-open" data-req="' + r.id + '" data-fk="ap-' + r.id + '" aria-label="Aprovar pedido de ' + esc(r.who) + '">Aprovar</button> <button type="button" class="btn-row danger" data-act="refuse-open" data-req="' + r.id + '" data-fk="rf-' + r.id + '" aria-label="Recusar pedido de ' + esc(r.who) + '">Recusar</button>'
+        : '<button type="button" class="btn-row btn-row-strong" data-act="open-req" data-req="' + r.id + '" data-fk="op-' + r.id + '" aria-label="Decidir pedido de ' + esc(r.who) + '">Decidir</button>';
+      return '<tr' + (s.active === r.id ? ' class="is-sel"' : '') + '><td data-label="Pessoa">' + who + '</td><td data-label="Período">' + periodTxt(r) + '</td>' +
+        '<td data-label="Conta" class="num">' + plural(n, 'dia', 'dias') + '</td>' +
+        '<td data-label="Disponível" class="num"><span><span class="arrow">' + b.disp + ' → ' + (b.disp - n) + '</span>' + (y !== YEAR ? ' <span class="muted small">(' + y + ')</span>' : '') + '</span></td>' +
+        '<td data-label="Pedido em">' + fmt(r.asked) + '</td><td>' + act + '</td></tr>';
+    }).join('');
+    return tool + '<table class="fer-table table--cards"><thead><tr><th>Pessoa</th><th>Período</th><th class="num">Conta</th><th class="num">Disponível (antes → depois)</th><th>Pedido em</th><th><span class="sr-only">Acções</span></th></tr></thead><tbody>' + rows + '</tbody></table>';
+  }
+  function divHTML() {
+    if (!DIVS.length) return '<p class="empty">Sem divergências desde a data de referência.</p>';
+    var rows = DIVS.map(function (d) {
+      return '<tr><td data-label="Pessoa"><span class="person">' + esc(d.who) + '</span></td><td data-label="Divergência">' + esc(d.text) + '</td>' +
+        '<td><button type="button" class="btn-row" data-route="/horas/2026/' + d.week + '">Abrir folha da semana ' + d.week + '</button></td></tr>';
+    }).join('');
+    return '<p class="muted small">Informativas: nada se corrige sozinho, nem se cancela. Abra a folha e decida.</p>' +
+      '<table class="fer-table table--cards"><thead><tr><th>Pessoa</th><th>Divergência</th><th><span class="sr-only">Acções</span></th></tr></thead><tbody>' + rows + '</tbody></table>';
+  }
+
+  /* ── Mapa ── */
+  function legend(compact) {
+    var li = function (cls, txt) { return '<li><i class="sw ' + cls + '"></i>' + txt + '</li>'; };
+    if (compact) return '<ul class="legend" aria-label="Legenda">' + li('s-appr', 'Aprovado') + li('s-pend', 'Pendente') + li('s-prev', 'Colectivo previsto') + li('s-conf', 'Colectivo confirmado') + '</ul>';
+    return '<ul class="legend" aria-label="Legenda">' + li('s-appr', 'Aprovado') + li('s-pend', 'Pendente (tracejado)') + li('s-prev', 'Colectivo previsto «Natal» 14/12–28/12') +
+      li('s-off', 'Fim de semana') + li('s-ho', 'Feriado') + '<li><b>Negrito</b>: 2 ou mais pessoas ausentes no mesmo dia (não bloqueia)</li></ul>' +
+      '<p class="legend-note">O número é o de dias úteis que contam. «Natal» é previsão e não desconta. Encerramento de 15 dias fora de Maio–Outubro: confirmar a base legal com o contabilista (art. 242.º).</p>';
+  }
+  function cellBtn(top, w, n, key) {
+    return '<button type="button" class="cell-btn" data-act="open-req" data-req="' + top.req + '" data-fk="c-' + top.req + '-' + key + '" aria-label="Abrir pedido de ' + esc(w) + ', ' + fmt(top.start) + ' a ' + fmt(top.end) + '">' + n + '</button>';
+  }
+  function yearTable(c) {
+    var s = c.s, cols = [], groups = [], tk = -1, k;
+    for (k = 0; k < 53; k++) {
+      var ws = weekStart(k), m = +add(ws, 3).slice(5, 7) - 1;
+      if (!groups.length || groups[groups.length - 1].m !== m) groups.push({ m: m, n: 0 });
+      groups[groups.length - 1].n++; cols.push(ws);
+      if (ws <= TODAY && TODAY <= add(ws, 6)) tk = k;
+    }
+    var h1 = '<th class="nm" rowspan="2" scope="col">Pessoa</th>' + groups.map(function (g) {
+      return '<th colspan="' + g.n + '" scope="colgroup"><button type="button" class="mth" data-act="zoom" data-m="' + g.m + '" data-fk="m' + g.m + '" title="Ver os dias de ' + MES[g.m] + '">' + MES3[g.m] + '</button></th>';
+    }).join('');
+    var h2 = cols.map(function (ws, i) { return '<th scope="col" class="wk' + (i === tk ? ' today' : '') + '" title="Semana ' + (i + 1) + ' · ' + fmt(ws) + '–' + fmt(add(ws, 6)) + (i === tk ? ' · hoje' : '') + '">' + (i + 1) + '</th>'; }).join('');
+    var body = EMP.map(function (w) {
+      return '<tr data-name="' + esc(w) + '"><th scope="row" class="nm">' + esc(w) + '</th>' + cols.map(function (ws, i) {
+        var top = null, ov = false, found = [];
+        for (var j = 0; j < 7; j++) {
+          var d = add(ws, j), o = c.cm[w + '|' + d];
+          if (!o) continue;
+          found.push(o);
+          if (!top || PRI[o.st] > PRI[top.st]) top = o;
+          if ((o.st === 'appr' || o.st === 'pend') && c.abs[d] >= 2) ov = true;
+        }
+        if (!top) return '<td class="c"></td>';
+        var n = found.filter(function (o) { return o.st === top.st; }).length;
+        var tip = w + ' · ' + fmt(top.start) + '–' + fmt(top.end) + ' · ' + top.label + ' · ' + plural(n, 'dia', 'dias') + ' nesta semana' + (ov ? ' · 2 ou mais pessoas ausentes' : '');
+        var inner = top.st === 'pend' ? cellBtn(top, w, n, i) : n;
+        return '<td class="c s-' + top.st + (ov ? ' ov' : '') + (top.req && top.req === s.active ? ' sel' : '') + '" title="' + esc(tip) + '">' + inner + '</td>';
+      }).join('') + '</tr>';
+    }).join('');
+    var foot = '<tr class="foot"><th scope="row" class="nm">Ausentes</th>' + cols.map(function (ws) {
+      var mx = 0; for (var j = 0; j < 7; j++) mx = Math.max(mx, c.abs[add(ws, j)] || 0);
+      return '<td class="' + (mx >= 2 ? 'ov' : '') + '" style="' + (mx >= 2 ? 'font-weight:800' : '') + '">' + (mx || '') + '</td>';
+    }).join('') + '</tr>';
+    return '<div class="map-wrap" tabindex="0" role="region" aria-label="Mapa anual de férias; desloque na horizontal"><table class="leave-map table--scroll" style="min-width:' + (112 + 53 * 14) + 'px"><colgroup><col style="width:112px"></colgroup>' +
+      '<thead><tr>' + h1 + '</tr><tr>' + h2 + '</tr></thead><tbody>' + body + foot + '</tbody></table></div>';
+  }
+  function monthTable(c, y, m, o) {
+    o = o || {};
+    var days = monthDays(y, m), cw = o.mini ? 13 : 22, nw = o.mini ? 92 : 112;
+    var hd1 = days.map(function (d) { return '<th scope="col" class="dh' + (d === TODAY ? ' today' : '') + '"' + (isHoliday(d) ? ' title="Feriado (aberto)"' : '') + '>' + DOWL[dow(d)] + '</th>'; }).join('');
+    var hd2 = days.map(function (d) { return '<th scope="col" class="dh' + (d === TODAY ? ' today' : '') + '" title="' + DOW[dow(d)] + ' ' + fmt(d) + (d === TODAY ? ' · hoje' : '') + (isHoliday(d) ? ' · Feriado (aberto)' : '') + '">' + (+d.slice(8)) + '</th>'; }).join('');
+    var names = o.mini ? EMP : EMP;
+    var body = names.map(function (w) {
+      var cells = days.map(function (d) {
+        var o2 = c.cm[w + '|' + d];
+        if (!countable(d)) return '<td class="c off ' + (isHoliday(d) ? 'ho' : 'we') + '" title="' + (isHoliday(d) ? 'Feriado (aberto)' : 'Fim de semana') + ': não conta"></td>';
+        if (!o2) return '<td class="c"></td>';
+        var ov = (o2.st === 'appr' || o2.st === 'pend') && c.abs[d] >= 2;
+        var rq = o.who === w && d >= o.hs && d <= o.he;
+        var tip = w + ' · ' + DOW[dow(d)] + ' ' + fmt(d) + ' · ' + o2.label + (ov ? ' · 2 ou mais pessoas ausentes' : '');
+        var inner = (o2.st === 'pend' && !o.mini) ? cellBtn(o2, w, GLYPH.pend, d) : GLYPH[o2.st];
+        return '<td class="c s-' + o2.st + (ov ? ' ov' : '') + (rq ? ' rq' : '') + (o2.req && o2.req === c.s.active && !o.mini ? ' sel' : '') + '" title="' + esc(tip) + '">' + inner + '</td>';
+      }).join('');
+      var me = o.who === w;
+      return '<tr' + (o.mini ? ' data-who="' + esc(w) + '"' : ' data-name="' + esc(w) + '"') + (me ? ' class="me"' : '') + '><th scope="row" class="nm" title="' + esc(w) + '">' + esc(o.mini ? short(w) : w) + '</th>' + cells + '</tr>';
+    }).join('');
+    var foot = '<tr class="foot"><th scope="row" class="nm">Ausentes</th>' + days.map(function (d) {
+      var n = c.abs[d] || 0;
+      return '<td class="' + (n >= 2 ? 'ov' : '') + '" style="' + (n >= 2 ? 'font-weight:800' : '') + '">' + (n || '') + '</td>';
+    }).join('') + '</tr>';
+    return '<div class="map-wrap" tabindex="0" role="region" aria-label="Mapa de ' + MES[m] + ' ' + y + '; desloque na horizontal"><table class="leave-map table--scroll' + (o.mini ? ' mini' : '') + '" style="min-width:' + (nw + days.length * cw) + 'px"><colgroup><col style="width:' + nw + 'px"></colgroup>' +
+      '<thead><tr><th class="nm" rowspan="2" scope="col">Pessoa</th>' + hd1 + '</tr><tr>' + hd2 + '</tr></thead><tbody>' + body + foot + '</tbody></table></div>';
+  }
+  function listTable(s) {
+    var rows = EMP.map(function (w) {
+      var b = saldo(s, w, YEAR);
+      return '<tr data-name="' + esc(w) + '"><td data-label="Pessoa"><span class="person">' + esc(w) + '</span></td>' +
+        '<td data-label="Disponível" class="num"><b>' + b.disp + '</b></td><td data-label="Reservado" class="num">' + b.rsv + '</td>' +
+        '<td data-label="Gozado" class="num">' + b.g + '</td><td data-label="Pendente" class="num">' + (b.pen ? '<span class="badge-warn">' + b.pen + '</span>' : '0') + '</td></tr>';
+    }).join('');
+    return '<table class="fer-table table--cards"><thead><tr><th>Pessoa</th><th class="num">Disponível</th><th class="num">Reservado</th><th class="num">Gozado</th><th class="num">Pendente</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+      '<p class="legend-note">Dias de ' + YEAR + ' · disponível = saldo inicial a 01/10 − gozado desde a referência − reservado; o pendente não desconta.</p>';
+  }
+  function mapSection(c) {
+    var s = c.s, zoom = '';
+    if (s.view === 'cal') {
+      zoom = s.zoom == null
+        ? '<span class="muted small">Clique no nome de um mês para ver os dias.</span>'
+        : '<span class="zoom"><button type="button" class="btn-row" data-act="zoom-prev" data-fk="zp"' + (s.zoom === 0 ? ' disabled' : '') + '>‹ ' + (s.zoom > 0 ? MES3[s.zoom - 1] : 'Jan') + '</button>' +
+          '<strong class="zoom-lbl">' + MES[s.zoom] + ' ' + YEAR + '</strong>' +
+          '<button type="button" class="btn-row" data-act="zoom-next" data-fk="zn"' + (s.zoom === 11 ? ' disabled' : '') + '>' + (s.zoom < 11 ? MES3[s.zoom + 1] : 'Dez') + ' ›</button>' +
+          '<button type="button" class="btn-row btn-row-strong" data-act="zoom-all" data-fk="za">Ano todo</button></span>';
+    }
+    var tool = '<div class="toolbar"><div class="seg" role="group" aria-label="Forma do mapa">' +
+      '<button type="button" data-act="view" data-v="cal" data-fk="v-cal" aria-pressed="' + (s.view === 'cal') + '">Calendário</button>' +
+      '<button type="button" data-act="view" data-v="list" data-fk="v-list" aria-pressed="' + (s.view === 'list') + '">Lista</button></div>' + zoom +
+      '<div class="toolbar-actions"><input type="search" class="filter-in" data-act="filter" data-fk="filter" aria-label="Filtrar por nome" placeholder="Filtrar por nome" value="' + esc(s.filter || '') + '"></div></div>';
+    var body = s.view === 'list' ? listTable(s) : legend(false) + (s.zoom == null ? yearTable(c) : monthTable(c, YEAR, s.zoom, {}));
+    return tool + body;
+  }
+
+  /* ── Decisão: datas a descontar, saldo, motivo ── */
+  function decisionHTML(s, r, mode, o) {
+    o = o || {};
+    var days = range(r.start, r.end), prop = proposed(r.start, r.end).length, y = +r.start.slice(0, 4);
+    var b = saldo(s, r.who, y), oth = others(s, r);
+    var h = '<div class="decision" data-req="' + r.id + '" data-mode="' + mode + '" data-prop="' + prop + '" data-disp="' + b.disp + '" data-year="' + y + '">';
+    if (!o.noHead) h += '<div class="dec-head"><h3>' + esc(r.who) + '</h3><p class="muted">' + fmtY(r.start) + ' a ' + fmtY(r.end) + ' · pedido a ' + fmtY(r.asked) + '</p></div>';
+    h += '<fieldset class="dec-days" data-when="approve"><legend>Datas a descontar</legend><ul class="day-list">' + days.map(function (d) {
+      var lbl = DOW[dow(d)] + ' ' + fmt(d);
+      if (countable(d)) return '<li><label class="chk"><input type="checkbox" class="day-chk" data-date="' + d + '" checked><span>' + lbl + '</span></label></li>';
+      return '<li class="off"><span>' + lbl + '</span><span>não conta (' + (isHoliday(d) ? 'feriado' : 'fim de semana') + ')</span></li>';
+    }).join('') + '</ul><p class="muted small">Proposta pela regra «Dias úteis (seg–sex, sem feriados)». Desmarque um dia para o corrigir.</p></fieldset>' +
+      '<p class="dec-count" data-when="approve" aria-live="polite"></p>';
+    if (!o.noOthers) {
+      h += oth.length
+        ? '<p class="dec-others">Também ausentes nesses dias: ' + oth.map(function (x) { return '<b>' + esc(x.who) + '</b> (' + x.kind + ')'; }).join(', ') + '</p>'
+        : '<p class="dec-others none">Ninguém mais ausente nesses dias.</p>';
+    }
+    h += '<label class="reason" data-when="approve" hidden><span>Motivo da correcção (obrigatório)</span><textarea class="motivo" rows="2" data-fk="mot-' + r.id + '"></textarea></label>' +
+      '<div class="dec-actions" data-when="approve"><button type="button" class="primary" data-act="approve" data-fk="approve" disabled>Aprovar</button>' +
+      (mode === 'both' ? '<button type="button" class="btn-row danger" data-act="refuse" data-fk="refuse">Recusar</button>' : '') +
+      (o.dialog ? '<button type="button" class="btn-row btn-row-quiet" data-close-sheet>Cancelar</button>' : '') + '</div>' +
+      '<p class="dec-hint small" data-when="approve" aria-live="polite"></p>' +
+      '<div class="refuse-box"><label><span>Motivo da recusa (obrigatório)</span><textarea class="motivo-r" rows="2" data-fk="motr-' + r.id + '"></textarea></label>' +
+      '<div class="btn-line"><button type="button" class="btn-row danger" data-act="refuse-go" data-fk="refuse-go" disabled>Confirmar recusa</button>' +
+      (mode === 'both' ? '<button type="button" class="btn-row btn-row-quiet" data-act="refuse-cancel">Voltar</button>' : '<button type="button" class="btn-row btn-row-quiet" data-close-sheet>Cancelar</button>') + '</div></div></div>';
+    return h;
+  }
+  function updateDecision(dev, box) {
+    var chk = $$('.day-chk', box);
+    if (chk.length && box.dataset.mode !== 'refuse') {
+      var n = chk.filter(function (x) { return x.checked; }).length, un = chk.length - n;
+      var prop = +box.dataset.prop, disp = +box.dataset.disp, after = disp - n, mot = $('.motivo', box);
+      $('.reason', box).hidden = un === 0;
+      $('.dec-count', box).innerHTML = '<b>Conta ' + plural(n, 'dia', 'dias') + '</b>' + (n !== prop ? ' <span class="muted">(proposta: ' + prop + ')</span>' : '') +
+        ' · Disponível ' + box.dataset.year + ': <b>' + disp + ' → ' + after + '</b>' + (after < 0 ? ' <span class="badge-err">saldo insuficiente</span>' : '');
+      var need = un > 0 && !mot.value.trim();
+      $('[data-act="approve"]', box).disabled = n === 0 || need;
+      $('.dec-hint', box).textContent = n === 0 ? 'Marque pelo menos um dia.' : (need ? 'Indique o motivo da correcção para poder aprovar.' : '');
+    }
+    var mr = $('.motivo-r', box);
+    if (mr) $('[data-act="refuse-go"]', box).disabled = !mr.value.trim();
+    var sb = box.closest('.sheet__box');
+    if (sb) fit(dev, sb, sb.dataset.bottom === '1');
+  }
+  function updateAll(dev) { $$('.decision', dev).forEach(function (b) { updateDecision(dev, b); }); }
+
+  /* ── Diálogo / folha inferior (posicionado onde o utilizador está a olhar) ── */
+  function fit(dev, box, bottom) {
+    var r = dev.getBoundingClientRect();
+    var top = Math.max(0, -r.top), bot = Math.min(r.height, window.innerHeight - r.top), h = Math.max(260, bot - top);
+    box.style.maxHeight = (h - (bottom ? 8 : 48)) + 'px';
+    box.style.width = bottom ? '100%' : '';
+    box.style.borderRadius = bottom ? '14px 14px 0 0' : '';
+    if (bottom) { box.style.left = '0'; box.style.top = Math.max(top, bot - Math.min(box.offsetHeight, h - 8)) + 'px'; }
+    else box.style.top = (top + 24) + 'px';
+  }
+  function openSheet(dev, title, inner, bottom) {
+    var box = Mock.sheet(dev, '<div class="sheet-head"><h2>' + esc(title) + '</h2><button type="button" class="btn-row btn-row-quiet" data-close-sheet>Fechar</button></div>' + inner);
+    box.dataset.bottom = bottom ? '1' : '0';
+    box.setAttribute('aria-label', title);
+    fit(dev, box, bottom);
+    updateAll(dev);
+    fit(dev, box, bottom);
+    return box;
+  }
+  function openDecision(dev, r, mode) {
+    var s = st(dev);
+    openSheet(dev, mode === 'refuse' ? 'Recusar pedido' : 'Aprovar pedido', decisionHTML(s, r, mode, { dialog: true }), false);
+  }
+  function openBulk(dev) {
+    var s = st(dev), items = pend(s).filter(function (r) { return s.sel[r.id]; });
+    if (!items.length) return;
+    var tot = items.reduce(function (a, r) { return a + proposed(r.start, r.end).length; }, 0);
+    openSheet(dev, 'Aprovar selecionados', '<ul class="bulk-list">' + items.map(function (r) {
+      return '<li><b>' + esc(r.who) + '</b> · ' + periodTxt(r) + ' <span class="muted">· conta ' + plural(proposed(r.start, r.end).length, 'dia', 'dias') + '</span></li>';
+    }).join('') + '</ul><p class="muted small">Usa a contagem proposta pela regra «Dias úteis (seg–sex, sem feriados)»: ' + plural(tot, 'dia', 'dias') + ' no total. Para corrigir datas, aprove cada pedido em separado.</p>' +
+      '<div class="dec-actions"><button type="button" class="primary" data-act="bulk-go">Aprovar ' + items.length + '</button><button type="button" class="btn-row btn-row-quiet" data-close-sheet>Cancelar</button></div>', false);
+  }
+
+  /* ── Variantes ── */
+  var VIEWS = {};
+  VIEWS.a = function (c) {
+    var s = c.s;
+    return head() + summary(s) + urlLine(s) + tabsBlock(s, s.tab === 'pedidos' ? pendingHTML(s, 'a') : divHTML()) +
+      '<section class="card"><h2 class="sec-h">Mapa anual ' + YEAR + '</h2>' + mapSection(c) + '</section>';
+  };
+  VIEWS.b = function (c) {
+    var s = c.s, r = s.active && find(s, s.active), panel = '';
+    if (s.kind !== 'phone' && r && r.st === 'pend') {
+      panel = '<aside class="card decision-panel" aria-label="Decisão do pedido de ' + esc(r.who) + '"><div class="panel-top"><h3>Decidir pedido</h3>' +
+        '<button type="button" class="btn-row btn-row-quiet" data-act="close-panel" data-fk="close-panel">Fechar</button></div>' + decisionHTML(s, r, 'both') + '</aside>';
+    }
+    return head() + summary(s) + urlLine(s) + '<div class="b-grid' + (panel ? ' has-panel' : '') + '"><div class="b-main">' +
+      '<section class="card panel"><h2 class="sec-h">Mapa anual ' + YEAR + '</h2>' + mapSection(c) + '</section>' +
+      '<div class="b-lists">' + tabsBlock(s, s.tab === 'pedidos' ? pendingHTML(s, 'b') : divHTML()) + '</div></div>' + panel + '</div>';
+  };
+  function miniBlock(c, r) {
+    var y = +r.start.slice(0, 4), m = +r.start.slice(5, 7) - 1;
+    return '<h4 class="mini-h">' + MES[m] + ' ' + y + ' · quem mais está ausente</h4>' + legend(true) + monthTable(c, y, m, { mini: true, who: r.who, hs: r.start, he: r.end });
+  }
+  function cDetail(c) {
+    var s = c.s, back = '<button type="button" class="btn-row c-back" data-act="back" data-fk="back">‹ ' + (s.tab === 'pedidos' ? 'Pedidos' : 'Divergências') + '</button>';
+    if (s.tab === 'divergencias') {
+      var d = DIVS[s.activeDiv];
+      if (!d) return '<p class="empty">Sem divergências desde a data de referência.</p>';
+      var lv = s.reqs.filter(function (r) { return r.who === d.who && r.st === 'appr' && d.kind === 'work'; })[0];
+      return back + '<div class="cd-head"><h3>' + esc(d.who) + '</h3><span class="badge-warn">Divergência</span></div><p class="meta">' + esc(d.text) + '.</p>' +
+        '<dl>' + (lv ? '<dt>Férias aprovadas</dt><dd>' + periodTxt(lv) + '</dd>' : '') + '<dt>Folha</dt><dd>Semana ' + d.week + ' de ' + YEAR + '</dd></dl>' +
+        '<p class="muted small">Informativa: nada se corrige sozinho, nem se cancela. ' + (d.kind === 'work' ? 'Pode ser outra semana: confirme na folha.' : 'Se foram mesmo férias, falta o pedido; se foi engano, corrija a folha.') + '</p>' +
+        '<button type="button" class="btn-row btn-row-strong" data-route="/horas/2026/' + d.week + '">Abrir folha da semana ' + d.week + '</button>';
+    }
+    var r = s.active && find(s, s.active);
+    if (!r) return '<p class="empty">' + (pend(s).length ? 'Escolha um pedido na lista.' : 'Sem pedidos pendentes. Tudo decidido.') + '</p>';
+    if (r.st !== 'pend') {
+      var nx = pend(s)[0];
+      return back + '<div class="alert-ok" role="status">' + (r.st === 'appr' ? 'Aprovado' : 'Recusado') + ': <b>' + esc(r.who) + '</b> · ' + periodTxt(r) +
+        (r.st === 'appr' ? ' · ' + plural(r.counted.length, 'dia descontado', 'dias descontados') + (r.adj ? ' (corrigido: ' + esc(r.adj) + ')' : '') : ' · motivo: ' + esc(r.refusal || '')) + '</div>' +
+        '<div class="btn-line" style="margin-top:12px">' + (nx ? '<button type="button" class="btn-row btn-row-strong" data-act="next" data-fk="next">Seguinte pedido (' + esc(nx.who) + ')</button>' : '<span class="muted">Sem mais pedidos pendentes.</span>') + '</div>';
+    }
+    return back + '<div class="cd-head"><h3>' + esc(r.who) + '</h3><span class="badge-warn">Pendente</span></div>' +
+      '<p class="meta">' + fmtY(r.start) + ' a ' + fmtY(r.end) + ' · pedido a ' + fmtY(r.asked) + '</p>' + miniBlock(c, r) + decisionHTML(s, r, 'both', { noHead: true, noOthers: true });
+  }
+  VIEWS.c = function (c) {
+    var s = c.s;
+    var alt = '<div class="c-page-tools"><div class="seg" role="group" aria-label="Vista">' +
+      '<button type="button" data-act="page" data-p="inbox" data-fk="pg-inbox" aria-pressed="' + (s.page === 'inbox') + '">Caixa de entrada</button>' +
+      '<button type="button" data-act="page" data-p="map" data-fk="pg-map" aria-pressed="' + (s.page === 'map') + '">Mapa e saldos</button></div></div>';
+    var body;
+    if (s.page === 'map') {
+      body = '<section class="card"><h2 class="sec-h">Mapa anual ' + YEAR + '</h2>' + mapSection(c) + '</section>';
+    } else {
+      var list = s.tab === 'pedidos'
+        ? (pend(s).length ? pend(s).map(function (r) {
+          return '<li><button type="button" class="c-item" data-act="select" data-id="' + r.id + '" data-fk="it-' + r.id + '" aria-current="' + (s.active === r.id) + '"><span class="ci-name">' + esc(r.who) + '</span><span class="ci-sub">' + periodTxt(r) + ' · ' + plural(proposed(r.start, r.end).length, 'dia', 'dias') + '</span></button></li>';
+        }).join('') : '<li class="empty">Sem pedidos pendentes.</li>')
+        : DIVS.map(function (d, i) {
+          return '<li><button type="button" class="c-item" data-act="select-div" data-i="' + i + '" data-fk="dv-' + i + '" aria-current="' + (s.activeDiv === i) + '"><span class="ci-name">' + esc(d.who) + '</span><span class="ci-sub">' + esc(d.text) + '</span></button></li>';
+        }).join('') || '<li class="empty">Sem divergências desde a data de referência.</li>';
+      var inbox = '<div class="c-inbox" data-screen="' + s.screen + '"><ul class="c-list" aria-label="' + (s.tab === 'pedidos' ? 'Pedidos pendentes' : 'Divergências') + '">' + list + '</ul><div class="c-detail">' + cDetail(c) + '</div></div>';
+      body = tabsBlock(s, inbox, true);
+    }
+    return head() + summary(s) + urlLine(s) + alt + body;
+  };
+
+  /* ── Renderização ── */
+  function applyFilter(dev) {
+    var q = norm(st(dev).filter || '');
+    $$('tr[data-name]', dev).forEach(function (tr) { tr.hidden = !!q && norm(tr.dataset.name).indexOf(q) < 0; });
+  }
+  function render(dev, opt) {
+    opt = opt || {};
+    var s = st(dev), root = $('[data-root]', dev), ae = document.activeElement;
+    var fk = s.nextFocus || (ae && dev.contains(ae) && ae.getAttribute ? ae.getAttribute('data-fk') : null);
+    var caret = ae && ae.selectionStart != null ? ae.selectionStart : null;
+    var scr = $$('.map-wrap', dev).map(function (w) { return w.scrollLeft; });
+    s.nextFocus = null;
+    root.innerHTML = VIEWS[s.v](calc(s));
+    if (!opt.noScroll) $$('.map-wrap', dev).forEach(function (w, i) { if (scr[i]) w.scrollLeft = scr[i]; });
+    applyFilter(dev); updateAll(dev);
+    if (fk) {
+      var el = $('[data-fk="' + fk + '"]', root);
+      if (el && !el.disabled) { el.focus({ preventScroll: true }); if (caret != null && el.setSelectionRange && /text|search/.test(el.type)) { try { el.setSelectionRange(caret, caret); } catch (x) { /* ignorar */ } } }
+    }
+  }
+  function firstPend(s) { var p = pend(s)[0]; return p ? p.id : null; }
+  function phone(s) { return s.kind === 'phone'; }
+
+  window.mockInit = function (dev, variant, kind) {
+    var s = st(dev);
+    s.uid = Mock.uid('fer'); s.v = variant; s.kind = kind;
+    s.reqs = BASE.map(function (r) {
+      var o = { id: r.id, who: r.who, start: r.start, end: r.end, st: r.st, asked: r.asked };
+      if (r.st === 'appr') o.counted = proposed(r.start, r.end);
+      return o;
+    });
+    s.tab = 'pedidos'; s.sel = {}; s.cleared = false; s.view = 'cal'; s.zoom = null; s.filter = '';
+    s.page = 'inbox'; s.screen = 'list'; s.active = null; s.activeDiv = null; s.nextFocus = null;
+    if (variant === 'c' && !phone(s)) { s.active = firstPend(s); s.activeDiv = 0; }
+    render(dev, { noScroll: true });
+  };
+
+  /* ── Interacção ── */
+  function setTab(dev, tab, byKey) {
+    var s = st(dev); if (tab === s.tab) return;
+    s.tab = tab; s.sel = {}; s.cleared = true; s.screen = 'list';
+    if (s.v === 'b') { s.active = null; Mock.closeSheet(dev); }
+    if (s.v === 'c') { s.active = (!phone(s) && tab === 'pedidos') ? firstPend(s) : null; s.activeDiv = (!phone(s) && tab === 'divergencias') ? 0 : null; }
+    if (byKey) s.nextFocus = 'tab-' + tab;
+    render(dev);
+  }
+  Mock.on('click', '[data-act="tab"]', function (e, t, dev) { setTab(dev, t.dataset.tab); });
+  Mock.on('keydown', '[data-act="tab"]', function (e, t, dev) {
+    var order = ['pedidos', 'divergencias'], i = order.indexOf(t.dataset.tab);
+    var j = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: 1 }[e.key];
+    if (j === undefined) return; e.preventDefault(); setTab(dev, order[(j + 2) % 2], true);
+  });
+  Mock.on('change', '[data-act="sel"]', function (e, t, dev) { var s = st(dev); s.sel[t.dataset.id] = t.checked; s.cleared = false; render(dev); });
+  Mock.on('change', '[data-act="sel-all"]', function (e, t, dev) { var s = st(dev); pend(s).forEach(function (r) { s.sel[r.id] = t.checked; }); s.cleared = false; render(dev); });
+  Mock.on('input', '[data-act="filter"]', function (e, t, dev) { st(dev).filter = t.value; applyFilter(dev); });
+  Mock.on('click', '[data-act="view"]', function (e, t, dev) { st(dev).view = t.dataset.v; render(dev, { noScroll: true }); });
+  Mock.on('click', '[data-act="zoom"]', function (e, t, dev) { st(dev).zoom = +t.dataset.m; st(dev).nextFocus = 'za'; render(dev, { noScroll: true }); });
+  Mock.on('click', '[data-act="zoom-all"]', function (e, t, dev) { st(dev).zoom = null; render(dev, { noScroll: true }); });
+  Mock.on('click', '[data-act="zoom-prev"]', function (e, t, dev) { var s = st(dev); s.zoom = Math.max(0, s.zoom - 1); render(dev, { noScroll: true }); });
+  Mock.on('click', '[data-act="zoom-next"]', function (e, t, dev) { var s = st(dev); s.zoom = Math.min(11, s.zoom + 1); render(dev, { noScroll: true }); });
+  Mock.on('click', '[data-act="page"]', function (e, t, dev) { st(dev).page = t.dataset.p; render(dev, { noScroll: true }); });
+
+  Mock.on('click', '[data-act="approve-open"]', function (e, t, dev) { openDecision(dev, find(st(dev), t.dataset.req), 'approve'); });
+  Mock.on('click', '[data-act="refuse-open"]', function (e, t, dev) { openDecision(dev, find(st(dev), t.dataset.req), 'refuse'); });
+  Mock.on('click', '[data-act="bulk-open"]', function (e, t, dev) { openBulk(dev); });
+  Mock.on('click', '[data-act="open-req"]', function (e, t, dev) {
+    var s = st(dev), r = find(s, t.dataset.req); if (!r || r.st !== 'pend') return;
+    if (s.v === 'a') { openDecision(dev, r, 'approve'); return; }
+    if (s.v === 'b') {
+      var m = +r.start.slice(5, 7) - 1;
+      if (s.zoom != null && +r.start.slice(0, 4) === YEAR) s.zoom = m;
+      if (phone(s)) {
+        render(dev);
+        openSheet(dev, 'Decidir pedido', decisionHTML(s, r, 'both', { dialog: false }), true);
+      } else {
+        s.active = r.id; render(dev);
+        var btn = $('.map-wrap .cell-btn[data-req="' + r.id + '"]', dev);
+        if (btn) { var w = btn.closest('.map-wrap'); w.scrollLeft = Math.max(0, btn.closest('td').offsetLeft - 140); }
+        var pn = $('.decision-panel', dev); if (pn) pn.scrollIntoView({ block: 'nearest' });
+      }
+      return;
+    }
+    s.page = 'inbox'; s.tab = 'pedidos'; s.active = r.id; s.screen = 'detail'; render(dev);
+  });
+  Mock.on('click', '[data-act="close-panel"]', function (e, t, dev) { st(dev).active = null; render(dev); });
+  Mock.on('click', '[data-act="select"]', function (e, t, dev) { var s = st(dev); s.active = t.dataset.id; s.screen = 'detail'; render(dev); });
+  Mock.on('click', '[data-act="select-div"]', function (e, t, dev) { var s = st(dev); s.activeDiv = +t.dataset.i; s.screen = 'detail'; render(dev); });
+  Mock.on('click', '[data-act="back"]', function (e, t, dev) { var s = st(dev); s.screen = 'list'; render(dev); });
+  Mock.on('click', '[data-act="next"]', function (e, t, dev) { var s = st(dev); s.active = firstPend(s); s.screen = 'detail'; render(dev); });
+
+  Mock.on('change', '.day-chk', function (e, t, dev) { updateDecision(dev, t.closest('.decision')); });
+  Mock.on('input', '.motivo, .motivo-r', function (e, t, dev) { updateDecision(dev, t.closest('.decision')); });
+  Mock.on('click', '[data-act="refuse"]', function (e, t, dev) { var b = t.closest('.decision'); b.classList.add('is-refusing'); var ta = $('.motivo-r', b); if (ta) ta.focus(); updateDecision(dev, b); });
+  Mock.on('click', '[data-act="refuse-cancel"]', function (e, t, dev) { var b = t.closest('.decision'); b.classList.remove('is-refusing'); updateDecision(dev, b); });
+
+  function finish(dev, r) {
+    var s = st(dev);
+    Mock.closeSheet(dev);
+    delete s.sel[r.id];
+    if (s.v === 'b') s.active = null;
+    if (s.v === 'c') s.active = r.id;
+    render(dev);
+    Mock.toast(dev, r.st === 'appr' ? 'Aprovado: ' + r.who + ' · ' + plural(r.counted.length, 'dia descontado', 'dias descontados') : 'Recusado: ' + r.who);
+  }
+  Mock.on('click', '[data-act="approve"]', function (e, t, dev) {
+    var box = t.closest('.decision'), s = st(dev), r = find(s, box.dataset.req);
+    var chk = $$('.day-chk', box), ok = chk.filter(function (x) { return x.checked; }).map(function (x) { return x.dataset.date; });
+    r.st = 'appr'; r.counted = ok; r.adj = ok.length < chk.length ? $('.motivo', box).value.trim() : '';
+    finish(dev, r);
+  });
+  Mock.on('click', '[data-act="refuse-go"]', function (e, t, dev) {
+    var box = t.closest('.decision'), s = st(dev), r = find(s, box.dataset.req);
+    r.st = 'rec'; r.refusal = $('.motivo-r', box).value.trim();
+    finish(dev, r);
+  });
+  Mock.on('click', '[data-act="bulk-go"]', function (e, t, dev) {
+    var s = st(dev), items = pend(s).filter(function (r) { return s.sel[r.id]; });
+    items.forEach(function (r) { r.st = 'appr'; r.counted = proposed(r.start, r.end); delete s.sel[r.id]; });
+    Mock.closeSheet(dev); render(dev);
+    Mock.toast(dev, 'Aprovados: ' + plural(items.length, 'pedido', 'pedidos'));
+  });
+})();
+</script>
+</body>
+</html>
