@@ -77,6 +77,8 @@ a { color: inherit; text-decoration: none; }
 }
 .variant-notes b { font-weight: 600; }
 .variant-notes .note-extra { margin-top: 4px; font-size: 12px; color: var(--mut); }
+.variant-missing { max-width: 1180px; margin: 0 auto 16px; padding: 12px 14px; font-size: 14px; background: var(--warn-bg); color: var(--warn-tx); border: 1px solid var(--warn-bd, var(--border)); border-left: 4px solid var(--warn-tx); border-radius: 8px; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+.variant-missing[hidden] { display: none; }
 .stage { display: flex; flex-wrap: wrap; gap: 28px 24px; align-items: flex-start; justify-content: center; }
 .stage-item { min-width: 0; max-width: 100%; }
 .stage-cap { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; color: var(--mut); }
@@ -478,6 +480,76 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
 .req-panel { position: relative; }
 .sheet__box--dock { border-radius: 16px 16px 0 0; }
 .tl-sec { margin-top: 16px; }
+.blk--folga { border-radius: 7px; }
+
+/* Aviso da quarta-feira (folga rotativa): ícone âmbar e tooltip próprio dentro do .device */
+.device .wed-ico { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; min-height: 0; padding: 0; margin-left: 4px; border: none; border-radius: 6px; background: transparent; color: var(--warn-tx); cursor: help; vertical-align: middle; flex: none; }
+.device button.wed-ico:hover { background: var(--warn-bg); }
+.device .wed-ico svg { display: block; }
+.wed-tip { position: absolute; z-index: 70; max-width: min(260px, calc(100% - 16px)); padding: 8px 10px; border-radius: 8px; background: var(--warn-bg); color: var(--warn-tx); border: 1px solid var(--warn-bd); font-size: 13px; line-height: 1.4; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2); pointer-events: none; }
+.wed-tip[hidden] { display: none; }
+.when-wrap { display: inline-flex; align-items: center; flex-wrap: wrap; }
+@container app (max-width: 768px) {
+  .device button.wed-ico { width: 44px; height: 44px; margin: -10px 0; }
+  .wed-tip { font-size: 14px; }
+}
+.wed-cell { align-self: end; padding-bottom: 18px; }
+.wed-cell:empty { display: none; }
+@container app (max-width: 768px) { .wed-cell { padding-bottom: 12px; } }
+
+/* Tipo de pedido, nota e regra (formulários A, C, D e calendário B) */
+.kind-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.kind-lbl { font-size: 12px; color: var(--mut); }
+.device .kind-row .seg button { min-height: 40px; padding: 6px 14px; font-size: 14px; }
+.note-lbl { margin-bottom: 12px; }
+.device .note-lbl textarea, .device .note-lbl input { max-width: none; width: 100%; }
+.device .note-lbl textarea { resize: vertical; }
+.rule-badge { margin-top: 10px; white-space: normal; }
+.rule-badge[hidden] { display: none; }
+.cal-card .kind-row { margin: 8px 0 4px; }
+
+/* D · formulário no topo, saldo simples e pedidos em cartões */
+.d-form { margin-bottom: 12px; }
+.d-form .form-head h2 { font-size: 17px; }
+.d-saldo { margin-bottom: 4px; }
+.d-saldo h2 { font-size: 15px; }
+.ds-main { margin-top: 4px; font-size: 15px; }
+.ds-main b { font-size: 30px; line-height: 1.1; color: var(--ok-tx); font-variant-numeric: tabular-nums; }
+.ds-sub { font-size: 14px; color: var(--mut); margin-top: 2px; }
+.d-h { font-size: 17px; font-weight: 600; margin: 16px 0 8px; }
+.d-cards { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+.req-card {
+  display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; font-size: 14px;
+  background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--hint); border-radius: 10px;
+}
+.req-card--pendente { border-left-color: var(--warn-bd); }
+.req-card--aprovado, .req-card--ajustado { border-left-color: var(--ok-bd); }
+.req-card--recusado { border-left-color: var(--er-bd); }
+.req-card.is-new { background: var(--warn-bg); }
+.rc-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.rc-when { font-size: 18px; font-weight: 600; }
+.rc-adj { font-weight: 600; color: var(--ok-tx); }
+.rc-meta, .rc-note { color: var(--mut); }
+.req-card .btn-line { margin-top: 6px; }
+@container app (min-width: 800px) {
+  .d-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .d-form .date-pair { max-width: 520px; }
+}
+
+/* Telemóvel: alvos de toque de 44 px e texto de pelo menos 14 px (decisão 4 do briefing); vale também para a folha inferior do formulário */
+@container app (max-width: 768px) {
+  :is(.mf, .sheet__box) .btn-row, :is(.mf, .sheet__box) button.primary, :is(.mf, .sheet__box) .seg button, .device .kind-row .seg button,
+  :is(.mf, .sheet__box) input, :is(.mf, .sheet__box) select, :is(.mf, .sheet__box) textarea, .device .cal-nav button { min-height: 44px; }
+  :is(.mf, .sheet__box) .btn-row { display: inline-flex; align-items: center; justify-content: center; }
+  :is(.mf, .sheet__box) .small, :is(.mf, .sheet__box) [class^='badge-'], .device :is(.mf, .sheet__box) label, .kind-lbl, .bal-tile .lbl, .bal-tile .sub,
+  .seg-legend, .cal-hint, .pv-hint, .pv-sub, .cal-dow span, .tl-labels span, .tl-legend, .stats .st, .stats .st small, .mf-head p, .cal-legend ul, .tl-today i,
+  .legend-note, .prev-note, .mf table td .small, .sg { font-size: 14px; }
+  .device :is(.mf, .sheet__box) .btn-row, .device :is(.mf, .sheet__box) .btn-row.btn-row-quiet, .device :is(.mf, .sheet__box) .btn-row.danger { font-size: 14px; }
+  .strip-days li { width: 46px; font-size: 14px; }
+  .strip-days li b { font-size: 15px; }
+  .blk::after { inset: -9px -15px; }
+  .mf td [class^='badge-'], .req-card [class^='badge-'] { white-space: normal; }
+}
 </style>
 </head>
 <body data-view="both">
@@ -489,6 +561,7 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
     <button type="button" role="tab" id="tab-a" data-variant="a" aria-controls="panel-a" aria-selected="false">A · Mosaicos e formulário</button>
     <button type="button" role="tab" id="tab-b" data-variant="b" aria-controls="panel-b" aria-selected="false">B · Escolher no calendário</button>
     <button type="button" role="tab" id="tab-c" data-variant="c" aria-controls="panel-c" aria-selected="false">C · Linha do tempo</button>
+    <button type="button" role="tab" id="tab-d" data-variant="d" aria-controls="panel-d" aria-selected="false">D · Formulário e cartões (novo)</button>
   </div>
   <div class="mock-view" role="group" aria-label="Dispositivos">
     <button type="button" data-view="both" aria-pressed="true">Ambos</button>
@@ -504,6 +577,7 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
       <p><b>Vantagens:</b> tudo num ecrã e 3 gestos (início, fim, «Pedir férias»): o fim preenche-se sozinho com o início, e vê-se logo o que não conta e o saldo que fica.</p>
       <p><b>Custo:</b> dois seletores de data nativos (no telemóvel abrem duas vezes o calendário do sistema) e não mostra os dias já ocupados.</p>
       <p class="note-extra">Conta sem ficha de funcionário: o ecrã mostra «A sua conta não tem ficha de funcionário» e não mostra saldo, pedidos nem formulário. Quartas de folga contam: a regra é seg–sex sem feriados. Experimente 04/01–08/01/2027 (conta 5, no saldo de 2027) ou 14/12–28/12 (sobrepõe-se ao encerramento previsto).</p>
+      <p class="note-extra">O cartão «Pedir folga ou férias» tem o seletor de tipo («Férias» ou «Folga rotativa», um só dia) e uma nota opcional. A lista dos pedidos mostra o estado de cada um (Pendente, Aprovado, Aprovado com datas ajustadas, com o pedido e o aprovado lado a lado, e Recusado, com a nota) e permite cancelar os pendentes. Uma folga rotativa também se pode pedir à quarta-feira: aparece um ícone de aviso (tooltip ao passar o rato ou focar; toque a 375 px).</p>
     </div>
   </section>
   <section role="tabpanel" id="panel-b" aria-labelledby="tab-b" data-variant="b" hidden>
@@ -512,6 +586,7 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
       <p><b>Vantagens:</b> vê-se o que já está ocupado (férias, pendentes, encerramento previsto) ao escolher, sem escrever datas; 3 toques: início, fim, «Pedir».</p>
       <p><b>Custo:</b> mais altura a 375 px e, num período que passa de um mês ao seguinte, é preciso navegar (a seleção mantém-se).</p>
       <p class="note-extra">Conta sem ficha de funcionário: o ecrã mostra «A sua conta não tem ficha de funcionário» e não mostra saldo, pedidos nem calendário. Quartas de folga contam: a regra é seg–sex sem feriados.</p>
+      <p class="note-extra">Por cima do calendário escolhe-se o tipo: «Férias» (primeiro e último dia) ou «Folga rotativa» (um toque, um dia). A nota é opcional e fica no resumo. Os pedidos, os estados (incluindo «Aprovado com datas ajustadas» e a nota da recusa) e o cancelamento dos pendentes estão em «Os meus pedidos».</p>
     </div>
   </section>
   <section role="tabpanel" id="panel-c" aria-labelledby="tab-c" data-variant="c" hidden>
@@ -520,6 +595,15 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
       <p><b>Vantagens:</b> o ano e o saldo lidos numa linha, com as lacunas à vista; os pedidos ficam agrupados por estado, e o pedido novo aparece logo na linha do tempo.</p>
       <p><b>Custo:</b> a 375 px os períodos curtos ficam estreitos (3 dias ≈ 14 px) e as datas escolhem-se em dois seletores, sem calendário.</p>
       <p class="note-extra">Conta sem ficha de funcionário: o ecrã mostra «A sua conta não tem ficha de funcionário» e não mostra saldo, linha do tempo nem pedidos. A linha do tempo vai até Janeiro de 2027 para mostrar o pedido pendente.</p>
+      <p class="note-extra">«Pedir folga ou férias» abre o formulário com o seletor de tipo e a nota. As folgas rotativas (um dia) aparecem na linha do tempo como blocos estreitos; o detalhe de cada período mostra o estado, as datas pedidas e aprovadas e permite cancelar os pendentes.</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-d" aria-labelledby="tab-d" data-variant="d" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> um formulário único no topo (Tipo: «Folga rotativa» ou «Férias»; datas; nota; «Enviar»), um cartão simples com o saldo de férias e, por baixo, «Os meus pedidos» em cartões, um por pedido, com o estado, as datas e o botão de cancelar nos pendentes.</p>
+      <p><b>Vantagens:</b> é o desenho mais curto de percorrer no telemóvel: pede-se e acompanha-se no mesmo ecrã, sem calendário, mosaicos nem linha do tempo; cada cartão diz sozinho o que aconteceu (pedido e aprovado lado a lado, nota da recusa, semana da escala).</p>
+      <p><b>Custo:</b> as datas escolhem-se em seletores nativos e não se vêem os dias já ocupados nem o encerramento previsto (só o aviso depois de escolher).</p>
+      <p class="note-extra">Conta sem ficha de funcionário: o ecrã mostra «A sua conta não tem ficha de funcionário» e não mostra saldo, pedidos nem formulário. Uma folga rotativa também se pode pedir à quarta-feira: aparece um ícone de aviso (tooltip ao passar o rato ou focar; toque a 375 px). A folga aprovada diz em que semana da escala entra como folga fixada.</p>
     </div>
   </section>
 </main>
@@ -561,6 +645,9 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
           <h2 data-slot="monthname" aria-live="polite"></h2>
           <button type="button" class="secondary" data-act="month" data-dir="1" aria-label="Mês seguinte">›</button>
         </div>
+        <div class="kind-row"><span class="kind-lbl">Tipo</span><div class="seg" role="group" aria-label="Tipo de pedido">
+          <button type="button" data-act="bkind" data-k="ferias" aria-pressed="true">Férias (período)</button>
+          <button type="button" data-act="bkind" data-k="folga" aria-pressed="false">Folga rotativa (um dia)</button></div></div>
         <p class="cal-hint" data-slot="hint" aria-live="polite"></p>
         <div class="cal-dow" aria-hidden="true"><span>seg</span><span>ter</span><span>qua</span><span>qui</span><span>sex</span><span>sáb</span><span>dom</span></div>
         <div class="cal-grid" data-slot="grid"></div>
@@ -612,6 +699,21 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
       </div>
       <aside class="card req-form req-panel" data-slot="formbox" data-form-kind="panel" aria-label="Pedir férias" hidden></aside>
     </div>
+  </main>
+</template>
+
+<template data-variant="d" data-active="As minhas férias" data-title="As minhas férias" data-user="Inês Calado">
+  <main class="mf">
+    <header class="mf-head">
+      <h1>As minhas férias</h1>
+      <p>Peça uma folga rotativa ou férias e acompanhe os pedidos · data de referência 01/10/2026</p>
+    </header>
+    <section class="card req-form d-form" data-slot="formbox" data-form-kind="inline" aria-label="Novo pedido"></section>
+    <section class="card d-saldo" data-slot="dsaldo" aria-label="Saldo de férias"></section>
+    <section aria-label="Os meus pedidos">
+      <h2 class="d-h">Os meus pedidos</h2>
+      <div class="d-cards" data-slot="cards"></div>
+    </section>
   </main>
 </template>
 
@@ -729,7 +831,7 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
       }).join('');
     }).join('');
     app.innerHTML =
-      '<aside class="app-side" aria-label="Menu principal"><div class="app-logo">GIG</div><nav>' + nav + '</nav>' +
+      '<aside class="app-side" aria-label="Menu principal"><div class="app-logo">GiG</div><nav>' + nav + '</nav>' +
       '<div class="app-user"><span class="app-user__name">' + esc(user) + '</span><button type="button" data-route="/login">Sair</button></div></aside>' +
       '<div class="app-scrim" data-act-scrim></div>' +
       '<div class="app-main"><div class="app-top"><button type="button" class="app-burger" aria-expanded="false" aria-label="Abrir menu">☰</button>' +
@@ -760,13 +862,31 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     panel.dataset.rendered = '1';
   }
 
-  /* separadores A/B/C (hash #a/#b/#c) e alternador de dispositivos */
-  var tabs = $$('.mock-bar [role="tab"]'), panels = $$('[role="tabpanel"]');
+  /* separadores derivados dos <template data-variant> (hash #a, #b, ...) e alternador de dispositivos */
+  var VARIANTS = $$('template[data-variant]').map(function (t) { return t.dataset.variant; }).sort();
+  var tablist = $('.mock-tabs'), mainEl = $('.mock-main'), notice = mk('div', 'variant-missing');
+  notice.hidden = true; notice.setAttribute('role', 'alert'); mainEl.insertBefore(notice, mainEl.firstChild);
+  $$('.mock-bar [role="tab"], [role="tabpanel"][data-variant]').forEach(function (el) { if (VARIANTS.indexOf(el.dataset.variant) < 0) el.remove(); });
+  VARIANTS.forEach(function (v) {
+    if (!$('#tab-' + v)) {
+      var b = mk('button', ''); b.type = 'button'; b.id = 'tab-' + v; b.dataset.variant = v; b.setAttribute('role', 'tab');
+      b.setAttribute('aria-controls', 'panel-' + v); b.setAttribute('aria-selected', 'false'); b.textContent = v.toUpperCase(); tablist.appendChild(b);
+    }
+    if (!$('#panel-' + v)) {
+      var p = mk('section', ''); p.id = 'panel-' + v; p.dataset.variant = v; p.hidden = true; p.setAttribute('role', 'tabpanel'); p.setAttribute('aria-labelledby', 'tab-' + v);
+      mainEl.appendChild(p);
+    }
+  });
+  var tabs = $$('.mock-bar [role="tab"]'), panels = $$('[role="tabpanel"][data-variant]');
   function select(v, focus) {
-    if (!tabs.some(function (t) { return t.dataset.variant === v; })) v = tabs[0].dataset.variant;
-    tabs.forEach(function (t) { var o = t.dataset.variant === v; t.setAttribute('aria-selected', String(o)); t.tabIndex = o ? 0 : -1; if (o && focus) t.focus(); });
-    panels.forEach(function (p) { p.hidden = p.dataset.variant !== v; if (p.dataset.variant === v && !p.dataset.rendered) mount(p); });
-    if (location.hash.slice(1) !== v) { try { history.replaceState(null, '', '#' + v); } catch (e) { /* file:// restrito */ } }
+    var missing = null;
+    if (VARIANTS.indexOf(v) < 0) { if (v) missing = v; v = VARIANTS[0]; }
+    tabs.forEach(function (t) { var o = !missing && t.dataset.variant === v; t.setAttribute('aria-selected', String(o)); t.tabIndex = o || (missing && t.dataset.variant === v) ? 0 : -1; if (o && focus) t.focus(); });
+    panels.forEach(function (p) { p.hidden = !!missing || p.dataset.variant !== v; if (!p.hidden && !p.dataset.rendered) mount(p); });
+    notice.hidden = !missing;
+    if (missing) {
+      notice.innerHTML = '<span>Esta funcionalidade não tem a variante ' + esc(missing.toUpperCase()) + '.</span> <a class="btn-row" href="#' + esc(VARIANTS[0]) + '">Ver a variante ' + esc(VARIANTS[0].toUpperCase()) + '</a>';
+    } else if (location.hash.slice(1) !== v) { try { history.replaceState(null, '', '#' + v); } catch (e) { /* file:// restrito */ } }
   }
   function setView(v) {
     document.body.dataset.view = v;
@@ -816,18 +936,27 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
   var $ = Mock.$, $$ = Mock.$$, esc = Mock.esc;
 
   /* ── Dados fictícios (briefing comum) ── */
-  var TODAY = '2026-10-03', YEAR = '2026', BASE = 15, REFERENCE = '2026-10-01';
+  var TODAY = '2026-10-03', YEAR = '2026', BASE = 15, REFERENCE = '2026-10-01', MIN_DATE = '2026-10-04', MAX_DATE = '2027-12-31';
+  var GESTORA = 'Joana Valente';
   var WD = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
   var MONTHS = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
   var MON3 = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
   var PREV = { name: 'Natal', start: '2026-12-14', end: '2026-12-28' };
   var NAV_MONTHS = ['2026-10', '2026-11', '2026-12', '2027-01'];
-  var STATUS_ORDER = { Pendente: 0, Aprovado: 1, Recusado: 2, Cancelado: 3 };
-  var BADGE = { Aprovado: 'badge-ok', Pendente: 'badge-warn', Recusado: 'badge-err', Cancelado: 'badge-mut' };
+  var STATUS_ORDER = { Pendente: 0, Aprovado: 1, Ajustado: 1, Recusado: 2, Cancelado: 3 };
+  var BADGE = { Aprovado: 'badge-ok', Ajustado: 'badge-ok', Pendente: 'badge-warn', Recusado: 'badge-err', Cancelado: 'badge-mut' };
+  var LABEL = { Aprovado: 'Aprovado', Ajustado: 'Aprovado com datas ajustadas', Pendente: 'Pendente', Recusado: 'Recusado', Cancelado: 'Cancelado' };
+  var GROUPS = ['Pendente', 'Aprovado', 'Recusado', 'Cancelado'];
+  var KIND_LABEL = { ferias: 'Férias', folga: 'Folga rotativa' };
+  /* Ajustado: start/end são as datas aprovadas e orig as datas pedidas */
   var INITIAL = [
-    { id: 'a3', start: '2026-05-11', end: '2026-05-12', status: 'Aprovado' },
-    { id: 'a4', start: '2026-11-09', end: '2026-11-11', status: 'Aprovado' },
-    { id: 'p3', start: '2027-01-04', end: '2027-01-08', status: 'Pendente', at: '2026-10-02' }
+    { id: 'a3', kind: 'ferias', start: '2026-05-11', end: '2026-05-12', status: 'Aprovado' },
+    { id: 'a4', kind: 'ferias', start: '2026-11-09', end: '2026-11-11', status: 'Aprovado' },
+    { id: 'j1', kind: 'ferias', start: '2026-11-23', end: '2026-11-27', orig: { start: '2026-11-16', end: '2026-11-20' }, status: 'Ajustado', at: '2026-09-25', by: GESTORA, decided: '2026-10-01' },
+    { id: 'f2', kind: 'folga', start: '2026-10-23', end: '2026-10-23', status: 'Aprovado', at: '2026-09-29', by: GESTORA, decided: '2026-10-01' },
+    { id: 'r1', kind: 'ferias', start: '2026-12-21', end: '2026-12-24', status: 'Recusado', at: '2026-09-27', by: GESTORA, decided: '2026-10-01', reason: 'Semana de maior movimento. Sugiro 11–15/01.' },
+    { id: 'f1', kind: 'folga', start: '2026-10-16', end: '2026-10-16', status: 'Pendente', at: '2026-10-02' },
+    { id: 'p3', kind: 'ferias', start: '2027-01-04', end: '2027-01-08', status: 'Pendente', at: '2026-10-02' }
   ];
 
   /* ── Datas (UTC, sem fuso) ── */
@@ -844,10 +973,80 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     if (a === b) return dmy(a);
     return a.slice(0, 4) === b.slice(0, 4) ? dm(a) + '–' + dm(b) + '/' + b.slice(0, 4) : dmy(a) + '–' + dmy(b);
   }
+  /* «14–18/12», «30/11–04/12», «16/10»; o ano só aparece fora de 2026 */
+  function rng(a, b) {
+    var yy = (a.slice(0, 4) !== YEAR || b.slice(0, 4) !== YEAR) ? '/' + b.slice(0, 4) : '';
+    if (a === b) return dm(a) + yy;
+    if (a.slice(0, 7) === b.slice(0, 7)) return a.slice(8, 10) + '–' + dm(b) + yy;
+    return dm(a) + '–' + dm(b) + yy;
+  }
+  function isoWeek(s) {
+    var d = dt(s); d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7) + 3);
+    var jan4 = new Date(Date.UTC(d.getUTCFullYear(), 0, 4));
+    return 1 + Math.round(((d - jan4) / 864e5 - 3 + ((jan4.getUTCDay() + 6) % 7)) / 7);
+  }
   function plural(n, s, p) { return n + ' ' + (n === 1 ? s : p); }
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
 
-  /* ── Contagem: dias úteis seg–sex, sem feriados ── */
+
+  /* ── Aviso da quarta-feira (folga rotativa): tooltip ao passar o rato/focar (desktop), mostrar/esconder ao tocar (375 px) ── */
+  var WED_DOW = 3, WED_MSG = 'A quarta-feira já costuma ser dia de folga da casa (excepto na época alta).';
+  var WED_SVG = '<svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" focusable="false"><path d="M8 1.6 15 14H1z" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M8 6v4M8 11.7v.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+  function wedIcon() {
+    return '<button type="button" class="wed-ico" data-wed aria-label="Aviso sobre a quarta-feira" aria-expanded="false">' + WED_SVG + '</button>';
+  }
+  function tipEl(dev) {
+    var app = $('.app', dev), t = $('.wed-tip', app);
+    if (!t) {
+      t = document.createElement('div'); t.className = 'wed-tip'; t.setAttribute('role', 'tooltip'); t.id = Mock.uid('wedtip'); t.hidden = true; t.textContent = WED_MSG; app.appendChild(t);
+    }
+    return t;
+  }
+  function showTip(dev, ico) {
+    var t = tipEl(dev), app = $('.app', dev);
+    hideTip(dev); t.hidden = false; t._ico = ico; ico.setAttribute('aria-expanded', 'true');
+    var ar = app.getBoundingClientRect(), ir = ico.getBoundingClientRect(), w = t.offsetWidth, h = t.offsetHeight;
+    var left = Math.min(Math.max(8, ir.left - ar.left + ir.width / 2 - w / 2), Math.max(8, ar.width - w - 8));
+    var top = ir.bottom - ar.top + 4;
+    if (top + h > ar.height - 4) top = ir.top - ar.top - h - 4;
+    t.style.left = left + 'px'; t.style.top = Math.max(4, top) + 'px';
+  }
+  function hideTip(dev) {
+    var t = $('.wed-tip', dev); if (!t || t.hidden) return;
+    t.hidden = true; if (t._ico) t._ico.setAttribute('aria-expanded', 'false');
+  }
+  function wireWed(dev) { var t = tipEl(dev); $$('[data-wed]', dev).forEach(function (i) { i.setAttribute('aria-describedby', t.id); }); }
+  var isDesktop = function (dev) { return dev.dataset.kind === 'desktop'; };
+  Mock.on('mouseover', '[data-wed]', function (e, t, dev) { if (isDesktop(dev)) showTip(dev, t); });
+  Mock.on('mouseout', '[data-wed]', function (e, t, dev) { if (isDesktop(dev) && !t.contains(e.relatedTarget) && !t.matches(':focus-visible')) hideTip(dev); });
+  Mock.on('focusin', '[data-wed]', function (e, t, dev) { if (isDesktop(dev)) showTip(dev, t); });
+  Mock.on('focusout', '[data-wed]', function (e, t, dev) { if (isDesktop(dev)) hideTip(dev); });
+  Mock.on('click', '[data-wed]', function (e, t, dev) {
+    var tip = $('.wed-tip', dev), open = tip && !tip.hidden && tip._ico === t;
+    if (isDesktop(dev)) showTip(dev, t); else if (open) hideTip(dev); else showTip(dev, t);
+  });
+  document.addEventListener('click', function (e) {
+    if (e.target.closest && e.target.closest('[data-wed]')) return;
+    $$('.wed-tip:not([hidden])').forEach(function (t) { hideTip(t.closest('.device')); });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') $$('.wed-tip:not([hidden])').forEach(function (t) { hideTip(t.closest('.device')); });
+  });
+
+  function wedMark(q) { return isFolga(q) && dow(q.start) === WED_DOW ? wedIcon() : ''; }
+
+  /* ── Tipo e estado de um pedido ── */
+  function isFolga(q) { return q.kind === 'folga'; }
+  function isOpen(q) { return q.status === 'Aprovado' || q.status === 'Ajustado' || q.status === 'Pendente'; }
+  function isOk(q) { return q.status === 'Aprovado' || q.status === 'Ajustado'; }
+  function kindBadge(q) { return '<span class="' + (isFolga(q) ? 'badge-info' : 'badge-mut') + '">' + KIND_LABEL[q.kind] + '</span>'; }
+  function stateBadge(q) { return '<span class="' + BADGE[q.status] + '">' + LABEL[q.status] + '</span>'; }
+  function qPeriod(q) { return isFolga(q) ? wdl(q.start) + '/' + q.start.slice(0, 4) : period(q.start, q.end); }
+  function adjTxt(q) { return 'pedido ' + rng(q.orig.start, q.orig.end) + ' → aprovado ' + rng(q.start, q.end); }
+  function weekNote(q) { return isFolga(q) && isOk(q) ? 'Entra na escala da semana ' + isoWeek(q.start) + ' como folga fixada' : ''; }
+  function grpOf(q) { return q.status === 'Ajustado' ? 'Aprovado' : q.status; }
+
+  /* ── Contagem de férias: dias úteis seg–sex, sem feriados ── */
   function count(a, b) {
     var days = [], counted = [], skipped = [];
     for (var s = a; s <= b; s = addDays(s, 1)) {
@@ -858,18 +1057,26 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     }
     return { days: days, counted: counted, skipped: skipped };
   }
-  function isOpen(q) { return q.status === 'Aprovado' || q.status === 'Pendente'; }
+  function countQ(q) { return isFolga(q) ? { days: [{ iso: q.start, kind: 'on' }], counted: [q.start], skipped: [] } : count(q.start, q.end); }
   function balance(reqs) {
     var g = 0, r = 0, p = 0, pOther = 0, pendingByYear = {};
     reqs.forEach(function (q) {
+      if (isFolga(q)) return;
       var c = count(q.start, q.end).counted;
-      if (q.status === 'Aprovado') c.forEach(function (x) { if (x.slice(0, 4) === YEAR && x >= REFERENCE) { if (x <= TODAY) g++; else r++; } });
+      if (isOk(q)) c.forEach(function (x) { if (x.slice(0, 4) === YEAR && x >= REFERENCE) { if (x <= TODAY) g++; else r++; } });
       if (q.status === 'Pendente') { c.forEach(function (x) { var y = x.slice(0, 4); pendingByYear[y] = (pendingByYear[y] || 0) + 1; }); p += c.filter(function (x) { return x.slice(0, 4) === YEAR; }).length; pOther += c.filter(function (x) { return x.slice(0, 4) !== YEAR; }).length; }
     });
     return { base: BASE, g: g, r: r, p: p, pOther: pOther, pendingByYear: pendingByYear, avail: BASE - g - r };
   }
   function otherPending(b) { return Object.keys(b.pendingByYear).filter(function (y) { return y !== YEAR; }).sort().map(function (y) { return b.pendingByYear[y] + ' em ' + y; }).join(' · '); }
-  function analyse(a, b, st) {
+  function overlaps(st, a, b) { return st.reqs.filter(function (q) { return isOpen(q) && q.start <= b && q.end >= a; }); }
+  /* férias: dois dias; folga rotativa: um dia (b = a) */
+  function analyse(a, b, st, kind) {
+    if (kind === 'folga') {
+      if (!a) return { kind: 'empty' };
+      if (a <= TODAY) return { kind: 'past' };
+      return { kind: 'ok', folga: true, n: 1, n26: 0, other: 0, span: 1, c: countQ({ kind: 'folga', start: a, end: a }), over: overlaps(st, a, a), prev: PREV.start <= a && PREV.end >= a, exceeds: false };
+    }
     if (!a || !b) return { kind: 'empty' };
     if (a <= TODAY) return { kind: 'past' };
     if (b < a) return { kind: 'order' };
@@ -879,7 +1086,7 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     return {
       kind: 'ok', n: c.counted.length, n26: n26, other: c.counted.length - n26, span: c.days.length, c: c,
       avail: bal.avail, after: bal.avail - n26, exceeds: n26 > bal.avail,
-      over: st.reqs.filter(function (q) { return isOpen(q) && q.start <= b && q.end >= a; }),
+      over: overlaps(st, a, b),
       prev: PREV.start <= b && PREV.end >= a
     };
   }
@@ -896,10 +1103,13 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
         WD[dow(x.iso)] + '<b>' + x.iso.slice(8, 10) + '</b></li>';
     }).join('') + '</ul>';
   }
+  function overLabel(q) {
+    return (isFolga(q) ? 'à folga rotativa de ' + dm(q.start) : 'ao pedido de férias de ' + period(q.start, q.end)) + ' (' + LABEL[q.status] + ')';
+  }
   function warnHtml(an) {
     var h = '';
-    if (an.exceeds) h += '<p class="alert-warn">Excede o disponível (' + an.avail + ' em 2026): pode pedir na mesma, a decisão é do gestor.</p>';
-    an.over.forEach(function (q) { h += '<p class="alert-warn">Sobrepõe-se ao pedido de ' + period(q.start, q.end) + ' (' + q.status + ').</p>'; });
+    if (an.exceeds) h += '<p class="alert-warn">Excede o disponível (' + an.avail + ' em 2026): pode pedir na mesma, a decisão é da gestora.</p>';
+    an.over.forEach(function (q) { h += '<p class="alert-warn">Sobrepõe-se ' + overLabel(q) + '.</p>'; });
     if (an.prev) h += '<p class="alert-info">Sobrepõe-se ao encerramento previsto «' + PREV.name + '» (' + period(PREV.start, PREV.end) + ').</p>';
     return h;
   }
@@ -911,10 +1121,13 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
   }
   function previewHtml(an, a, b) {
     switch (an.kind) {
-      case 'empty': return '<p class="pv-hint muted">Escolha o primeiro e o último dia. Contam só os dias úteis, de segunda a sexta, sem feriados.</p>';
-      case 'past': return '<p class="alert-err">O primeiro dia tem de ser depois de hoje (03/10/2026).</p>';
+      case 'empty': return '<p class="pv-hint muted">' + emptyHint('ferias') + '</p>';
+      case 'past': return '<p class="alert-err">A data tem de ser depois de hoje (03/10/2026).</p>';
       case 'order': return '<p class="alert-err">O último dia é anterior ao primeiro.</p>';
       case 'long': return '<p class="alert-err">Período demasiado longo: confirme as datas.</p>';
+    }
+    if (an.folga) {
+      return '<p class="pv-count" role="status">Folga rotativa <b>1</b> dia</p><p class="pv-sub">' + wdl(a) + '/' + a.slice(0, 4) + ' · não desconta dias de férias · fica «Pendente» até a gestora decidir</p>' + warnHtml(an);
     }
     var h = '<p class="pv-count" role="status">Conta <b>' + an.n + '</b> ' + (an.n === 1 ? 'dia' : 'dias') + '</p>';
     h += '<p class="pv-sub">' + period(a, b) + ' · ' + plural(an.span, 'dia seguido', 'dias seguidos') +
@@ -923,15 +1136,28 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     if (an.n === 0) h += '<p class="alert-warn">Só fins de semana e feriados: não há dias a descontar.</p>';
     return h + leftHtml(an) + warnHtml(an);
   }
+  function emptyHint(kind) {
+    return kind === 'folga'
+      ? 'Escolha o dia da folga rotativa.'
+      : 'Escolha o primeiro e o último dia. Contam só os dias úteis, de segunda a sexta, sem feriados.';
+  }
 
-  var FORM_INNER = function (closable) {
-    return '<div class="form-head"><h2>Pedir férias</h2><span class="badge-warn" title="Dias úteis (seg–sex, sem feriados). A confirmar com o contabilista.">Regra de contagem por validar</span>' +
+  /* Formulário: tipo, datas, nota. opts.title, opts.submit (rótulo fixo do botão) */
+  var FORM_INNER = function (closable, opts) {
+    opts = opts || {};
+    return '<div class="form-head"><h2>' + (opts.title || 'Pedir folga ou férias') + '</h2>' +
       (closable ? '<button type="button" class="btn-row btn-row-quiet" data-act="close-form" data-close-sheet>Fechar</button>' : '') + '</div>' +
-      '<div class="date-pair"><label>Início<input type="date" data-field="start" min="2026-10-04" max="2027-12-31"></label>' +
-      '<label>Fim<input type="date" data-field="end" min="2026-10-04" max="2027-12-31"></label></div>' +
+      '<div class="kind-row"><span class="kind-lbl">Tipo</span><div class="seg" role="group" aria-label="Tipo de pedido">' +
+      '<button type="button" data-act="kind" data-k="ferias" aria-pressed="true">Férias</button>' +
+      '<button type="button" data-act="kind" data-k="folga" aria-pressed="false">Folga rotativa</button></div></div>' +
+      '<div class="date-pair"><label><span class="lbl-start">Início</span><input type="date" data-field="start" min="' + MIN_DATE + '" max="' + MAX_DATE + '"></label>' +
+      '<label class="lbl-end"><span>Fim</span><input type="date" data-field="end" min="' + MIN_DATE + '" max="' + MAX_DATE + '"></label>' +
+      '<div class="wed-cell" data-slot="wed"></div></div>' +
+      '<label class="note-lbl"><span>Nota (opcional)</span><textarea data-field="note" rows="2" maxlength="200" placeholder="Ex.: casamento de uma amiga"></textarea></label>' +
       '<div class="pv" data-slot="preview" aria-live="polite"></div>' +
-      '<div class="btn-line"><button type="button" class="primary" data-act="submit" disabled>Pedir férias</button>' +
-      '<button type="button" class="btn-row btn-row-quiet" data-act="clear">Limpar</button></div>';
+      '<div class="btn-line"><button type="button" class="primary" data-act="submit"' + (opts.submit ? ' data-fixed-label="1"' : '') + ' disabled>' + (opts.submit || 'Pedir férias') + '</button>' +
+      '<button type="button" class="btn-row btn-row-quiet" data-act="clear">Limpar</button></div>' +
+      '<p class="badge-warn rule-badge" title="Dias úteis (seg–sex, sem feriados). A confirmar com o contabilista.">Regra de contagem das férias por validar</p>';
   };
 
   /* ── Lista de pedidos (.table--cards, data-label em cada td, menos na acção) ── */
@@ -939,34 +1165,68 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     return list.slice().sort(function (x, y) { return (STATUS_ORDER[x.status] - STATUS_ORDER[y.status]) || (x.start < y.start ? -1 : 1); });
   }
   function decisionHtml(q) {
+    var nt = weekNote(q), by = q.by ? esc(q.by) + ' · ' + dmy(q.decided) : '';
     switch (q.status) {
-      case 'Aprovado': return q.by && q.decided ? 'Aprovado por ' + esc(q.by) + ' em ' + dmy(q.decided) : 'Pedido aprovado';
+      case 'Aprovado': return (q.by ? (isFolga(q) ? 'Folga aprovada' : 'Aprovado') + '<span class="small muted">' + by + '</span>' : 'Pedido aprovado') + (nt ? '<span class="small">' + nt + '</span>' : '');
+      case 'Ajustado': return 'Aprovado com datas ajustadas: ' + adjTxt(q) + '<span class="small muted">' + by + '</span>';
       case 'Pendente': return 'Pedido em ' + dmy(q.at) + ' · aguarda decisão';
-      case 'Recusado': return '«' + esc(q.reason) + '»<span class="small muted">' + esc(q.by) + ' · ' + dmy(q.decided) + '</span>';
+      case 'Recusado': return '«' + esc(q.reason) + '»<span class="small muted">' + by + '</span>';
       default: return 'Cancelado por si em ' + dmy(q.decided);
     }
   }
-  function reqRow(q) {
+  function subState(q) {
+    if (isFolga(q) || !isOk(q)) return '';
+    return q.end < REFERENCE ? 'Histórico anterior à referência' : q.end <= TODAY ? 'Gozado' : (q.start > TODAY ? 'Reservado' : 'A decorrer');
+  }
+  function contaHtml(q) {
+    if (isFolga(q)) return '<span class="muted">—</span>';
     var c = count(q.start, q.end), hol = c.skipped.filter(function (x) { return x.kind === 'feriado'; });
-    var sub = q.status === 'Aprovado' ? (q.end < REFERENCE ? 'Histórico anterior à referência' : q.end <= TODAY ? 'Gozado' : (q.start > TODAY ? 'Reservado' : 'A decorrer')) : '';
+    return plural(c.counted.length, 'dia', 'dias') + (hol.length ? '<span class="small muted">' + hol.map(function (x) { return dm(x.iso) + ' é feriado'; }).join(', ') + '</span>' : '');
+  }
+  function periodCell(q) {
+    return '<span class="when-wrap"><b>' + qPeriod(q) + '</b>' + wedMark(q) + '</span>' + (q.status === 'Ajustado' ? '<span class="small muted">pedido: ' + period(q.orig.start, q.orig.end) + '</span>' : '') +
+      (q.note ? '<span class="small muted">Nota: «' + esc(q.note) + '»</span>' : '');
+  }
+  function reqRow(q) {
+    var sub = subState(q);
     return '<tr' + (q.fresh ? ' class="is-new"' : '') + ' data-rid="' + q.id + '">' +
-      '<td data-label="Período"><b>' + period(q.start, q.end) + '</b></td>' +
-      '<td data-label="Conta">' + plural(c.counted.length, 'dia', 'dias') +
-      (hol.length ? '<span class="small muted">' + hol.map(function (x) { return dm(x.iso) + ' é feriado'; }).join(', ') + '</span>' : '') + '</td>' +
-      '<td data-label="Estado"><span class="' + BADGE[q.status] + '">' + q.status + '</span>' + (sub ? '<span class="small muted">' + sub + '</span>' : '') + '</td>' +
+      '<td data-label="Tipo">' + kindBadge(q) + '</td>' +
+      '<td data-label="Período">' + periodCell(q) + '</td>' +
+      '<td data-label="Conta">' + contaHtml(q) + '</td>' +
+      '<td data-label="Estado">' + stateBadge(q) + (sub ? '<span class="small muted">' + sub + '</span>' : '') + '</td>' +
       '<td data-label="Decisão">' + decisionHtml(q) + '</td>' +
       '<td class="act">' + (q.status === 'Pendente' ? '<button type="button" class="btn-row danger" data-act="cancel" data-rid="' + q.id + '">Cancelar pedido</button>' : '') + '</td></tr>';
   }
   function reqTable(list) {
-    return '<table class="table--cards"><thead><tr><th>Período</th><th>Conta</th><th>Estado</th><th>Decisão</th><th><span class="sr-only">Ações</span></th></tr></thead><tbody>' +
+    return '<table class="table--cards"><thead><tr><th>Tipo</th><th>Período</th><th>Conta</th><th>Estado</th><th>Decisão</th><th><span class="sr-only">Ações</span></th></tr></thead><tbody>' +
       list.map(reqRow).join('') + '</tbody></table>';
   }
   function listFlat(st) { return reqTable(sortReqs(st.reqs)); }
   function listGrouped(st) {
-    return ['Pendente', 'Aprovado', 'Recusado', 'Cancelado'].map(function (s) {
-      var l = sortReqs(st.reqs.filter(function (q) { return q.status === s; }));
-      return l.length ? '<div class="grp"><h3><span class="' + BADGE[s] + '">' + s + '</span><span class="muted small">' + plural(l.length, 'pedido', 'pedidos') + '</span></h3>' + reqTable(l) + '</div>' : '';
+    return GROUPS.map(function (s) {
+      var l = sortReqs(st.reqs.filter(function (q) { return grpOf(q) === s; }));
+      return l.length ? '<div class="grp"><h3><span class="' + BADGE[s] + '">' + LABEL[s] + '</span><span class="muted small">' + plural(l.length, 'pedido', 'pedidos') + '</span></h3>' + reqTable(l) + '</div>' : '';
     }).join('');
+  }
+
+  /* ── D · pedidos em cartões ── */
+  function cardHtml(q) {
+    var sub = subState(q), nt = weekNote(q);
+    return '<article class="req-card req-card--' + q.status.toLowerCase() + (q.fresh ? ' is-new' : '') + '" data-rid="' + q.id + '" aria-label="' + KIND_LABEL[q.kind] + ', ' + esc(qPeriod(q)) + ', ' + LABEL[q.status] + '">' +
+      '<div class="rc-top">' + kindBadge(q) + stateBadge(q) + '</div>' +
+      '<p class="rc-when">' + qPeriod(q) + wedMark(q) + '</p>' +
+      (q.status === 'Ajustado' ? '<p class="rc-adj">Pedido ' + period(q.orig.start, q.orig.end) + ' → aprovado ' + period(q.start, q.end) + '</p>' : '') +
+      '<p class="rc-meta">' + (isFolga(q) ? '1 dia de folga rotativa · não desconta férias' : plural(count(q.start, q.end).counted.length, 'dia de férias', 'dias de férias') + (sub ? ' · ' + sub : '')) + '</p>' +
+      (q.note ? '<p class="rc-note">Nota: «' + esc(q.note) + '»</p>' : '') +
+      '<p class="rc-dec">' + decisionHtml(q).replace(/<span class="small[^"]*">/g, ' · ').replace(/<\/span>/g, '') + '</p>' +
+      (nt && q.status !== 'Aprovado' ? '<p class="rc-dec">' + nt + '</p>' : '') +
+      (q.status === 'Pendente' ? '<div class="btn-line"><button type="button" class="btn-row danger" data-act="cancel" data-rid="' + q.id + '">Cancelar pedido</button></div>' : '') + '</article>';
+  }
+  function cardsHtml(st) { return sortReqs(st.reqs).map(cardHtml).join(''); }
+  function saldoCardHtml(st) {
+    var b = balance(st.reqs);
+    return '<h2>Saldo de férias de 2026</h2><p class="ds-main"><b>' + b.avail + '</b> disponíveis de ' + b.base + '</p>' +
+      '<p class="ds-sub">Reservado ' + b.r + ' · Gozado ' + b.g + ' · Pendente ' + b.p + (b.pOther ? ' (+ ' + otherPending(b) + ')' : '') + '</p>';
   }
 
   /* ── A · mosaicos e previsto ── */
@@ -1000,7 +1260,7 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
   function calHtml(st) {
     var y = +st.month.slice(0, 4), m = +st.month.slice(5, 7), first = st.month + '-01';
     var lead = (dow(first) + 6) % 7, nd = new Date(Date.UTC(y, m, 0)).getUTCDate(), sel = st.sel;
-    var an = sel.start && sel.end ? analyse(sel.start, sel.end, st) : null;
+    var an = sel.start && sel.end ? analyse(sel.start, sel.end, st, st.bKind) : null;
     var cnt = {};
     if (an && an.kind === 'ok') an.c.counted.forEach(function (x) { cnt[x] = 1; });
     var h = '', i;
@@ -1014,8 +1274,11 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
       if (off) cls.push('is-off');
       if (s === TODAY) { cls.push('is-today'); lab = 'hoje'; }
       if (nationalHoliday(s)) { if (!lab) lab = 'feriado'; tip.push(nationalHoliday(s) + ' · Feriado (aberto)'); }
-      if (bk) { cls.push(bk.status === 'Aprovado' ? 'is-ok' : 'is-pend'); lab = bk.status === 'Aprovado' ? 'férias' : 'pendente'; tip.push(bk.status === 'Aprovado' ? 'Férias aprovadas' : 'Pedido pendente'); }
-      else if (PREV.start <= s && s <= PREV.end) { cls.push('is-prev'); if (!nationalHoliday(s) && s !== TODAY) lab = 'encerr.'; tip.push('Encerramento previsto «' + PREV.name + '»'); }
+      if (bk) {
+        cls.push(isOk(bk) ? 'is-ok' : 'is-pend');
+        lab = isFolga(bk) ? 'folga' : (isOk(bk) ? 'férias' : 'pendente');
+        tip.push((isFolga(bk) ? 'Folga rotativa' : 'Férias') + ' ' + (isOk(bk) ? 'aprovada' : 'pendente'));
+      } else if (PREV.start <= s && s <= PREV.end) { cls.push('is-prev'); if (!nationalHoliday(s) && s !== TODAY) lab = 'encerr.'; tip.push('Encerramento previsto «' + PREV.name + '»'); }
       var inRange = sel.start && s >= sel.start && s <= (sel.end || sel.start);
       if (inRange) {
         var counts = sel.end ? !!cnt[s] : !off;
@@ -1032,19 +1295,25 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
   }
   function hintText(st) {
     var s = st.sel;
+    if (st.bKind === 'folga') return s.start ? 'Folga em ' + wdl(s.start) + '. Toque noutro dia para mudar.' : 'Toque no dia da folga rotativa.';
     if (!s.start) return 'Toque no primeiro dia das férias.';
     if (!s.end) return 'Início ' + wdl(s.start) + '. Toque no último dia (ou no mesmo dia).';
     return 'Toque noutro dia para recomeçar, ou em «Limpar».';
   }
   function summaryHtml(st) {
-    var s = st.sel, btns = function (ok) {
-      return '<div class="btn-line"><button type="button" class="primary" data-act="submit"' + (ok ? '' : ' disabled') + '>Pedir</button>' +
+    var s = st.sel, folga = st.bKind === 'folga';
+    var noteBox = '<label class="note-lbl"><span>Nota (opcional)</span><input type="text" data-act="bnote" maxlength="200" value="' + esc(st.note || '') + '" placeholder="Ex.: casamento de uma amiga"></label>';
+    var btns = function (ok) {
+      return noteBox + '<div class="btn-line"><button type="button" class="primary" data-act="submit"' + (ok ? '' : ' disabled') + '>' + (folga ? 'Pedir folga' : 'Pedir') + '</button>' +
         '<button type="button" class="btn-row btn-row-quiet" data-act="clear"' + (s.start ? '' : ' disabled') + '>Limpar</button></div>';
     };
-    if (!s.start) return '<p class="sum-hint">Toque no <b>primeiro dia</b> das férias.</p>' + btns(false);
+    if (!s.start) return '<p class="sum-hint">' + (folga ? 'Toque no <b>dia</b> da folga rotativa.' : 'Toque no <b>primeiro dia</b> das férias.') + '</p>' + btns(false);
     if (!s.end) return '<p class="sum-hint">Início <b>' + wdl(s.start) + '</b>. Toque no <b>último dia</b>.</p>' + btns(false);
-    var an = analyse(s.start, s.end, st);
+    var an = analyse(s.start, s.end, st, st.bKind);
     if (an.kind !== 'ok') return previewHtml(an, s.start, s.end) + btns(false);
+    if (an.folga) {
+      return '<p class="sum-main" role="status">Folga rotativa · <b>1</b> dia</p><p class="small muted">' + wdl(s.start) + '/' + s.start.slice(0, 4) + ' ' + (dow(s.start) === WED_DOW ? wedIcon() : '') + ' · não desconta dias de férias · fica «Pendente» até a gestora decidir</p>' + warnHtml(an) + btns(true);
+    }
     var main = an.n26 > 0 || an.other === 0
       ? 'Conta <b>' + an.n + '</b> ' + (an.n === 1 ? 'dia' : 'dias') + (an.exceeds ? ' · excede o disponível (' + an.avail + ')' : (an.n26 > 0 ? ' · fica com <b>' + an.after + '</b> disponíveis' : ''))
       : 'Conta <b>' + an.n + '</b> ' + (an.n === 1 ? 'dia' : 'dias') + ' no saldo de 2027';
@@ -1068,15 +1337,15 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
   }
   function blockKind(q) { return q.status === 'Pendente' ? 'p' : (q.end <= TODAY ? 'g' : 'r'); }
   function blockLabel(q) {
-    var n = count(q.start, q.end).counted.length;
-    return (q.status === 'Pendente' ? 'Pendente' : (q.end < REFERENCE ? 'Histórico anterior à referência' : q.end <= TODAY ? 'Gozado' : 'Reservado')) + ', ' + period(q.start, q.end) + ', ' + plural(n, 'dia', 'dias');
+    return KIND_LABEL[q.kind] + ' · ' + (q.status === 'Pendente' ? 'Pendente' : (q.end < REFERENCE ? 'Histórico anterior à referência' : q.end <= TODAY ? 'Gozado' : 'Reservado')) + ', ' + qPeriod(q) +
+      (isFolga(q) ? '' : ', ' + plural(count(q.start, q.end).counted.length, 'dia', 'dias'));
   }
   function timelineHtml(st) {
     var ms = monthList(), h = '<div class="tl-track"><div class="tl-bg">';
     ms.forEach(function (x) { h += '<div class="tl-m' + (x.y === 2027 ? ' y27' : '') + '" style="flex:' + x.days + ' 1 0"></div>'; });
     h += '</div><span class="tl-today" style="left:' + pos(TODAY).toFixed(3) + '%"><i>hoje</i></span>';
     st.reqs.filter(isOpen).forEach(function (q) {
-      h += '<button type="button" class="blk blk--' + blockKind(q) + (st.pick === q.id ? ' is-sel' : '') + '" data-act="pick" data-rid="' + q.id + '" style="left:' + pos(q.start).toFixed(3) + '%;width:' + wid(q.start, q.end).toFixed(3) + '%" aria-label="' + esc(blockLabel(q)) + '" aria-pressed="' + (st.pick === q.id) + '" title="' + esc(blockLabel(q)) + '"></button>';
+      h += '<button type="button" class="blk blk--' + blockKind(q) + (isFolga(q) ? ' blk--folga' : '') + (st.pick === q.id ? ' is-sel' : '') + '" data-act="pick" data-rid="' + q.id + '" style="left:' + pos(q.start).toFixed(3) + '%;width:' + wid(q.start, q.end).toFixed(3) + '%" aria-label="' + esc(blockLabel(q)) + '" aria-pressed="' + (st.pick === q.id) + '" title="' + esc(blockLabel(q)) + '"></button>';
     });
     h += '<button type="button" class="blk blk--x' + (st.pick === 'prev' ? ' is-sel' : '') + '" data-act="pick" data-rid="prev" style="left:' + pos(PREV.start).toFixed(3) + '%;width:' + wid(PREV.start, PREV.end).toFixed(3) + '%" aria-label="Encerramento previsto «Natal», ' + period(PREV.start, PREV.end) + '" aria-pressed="' + (st.pick === 'prev') + '" title="Encerramento previsto «Natal»"></button>';
     h += '</div><div class="tl-labels" aria-hidden="true">';
@@ -1095,10 +1364,11 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     }
     var q = st.reqs.filter(function (x) { return x.id === st.pick; })[0];
     if (!q) return '';
-    var c = count(q.start, q.end), sub = q.status === 'Aprovado' ? (q.end < REFERENCE ? 'Histórico anterior à referência' : q.end <= TODAY ? 'Gozado' : 'Reservado') : q.status;
-    return '<div class="head"><b>' + period(q.start, q.end) + '</b><span class="' + BADGE[q.status] + '">' + sub + '</span></div>' +
-      '<p>Conta <b>' + c.counted.length + '</b> ' + (c.counted.length === 1 ? 'dia' : 'dias') + (c.skipped.length ? ' · não conta: ' + esc(skippedText(c)) : '') + '</p>' +
-      '<p class="muted small">' + decisionHtml(q).replace(/<span class="small muted">/g, ' · ').replace(/<\/span>/g, '') + '</p>' +
+    var c = countQ(q), nt = weekNote(q);
+    return '<div class="head"><b>' + qPeriod(q) + '</b>' + wedMark(q) + kindBadge(q) + stateBadge(q) + '</div>' +
+      (isFolga(q) ? '' : '<p>Conta <b>' + c.counted.length + '</b> ' + (c.counted.length === 1 ? 'dia' : 'dias') + (c.skipped.length ? ' · não conta: ' + esc(skippedText(c)) : '') + '</p>') +
+      '<p class="muted">' + decisionHtml(q).replace(/<span class="small[^"]*">/g, ' · ').replace(/<\/span>/g, '') + '</p>' +
+      (nt && q.status !== 'Aprovado' ? '<p class="muted">' + nt + '</p>' : '') +
       (q.status === 'Pendente' ? '<div class="btn-line"><button type="button" class="btn-row danger" data-act="cancel" data-rid="' + q.id + '">Cancelar pedido</button></div>' : '');
   }
   function statsHtml(st) {
@@ -1106,42 +1376,63 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     return '<div class="st st--avail">Disponível<b>' + b.avail + ' <span class="small muted">de ' + b.base + '</span></b></div>' +
       '<div class="st">Reservado<b>' + b.r + '</b></div><div class="st">Gozado<b>' + b.g + '</b></div>' +
       '<div class="st">Pendente em 2026<b>' + b.p + '</b>' + (b.pOther ? '<small>' + otherPending(b) + ', sem descontar</small>' : '') + '</div>' +
-      '<div class="btn-open"><button type="button" class="primary" data-act="open-form" aria-expanded="' + (!!st.panel) + '">Pedir férias</button></div>';
+      '<div class="btn-open"><button type="button" class="primary" data-act="open-form" aria-expanded="' + (!!st.panel) + '">Pedir folga ou férias</button></div>';
   }
 
   /* ── Render por variante ── */
   function setSlot(dev, name, html) { $$('[data-slot="' + name + '"]', dev).forEach(function (n) { n.innerHTML = html; }); }
   function render(dev) {
     var st = Mock.state(dev), v = dev.dataset.variant;
+    hideTip(dev);
     setSlot(dev, 'previsto', previstoHtml(st));
     if (v === 'a') { setSlot(dev, 'tiles', tilesHtml(st)); setSlot(dev, 'list', listFlat(st)); }
     if (v === 'b') {
       setSlot(dev, 'segbar', segbarHtml(st)); setSlot(dev, 'list', listFlat(st));
       setSlot(dev, 'monthname', MONTHS[+st.month.slice(5, 7) - 1] + ' ' + st.month.slice(0, 4));
-      setSlot(dev, 'hint', hintText(st)); setSlot(dev, 'summary', summaryHtml(st));
+      setSlot(dev, 'hint', hintText(st));
+      var af = document.activeElement, fnote = af && af.getAttribute && af.getAttribute('data-act') === 'bnote' ? af : null, caret = fnote ? fnote.selectionStart : null;
+      setSlot(dev, 'summary', summaryHtml(st));
+      if (fnote) { var again0 = $('[data-act="bnote"]', dev); if (again0) { again0.focus(); try { again0.setSelectionRange(caret, caret); } catch (x) { /* ignorar */ } } }
       var f = document.activeElement, keep = f && f.getAttribute ? f.getAttribute('data-iso') : null;
       setSlot(dev, 'grid', calHtml(st));
       if (keep) { var again = $('[data-iso="' + keep + '"]', dev); if (again && !again.disabled) again.focus(); }
       var i = NAV_MONTHS.indexOf(st.month), nav = $$('[data-act="month"]', dev);
       nav[0].disabled = i <= 0; nav[1].disabled = i >= NAV_MONTHS.length - 1;
+      $$('[data-act="bkind"]', dev).forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.k === st.bKind)); });
     }
     if (v === 'c') {
       setSlot(dev, 'stats', statsHtml(st)); setSlot(dev, 'timeline', timelineHtml(st));
       setSlot(dev, 'detail', detailHtml(st)); setSlot(dev, 'list', listGrouped(st));
     }
+    if (v === 'd') { setSlot(dev, 'dsaldo', saldoCardHtml(st)); setSlot(dev, 'cards', cardsHtml(st)); }
+    wireWed(dev);
   }
 
-  /* ── Formulário (A, e C no painel e na folha) ── */
+  /* ── Formulário (A, D inline; C no painel e na folha) ── */
+  function formKind(f) { return f.dataset.kind || 'ferias'; }
   function refreshForm(f, dev) {
-    var st = Mock.state(dev), a = $('[data-field="start"]', f).value, b = $('[data-field="end"]', f).value;
-    var an = analyse(a, b, st);
-    $('[data-slot="preview"]', f).innerHTML = previewHtml(an, a, b);
+    var st = Mock.state(dev), k = formKind(f), a = $('[data-field="start"]', f).value, b = k === 'folga' ? a : $('[data-field="end"]', f).value;
+    var an = analyse(a, b, st, k);
+    $('[data-slot="preview"]', f).innerHTML = an.kind === 'empty' ? '<p class="pv-hint muted">' + emptyHint(k) + '</p>' : previewHtml(an, a, b);
     $('[data-act="submit"]', f).disabled = !(an.kind === 'ok' && an.n > 0);
+    $('[data-slot="wed"]', f).innerHTML = k === 'folga' && a && dow(a) === WED_DOW ? wedIcon() : '';
+    wireWed(dev); hideTip(dev);
     dock(dev);
   }
-  function mountForm(box, dev, closable) {
+  function setFormKind(f, k, dev) {
+    f.dataset.kind = k;
+    $$('[data-act="kind"]', f).forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.k === k)); });
+    $('.lbl-end', f).hidden = k === 'folga';
+    $('.lbl-start', f).textContent = k === 'folga' ? 'Dia' : 'Início';
+    var sb = $('[data-act="submit"]', f);
+    if (!sb.hasAttribute('data-fixed-label')) sb.textContent = k === 'folga' ? 'Pedir folga' : 'Pedir férias';
+    $('.rule-badge', f).hidden = k === 'folga';
+    refreshForm(f, dev);
+  }
+  function mountForm(box, dev, closable, opts) {
     box.setAttribute('data-form', '');
-    box.innerHTML = FORM_INNER(closable);
+    box.dataset.kind = 'ferias';
+    box.innerHTML = FORM_INNER(closable, opts);
     refreshForm(box, dev);
   }
   function dock(dev) {
@@ -1151,50 +1442,60 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     box.style.left = '0'; box.style.width = '100%'; box.style.maxHeight = Math.max(240, window.innerHeight - 16) + 'px';
     box.style.top = Math.max(0, bottom - box.offsetHeight) + 'px';
   }
-  function addRequest(dev, a, b) {
-    var st = Mock.state(dev), n = count(a, b).counted.length;
+  function addRequest(dev, kind, a, b, note) {
+    var st = Mock.state(dev);
     st.reqs.forEach(function (q) { q.fresh = false; });
     st.seq += 1;
-    st.reqs.push({ id: 'n' + st.seq, start: a, end: b, status: 'Pendente', at: TODAY, fresh: true });
+    st.reqs.push({ id: 'n' + st.seq, kind: kind, start: a, end: kind === 'folga' ? a : b, status: 'Pendente', at: TODAY, note: note || '', fresh: true });
     render(dev);
-    Mock.toast(dev, 'Pedido enviado: ' + plural(n, 'dia', 'dias') + ', pendente');
+    Mock.toast(dev, kind === 'folga' ? 'Pedido de folga rotativa enviado: ' + wdl(a) + ', pendente' : 'Pedido de férias enviado: ' + plural(count(a, b).counted.length, 'dia', 'dias') + ', pendente');
   }
 
   window.mockInit = function (dev, v) {
     var st = Mock.state(dev);
-    st.reqs = clone(INITIAL); st.seq = 0; st.month = '2026-11'; st.sel = { start: null, end: null }; st.pick = null; st.panel = false;
-    $$('[data-slot="formbox"]', dev).forEach(function (box) { mountForm(box, dev, box.getAttribute('data-form-kind') === 'panel'); });
+    st.reqs = clone(INITIAL); st.seq = 0; st.month = '2026-11'; st.sel = { start: null, end: null }; st.pick = null; st.panel = false; st.bKind = 'ferias'; st.note = '';
+    $$('[data-slot="formbox"]', dev).forEach(function (box) {
+      mountForm(box, dev, box.getAttribute('data-form-kind') === 'panel', v === 'd' ? { title: 'Novo pedido', submit: 'Enviar' } : null);
+    });
     render(dev);
   };
 
   /* ── Interação ── */
   Mock.on('change', '[data-form] [data-field]', function (e, t, dev) {
     var f = t.closest('[data-form]'), s = $('[data-field="start"]', f), en = $('[data-field="end"]', f);
-    if (t === s && s.value && (!en.value || en.value < s.value)) en.value = s.value;
+    if (t === s && formKind(f) !== 'folga' && s.value && (!en.value || en.value < s.value)) en.value = s.value;
     refreshForm(f, dev);
   });
   Mock.on('input', '[data-form] [data-field]', function (e, t, dev) { refreshForm(t.closest('[data-form]'), dev); });
+  Mock.on('click', '[data-form] [data-act="kind"]', function (e, t, dev) { setFormKind(t.closest('[data-form]'), t.dataset.k, dev); });
+  Mock.on('input', '[data-act="bnote"]', function (e, t, dev) { Mock.state(dev).note = t.value; });
+  Mock.on('click', '[data-act="bkind"]', function (e, t, dev) {
+    var st = Mock.state(dev); if (st.bKind === t.dataset.k) return;
+    st.bKind = t.dataset.k; st.sel = { start: null, end: null }; render(dev);
+  });
 
   Mock.on('click', '[data-act="submit"]', function (e, t, dev) {
-    var st = Mock.state(dev), f = t.closest('[data-form]'), a, b;
-    if (f) { a = $('[data-field="start"]', f).value; b = $('[data-field="end"]', f).value; } else { a = st.sel.start; b = st.sel.end; }
-    var an = analyse(a, b, st);
+    var st = Mock.state(dev), f = t.closest('[data-form]'), a, b, k, note;
+    if (f) {
+      k = formKind(f); a = $('[data-field="start"]', f).value; b = k === 'folga' ? a : $('[data-field="end"]', f).value; note = $('[data-field="note"]', f).value.trim();
+    } else { k = st.bKind; a = st.sel.start; b = st.sel.end; note = (st.note || '').trim(); }
+    var an = analyse(a, b, st, k);
     if (an.kind !== 'ok' || an.n === 0) return;
     if (f) {
-      $('[data-field="start"]', f).value = ''; $('[data-field="end"]', f).value = '';
+      $('[data-field="start"]', f).value = ''; $('[data-field="end"]', f).value = ''; $('[data-field="note"]', f).value = '';
       refreshForm(f, dev); Mock.closeSheet(dev);
       if (st.panel) { st.panel = false; $('[data-slot="layout"]', dev).classList.remove('has-panel'); $('[data-form-kind="panel"]', dev).hidden = true; }
-    } else { st.sel = { start: null, end: null }; }
-    addRequest(dev, a, b);
+    } else { st.sel = { start: null, end: null }; st.note = ''; }
+    addRequest(dev, k, a, b, note);
   });
   Mock.on('click', '[data-act="clear"]', function (e, t, dev) {
     var st = Mock.state(dev), f = t.closest('[data-form]');
-    if (f) { $('[data-field="start"]', f).value = ''; $('[data-field="end"]', f).value = ''; refreshForm(f, dev); }
-    else { st.sel = { start: null, end: null }; render(dev); }
+    if (f) { $('[data-field="start"]', f).value = ''; $('[data-field="end"]', f).value = ''; $('[data-field="note"]', f).value = ''; refreshForm(f, dev); }
+    else { st.sel = { start: null, end: null }; st.note = ''; render(dev); }
   });
   Mock.on('click', '[data-act="cancel"]', function (e, t, dev) {
     var st = Mock.state(dev);
-    st.reqs.forEach(function (q) { q.fresh = false; if (q.id === t.getAttribute('data-rid')) { q.status = 'Cancelado'; q.decided = TODAY; } });
+    st.reqs.forEach(function (q) { q.fresh = false; if (q.id === t.getAttribute('data-rid') && q.status === 'Pendente') { q.status = 'Cancelado'; q.decided = TODAY; } });
     st.pick = null; render(dev); Mock.toast(dev, 'Pedido cancelado');
   });
   Mock.on('click', '[data-act="month"]', function (e, t, dev) {
@@ -1205,7 +1506,8 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
   Mock.on('click', '[data-act="day"]', function (e, t, dev) {
     var st = Mock.state(dev), s = t.getAttribute('data-iso'), sel = st.sel;
     if (s <= TODAY) return;
-    if (!sel.start || sel.end) st.sel = { start: s, end: null };
+    if (st.bKind === 'folga') st.sel = { start: s, end: s };
+    else if (!sel.start || sel.end) st.sel = { start: s, end: null };
     else if (s < sel.start) st.sel = { start: s, end: sel.start };
     else st.sel = { start: sel.start, end: s };
     render(dev);

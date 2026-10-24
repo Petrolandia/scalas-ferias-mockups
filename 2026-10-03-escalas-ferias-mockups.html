@@ -56,6 +56,14 @@ th.c, td.c { text-align: center; width: 56px; }
 td.c input { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; vertical-align: middle; }
 td.c label { display: inline-block; padding: 6px 10px; margin: -6px -10px; cursor: pointer; }
 .pick-foot { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 10px; font-size: 12px; color: var(--mut); }
+.news { margin-top: 14px; padding: 10px 14px; font-size: 13px; line-height: 1.5; background: var(--info-bg); border: 1px solid var(--info-bd); border-radius: 8px; }
+.tag-new {
+  display: inline-block; font-size: 11px; font-weight: 600; line-height: 16px; padding: 0 6px; border-radius: 999px; vertical-align: 1px;
+  background: var(--warn-bg); border: 1px solid var(--warn-bd); color: var(--warn-tx);
+}
+.card h3 .tag-new { margin-left: 6px; }
+.btn-row .tag-new { margin-left: 4px; }
+th.c-wide, td.c-wide { width: 96px; }
 .source { margin-top: 32px; font-size: 13px; color: var(--mut); line-height: 1.6; }
 .source a { color: var(--info-tx); text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
 
@@ -72,15 +80,16 @@ td.c label { display: inline-block; padding: 6px 10px; margin: -6px -10px; curso
 
 <div class="page">
   <h1>Escalas e férias — mockups</h1>
-  <p class="sub">03/10/2026 · Escolher uma variante (A, B ou C) por funcionalidade</p>
+  <p class="sub">Atualizado a 08/10/2026 · Escolher uma variante por funcionalidade (D = próxima do Homebase, onde existe)</p>
+  <p class="news"><b>Desde a versão anterior:</b> opções D, mais próximas do Homebase, e três ecrãs novos (10 a 12), marcados com <span class="tag-new">Novo</span>. Em todas as opções entraram os postos com cor, o email da escala, o pedido de folga e as horas junto ao nome. No 9 também podes escolher «Como hoje», sem ligação à escala.</p>
 
-  <h2 class="section">As nove funcionalidades</h2>
+  <h2 class="section">As funcionalidades</h2>
   <div class="grid" id="grid"></div>
 
   <h2 class="section">A tua escolha</h2>
   <div class="pick-wrap">
     <table id="pick">
-      <thead><tr><th>Funcionalidade</th><th class="c">A</th><th class="c">B</th><th class="c">C</th></tr></thead>
+      <thead><tr><th>Funcionalidade</th><th class="c">A</th><th class="c">B</th><th class="c">C</th><th class="c">D</th><th class="c c-wide">Como hoje</th><th>Escolha</th></tr></thead>
       <tbody></tbody>
     </table>
     <div class="pick-foot">
@@ -90,8 +99,6 @@ td.c label { display: inline-block; padding: 6px 10px; margin: -6px -10px; curso
   </div>
 
   <p class="source">
-    Fontes: <a href="2026-10-03-escalas-ferias-design.md">2026-10-03-escalas-ferias-design.md</a> (spec)
-    e <a href="../plans/2026-10-03-escalas-ferias.md">../plans/2026-10-03-escalas-ferias.md</a> (plano).
     Cada mockup tem a moldura de uma app mínima, em desktop e a 375 px, com a interação suficiente para contar cliques.
   </p>
 </div>
@@ -111,27 +118,48 @@ td.c label { display: inline-block; padding: 6px 10px; margin: -6px -10px; curso
     { n: 4, file: '4-config-escala.html', name: 'Configuração da escala', short: 'Configuração da escala', route: '/escala/configuracao',
       decide: 'Onde se definem turnos-tipo, padrões, épocas e a lista de verificação do arranque.' },
     { n: 5, file: '5-ferias-gestao.html', name: 'Férias — gestão', short: 'Férias — gestão', route: '/ferias',
-      decide: 'Como se aprovam pedidos e se lê o mapa anual, os saldos e as divergências.' },
+      decide: 'Como se aprovam, recusam ou ajustam pedidos de férias e de folga rotativa, e se lê o mapa anual.' },
     { n: 6, file: '6-minhas-ferias.html', name: 'As minhas férias', short: 'As minhas férias', route: '/ferias/minhas',
-      decide: 'Como a colaboradora vê o saldo e faz um pedido de férias.' },
+      decide: 'Como a colaboradora vê o saldo e pede férias ou uma folga rotativa, no telemóvel.' },
     { n: 7, file: '7-config-ferias.html', name: 'Configuração das férias', short: 'Configuração das férias', route: '/ferias/configuracao',
       decide: 'Onde se definem o direito anual, a regra de contagem, os saldos iniciais e os encerramentos.' },
     { n: 8, file: '8-impressoes.html', name: 'Impressões A4', short: 'Impressões A4', route: '/escala/imprimir · /ferias/imprimir',
       decide: 'Como saem em papel a escala da semana e o mapa de férias.' },
-    { n: 9, file: '9-folha-semanal.html', name: 'Folha semanal: «Preencher com a escala»', short: 'Folha semanal', route: '/horas/[ano]/[semana]',
-      decide: 'Como a escala preenche a folha de horas, sem voltar a escrever o que já está planeado.' }
+    { n: 9, file: '9-folha-semanal.html', name: 'Folha semanal pré-preenchida pela escala', short: 'Folha semanal', route: '/horas/[ano]/[semana]',
+      decide: 'Como a folha de horas aparece já preenchida com a escala publicada, até hoje, e só grava ao confirmar.' },
+    { n: 10, file: '10-email-escala.html', name: 'Email da escala', short: 'Email da escala', route: '',
+      decide: 'Como a equipa recebe a escala publicada ou alterada por email.' },
+    { n: 11, file: '11-configuracao.html', name: 'Configuração: postos e email', short: 'Configuração: postos e email', route: '/admin/integracoes',
+      decide: 'Onde se definem os postos e o fornecedor de email.' },
+    { n: 12, file: '12-equipa.html', name: 'Equipa', short: 'Equipa', route: '',
+      decide: 'Como se gere a equipa, com o email na ficha e o convite para a conta.' }
   ];
+  /* variantes que existem por funcionalidade (as ligações e a tabela de escolha derivam daqui);
+     'hoje' só entra na tabela de escolha: é manter o ecrã actual, sem mockup */
+  var ALL_VARIANTS = ['a', 'b', 'c', 'd', 'hoje'];
+  var VARIANTS_BY_FEATURE = {
+    1: ['a', 'b', 'c', 'd'], 2: ['a', 'b', 'c', 'd'], 3: ['a', 'b', 'c'], 4: ['a', 'b', 'c'],
+    5: ['a', 'b', 'c', 'd'], 6: ['a', 'b', 'c', 'd'], 7: ['a', 'b', 'c'], 8: ['a', 'b', 'c'],
+    9: ['a', 'b', 'c', 'd', 'hoje'], 10: ['a', 'b', 'c'], 11: ['a', 'b', 'c'], 12: ['a', 'b', 'c']
+  };
+  /* o que é novo face à versão publicada a 03/10: as variantes D e as funcionalidades 10 a 12 */
+  var NEW_FEATURES = [10, 11, 12];
+  var NEW_VARIANTS = ['d'];
+  var TAG_NEW = '<span class="tag-new">Novo</span>';
+  var label = function (v) { return v === 'hoje' ? 'Como hoje' : v.toUpperCase(); };
   var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
 
   document.getElementById('grid').innerHTML = FEATURES.map(function (f) {
     var url = PREFIX + f.file;
+    var isNew = NEW_FEATURES.indexOf(f.n) >= 0;
     return '<article class="card">' +
-      '<div class="card-head"><span class="num" aria-hidden="true">' + f.n + '</span><h3>' + esc(f.name) + '</h3></div>' +
-      '<p class="route">' + esc(f.route) + '</p>' +
+      '<div class="card-head"><span class="num" aria-hidden="true">' + f.n + '</span><h3>' + esc(f.name) + (isNew ? TAG_NEW : '') + '</h3></div>' +
+      (f.route ? '<p class="route">' + esc(f.route) + '</p>' : '') +
       '<p class="decide">' + esc(f.decide) + '</p>' +
       '<div class="links">' +
-        ['a', 'b', 'c'].map(function (v) {
-          return '<a class="btn-row" href="' + url + '#' + v + '" aria-label="Variante ' + v.toUpperCase() + ' — ' + esc(f.short) + '">' + v.toUpperCase() + '</a>';
+        VARIANTS_BY_FEATURE[f.n].filter(function (v) { return v !== 'hoje'; }).map(function (v) {
+          var vNew = !isNew && NEW_VARIANTS.indexOf(v) >= 0;
+          return '<a class="btn-row" href="' + url + '#' + v + '" aria-label="Variante ' + v.toUpperCase() + (vNew ? ' (nova)' : '') + ' — ' + esc(f.short) + '">' + v.toUpperCase() + (vNew ? TAG_NEW : '') + '</a>';
         }).join('') +
         '<span class="spacer"></span><a class="btn-row btn-row-strong" href="' + url + '">Abrir</a>' +
       '</div></article>';
@@ -139,24 +167,43 @@ td.c label { display: inline-block; padding: 6px 10px; margin: -6px -10px; curso
 
   var tbody = document.querySelector('#pick tbody');
   tbody.innerHTML = FEATURES.map(function (f) {
-    return '<tr><td>' + f.n + ' · ' + esc(f.short) + '</td>' + ['a', 'b', 'c'].map(function (v) {
-      return '<td class="c"><label><input type="radio" name="f' + f.n + '" value="' + v + '" aria-label="' + esc(f.short) + ': variante ' + v.toUpperCase() + '"></label></td>';
-    }).join('') + '</tr>';
+    return '<tr><td>' + f.n + ' · ' + esc(f.short) + '</td>' + ALL_VARIANTS.map(function (v) {
+      var cls = v === 'hoje' ? 'c c-wide' : 'c';
+      if (VARIANTS_BY_FEATURE[f.n].indexOf(v) < 0) return '<td class="' + cls + '" aria-label="sem opção ' + label(v) + '">—</td>';
+      var aria = v === 'hoje' ? esc(f.short) + ': como hoje, sem ligação à escala' : esc(f.short) + ': variante ' + label(v);
+      return '<td class="' + cls + '"><label><input type="radio" name="f' + f.n + '" value="' + v + '" aria-label="' + aria + '"></label></td>';
+    }).join('') + '<td class="choice" data-choice="' + f.n + '"></td></tr>';
   }).join('');
 
-  var read = function () { try { return JSON.parse(localStorage.getItem(STORE)) || {}; } catch (e) { return {}; } };
+  var read = function () {
+    try {
+      var o = JSON.parse(localStorage.getItem(STORE));
+      return o && typeof o === 'object' && !Array.isArray(o) ? o : {};
+    } catch (e) { return {}; }
+  };
   var write = function (o) { try { localStorage.setItem(STORE, JSON.stringify(o)); } catch (e) { /* sem armazenamento */ } };
-  var saved = read();
-  Object.keys(saved).forEach(function (k) {
-    var r = document.querySelector('input[name="' + k + '"][value="' + saved[k] + '"]'); if (r) r.checked = true;
+  /* escolha guardada que não existe na lista da funcionalidade é descartada */
+  var saved = read(), valid = {};
+  FEATURES.forEach(function (f) {
+    var k = 'f' + f.n, r = saved[k] && VARIANTS_BY_FEATURE[f.n].indexOf(saved[k]) >= 0
+      ? document.querySelector('input[name="' + k + '"][value="' + saved[k] + '"]') : null;
+    if (r) { r.checked = true; valid[k] = saved[k]; }
   });
+  if (Object.keys(valid).length !== Object.keys(saved).length) write(valid);
+  var showChoices = function () {
+    FEATURES.forEach(function (f) {
+      var r = tbody.querySelector('input[name="f' + f.n + '"]:checked');
+      tbody.querySelector('[data-choice="' + f.n + '"]').textContent = r ? label(r.value) : 'sem escolha';
+    });
+  };
+  showChoices();
   tbody.addEventListener('change', function (e) {
     if (e.target.type !== 'radio') return;
-    var o = read(); o[e.target.name] = e.target.value; write(o);
+    var o = read(); o[e.target.name] = e.target.value; write(o); showChoices();
   });
   document.getElementById('clear').addEventListener('click', function () {
     Array.prototype.forEach.call(tbody.querySelectorAll('input'), function (i) { i.checked = false; });
-    write({});
+    write({}); showChoices();
   });
 })();
 </script>

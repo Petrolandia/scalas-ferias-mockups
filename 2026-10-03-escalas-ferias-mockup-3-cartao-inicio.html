@@ -77,6 +77,8 @@ a { color: inherit; text-decoration: none; }
 }
 .variant-notes b { font-weight: 600; }
 .variant-notes .note-extra { margin-top: 4px; font-size: 12px; color: var(--mut); }
+.variant-missing { max-width: 1180px; margin: 0 auto 16px; padding: 12px 14px; font-size: 14px; background: var(--warn-bg); color: var(--warn-tx); border: 1px solid var(--warn-bd, var(--border)); border-left: 4px solid var(--warn-tx); border-radius: 8px; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+.variant-missing[hidden] { display: none; }
 .stage { display: flex; flex-wrap: wrap; gap: 28px 24px; align-items: flex-start; justify-content: center; }
 .stage-item { min-width: 0; max-width: 100%; }
 .stage-cap { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; color: var(--mut); }
@@ -272,6 +274,73 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
 /* === FIM MOLDURA === */
 
 /* === ESPECÍFICO DESTE MOCKUP === */
+/* === POSTOS (copiar) === */
+/* Postos e cores fixos (as mesmas em todos os mockups): Montagem #d9a400 · Fogão #2f6fd6 · Sumo #a03fb5 · Copa #e8742a ·
+   Copa e Apoio #d9534f · Bar #2e9e5b · Produção #7a5a2e · Sala #3aa6b9 · Supervisão #b0234a · Gerência #6b4fd8.
+   O bloco tem sempre fundo claro, texto escuro e barra esquerda de 4 px na cor do posto: o contraste AA não depende do tema.
+   Uso (turno com troca de posto: dois .shift-seg e duas .shift-band no MESMO bloco; flex do .shift-seg = minutos do segmento):
+     <span class="shift-block has-swap" style="--pos-color:#a03fb5">
+       <span class="shift-bars" aria-hidden="true"><i class="shift-seg" style="--pos-color:#a03fb5;flex:120"></i><i class="shift-seg" style="--pos-color:#e8742a;flex:420"></i></span>
+       <span class="shift-time">08:00–17:00</span>
+       <span class="shift-pos"><span class="shift-band" style="--pos-color:#a03fb5">Sumo</span><span class="shift-band" style="--pos-color:#e8742a">Copa 10:00</span></span>
+     </span> */
+.shift-block { --pos-color: #66736b; position: relative; display: flex; flex-direction: column; gap: 2px; min-width: 0; padding: 3px 4px 3px 9px; border-radius: 6px; overflow: hidden; text-align: left; color: #1f2a24; background: color-mix(in srgb, var(--pos-color) 15%, #fff); }
+.shift-bars { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; display: flex; flex-direction: column; }
+.shift-seg { display: block; flex: 1 1 0; min-height: 3px; background: var(--pos-color); }
+.shift-time { display: block; font-weight: 600; font-size: 12px; line-height: 1.2; font-variant-numeric: tabular-nums; white-space: nowrap; color: #1f2a24; }
+.shift-pos { display: flex; gap: 2px; min-width: 0; }
+.shift-band { display: block; flex: 1 1 auto; min-width: 0; padding: 0 4px; border-radius: 3px; font-size: 10px; line-height: 1.4; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #1f2a24; background: color-mix(in srgb, var(--pos-color) 30%, #fff); }
+.shift-tag { display: inline-block; margin-right: 3px; padding: 0 4px; border-radius: 3px; font-size: 9.5px; font-weight: 700; line-height: 1.4; color: #5a4300; background: #f0dca0; }
+.pos-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; background: var(--pos-color, #66736b); }
+/* === FIM POSTOS === */
+
+/* Blocos de posto no cartão: texto sempre ≥ 14 px */
+.sched-card .shift-block { padding: 4px 8px 4px 13px; border-radius: 8px; gap: 3px; }
+.sched-card .shift-bars { width: 5px; }
+.sched-card .shift-time { font-size: 15px; font-weight: 700; }
+.sched-card .shift-pos { flex-wrap: wrap; gap: 4px; }
+.sched-card .shift-band { flex: 0 1 auto; padding: 1px 8px; font-size: 14px; line-height: 1.4; border-radius: 5px; }
+.shift-block--lg { padding: 8px 10px 8px 15px !important; gap: 6px !important; border-radius: 10px !important; }
+.shift-block--lg .shift-bars { width: 6px !important; }
+.shift-block--lg .shift-time { font-size: 30px !important; font-weight: 700; line-height: 1.15; }
+
+/* Atalho «Pedir folga / férias» e pedido enviado */
+.device .sched-card .ask-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 8px 16px; font-size: 15px; border-radius: 8px; }
+.sched-card .ask-line { margin-top: 12px; }
+.sched-row small { display: block; }
+.sched-card .ask-status { margin-top: 10px; font-size: 14px; }
+.sheet__box.ms-askbox { width: min(520px, calc(100% - 24px)); padding: 16px; }
+.ms-askbox h2 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+.ms-askbox .ms-askhint { margin-bottom: 12px; font-size: 14px; color: var(--mut); }
+.device .ms-askbox label { font-size: 14px; margin-bottom: 12px; }
+.device .ms-askbox input, .device .ms-askbox textarea { min-height: 44px; font-size: 16px; max-width: none; }
+.device .ms-askbox .seg { display: flex; width: 100%; margin-bottom: 8px; }
+.device .ms-askbox .seg button { flex: 1; min-height: 44px; font-size: 15px; padding: 6px 8px; }
+.ms-askbtns { display: flex; gap: 8px; flex-wrap: wrap; }
+.device .ms-askbtns button { flex: 1 1 140px; min-height: 48px; font-size: 16px; }
+.ms-askerr { margin-bottom: 10px; }
+/* Aviso da quarta-feira (folga rotativa): triângulo âmbar e tooltip âmbar próprios dentro do .device (mesmo desenho nos mockups 2, 3, 5 e 6) */
+.ms-daterow { display: flex; align-items: flex-end; gap: 2px; }
+.ms-daterow > label { flex: 1; min-width: 0; }
+.device .wed-ico { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; min-height: 0; padding: 0; margin-left: 4px; border: none; border-radius: 6px; background: transparent; color: var(--warn-tx); cursor: help; vertical-align: middle; flex: none; }
+.device button.wed-ico:hover { background: var(--warn-bg); }
+.device .wed-ico svg { display: block; }
+.device .ms-daterow .wed-ico { margin: 0 0 22px 4px; }
+.device .ms-req .wed-ico, .device .ask-status .wed-ico { margin-left: 2px; }
+.wed-tip { position: absolute; z-index: 70; max-width: min(260px, calc(100% - 16px)); padding: 8px 10px; border-radius: 8px; background: var(--warn-bg); color: var(--warn-tx); border: 1px solid var(--warn-bd); font-size: 13px; line-height: 1.4; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2); pointer-events: none; }
+.wed-tip[hidden] { display: none; }
+@container app (max-width: 768px) {
+  .device button.wed-ico { width: 44px; height: 44px; margin: -10px 0; }
+  .device .ms-daterow .wed-ico { margin: 0 0 12px; }
+  .device .ms-req .wed-ico, .device .ask-status .wed-ico { margin: -10px -12px -10px -10px; }
+  .wed-tip { font-size: 14px; }
+}
+@container app (max-width: 768px) {
+  .sheet__box.ms-askbox { left: 0 !important; width: 100%; max-width: none; border-radius: 16px 16px 0 0; border-width: 1px 0 0; padding: 16px 16px 20px; }
+  .device .sched-card .ask-btn { width: 100%; }
+  .app-top .app-burger { min-width: 44px; min-height: 44px; }
+}
+
 .home-title { margin-bottom: 12px; }
 .home-section { margin-bottom: 32px; }
 .home-section > h2 { font-size: 15px; font-weight: 600; margin-bottom: 16px; }
@@ -347,6 +416,15 @@ a.pill:hover { background: #f5e2bd; }
 .diff-line { display: flex; align-items: center; justify-content: space-between; gap: 8px 12px; flex-wrap: wrap; font-size: 14px; }
 .sched-card .seen-note { font-size: 13px; color: var(--mut); }
 @container app (min-width: 600px) { .tile { padding: 14px 10px; } .tile .tile-time { font-size: 16px; } }
+.tile { padding-top: 16px; background: color-mix(in srgb, var(--pos-color, #fff) 12%, #fff); }
+.tile-bars { position: absolute; top: 0; left: 0; right: 0; height: 6px; display: flex; border-radius: 10px 10px 0 0; overflow: hidden; }
+.tile-bars i { display: block; min-width: 2px; background: var(--pos-color); }
+.tile .tile-pos { display: block; font-size: 14px; line-height: 1.3; font-weight: 600; margin-top: 2px; }
+.tile .tile-pos .pos-dot { margin-right: 4px; }
+@container app (max-width: 768px) {
+  .sched-card .kpi-title, .sched-card small, .sched-card .today-label, .sched-card .today-meta, .sched-card .kpi-sub, .sched-card .chg, .sched-card .next, .sched-card .seen-note, .sched-card .tile .tile-date, .sched-card .tile .tag-hoje, .sched-card a.pill { font-size: 14px; }
+  .device .sched-card .btn-row, .sched-card a.pill { min-height: 44px; font-size: 14px; display: inline-flex; align-items: center; }
+}
 </style>
 </head>
 <body data-view="both">
@@ -369,7 +447,7 @@ a.pill:hover { background: #f5e2bd; }
 <main class="mock-main">
   <section role="tabpanel" id="panel-a" aria-labelledby="tab-a" data-variant="a" hidden>
     <div class="variant-notes">
-      <p><b>Ideia:</b> um cartão do tamanho dos vizinhos, com três linhas (hoje, amanhã, seg 05/10) e uma pílula âmbar «Escala alterada» no cabeçalho que leva direto à semana 41.</p>
+      <p><b>Ideia:</b> um cartão do tamanho dos vizinhos, com três linhas (hoje, amanhã, seg 05/10), cada turno num bloco com a cor do posto (amanhã, Sumo → Copa 10:00 na mesma jornada), uma pílula âmbar «Escala alterada» no cabeçalho que leva direto à semana 41 e o botão «Pedir folga / férias».</p>
       <p><b>Vantagens:</b> ocupa o mínimo de espaço, não desloca os cartões existentes e o aviso fica a 1 clique da escala.</p>
       <p><b>Custo:</b> sem intervalo de almoço nem colegas; o «antes» da alteração só aparece no tooltip e na escala completa.</p>
       <p class="note-extra">Conta sem ficha de funcionário: o cartão não aparece.</p>
@@ -377,7 +455,7 @@ a.pill:hover { background: #f5e2bd; }
   </section>
   <section role="tabpanel" id="panel-b" aria-labelledby="tab-b" data-variant="b" hidden>
     <div class="variant-notes">
-      <p><b>Ideia:</b> «Hoje» em grande, com intervalo e n.º de colegas, os dois dias seguintes por baixo e uma faixa âmbar no topo com «Ver alterações».</p>
+      <p><b>Ideia:</b> «Hoje» em grande, num bloco com a cor do posto, com intervalo e n.º de colegas, os dois dias seguintes por baixo (também com a cor do posto), uma faixa âmbar no topo com «Ver alterações» e o botão «Pedir folga / férias».</p>
       <p><b>Vantagens:</b> responde a «a que horas entro?» sem abrir nada; a alteração mostra o antes e o depois e marca-se como vista no próprio cartão (2 cliques).</p>
       <p><b>Custo:</b> ocupa duas colunas e é o cartão mais alto da página.</p>
       <p class="note-extra">Conta sem ficha de funcionário: o cartão não aparece.</p>
@@ -385,7 +463,7 @@ a.pill:hover { background: #f5e2bd; }
   </section>
   <section role="tabpanel" id="panel-c" aria-labelledby="tab-c" data-variant="c" hidden>
     <div class="variant-notes">
-      <p><b>Ideia:</b> três mosaicos lado a lado (dia, data, horário ou «Folga») e, por baixo, a diferença em linha, antes → depois, com «Vista» e «Abrir escala».</p>
+      <p><b>Ideia:</b> três mosaicos lado a lado (dia, data, horário e posto, com a faixa da cor do posto no topo) e, por baixo, a diferença em linha, antes → depois, com «Vista» e «Abrir escala», e o botão «Pedir folga / férias».</p>
       <p><b>Vantagens:</b> lê-se em meio segundo e diz exatamente o que mudou, sem abrir a escala; «Vista» fecha o aviso num clique.</p>
       <p><b>Custo:</b> ocupa a largura toda da secção; com várias alterações a linha de diferença cresce (uma por dia alterado).</p>
       <p class="note-extra">Conta sem ficha de funcionário: o cartão não aparece.</p>
@@ -414,10 +492,12 @@ a.pill:hover { background: #f5e2bd; }
             <a class="pill" href="#" data-when="changed" data-route="/escala/minha?semana=2026-W41"><span class="dot" aria-hidden="true"></span>Escala alterada</a>
           </div>
           <ul class="sched-list">
-            <li class="sched-row"><span><b>Hoje</b> <span class="muted">sáb 03/10</span></span><span class="time">08:00–17:30</span></li>
-            <li class="sched-row"><span><b>Amanhã</b> <span class="muted">dom 04/10</span></span><span class="time">08:00–17:00</span></li>
-            <li class="sched-row is-changed"><span><b>Seg 05/10</b><small>Feriado (aberto)</small></span><span class="time"><span class="chg" data-when="changed" title="Antes: Folga">alterado</span>08:00–17:30</span></li>
+            <li class="sched-row"><span><b>Hoje</b> <span class="muted">sáb 03/10</span></span><span class="time"><span class="shift-block" style="--pos-color:#e8742a"><span class="shift-bars" aria-hidden="true"><i class="shift-seg" style="--pos-color:#e8742a"></i></span><span class="shift-time">08:00–17:30</span><span class="shift-pos"><span class="shift-band" style="--pos-color:#e8742a">Copa</span></span></span></span></li>
+            <li class="sched-row"><span><b>Amanhã</b> <span class="muted">dom 04/10</span></span><span class="time"><span class="shift-block has-swap" style="--pos-color:#a03fb5"><span class="shift-bars" aria-hidden="true"><i class="shift-seg" style="--pos-color:#a03fb5;flex:120"></i><i class="shift-seg" style="--pos-color:#e8742a;flex:420"></i></span><span class="shift-time">08:00–17:00</span><span class="shift-pos"><span class="shift-band" style="--pos-color:#a03fb5">Sumo</span><span class="shift-band" style="--pos-color:#e8742a">Copa 10:00</span></span></span></span></li>
+            <li class="sched-row is-changed"><span><b>Seg 05/10</b><small>Feriado (aberto)</small></span><span class="time"><span class="chg" data-when="changed" title="Antes: Folga">alterado</span><span class="shift-block" style="--pos-color:#e8742a"><span class="shift-bars" aria-hidden="true"><i class="shift-seg" style="--pos-color:#e8742a"></i></span><span class="shift-time">08:00–17:30</span><span class="shift-pos"><span class="shift-band" style="--pos-color:#e8742a">Copa</span></span></span></span></li>
           </ul>
+          <div class="btn-line ask-line"><button type="button" class="btn-row btn-row-strong ask-btn" data-act="ask">Pedir folga / férias</button></div>
+          <p class="alert-info ask-status" role="status" data-ask-status hidden></p>
         </div>
         <div class="card">
           <h3 class="kpi-title">Banco de horas</h3>
@@ -468,13 +548,15 @@ a.pill:hover { background: #f5e2bd; }
           </div>
           <div class="today">
             <p class="today-label">Hoje · sáb 03/10</p>
-            <p class="today-time">08:00–17:30</p>
+            <div class="today-time"><span class="shift-block shift-block--lg" style="--pos-color:#e8742a"><span class="shift-bars" aria-hidden="true"><i class="shift-seg" style="--pos-color:#e8742a"></i></span><span class="shift-time">08:00–17:30</span><span class="shift-pos"><span class="shift-band" style="--pos-color:#e8742a">Copa</span></span></span></div>
             <p class="today-meta">Dia · intervalo 12:30–13:30 · 6 colegas a trabalhar</p>
           </div>
           <div class="next-grid">
-            <div class="next"><span>Amanhã · dom 04/10</span><b>08:00–17:00</b></div>
-            <div class="next is-changed"><span>Seg 05/10 · Feriado (aberto)</span><b>08:00–17:30</b><span class="chg" data-when="changed" title="Antes: Folga">alterado</span></div>
+            <div class="next"><span>Amanhã · dom 04/10</span><span class="shift-block has-swap" style="--pos-color:#a03fb5"><span class="shift-bars" aria-hidden="true"><i class="shift-seg" style="--pos-color:#a03fb5;flex:120"></i><i class="shift-seg" style="--pos-color:#e8742a;flex:420"></i></span><span class="shift-time">08:00–17:00</span><span class="shift-pos"><span class="shift-band" style="--pos-color:#a03fb5">Sumo</span><span class="shift-band" style="--pos-color:#e8742a">Copa 10:00</span></span></span></div>
+            <div class="next is-changed"><span>Seg 05/10 · Feriado (aberto)</span><span class="shift-block" style="--pos-color:#e8742a"><span class="shift-bars" aria-hidden="true"><i class="shift-seg" style="--pos-color:#e8742a"></i></span><span class="shift-time">08:00–17:30</span><span class="shift-pos"><span class="shift-band" style="--pos-color:#e8742a">Copa</span></span></span><span class="chg" data-when="changed" title="Antes: Folga">alterado</span></div>
           </div>
+          <div class="btn-line ask-line"><button type="button" class="btn-row btn-row-strong ask-btn" data-act="ask">Pedir folga / férias</button></div>
+          <p class="alert-info ask-status" role="status" data-ask-status hidden></p>
         </div>
         <div class="card">
           <h3 class="kpi-title">Banco de horas</h3>
@@ -513,21 +595,27 @@ a.pill:hover { background: #f5e2bd; }
         <div class="card sched-card span-all" data-seen="false">
           <h3 class="kpi-title">A minha escala <span class="new-tag" title="Elemento novo (marca do mockup)">Novo</span></h3>
           <div class="tiles">
-            <div class="tile is-today">
+            <div class="tile is-today" style="--pos-color:#e8742a">
+              <span class="tile-bars" aria-hidden="true"><i style="--pos-color:#e8742a;flex:1"></i></span>
               <span class="tile-day">sáb <span class="tag-hoje">hoje</span></span>
               <span class="tile-date">03/10</span>
               <span class="tile-time"><span>08:00–</span><span>17:30</span></span>
+              <span class="tile-pos"><span class="pos-dot" style="--pos-color:#e8742a" aria-hidden="true"></span>Copa</span>
             </div>
-            <div class="tile">
+            <div class="tile" style="--pos-color:#a03fb5">
+              <span class="tile-bars" aria-hidden="true"><i style="--pos-color:#a03fb5;flex:120"></i><i style="--pos-color:#e8742a;flex:420"></i></span>
               <span class="tile-day">dom</span>
               <span class="tile-date">04/10</span>
               <span class="tile-time"><span>08:00–</span><span>17:00</span></span>
+              <span class="tile-pos"><span class="pos-dot" style="--pos-color:#a03fb5" aria-hidden="true"></span>Sumo</span><span class="tile-pos"><span class="pos-dot" style="--pos-color:#e8742a" aria-hidden="true"></span>Copa 10:00</span>
             </div>
-            <div class="tile is-changed">
+            <div class="tile is-changed" style="--pos-color:#e8742a">
+              <span class="tile-bars" aria-hidden="true"><i style="--pos-color:#e8742a;flex:1"></i></span>
               <span class="dot" data-when="changed" aria-hidden="true"></span>
               <span class="tile-day">seg</span>
               <span class="tile-date">05/10</span><small>Feriado (aberto)</small>
               <span class="tile-time"><span>08:00–</span><span>17:30</span></span>
+              <span class="tile-pos"><span class="pos-dot" style="--pos-color:#e8742a" aria-hidden="true"></span>Copa</span>
             </div>
           </div>
           <div class="alert-warn diff-line" data-when="changed">
@@ -538,6 +626,8 @@ a.pill:hover { background: #f5e2bd; }
             </span>
           </div>
           <p class="seen-note" data-when="seen">Alterações da semana 41 vistas.</p>
+          <div class="btn-line ask-line"><button type="button" class="btn-row btn-row-strong ask-btn" data-act="ask">Pedir folga / férias</button></div>
+          <p class="alert-info ask-status" role="status" data-ask-status hidden></p>
         </div>
         <div class="card">
           <h3 class="kpi-title">Banco de horas</h3>
@@ -673,7 +763,7 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
       }).join('');
     }).join('');
     app.innerHTML =
-      '<aside class="app-side" aria-label="Menu principal"><div class="app-logo">GIG</div><nav>' + nav + '</nav>' +
+      '<aside class="app-side" aria-label="Menu principal"><div class="app-logo">GiG</div><nav>' + nav + '</nav>' +
       '<div class="app-user"><span class="app-user__name">' + esc(user) + '</span><button type="button" data-route="/login">Sair</button></div></aside>' +
       '<div class="app-scrim" data-act-scrim></div>' +
       '<div class="app-main"><div class="app-top"><button type="button" class="app-burger" aria-expanded="false" aria-label="Abrir menu">☰</button>' +
@@ -704,13 +794,31 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     panel.dataset.rendered = '1';
   }
 
-  /* separadores A/B/C (hash #a/#b/#c) e alternador de dispositivos */
-  var tabs = $$('.mock-bar [role="tab"]'), panels = $$('[role="tabpanel"]');
+  /* separadores derivados dos <template data-variant> (hash #a, #b, ...) e alternador de dispositivos */
+  var VARIANTS = $$('template[data-variant]').map(function (t) { return t.dataset.variant; }).sort();
+  var tablist = $('.mock-tabs'), mainEl = $('.mock-main'), notice = mk('div', 'variant-missing');
+  notice.hidden = true; notice.setAttribute('role', 'alert'); mainEl.insertBefore(notice, mainEl.firstChild);
+  $$('.mock-bar [role="tab"], [role="tabpanel"][data-variant]').forEach(function (el) { if (VARIANTS.indexOf(el.dataset.variant) < 0) el.remove(); });
+  VARIANTS.forEach(function (v) {
+    if (!$('#tab-' + v)) {
+      var b = mk('button', ''); b.type = 'button'; b.id = 'tab-' + v; b.dataset.variant = v; b.setAttribute('role', 'tab');
+      b.setAttribute('aria-controls', 'panel-' + v); b.setAttribute('aria-selected', 'false'); b.textContent = v.toUpperCase(); tablist.appendChild(b);
+    }
+    if (!$('#panel-' + v)) {
+      var p = mk('section', ''); p.id = 'panel-' + v; p.dataset.variant = v; p.hidden = true; p.setAttribute('role', 'tabpanel'); p.setAttribute('aria-labelledby', 'tab-' + v);
+      mainEl.appendChild(p);
+    }
+  });
+  var tabs = $$('.mock-bar [role="tab"]'), panels = $$('[role="tabpanel"][data-variant]');
   function select(v, focus) {
-    if (!tabs.some(function (t) { return t.dataset.variant === v; })) v = tabs[0].dataset.variant;
-    tabs.forEach(function (t) { var o = t.dataset.variant === v; t.setAttribute('aria-selected', String(o)); t.tabIndex = o ? 0 : -1; if (o && focus) t.focus(); });
-    panels.forEach(function (p) { p.hidden = p.dataset.variant !== v; if (p.dataset.variant === v && !p.dataset.rendered) mount(p); });
-    if (location.hash.slice(1) !== v) { try { history.replaceState(null, '', '#' + v); } catch (e) { /* file:// restrito */ } }
+    var missing = null;
+    if (VARIANTS.indexOf(v) < 0) { if (v) missing = v; v = VARIANTS[0]; }
+    tabs.forEach(function (t) { var o = !missing && t.dataset.variant === v; t.setAttribute('aria-selected', String(o)); t.tabIndex = o || (missing && t.dataset.variant === v) ? 0 : -1; if (o && focus) t.focus(); });
+    panels.forEach(function (p) { p.hidden = !!missing || p.dataset.variant !== v; if (!p.hidden && !p.dataset.rendered) mount(p); });
+    notice.hidden = !missing;
+    if (missing) {
+      notice.innerHTML = '<span>Esta funcionalidade não tem a variante ' + esc(missing.toUpperCase()) + '.</span> <a class="btn-row" href="#' + esc(VARIANTS[0]) + '">Ver a variante ' + esc(VARIANTS[0].toUpperCase()) + '</a>';
+    } else if (location.hash.slice(1) !== v) { try { history.replaceState(null, '', '#' + v); } catch (e) { /* file:// restrito */ } }
   }
   function setView(v) {
     document.body.dataset.view = v;
@@ -766,6 +874,108 @@ Mock.on('click', '[data-act="toggle-diff"]', function (e, t) {
   t.setAttribute('aria-expanded', String(open));
   t.textContent = open ? 'Esconder alterações' : 'Ver alterações';
   document.getElementById(t.getAttribute('aria-controls')).hidden = !open;
+});
+/* Atalho «Pedir folga / férias»: folha inferior (folga rotativa = um dia, férias = período) */
+var MANAGER = 'Joana Valente', MIN_ASK = '2026-10-04';
+function isoDate(iso) { var a = iso.split('-'); return a[2] + '/' + a[1] + '/' + a[0]; }
+/* aviso da quarta-feira: triângulo âmbar + tooltip próprio (desktop: hover e foco; telemóvel: toque); mesmo desenho e comportamento do mockup 6 */
+var WED_MSG = 'A quarta-feira já costuma ser dia de folga da casa (excepto na época alta).';
+var WED_SVG = '<svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" focusable="false"><path d="M8 1.6 15 14H1z" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M8 6v4M8 11.7v.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+function isWed(iso) { return !!iso && new Date(iso + 'T00:00:00Z').getUTCDay() === 3; }
+function tipEl(dev) {
+  var app = Mock.$('.app', dev), t = Mock.$('.wed-tip', app);
+  if (!t) {
+    t = document.createElement('div'); t.className = 'wed-tip'; t.setAttribute('role', 'tooltip'); t.id = Mock.uid('wedtip'); t.hidden = true; t.textContent = WED_MSG; app.appendChild(t);
+  }
+  return t;
+}
+function wedIcon(dev) { return '<button type="button" class="wed-ico" data-wed aria-label="Aviso sobre a quarta-feira" aria-expanded="false" aria-describedby="' + tipEl(dev).id + '">' + WED_SVG + '</button>'; }
+function ensureTip(dev) { tipEl(dev); }
+function showTip(dev, ico) {
+  var t = tipEl(dev), app = Mock.$('.app', dev);
+  hideTip(dev); t.hidden = false; t._ico = ico; ico.setAttribute('aria-expanded', 'true');
+  var ar = app.getBoundingClientRect(), ir = ico.getBoundingClientRect(), w = t.offsetWidth, h = t.offsetHeight;
+  var left = Math.min(Math.max(8, ir.left - ar.left + ir.width / 2 - w / 2), Math.max(8, ar.width - w - 8));
+  var top = ir.bottom - ar.top + 4;
+  if (top + h > ar.height - 4) top = ir.top - ar.top - h - 4;
+  t.style.left = left + 'px'; t.style.top = Math.max(4, top) + 'px';
+}
+function hideTip(dev) {
+  var t = Mock.$('.wed-tip', dev); if (!t || t.hidden) return;
+  t.hidden = true; if (t._ico) t._ico.setAttribute('aria-expanded', 'false');
+}
+function syncWed(box, dev) {
+  var ferias = Mock.$('[data-act="ask-type"][data-type="ferias"]', box).getAttribute('aria-pressed') === 'true';
+  var show = !ferias && isWed(Mock.$('[name="d1"]', box).value), b = Mock.$('.wed-ico', box);
+  b.hidden = !show; if (!show) hideTip(dev);
+}
+var isDesktop = function (dev) { return dev.dataset.kind === 'desktop'; };
+Mock.on('mouseover', '[data-wed]', function (e, t, dev) { if (isDesktop(dev)) showTip(dev, t); });
+Mock.on('mouseout', '[data-wed]', function (e, t, dev) { if (isDesktop(dev) && !t.contains(e.relatedTarget) && !t.matches(':focus-visible')) hideTip(dev); });
+Mock.on('focusin', '[data-wed]', function (e, t, dev) { if (isDesktop(dev)) showTip(dev, t); });
+Mock.on('focusout', '[data-wed]', function (e, t, dev) { if (isDesktop(dev)) hideTip(dev); });
+Mock.on('click', '[data-wed]', function (e, t, dev) {
+  var tip = Mock.$('.wed-tip', dev), open = tip && !tip.hidden && tip._ico === t;
+  if (isDesktop(dev)) showTip(dev, t); else if (open) hideTip(dev); else showTip(dev, t);
+});
+Mock.on('input', '[name="d1"]', function (e, t, dev) { syncWed(t.closest('.sheet__box'), dev); });
+Mock.on('change', '[name="d1"]', function (e, t, dev) { syncWed(t.closest('.sheet__box'), dev); });
+/* a folha fecha por Escape, Cancelar, Enviar ou clique fora: em todos os casos o tooltip desaparece */
+document.addEventListener('click', function (e) {
+  if (e.target.closest && e.target.closest('[data-wed]')) return;
+  Mock.$$('.wed-tip:not([hidden])').forEach(function (t) { hideTip(t.closest('.device')); });
+});
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') Mock.$$('.wed-tip:not([hidden])').forEach(function (t) { hideTip(t.closest('.device')); });
+});
+window.mockInit = function (dev) { ensureTip(dev); };
+function askHTML(dev) {
+  return '<form class="ms-askform" novalidate>' +
+    '<h2>Pedir folga / férias</h2>' +
+    '<div class="seg" role="group" aria-label="Tipo de pedido"><button type="button" data-act="ask-type" data-type="folga" aria-pressed="true">Folga rotativa</button><button type="button" data-act="ask-type" data-type="ferias" aria-pressed="false">Férias</button></div>' +
+    '<p class="ms-askhint" data-hint>Folga rotativa: um dia.</p>' +
+    '<div class="ms-daterow"><label><span data-lbl>Dia da folga</span><input type="date" name="d1" min="' + MIN_ASK + '"></label>' + wedIcon(dev).replace('class="wed-ico"', 'class="wed-ico" hidden') + '</div>' +
+    '<label data-to hidden>Até (inclusive)<input type="date" name="d2" min="' + MIN_ASK + '"></label>' +
+    '<label>Nota (opcional)<textarea name="note" rows="2" placeholder="Ex.: consulta médica"></textarea></label>' +
+    '<p class="alert-err ms-askerr" role="alert" data-err hidden></p>' +
+    '<div class="ms-askbtns"><button type="button" class="primary" data-act="ask-send">Enviar</button><button type="button" class="secondary" data-close-sheet>Cancelar</button></div>' +
+    '</form>';
+}
+/* a folha cola-se ao fundo da parte visível do dispositivo */
+function placeSheet(dev, box) {
+  var r = dev.getBoundingClientRect();
+  var top = Math.min(Math.max(-r.top, 0), r.height), bottom = Math.min(Math.max(window.innerHeight - r.top, 0), r.height);
+  box.style.top = Math.max(top + 8, bottom - box.offsetHeight - 12) + 'px';
+}
+Mock.on('click', '[data-act="ask"]', function (e, t, dev) {
+  var box = Mock.sheet(dev, askHTML(dev));
+  box.classList.add('ms-askbox'); box.setAttribute('aria-label', 'Pedir folga / férias');
+  placeSheet(dev, box);
+});
+Mock.on('click', '[data-act="ask-type"]', function (e, t, dev) {
+  var box = t.closest('.sheet__box'), ferias = t.dataset.type === 'ferias';
+  Mock.$$('[data-act="ask-type"]', box).forEach(function (b) { b.setAttribute('aria-pressed', String(b === t)); });
+  Mock.$('[data-hint]', box).textContent = ferias ? 'Férias: um período (primeiro e último dia).' : 'Folga rotativa: um dia.';
+  Mock.$('[data-lbl]', box).textContent = ferias ? 'Primeiro dia' : 'Dia da folga';
+  Mock.$('[data-to]', box).hidden = !ferias;
+  Mock.$('[data-err]', box).hidden = true;
+  syncWed(box, dev);
+});
+Mock.on('click', '[data-act="ask-send"]', function (e, t, dev) {
+  var box = t.closest('.sheet__box'), err = Mock.$('[data-err]', box);
+  var ferias = Mock.$('[data-act="ask-type"][data-type="ferias"]', box).getAttribute('aria-pressed') === 'true';
+  var d1 = Mock.$('[name="d1"]', box).value, d2 = Mock.$('[name="d2"]', box).value, msg = '';
+  if (!d1) msg = ferias ? 'Escolha o primeiro dia das férias.' : 'Escolha o dia da folga.';
+  else if (d1 < MIN_ASK) msg = 'Escolha uma data a partir de amanhã.';
+  else if (ferias && !d2) msg = 'Escolha o último dia das férias.';
+  else if (ferias && d2 < d1) msg = 'O último dia não pode ser antes do primeiro.';
+  if (msg) { err.textContent = msg; err.hidden = false; placeSheet(dev, box); return; }
+  var st = Mock.$('[data-ask-status]', dev);
+  st.innerHTML = (ferias ? 'Férias · ' + isoDate(d1) + ' a ' + isoDate(d2) : 'Folga rotativa · ' + isoDate(d1) + (isWed(d1) ? wedIcon(dev) : '')) + '. Pedido enviado, a aguardar resposta de ' + MANAGER + '.';
+  st.hidden = false;
+  hideTip(dev);
+  Mock.closeSheet(dev);
+  Mock.toast(dev, 'Pedido enviado. A ' + MANAGER + ' vai responder.');
 });
 </script>
 </body>

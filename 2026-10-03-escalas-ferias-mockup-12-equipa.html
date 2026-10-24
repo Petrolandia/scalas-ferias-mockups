@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 12 — Equipa</title>
+<style>
+/* === MOLDURA COMUM (copiar) === */
+/* Tokens copiados de src/app/globals.css:2-33 (tema «Menta») */
+:root {
+  --bg: #f3f6f3;
+  --card: #fff;
+  --border: rgba(0, 0, 0, 0.15);
+  --txt: #1f2a24;
+  --mut: #66736b;
+  --hint: #9aa49e;
+  --sidebar: #2f3a33;
+  --sidebar-tx: #dfeee5;
+  --brand: #7fc9a2;
+  --primary: #2e9e68;
+  --primary-hover: #267f54;
+  --ok-bg: #e2f2e9;
+  --ok-tx: #1f6b44;
+  --ok-bd: #7fc9a2;
+  --row-hover: rgba(127, 201, 162, 0.12);
+  --er-bg: #fcebeb;
+  --er-tx: #a32d2d;
+  --er-bd: #f09595;
+  --warn-bg: #faeeda;
+  --warn-tx: #854f0b;
+  --warn-bd: #e8c44e;
+  --info-tx: #1d4ed8;
+  --info-bg: #e6eefc;
+  --info-bd: #9db7f0;
+  --on-primary: #fff;
+}
+* { box-sizing: border-box; padding: 0; margin: 0; }
+[hidden] { display: none !important; }
+html, body {
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--txt);
+  -webkit-font-smoothing: antialiased;
+}
+body { min-height: 100vh; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+/* ── Barra do mockup (não faz parte do ecrã) ── */
+.mock-bar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+  padding: 8px 16px; background: var(--sidebar); color: var(--sidebar-tx); font-size: 13px;
+}
+.mock-back { padding: 4px 10px; border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 6px; white-space: nowrap; }
+.mock-back:hover { background: rgba(255, 255, 255, 0.12); }
+.mock-title { font-weight: 600; flex: 1 1 200px; min-width: 0; }
+.mock-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+.mock-bar button {
+  font-size: 13px; min-height: 30px; padding: 3px 12px; cursor: pointer; font-family: inherit;
+  background: transparent; color: var(--sidebar-tx); border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 6px;
+}
+.mock-bar button:hover { background: rgba(255, 255, 255, 0.12); }
+.mock-bar [role='tab'][aria-selected='true'],
+.mock-bar [aria-pressed='true'] { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+.mock-view { display: inline-flex; }
+.mock-view button { border-radius: 0; margin-left: -1px; }
+.mock-view button:first-child { border-radius: 6px 0 0 6px; margin-left: 0; }
+.mock-view button:last-child { border-radius: 0 6px 6px 0; }
+
+/* ── Palco: dois dispositivos lado a lado, a quebrar para baixo ── */
+.mock-main { padding: 16px 16px 56px; }
+.variant-notes {
+  max-width: 1180px; margin: 0 auto 16px; padding: 10px 14px; font-size: 14px; line-height: 1.5;
+  background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--primary); border-radius: 8px;
+}
+.variant-notes b { font-weight: 600; }
+.variant-notes .note-extra { margin-top: 4px; font-size: 12px; color: var(--mut); }
+.variant-missing { max-width: 1180px; margin: 0 auto 16px; padding: 12px 14px; font-size: 14px; background: var(--warn-bg); color: var(--warn-tx); border: 1px solid var(--warn-bd, var(--border)); border-left: 4px solid var(--warn-tx); border-radius: 8px; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+.variant-missing[hidden] { display: none; }
+.stage { display: flex; flex-wrap: wrap; gap: 28px 24px; align-items: flex-start; justify-content: center; }
+.stage-item { min-width: 0; max-width: 100%; }
+.stage-cap { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; color: var(--mut); }
+.stage-reset {
+  font-size: 12px; min-height: 0; padding: 2px 10px; cursor: pointer; font-family: inherit;
+  background: var(--card); color: var(--mut); border: 1px solid var(--border); border-radius: 6px;
+}
+.stage-reset:hover { color: var(--txt); }
+.device-scroll { overflow-x: auto; max-width: 100%; padding: 2px; }
+.device-scroll--phone { padding: 8px; }
+body[data-view='desktop'] .stage-item--phone,
+body[data-view='phone'] .stage-item--desktop { display: none; }
+
+/* ── Dispositivos: largura fixa, contentor para as container queries ── */
+.device {
+  container-type: inline-size; container-name: app; position: relative;
+  background: var(--bg); overflow: hidden;
+}
+.device--desktop { width: 1180px; border-radius: 10px; box-shadow: 0 0 0 1px var(--border), 0 4px 18px rgba(0, 0, 0, 0.08); }
+.device--phone { width: 375px; border-radius: 22px; box-shadow: 0 0 0 1px var(--border), 0 0 0 6px #dde5df, 0 6px 22px rgba(0, 0, 0, 0.15); }
+
+/* ── Mini-app: barra lateral + conteúdo (réplica de .shell/.sidebar/.content) ── */
+.app { display: flex; position: relative; min-height: 560px; font-size: 14px; background: var(--bg); color: var(--txt); }
+.app-side {
+  width: 220px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; padding: 20px 12px;
+  background: var(--sidebar); color: var(--sidebar-tx);
+}
+.app-logo {
+  background: #fff; border-radius: 8px; padding: 8px 10px; margin-bottom: 4px; text-align: center;
+  font-weight: 700; font-size: 18px; letter-spacing: 0.04em; color: var(--primary);
+}
+.app-side nav { display: flex; flex-direction: column; gap: 4px; }
+.sidebar-link {
+  display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; font-size: 14px;
+  color: var(--sidebar-tx); opacity: 0.85; flex-shrink: 0;
+}
+.sidebar-link:hover { opacity: 1; background: rgba(255, 255, 255, 0.1); }
+.sidebar-link--active { background: rgba(127, 201, 162, 0.22); color: #bfe8d2; opacity: 1; }
+.sidebar-section { font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.5; padding: 0 10px; margin: 12px 0 2px; }
+.sidebar-section:first-child { margin-top: 4px; }
+.app-user { margin-top: auto; padding-top: 16px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.app-user__name { padding: 0 10px; opacity: 0.8; }
+.app-side .app-user button {
+  width: 100%; text-align: left; background: transparent; border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--sidebar-tx); border-radius: 8px; padding: 8px 10px; font-size: 13px; cursor: pointer; min-height: 0;
+}
+.app-side .app-user button:hover { background: rgba(255, 255, 255, 0.1); }
+.app-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.app-top { display: none; }
+.app-scrim { display: none; }
+.app-content { flex: 1; min-width: 0; padding: 24px; position: relative; }
+.app-toast {
+  position: absolute; z-index: 60; transform: translateX(-50%); width: max-content; max-width: calc(100% - 24px);
+  padding: 8px 14px; border-radius: 8px; background: var(--sidebar); color: var(--sidebar-tx); font-size: 13px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25); pointer-events: none;
+}
+.sheet { position: absolute; inset: 0; z-index: 50; background: rgba(0, 0, 0, 0.35); }
+.sheet__box {
+  position: absolute; width: min(520px, calc(100% - 24px)); max-height: 80%; overflow: auto;
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+}
+.new-tag {
+  display: inline-block; vertical-align: middle; margin-left: 6px; padding: 0 6px; border-radius: 4px; font-size: 11px;
+  font-weight: 600; text-transform: none; letter-spacing: 0; background: var(--info-bg); border: 1px solid var(--info-bd); color: var(--info-tx);
+}
+
+/* ── Base de formulários e botões (globals.css) ── */
+.device input, .device select, .device textarea, .device button {
+  font-size: 16px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 8px;
+  background: #fff; min-height: 36px; font-family: inherit; color: var(--txt);
+}
+.device input[type='checkbox'], .device input[type='radio'] { min-height: 0; width: 18px; height: 18px; accent-color: var(--primary); }
+.device label { font-size: 12px; color: var(--mut); display: block; margin-bottom: 12px; }
+.device label > input, .device label > select, .device label > textarea { display: block; width: 100%; max-width: 420px; margin-top: 4px; }
+.device button.primary {
+  background: var(--primary); color: #fff; border: none; font-weight: 600; cursor: pointer; padding: 10px 22px; border-radius: 8px;
+}
+.device button.primary:hover { background: var(--primary-hover); }
+.device button.primary:disabled { background: var(--hint); cursor: not-allowed; }
+.device button.secondary { cursor: pointer; background: #fff; }
+.device .btn-row {
+  display: inline-block; font-size: 13px; font-weight: 500; padding: 4px 12px; min-height: 0;
+  border: 1px solid var(--primary); border-radius: 6px; background: #f2faf6; color: var(--primary-hover);
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+}
+.device .btn-row:hover { background: #e3f4ea; }
+.device .btn-row[aria-pressed='true'], .device .btn-row[aria-current='page'] { background: var(--primary); color: #fff; }
+.device .btn-row.btn-row-strong { background: var(--primary); color: #fff; font-weight: 600; }
+.device .btn-row.btn-row-strong:hover { background: var(--primary-hover); }
+.device .btn-row.btn-row-quiet { font-size: 12px; font-weight: 400; border-color: var(--border); background: var(--bg); color: var(--mut); }
+.device .btn-row.btn-row-quiet:hover { background: var(--card); color: var(--txt); }
+.device .btn-row.danger { border-color: #c0392b; color: #c0392b; background: #fdf3f2; }
+.device .btn-row:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Cartões, badges, avisos (globals.css) ── */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.badge-ok, .badge-warn, .badge-err, .badge-info, .badge-mut {
+  font-size: 12px; padding: 2px 8px; border-radius: 4px; white-space: nowrap; border: 1px solid; display: inline-block;
+}
+.badge-ok { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.badge-warn { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); }
+.badge-err { background: var(--er-bg); border-color: var(--er-bd); color: var(--er-tx); }
+.badge-info { background: var(--info-bg); border-color: var(--info-bd); color: var(--info-tx); }
+.badge-mut { background: var(--bg); border-color: var(--border); color: var(--mut); }
+.alert-ok, .alert-warn, .alert-err, .alert-info { border-radius: 8px; padding: 8px 12px; font-size: 14px; border: 1px solid; }
+.alert-ok { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.alert-warn { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); }
+.alert-err { background: var(--er-bg); border-color: var(--er-bd); color: var(--er-tx); }
+.alert-info { background: var(--info-bg); border-color: var(--info-bd); color: var(--info-tx); }
+.toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 12px 0 16px; }
+.toolbar-actions { margin-left: auto; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.muted { color: var(--mut); }
+.small { font-size: 12px; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Separadores de trabalho e filtro segmentado (precedente 2026-09-25) */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin: 4px 0 12px; flex-wrap: wrap; }
+.tabs [role='tab'] {
+  border: 1px solid transparent; border-bottom: none; border-radius: 8px 8px 0 0; background: none; min-height: 0;
+  font-size: 15px; padding: 8px 14px; cursor: pointer; color: var(--mut); margin-bottom: -1px;
+}
+.tabs [role='tab'][aria-selected='true'] { background: var(--card); border-color: var(--border); color: var(--txt); font-weight: 600; }
+.tab-count { display: inline-block; min-width: 20px; padding: 0 6px; border-radius: 10px; background: var(--er-bg); color: var(--er-tx); font-size: 12px; font-weight: 600; text-align: center; }
+.seg { display: inline-flex; border: 1px solid var(--primary); border-radius: 6px; overflow: hidden; }
+.device .seg button { border: none; border-radius: 0; min-height: 0; font-size: 13px; padding: 4px 12px; background: #f2faf6; color: var(--primary-hover); cursor: pointer; }
+.device .seg button[aria-pressed='true'] { background: var(--primary); color: #fff; font-weight: 600; }
+
+/* ── Tabelas (globals.css:492-): base desktop ── */
+.device table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 14px; }
+.device th { text-align: left; font-size: 12px; color: var(--mut); border-bottom: 1px solid var(--border); padding: 6px 8px; }
+.device td { padding: 8px; border-bottom: 1px solid var(--border); }
+.table-scroll-wrap { overflow-x: auto; }
+
+/* ── ≤768px: réplica do bloco @media (max-width: 768px) de globals.css, por container query ── */
+@container app (max-width: 768px) {
+  .app-side {
+    position: absolute; top: 0; left: 0; bottom: 0; z-index: 30; width: 240px;
+    transform: translateX(-100%); visibility: hidden;
+    transition: transform 0.22s ease, visibility 0s linear 0.22s; box-shadow: 4px 0 16px rgba(0, 0, 0, 0.25);
+  }
+  .app[data-menu-open] .app-side { transform: none; visibility: visible; transition: transform 0.22s ease; }
+  .app[data-menu-open] .app-scrim { display: block; position: absolute; inset: 0; z-index: 20; background: rgba(0, 0, 0, 0.4); }
+  .app-top {
+    display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+  .app-top .app-burger { padding: 6px 10px; line-height: 1; cursor: pointer; }
+  .app-top__title { font-weight: 600; font-size: 15px; }
+  .app-content { padding: 16px; }
+  h1 { font-size: 20px; }
+  .card { padding: 12px; }
+  .tabs [role='tab'] { flex: 1; padding: 8px 6px; font-size: 14px; }
+  .toolbar-actions { margin-left: 0; }
+  .sheet__box { padding: 12px; }
+
+  /* Grelha por omissão: a tabela é o próprio contentor de scroll */
+  table:not(.table--cards):not(.table--scroll) { display: block; overflow-x: auto; width: 100%; margin-top: 12px; font-size: 13px; }
+  table:not(.table--cards):not(.table--scroll) th,
+  table:not(.table--cards):not(.table--scroll) td { white-space: nowrap; padding: 4px 8px; font-variant-numeric: tabular-nums; }
+  /* .table--fill: 2–3 colunas, 100% da largura, o nome quebra */
+  table.table--fill:not(.table--cards):not(.table--scroll) { display: table; width: 100%; table-layout: auto; overflow-x: visible; }
+  table.table--fill:not(.table--cards):not(.table--scroll) th,
+  table.table--fill:not(.table--cards):not(.table--scroll) td { white-space: normal; overflow-wrap: anywhere; }
+  /* .table--cards: linhas viram cards; exige data-label em cada td (excepto acções) */
+  table.table--cards thead { display: none; }
+  table.table--cards, table.table--cards tbody, table.table--cards tfoot, table.table--cards tr, table.table--cards td { display: block; width: 100%; }
+  table.table--cards tr { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; padding: 8px 12px; }
+  table.table--cards td { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 4px 0; border-bottom: none; }
+  table.table--cards td[data-label]::before {
+    content: attr(data-label); font-size: 11px; font-weight: 600; color: var(--mut); text-transform: uppercase; letter-spacing: 0.04em; flex-shrink: 0;
+  }
+  table.table--cards td:not([data-label]) { justify-content: flex-end; border-top: 1px solid var(--border); margin-top: 4px; padding-top: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* Página estreita: o dispositivo mantém 375 px, com deslocação na moldura. */
+@media (max-width: 420px) {
+  .mock-main { padding: 12px 0 40px; }
+  .variant-notes { margin-left: 12px; margin-right: 12px; }
+  .stage-cap { padding: 0 12px; }
+  .device-scroll--phone { padding: 0; }
+  .device--phone { border-radius: 0; box-shadow: 0 0 0 1px var(--border); }
+}
+@media (max-width: 700px) {
+  .mock-bar { position: static; padding: 8px 12px; }
+  .mock-back { order: 1; }
+  .mock-view { order: 2; margin-left: auto; }
+  .mock-title { order: 3; flex-basis: 100%; }
+  .mock-tabs { order: 4; flex: 1 1 100%; flex-wrap: nowrap; }
+  .mock-tabs button { flex: 1 1 0; min-width: 0; padding: 4px 4px; font-size: 12px; line-height: 1.25; }
+}
+/* === FIM MOLDURA === */
+
+/* === ESPECÍFICO DESTE MOCKUP === */
+/* === POSTOS (copiar) === */
+/* Postos e cores fixos (as mesmas em todos os mockups): Montagem #d9a400 · Fogão #2f6fd6 · Sumo #a03fb5 · Copa #e8742a ·
+   Copa e Apoio #d9534f · Bar #2e9e5b · Produção #7a5a2e · Sala #3aa6b9 · Supervisão #b0234a · Gerência #6b4fd8.
+   O bloco tem sempre fundo claro, texto escuro e barra esquerda de 4 px na cor do posto: o contraste AA não depende do tema.
+   Uso (turno com troca de posto: dois .shift-seg e duas .shift-band no MESMO bloco; flex do .shift-seg = minutos do segmento):
+     <span class="shift-block has-swap" style="--pos-color:#a03fb5">
+       <span class="shift-bars" aria-hidden="true"><i class="shift-seg" style="--pos-color:#a03fb5;flex:120"></i><i class="shift-seg" style="--pos-color:#e8742a;flex:420"></i></span>
+       <span class="shift-time">08:00–17:00</span>
+       <span class="shift-pos"><span class="shift-band" style="--pos-color:#a03fb5">Sumo</span><span class="shift-band" style="--pos-color:#e8742a">Copa 10:00</span></span>
+     </span> */
+.shift-block { --pos-color: #66736b; position: relative; display: flex; flex-direction: column; gap: 2px; min-width: 0; padding: 3px 4px 3px 9px; border-radius: 6px; overflow: hidden; text-align: left; color: #1f2a24; background: color-mix(in srgb, var(--pos-color) 15%, #fff); }
+.shift-bars { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; display: flex; flex-direction: column; }
+.shift-seg { display: block; flex: 1 1 0; min-height: 3px; background: var(--pos-color); }
+.shift-time { display: block; font-weight: 600; font-size: 12px; line-height: 1.2; font-variant-numeric: tabular-nums; white-space: nowrap; color: #1f2a24; }
+.shift-pos { display: flex; gap: 2px; min-width: 0; }
+.shift-band { display: block; flex: 1 1 auto; min-width: 0; padding: 0 4px; border-radius: 3px; font-size: 10px; line-height: 1.4; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #1f2a24; background: color-mix(in srgb, var(--pos-color) 30%, #fff); }
+.shift-tag { display: inline-block; margin-right: 3px; padding: 0 4px; border-radius: 3px; font-size: 9.5px; font-weight: 700; line-height: 1.4; color: #5a4300; background: #f0dca0; }
+.pos-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; background: var(--pos-color, #66736b); }
+/* === FIM POSTOS === */
+.team h1 { font-size: 22px; font-weight: 600; line-height: 1.2; margin-bottom: 4px; }
+.team .lead { font-size: 14px; color: var(--mut); margin-bottom: 12px; max-width: 760px; }
+.team .sheet-h { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+.team .toolbar { margin: 8px 0 12px; }
+.team .toolbar .search { flex: 1 1 220px; max-width: 320px; margin: 0; }
+.device .team .toolbar .search input { max-width: none; width: 100%; margin: 0; }
+.team .counts { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+.team .btn-line { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.team .reason { font-size: 14px; color: var(--warn-tx); }
+.team .empty { padding: 20px 8px; text-align: center; color: var(--mut); }
+.team .alert-err { margin: 4px 0 10px; }
+.team .pos { white-space: nowrap; }
+.team td.act { white-space: nowrap; }
+.team td.act .btn-row + .btn-row, .team td.act .reason { margin-left: 8px; }
+.team .nm { font-weight: 600; }
+.team .na { color: var(--warn-tx); font-size: 14px; }
+
+/* B · cartões */
+.team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.tcard { display: flex; flex-direction: column; gap: 6px; padding: 14px; }
+.tcard-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.tcard h3 { font-size: 16px; font-weight: 600; overflow-wrap: anywhere; }
+.tcard .pos { font-size: 14px; color: var(--mut); }
+.tcard dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 10px; font-size: 14px; margin-top: 2px; }
+.tcard dt { font-size: 12px; color: var(--mut); text-transform: uppercase; letter-spacing: 0.04em; padding-top: 2px; }
+.tcard dd { overflow-wrap: anywhere; }
+.tcard .btn-line { margin-top: 8px; }
+
+/* C · lista + ficha lateral */
+.split { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 16px; align-items: start; }
+.list-pane { padding: 4px; }
+.list-pane ul { list-style: none; }
+.device .row-btn { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 2px 8px; text-align: left; padding: 8px 10px; min-height: 56px; border: 1px solid transparent; border-radius: 8px; background: transparent; cursor: pointer; }
+.device .row-btn:hover { background: var(--row-hover); }
+.device .row-btn[aria-current='true'] { background: var(--ok-bg); border-color: var(--ok-bd); }
+.row-btn .sub { grid-column: 1; font-size: 13px; color: var(--mut); }
+.row-btn .nm { font-size: 15px; }
+.row-btn .badge-ok, .row-btn .badge-mut, .row-btn .badge-info { grid-row: 1 / span 2; grid-column: 2; }
+.ficha { display: flex; flex-direction: column; gap: 4px; }
+.ficha h2 { font-size: 18px; font-weight: 600; }
+.ficha .ro-line { font-size: 14px; margin-bottom: 8px; }
+.ficha .back { display: none; margin-bottom: 8px; }
+.ficha .btn-line { margin-top: 8px; }
+@container app (max-width: 768px) {
+  .team h1 { font-size: 20px; }
+  .split { grid-template-columns: 1fr; }
+  .split[data-open='false'] .ficha { display: none; }
+  .split[data-open='true'] .list-pane { display: none; }
+  .ficha .back { display: inline-flex; align-items: center; align-self: flex-start; }
+  .team-grid { grid-template-columns: 1fr; }
+  .device .team .btn-row, .device .team button.primary, .device .team button.secondary { min-height: 44px; }
+  .device .team .btn-row { display: inline-flex; align-items: center; justify-content: center; }
+  .device .team .toolbar .search input, .device .team label > input { min-height: 44px; max-width: none; }
+  .device .team .seg button { min-height: 44px; }
+  .team .toolbar .search { max-width: none; flex-basis: 100%; }
+  .team td.act { white-space: normal; }
+  .team td.act .btn-row + .btn-row, .team td.act .reason { margin-left: 0; }
+  .team td.act { display: flex; flex-wrap: wrap; gap: 6px 8px; }
+}
+</style>
+</head>
+<body data-view="both">
+
+<header class="mock-bar">
+  <a class="mock-back" href="2026-10-03-escalas-ferias-mockups.html">← Índice</a>
+  <span class="mock-title">12 · Equipa</span>
+  <div class="mock-tabs" role="tablist" aria-label="Variantes">
+    <button type="button" role="tab" id="tab-a" data-variant="a" aria-controls="panel-a" aria-selected="false">A · Tabela</button>
+    <button type="button" role="tab" id="tab-b" data-variant="b" aria-controls="panel-b" aria-selected="false">B · Cartões</button>
+    <button type="button" role="tab" id="tab-c" data-variant="c" aria-controls="panel-c" aria-selected="false">C · Lista + ficha lateral</button>
+  </div>
+  <div class="mock-view" role="group" aria-label="Dispositivos">
+    <button type="button" data-view="both" aria-pressed="true">Ambos</button>
+    <button type="button" data-view="desktop" aria-pressed="false">Desktop</button>
+    <button type="button" data-view="phone" aria-pressed="false">375 px</button>
+  </div>
+</header>
+
+<main class="mock-main">
+  <section role="tabpanel" id="panel-a" aria-labelledby="tab-a" data-variant="a" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> uma tabela da equipa com nome, email, telefone, posto habitual e estado da conta (Sem conta, Convidado com a data, Activo). A ação «Convidar» está na própria linha e «Editar» abre a ficha com o email e o telefone.</p>
+      <p><b>Vantagens:</b> é a forma mais densa de ver os 11 de uma vez e de ver quem falta convidar; em 375 px cada linha vira um cartão com os rótulos.</p>
+      <p><b>Custo:</b> em 375 px o cartão de cada pessoa ocupa um ecrã quase inteiro, e a edição abre uma janela por cima da lista.</p>
+      <p class="note-extra">Sem email, «Convidar» fica desactivado com a razão «Falta o email» à vista; ao gravar um email na ficha, passa a activo.</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-b" aria-labelledby="tab-b" data-variant="b" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> um cartão por pessoa, num formato familiar a quem já usa aplicações de escalas: nome e estado em cima, posto habitual, email e telefone por baixo e os botões «Editar» e «Convidar».</p>
+      <p><b>Vantagens:</b> cada pessoa lê-se como um todo, bom para o telemóvel (um cartão por linha) e para dar a cara à equipa; o estado salta à vista.</p>
+      <p><b>Custo:</b> em desktop mostra menos pessoas por ecrã do que a tabela e não permite comparar colunas.</p>
+      <p class="note-extra">A pesquisa por nome e o filtro por estado são instantâneos, sem recarregar.</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-c" aria-labelledby="tab-c" data-variant="c" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> à esquerda a lista curta (nome, posto e estado) e, ao lado, a ficha da pessoa escolhida, com email e telefone editáveis no próprio sítio e o botão «Convidar». Em 375 px a lista ocupa o ecrã e a ficha abre por cima, com «Equipa» para voltar.</p>
+      <p><b>Vantagens:</b> não há janela por cima: edita-se e convida-se na mesma vista, e passa-se de pessoa em pessoa com um clique.</p>
+      <p><b>Custo:</b> em 375 px são dois ecrãs (lista e ficha) e o estado da conta de quem não está aberto só se vê na etiqueta da lista.</p>
+      <p class="note-extra">O botão «Convidar» usa o email que está no campo; se o campo estiver vazio, fica desactivado com «Falta o email».</p>
+    </div>
+  </section>
+</main>
+
+<!-- Conteúdo de cada variante: clonado por JS para o desktop e para os 375 px. Sem id aqui dentro. -->
+<template data-variant="a" data-active="Equipa" data-title="Equipa" data-user="Joana Valente">
+  <div class="team">
+    <h1>Equipa <span class="new-tag" title="Elemento novo (marca do mockup)">Novo</span></h1>
+    <p class="lead">O email fica na ficha e é por ele que cada pessoa recebe a escala, mesmo sem conta. A conta cria-se por convite.</p>
+    <div class="counts" data-slot="counts"></div>
+    <div class="toolbar">
+      <label class="search">Pesquisar por nome<input type="search" data-f="q" placeholder="Nome" autocomplete="off"></label>
+      <span class="seg" role="group" aria-label="Estado da conta" data-slot="filter"></span>
+    </div>
+    <div class="card" data-slot="list"></div>
+  </div>
+</template>
+
+<template data-variant="b" data-active="Equipa" data-title="Equipa" data-user="Joana Valente">
+  <div class="team">
+    <h1>Equipa <span class="new-tag" title="Elemento novo (marca do mockup)">Novo</span></h1>
+    <p class="lead">O email fica na ficha e é por ele que cada pessoa recebe a escala, mesmo sem conta. A conta cria-se por convite.</p>
+    <div class="counts" data-slot="counts"></div>
+    <div class="toolbar">
+      <label class="search">Pesquisar por nome<input type="search" data-f="q" placeholder="Nome" autocomplete="off"></label>
+      <span class="seg" role="group" aria-label="Estado da conta" data-slot="filter"></span>
+    </div>
+    <div data-slot="list"></div>
+  </div>
+</template>
+
+<template data-variant="c" data-active="Equipa" data-title="Equipa" data-user="Joana Valente">
+  <div class="team">
+    <h1>Equipa <span class="new-tag" title="Elemento novo (marca do mockup)">Novo</span></h1>
+    <p class="lead">O email fica na ficha e é por ele que cada pessoa recebe a escala, mesmo sem conta. A conta cria-se por convite.</p>
+    <div class="counts" data-slot="counts"></div>
+    <div class="toolbar">
+      <label class="search">Pesquisar por nome<input type="search" data-f="q" placeholder="Nome" autocomplete="off"></label>
+      <span class="seg" role="group" aria-label="Estado da conta" data-slot="filter"></span>
+    </div>
+    <div class="split" data-slot="split" data-open="false">
+      <div class="card list-pane" data-slot="list"></div>
+      <div class="card ficha" data-slot="ficha"></div>
+    </div>
+  </div>
+</template>
+
+<script>
+/* === MOLDURA COMUM (copiar) === */
+/* API para o JS específico (script a seguir a este):
+     window.mockInit = (deviceEl, variant, kind) => {}   chamado por cada clone (kind = 'desktop' | 'phone')
+     Mock.on(tipo, seletor, (evento, elemento, deviceEl) => {})   delegação com escopo no .device
+     Mock.toast(deviceEl, texto)   Mock.sheet(deviceEl, html|Node) → caixa   Mock.closeSheet(deviceEl)
+     Mock.state(deviceEl) → objeto por clone   Mock.uid(prefixo) → id único   Mock.$ Mock.$$ Mock.esc
+   No markup dos templates (sem id): data-id="k" → id único por clone; data-for / data-controls /
+   data-labelledby / data-describedby="k" → for / aria-controls / aria-labelledby / aria-describedby.
+   [data-route="/rota"] simula navegação (aviso «Abre /rota»). Atributos do <template>:
+   data-active (item do menu activo), data-title (título da barra a 375 px), data-user (nome na barra lateral). */
+(function () {
+  'use strict';
+  var VIEW_KEY = 'escalas-ferias-mock-view';
+  var MENU = [
+    ['Geral', [['Início', '/']]],
+    ['Operação', [['Horas', '/horas'], ['As minhas horas', '/horas/minhas'], ['Escala', '/escala'], ['A minha escala', '/escala/minha'],
+      ['Férias', '/ferias'], ['As minhas férias', '/ferias/minhas'], ['Gorjetas', '/gorjetas'], ['As minhas gorjetas', '/gorjetas/minhas'],
+      ['Fecho de caixa', '/caixa']]],
+    ['Cadastros', [['Cadastros', '/cadastros'], ['Equipa', '/cadastros/equipa']]],
+    ['Administração', [['Integrações', '/admin/integracoes']]]
+  ];
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var mk = function (tag, cls) { var n = document.createElement(tag); if (cls) n.className = cls; return n; };
+  var clamp = function (v, lo, hi) { return Math.min(Math.max(v, lo), hi); };
+  var states = new WeakMap();
+  var counter = 0;
+  var uid = function (p) { counter += 1; return (p || 'u') + '-' + counter; };
+  var state = function (dev) { if (!states.has(dev)) states.set(dev, {}); return states.get(dev); };
+
+  /* ids únicos por clone: data-id define, os data-for/controls/labelledby/describedby ligam */
+  function wireIds(root) {
+    var map = {};
+    var get = function (k) { if (!map[k]) map[k] = uid(k); return map[k]; };
+    $$('[data-id]', root).forEach(function (n) { n.id = get(n.getAttribute('data-id')); });
+    [['data-for', 'for'], ['data-controls', 'aria-controls'], ['data-labelledby', 'aria-labelledby'], ['data-describedby', 'aria-describedby']]
+      .forEach(function (p) { $$('[' + p[0] + ']', root).forEach(function (n) { n.setAttribute(p[1], get(n.getAttribute(p[0]))); }); });
+  }
+
+  /* parte visível do dispositivo (para posicionar avisos e diálogos onde o utilizador está a olhar) */
+  function visibleBox(dev) {
+    var r = dev.getBoundingClientRect();
+    var sc = dev.closest('.device-scroll');
+    return {
+      top: clamp(-r.top, 0, r.height), bottom: clamp(window.innerHeight - r.top, 0, r.height),
+      left: sc ? sc.scrollLeft : 0, width: sc ? sc.clientWidth : dev.clientWidth
+    };
+  }
+  function toast(dev, msg) {
+    var app = $('.app', dev); if (!app) return;
+    var t = $('.app-toast', app);
+    if (!t) { t = mk('div', 'app-toast'); t.setAttribute('role', 'status'); app.appendChild(t); }
+    t.textContent = msg; t.hidden = false;
+    var v = visibleBox(dev);
+    t.style.top = Math.max(8, v.bottom - 56) + 'px';
+    t.style.left = (v.left + v.width / 2) + 'px';
+    clearTimeout(t._h); t._h = setTimeout(function () { t.hidden = true; }, 2800);
+  }
+  function sheet(dev, content) {
+    var app = $('.app', dev), s = $('.sheet', app);
+    if (!s) { s = mk('div', 'sheet'); s.innerHTML = '<div class="sheet__box" role="dialog" aria-modal="true"></div>'; app.appendChild(s); }
+    var box = $('.sheet__box', s);
+    if (typeof content === 'string') box.innerHTML = content; else if (content) box.replaceChildren(content);
+    wireIds(box); s.hidden = false;
+    var v = visibleBox(dev);
+    box.style.top = (v.top + 24) + 'px';
+    box.style.left = Math.max(12, v.left + (v.width - box.offsetWidth) / 2) + 'px';
+    var f = $('button, input, select, textarea, a[href]', box); if (f) f.focus();
+    return box;
+  }
+  function closeSheet(dev) { var s = $('.sheet', dev); if (s) s.hidden = true; }
+  function setMenu(dev, open) {
+    var app = $('.app', dev); if (!app) return;
+    app.toggleAttribute('data-menu-open', open);
+    var b = $('.app-burger', dev); if (b) { b.setAttribute('aria-expanded', String(open)); b.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu'); }
+  }
+  function on(type, selector, fn) {
+    document.addEventListener(type, function (e) {
+      var t = e.target && e.target.closest ? e.target.closest(selector) : null; if (!t) return;
+      var dev = t.closest('.device'); if (!dev) return;
+      fn(e, t, dev);
+    });
+  }
+
+  /* mini-app: barra lateral (desktop) / barra superior com ☰ (≤768px, por container query) */
+  function buildApp(tpl) {
+    var active = tpl.dataset.active || document.body.dataset.active || '';
+    var title = tpl.dataset.title || active;
+    var user = tpl.dataset.user || 'Carla Videira';
+    var app = mk('div', 'app');
+    if (tpl.dataset.shell === 'bare') {
+      app.className = 'app app--bare';
+      app.innerHTML = '<div class="app-main"><div class="app-content"></div></div>';
+      $('.app-content', app).appendChild(tpl.content.cloneNode(true));
+      return app;
+    }
+    var nav = MENU.map(function (sec) {
+      return '<div class="sidebar-section">' + esc(sec[0]) + '</div>' + sec[1].map(function (it) {
+        var on_ = it[0] === active;
+        return '<a class="sidebar-link' + (on_ ? ' sidebar-link--active' : '') + '" href="#" data-route="' + esc(it[1]) + '"' + (on_ ? ' aria-current="page"' : '') + '>' + esc(it[0]) + '</a>';
+      }).join('');
+    }).join('');
+    app.innerHTML =
+      '<aside class="app-side" aria-label="Menu principal"><div class="app-logo">GiG</div><nav>' + nav + '</nav>' +
+      '<div class="app-user"><span class="app-user__name">' + esc(user) + '</span><button type="button" data-route="/login">Sair</button></div></aside>' +
+      '<div class="app-scrim" data-act-scrim></div>' +
+      '<div class="app-main"><div class="app-top"><button type="button" class="app-burger" aria-expanded="false" aria-label="Abrir menu">☰</button>' +
+      '<span class="app-top__title">' + esc(title) + '</span></div><div class="app-content"></div></div>';
+    $('.app-content', app).appendChild(tpl.content.cloneNode(true));
+    return app;
+  }
+  function fill(dev) {
+    var tpl = $('template[data-variant="' + dev.dataset.variant + '"]');
+    states.delete(dev);
+    dev.replaceChildren(buildApp(tpl));
+    wireIds(dev);
+    if (typeof window.mockInit === 'function') window.mockInit(dev, dev.dataset.variant, dev.dataset.kind);
+  }
+  function mount(panel) {
+    var v = panel.dataset.variant;
+    var stage = $('.stage', panel) || panel.appendChild(mk('div', 'stage'));
+    stage.replaceChildren();
+    [['desktop', 'Desktop'], ['phone', '375 px']].forEach(function (d) {
+      var item = mk('figure', 'stage-item stage-item--' + d[0]);
+      item.innerHTML = '<figcaption class="stage-cap"><span>' + d[1] + '</span><button type="button" class="stage-reset" title="Repor o estado inicial">Repor</button></figcaption>';
+      var dev = mk('div', 'device device--' + d[0]);
+      dev.dataset.variant = v; dev.dataset.kind = d[0];
+      var sc = mk('div', 'device-scroll' + (d[0] === 'phone' ? ' device-scroll--phone' : '')); sc.appendChild(dev); item.appendChild(sc);
+      stage.appendChild(item);
+      fill(dev);
+    });
+    panel.dataset.rendered = '1';
+  }
+
+  /* separadores derivados dos <template data-variant> (hash #a, #b, ...) e alternador de dispositivos */
+  var VARIANTS = $$('template[data-variant]').map(function (t) { return t.dataset.variant; }).sort();
+  var tablist = $('.mock-tabs'), mainEl = $('.mock-main'), notice = mk('div', 'variant-missing');
+  notice.hidden = true; notice.setAttribute('role', 'alert'); mainEl.insertBefore(notice, mainEl.firstChild);
+  $$('.mock-bar [role="tab"], [role="tabpanel"][data-variant]').forEach(function (el) { if (VARIANTS.indexOf(el.dataset.variant) < 0) el.remove(); });
+  VARIANTS.forEach(function (v) {
+    if (!$('#tab-' + v)) {
+      var b = mk('button', ''); b.type = 'button'; b.id = 'tab-' + v; b.dataset.variant = v; b.setAttribute('role', 'tab');
+      b.setAttribute('aria-controls', 'panel-' + v); b.setAttribute('aria-selected', 'false'); b.textContent = v.toUpperCase(); tablist.appendChild(b);
+    }
+    if (!$('#panel-' + v)) {
+      var p = mk('section', ''); p.id = 'panel-' + v; p.dataset.variant = v; p.hidden = true; p.setAttribute('role', 'tabpanel'); p.setAttribute('aria-labelledby', 'tab-' + v);
+      mainEl.appendChild(p);
+    }
+  });
+  var tabs = $$('.mock-bar [role="tab"]'), panels = $$('[role="tabpanel"][data-variant]');
+  function select(v, focus) {
+    var missing = null;
+    if (VARIANTS.indexOf(v) < 0) { if (v) missing = v; v = VARIANTS[0]; }
+    tabs.forEach(function (t) { var o = !missing && t.dataset.variant === v; t.setAttribute('aria-selected', String(o)); t.tabIndex = o || (missing && t.dataset.variant === v) ? 0 : -1; if (o && focus) t.focus(); });
+    panels.forEach(function (p) { p.hidden = !!missing || p.dataset.variant !== v; if (!p.hidden && !p.dataset.rendered) mount(p); });
+    notice.hidden = !missing;
+    if (missing) {
+      notice.innerHTML = '<span>Esta funcionalidade não tem a variante ' + esc(missing.toUpperCase()) + '.</span> <a class="btn-row" href="#' + esc(VARIANTS[0]) + '">Ver a variante ' + esc(VARIANTS[0].toUpperCase()) + '</a>';
+    } else if (location.hash.slice(1) !== v) { try { history.replaceState(null, '', '#' + v); } catch (e) { /* file:// restrito */ } }
+  }
+  function setView(v) {
+    document.body.dataset.view = v;
+    $$('.mock-view button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.view === v)); });
+    try { localStorage.setItem(VIEW_KEY, v); } catch (e) { /* sem armazenamento */ }
+  }
+  function boot() {
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { select(t.dataset.variant); });
+      t.addEventListener('keydown', function (e) {
+        var j = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }[e.key];
+        if (j === undefined) return; e.preventDefault(); select(tabs[(j + tabs.length) % tabs.length].dataset.variant, true);
+      });
+    });
+    $$('.mock-view button').forEach(function (b) { b.addEventListener('click', function () { setView(b.dataset.view); }); });
+    window.addEventListener('hashchange', function () { select(location.hash.slice(1).toLowerCase()); });
+    var saved = null; try { saved = localStorage.getItem(VIEW_KEY); } catch (e) { /* ignorar */ }
+    setView(['both', 'desktop', 'phone'].indexOf(saved) >= 0 ? saved : 'both');
+    select(location.hash.slice(1).toLowerCase());
+  }
+
+  /* comportamentos da moldura */
+  on('click', '.app-burger', function (e, t, dev) { setMenu(dev, !$('.app', dev).hasAttribute('data-menu-open')); });
+  on('click', '.app-scrim', function (e, t, dev) { setMenu(dev, false); });
+  on('click', '[data-route]', function (e, t, dev) { e.preventDefault(); setMenu(dev, false); toast(dev, 'Abre ' + t.getAttribute('data-route')); });
+  on('click', 'a[href="#"]', function (e) { e.preventDefault(); });
+  on('click', '.sheet', function (e, t, dev) { if (e.target === t || e.target.closest('[data-close-sheet]')) closeSheet(dev); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    $$('.sheet:not([hidden])').forEach(function (s) { closeSheet(s.closest('.device')); });
+    $$('.app[data-menu-open]').forEach(function (a) { setMenu(a.closest('.device'), false); });
+  });
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.stage-reset'); if (!b) return;
+    fill($('.device', b.closest('.stage-item')));
+  });
+
+  window.Mock = { $: $, $$: $$, esc: esc, uid: uid, state: state, on: on, toast: toast, sheet: sheet, closeSheet: closeSheet, setMenu: setMenu };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+/* === FIM MOLDURA === */
+</script>
+<script>
+/* === ESPECÍFICO DESTE MOCKUP === */
+(function () {
+  'use strict';
+  var $ = Mock.$, $$ = Mock.$$, esc = Mock.esc;
+
+  /* ───────── dados fictícios (os 11 funcionários do briefing; contactos inventados) ───────── */
+  var TODAY = '03/10/2026';
+  var POSTO_COLOR = { 'Montagem': '#d9a400', 'Fogão': '#2f6fd6', 'Sumo': '#a03fb5', 'Copa': '#e8742a', 'Copa e Apoio': '#d9534f',
+    'Bar': '#2e9e5b', 'Produção': '#7a5a2e', 'Sala': '#3aa6b9', 'Supervisão': '#b0234a', 'Gerência': '#6b4fd8' };
+  /* id, nome, email, telefone, posto habitual, conta (none|invited|active), data do convite */
+  var PEOPLE0 = [
+    ['beatriz', 'Beatriz Moura', 'beatriz.moura@exemplo.pt', '913000103', 'Sumo', 'active', ''],
+    ['carla', 'Carla Videira', 'carla.videira@exemplo.pt', '912000101', 'Supervisão', 'active', ''],
+    ['filipa', 'Filipa Couto', '', '914000104', 'Sala', 'none', ''],
+    ['hugo', 'Hugo Brandão', 'hugo.brandao@exemplo.pt', '912000102', 'Gerência', 'active', ''],
+    ['ines', 'Inês Calado', 'ines.calado@exemplo.pt', '915000105', 'Copa', 'active', ''],
+    ['marta', 'Marta Leal', 'marta.leal@exemplo.pt', '916000106', 'Bar', 'invited', '02/10/2026'],
+    ['matilde', 'Matilde Teles', 'matilde.teles@exemplo.pt', '917000107', 'Produção', 'none', ''],
+    ['nuno', 'Nuno Arez', 'nuno.arez@exemplo.pt', '918000108', 'Copa e Apoio', 'invited', '01/10/2026'],
+    ['rui', 'Rui Pestana', 'rui.pestana@exemplo.pt', '919000109', 'Montagem', 'none', ''],
+    ['sonia', 'Sónia Brito', 'sonia.brito@exemplo.pt', '913000111', 'Montagem', 'none', ''],
+    ['tiago', 'Tiago Fontes', 'tiago.fontes@exemplo.pt', '912000110', 'Fogão', 'active', '']
+  ];
+  var FILTERS = [['all', 'Todos'], ['none', 'Sem conta'], ['invited', 'Convidado'], ['active', 'Activo']];
+  var ACCT_LABEL = { none: 'Sem conta', invited: 'Convidado', active: 'Activo' };
+
+  /* ───────── funções puras ───────── */
+  var norm = function (s) { return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); };
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  var digits = function (s) { return String(s).replace(/\D/g, ''); };
+  var fmtPhone = function (s) { var d = digits(s); return d.length === 9 ? d.slice(0, 3) + ' ' + d.slice(3, 6) + ' ' + d.slice(6) : s; };
+  function validate(email, phone) {
+    if (email && !EMAIL_RE.test(email.trim())) return 'Indique um email válido (nome@exemplo.pt).';
+    if (phone && !/^9\d{8}$/.test(digits(phone))) return 'O telefone tem 9 dígitos e começa por 9.';
+    return '';
+  }
+  function newState(variant) {
+    return {
+      variant: variant, uid: Mock.uid('eq'), q: '', f: 'all', sel: 'filipa', draft: null, edit: null,
+      people: PEOPLE0.map(function (r) { return { id: r[0], name: r[1], email: r[2], phone: r[3], pos: r[4], acct: r[5], inv: r[6] }; })
+    };
+  }
+  var person = function (st, id) { for (var i = 0; i < st.people.length; i++) if (st.people[i].id === id) return st.people[i]; return null; };
+  var visible = function (st) {
+    var q = norm(st.q.trim());
+    return st.people.filter(function (p) { return (st.f === 'all' || p.acct === st.f) && (!q || norm(p.name).indexOf(q) >= 0); });
+  };
+
+  /* ───────── peças ───────── */
+  function acctBadge(p) {
+    if (p.acct === 'active') return '<span class="badge-ok">Activo</span>';
+    if (p.acct === 'invited') return '<span class="badge-info">Convidado (' + p.inv + ')</span>';
+    return '<span class="badge-mut">Sem conta</span>';
+  }
+  var posHtml = function (p) { return '<span class="pos"><span class="pos-dot" style="--pos-color:' + POSTO_COLOR[p.pos] + '"></span>' + esc(p.pos) + '</span>'; };
+  var emailHtml = function (p) { return p.email ? esc(p.email) : '<span class="na">Sem email</span>'; };
+  /* eff = o email que o botão usa (A e B: o da ficha; C: o que está no campo) */
+  function inviteHtml(st, p, eff) {
+    if (p.acct === 'active') return '';
+    var fk = 'inv-' + p.id, again = p.acct === 'invited', lbl = again ? 'Reenviar convite' : 'Convidar';
+    var why = !eff ? 'Falta o email' : (EMAIL_RE.test(eff.trim()) ? '' : 'Email inválido');
+    if (why) {
+      var rid = st.uid + '-r-' + p.id;
+      return '<button type="button" class="btn-row" disabled aria-describedby="' + rid + '" data-fk="' + fk + '">' + lbl + '</button> <span class="reason" id="' + rid + '">' + why + '</span>';
+    }
+    if (again) return '<button type="button" class="btn-row" data-act="invite" data-id="' + p.id + '" data-fk="' + fk + '">Reenviar convite</button>';
+    return '<button type="button" class="btn-row btn-row-strong" data-act="invite" data-id="' + p.id + '" data-fk="' + fk + '">Convidar</button>';
+  }
+  var editBtn = function (p) { return '<button type="button" class="btn-row" data-act="edit" data-id="' + p.id + '" data-fk="edit-' + p.id + '" aria-label="Editar ' + esc(p.name) + '">Editar</button>'; };
+  var count = function (st, a) { return st.people.filter(function (p) { return a === 'all' || p.acct === a; }).length; };
+
+  function tableHtml(st, list) {
+    if (!list.length) return '<p class="empty">Ninguém corresponde à pesquisa e ao filtro.</p>';
+    var h = '<table class="table--cards"><thead><tr><th scope="col">Nome</th><th scope="col">Email</th><th scope="col">Telefone</th><th scope="col">Posto habitual</th><th scope="col">Conta</th><th scope="col"><span class="muted small">Ações</span></th></tr></thead><tbody>';
+    list.forEach(function (p) {
+      h += '<tr><td data-label="Nome"><span class="nm">' + esc(p.name) + '</span></td><td data-label="Email">' + emailHtml(p) + '</td><td data-label="Telefone">' + (p.phone ? fmtPhone(p.phone) : '<span class="muted">—</span>') +
+        '</td><td data-label="Posto habitual">' + posHtml(p) + '</td><td data-label="Conta">' + acctBadge(p) + '</td><td class="act">' + editBtn(p) + (p.acct === 'active' ? '' : ' ') + inviteHtml(st, p, p.email) + '</td></tr>';
+    });
+    return h + '</tbody></table>';
+  }
+  function cardsHtml(st, list) {
+    if (!list.length) return '<div class="card"><p class="empty">Ninguém corresponde à pesquisa e ao filtro.</p></div>';
+    return '<div class="team-grid">' + list.map(function (p) {
+      return '<article class="card tcard"><div class="tcard-head"><h3>' + esc(p.name) + '</h3>' + acctBadge(p) + '</div><p class="pos">' + posHtml(p) + '</p>' +
+        '<dl><dt>Email</dt><dd>' + emailHtml(p) + '</dd><dt>Telefone</dt><dd>' + (p.phone ? fmtPhone(p.phone) : '<span class="muted">—</span>') + '</dd></dl>' +
+        '<div class="btn-line">' + editBtn(p) + inviteHtml(st, p, p.email) + '</div></article>';
+    }).join('') + '</div>';
+  }
+  function listPaneHtml(st, list) {
+    if (!list.length) return '<p class="empty">Ninguém corresponde à pesquisa e ao filtro.</p>';
+    return '<ul>' + list.map(function (p) {
+      return '<li><button type="button" class="row-btn" data-act="select" data-id="' + p.id + '" data-fk="sel-' + p.id + '"' + (p.id === st.sel ? ' aria-current="true"' : '') + '><span class="nm">' + esc(p.name) + '</span>' + acctBadge(p) + '<span class="sub">' + posHtml(p) + '</span></button></li>';
+    }).join('') + '</ul>';
+  }
+  function fichaActions(st, p) {
+    var d = st.draft;
+    return editSaveBtn(p) + inviteHtml(st, p, d.email);
+  }
+  var editSaveBtn = function () { return '<button type="button" class="primary" data-act="save-ficha" data-fk="save-ficha">Guardar alterações</button>'; };
+  function fichaHtml(st) {
+    var p = person(st, st.sel), d = st.draft;
+    return '<button type="button" class="btn-row back" data-act="back" data-fk="back">← Equipa</button>' +
+      '<h2>' + esc(p.name) + '</h2><p class="ro-line">' + posHtml(p) + ' <span class="muted small">(definido nos Cadastros)</span> · ' + acctBadge(p) + '</p>' +
+      '<label>Email<input type="email" data-f="d-email" value="' + esc(d.email) + '" autocomplete="off" placeholder="nome@exemplo.pt"></label>' +
+      '<label>Telefone<input type="tel" data-f="d-phone" value="' + esc(d.phone) + '" autocomplete="off" placeholder="9xx xxx xxx"></label>' +
+      '<div class="alert-err" role="alert" data-slot="f-err" hidden></div>' +
+      '<div class="btn-line" data-slot="ficha-actions">' + fichaActions(st, p) + '</div>';
+  }
+  function resetDraft(st) { var p = person(st, st.sel); st.draft = { email: p.email, phone: p.phone ? fmtPhone(p.phone) : '' }; }
+
+  /* ───────── render ───────── */
+  function renderList(dev) {
+    var st = Mock.state(dev), list = visible(st), fk = null;
+    if (document.activeElement && dev.contains(document.activeElement)) fk = document.activeElement.getAttribute('data-fk');
+    var slot = $('[data-slot="list"]', dev);
+    slot.innerHTML = st.variant === 'a' ? tableHtml(st, list) : st.variant === 'b' ? cardsHtml(st, list) : listPaneHtml(st, list);
+    if (st.variant === 'c') $('[data-slot="ficha"]', dev).innerHTML = fichaHtml(st);
+    $('[data-slot="counts"]', dev).innerHTML = '<span class="badge-ok">' + count(st, 'active') + ' activos</span><span class="badge-info">' + count(st, 'invited') + ' convidados</span><span class="badge-mut">' + count(st, 'none') + ' sem conta</span>';
+    $('[data-slot="filter"]', dev).innerHTML = FILTERS.map(function (f) {
+      return '<button type="button" data-act="filter" data-v="' + f[0] + '" aria-pressed="' + (st.f === f[0]) + '">' + f[1] + ' (' + count(st, f[0]) + ')</button>';
+    }).join('');
+    if (fk) { var el = $('[data-fk="' + fk + '"]', dev); if (el && !el.disabled) el.focus(); }
+  }
+  window.mockInit = function (dev, variant) {
+    var s = Mock.state(dev), n = newState(variant);
+    Object.keys(n).forEach(function (k) { s[k] = n[k]; });
+    if (variant === 'c') resetDraft(s);
+    renderList(dev);
+  };
+
+  /* ───────── comportamento ───────── */
+  Mock.on('input', 'input[data-f="q"]', function (e, t, dev) { Mock.state(dev).q = t.value; renderList(dev); });
+  Mock.on('click', '[data-act="filter"]', function (e, t, dev) { Mock.state(dev).f = t.dataset.v; renderList(dev); });
+
+  Mock.on('click', '[data-act="invite"]', function (e, t, dev) {
+    var st = Mock.state(dev), p = person(st, t.dataset.id), again = p.acct === 'invited';
+    if (st.variant === 'c') {
+      var d = st.draft;
+      if (!EMAIL_RE.test((d.email || '').trim())) return;
+      p.email = d.email.trim();
+    }
+    if (!p.email) return;
+    p.acct = 'invited'; p.inv = TODAY;
+    renderList(dev);
+    Mock.toast(dev, (again ? 'Convite reenviado para ' : 'Convite enviado para ') + p.email);
+  });
+
+  /* A e B: ficha numa janela por cima */
+  function openEdit(dev, id) {
+    var st = Mock.state(dev), p = person(st, id);
+    st.edit = { id: id, email: p.email, phone: p.phone ? fmtPhone(p.phone) : '' };
+    Mock.sheet(dev, '<h2 class="sheet-h">Ficha de ' + esc(p.name) + '</h2>' +
+      '<p class="ro-line" style="margin-bottom:10px">' + posHtml(p) + ' <span class="muted small">(definido nos Cadastros)</span> · ' + acctBadge(p) + '</p>' +
+      '<label>Email<input type="email" data-f="e-email" value="' + esc(st.edit.email) + '" autocomplete="off" placeholder="nome@exemplo.pt"></label>' +
+      '<label>Telefone<input type="tel" data-f="e-phone" value="' + esc(st.edit.phone) + '" autocomplete="off" placeholder="9xx xxx xxx"></label>' +
+      '<div class="alert-err" role="alert" data-slot="e-err" hidden></div>' +
+      '<div class="btn-line"><button type="button" class="primary" data-act="save-contact">Guardar</button><button type="button" class="secondary" data-close-sheet>Cancelar</button></div>');
+  }
+  Mock.on('click', '[data-act="edit"]', function (e, t, dev) { openEdit(dev, t.dataset.id); });
+  Mock.on('input', 'input[data-f="e-email"], input[data-f="e-phone"]', function (e, t, dev) {
+    var st = Mock.state(dev); st.edit[t.dataset.f === 'e-email' ? 'email' : 'phone'] = t.value;
+  });
+  Mock.on('click', '[data-act="save-contact"]', function (e, t, dev) {
+    var st = Mock.state(dev), box = t.closest('.sheet__box'), err = $('[data-slot="e-err"]', box), msg = validate(st.edit.email, st.edit.phone);
+    if (msg) { err.textContent = msg; err.hidden = false; return; }
+    var p = person(st, st.edit.id);
+    p.email = st.edit.email.trim(); p.phone = digits(st.edit.phone);
+    Mock.closeSheet(dev); renderList(dev); Mock.toast(dev, 'Ficha de ' + p.name + ' actualizada');
+  });
+
+  /* C: ficha lateral */
+  Mock.on('click', '[data-act="select"]', function (e, t, dev) {
+    var st = Mock.state(dev); st.sel = t.dataset.id; resetDraft(st);
+    $('[data-slot="split"]', dev).setAttribute('data-open', 'true');
+    renderList(dev);
+  });
+  Mock.on('click', '[data-act="back"]', function (e, t, dev) { $('[data-slot="split"]', dev).setAttribute('data-open', 'false'); });
+  Mock.on('input', 'input[data-f="d-email"], input[data-f="d-phone"]', function (e, t, dev) {
+    var st = Mock.state(dev), p = person(st, st.sel);
+    st.draft[t.dataset.f === 'd-email' ? 'email' : 'phone'] = t.value;
+    $('[data-slot="ficha-actions"]', dev).innerHTML = fichaActions(st, p);   /* o botão «Convidar» acompanha o campo */
+    var err = $('[data-slot="f-err"]', dev); if (err) err.hidden = true;
+  });
+  Mock.on('click', '[data-act="save-ficha"]', function (e, t, dev) {
+    var st = Mock.state(dev), p = person(st, st.sel), d = st.draft, err = $('[data-slot="f-err"]', dev), msg = validate(d.email, d.phone);
+    if (msg) { err.textContent = msg; err.hidden = false; return; }
+    p.email = d.email.trim(); p.phone = digits(d.phone); resetDraft(st); renderList(dev); Mock.toast(dev, 'Ficha de ' + p.name + ' actualizada');
+  });
+})();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 11 — Configuração: postos e email</title>
+<style>
+/* === MOLDURA COMUM (copiar) === */
+/* Tokens copiados de src/app/globals.css:2-33 (tema «Menta») */
+:root {
+  --bg: #f3f6f3;
+  --card: #fff;
+  --border: rgba(0, 0, 0, 0.15);
+  --txt: #1f2a24;
+  --mut: #66736b;
+  --hint: #9aa49e;
+  --sidebar: #2f3a33;
+  --sidebar-tx: #dfeee5;
+  --brand: #7fc9a2;
+  --primary: #2e9e68;
+  --primary-hover: #267f54;
+  --ok-bg: #e2f2e9;
+  --ok-tx: #1f6b44;
+  --ok-bd: #7fc9a2;
+  --row-hover: rgba(127, 201, 162, 0.12);
+  --er-bg: #fcebeb;
+  --er-tx: #a32d2d;
+  --er-bd: #f09595;
+  --warn-bg: #faeeda;
+  --warn-tx: #854f0b;
+  --warn-bd: #e8c44e;
+  --info-tx: #1d4ed8;
+  --info-bg: #e6eefc;
+  --info-bd: #9db7f0;
+  --on-primary: #fff;
+}
+* { box-sizing: border-box; padding: 0; margin: 0; }
+[hidden] { display: none !important; }
+html, body {
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--txt);
+  -webkit-font-smoothing: antialiased;
+}
+body { min-height: 100vh; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+/* ── Barra do mockup (não faz parte do ecrã) ── */
+.mock-bar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+  padding: 8px 16px; background: var(--sidebar); color: var(--sidebar-tx); font-size: 13px;
+}
+.mock-back { padding: 4px 10px; border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 6px; white-space: nowrap; }
+.mock-back:hover { background: rgba(255, 255, 255, 0.12); }
+.mock-title { font-weight: 600; flex: 1 1 200px; min-width: 0; }
+.mock-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+.mock-bar button {
+  font-size: 13px; min-height: 30px; padding: 3px 12px; cursor: pointer; font-family: inherit;
+  background: transparent; color: var(--sidebar-tx); border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 6px;
+}
+.mock-bar button:hover { background: rgba(255, 255, 255, 0.12); }
+.mock-bar [role='tab'][aria-selected='true'],
+.mock-bar [aria-pressed='true'] { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+.mock-view { display: inline-flex; }
+.mock-view button { border-radius: 0; margin-left: -1px; }
+.mock-view button:first-child { border-radius: 6px 0 0 6px; margin-left: 0; }
+.mock-view button:last-child { border-radius: 0 6px 6px 0; }
+
+/* ── Palco: dois dispositivos lado a lado, a quebrar para baixo ── */
+.mock-main { padding: 16px 16px 56px; }
+.variant-notes {
+  max-width: 1180px; margin: 0 auto 16px; padding: 10px 14px; font-size: 14px; line-height: 1.5;
+  background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--primary); border-radius: 8px;
+}
+.variant-notes b { font-weight: 600; }
+.variant-notes .note-extra { margin-top: 4px; font-size: 12px; color: var(--mut); }
+.variant-missing { max-width: 1180px; margin: 0 auto 16px; padding: 12px 14px; font-size: 14px; background: var(--warn-bg); color: var(--warn-tx); border: 1px solid var(--warn-bd, var(--border)); border-left: 4px solid var(--warn-tx); border-radius: 8px; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+.variant-missing[hidden] { display: none; }
+.stage { display: flex; flex-wrap: wrap; gap: 28px 24px; align-items: flex-start; justify-content: center; }
+.stage-item { min-width: 0; max-width: 100%; }
+.stage-cap { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; color: var(--mut); }
+.stage-reset {
+  font-size: 12px; min-height: 0; padding: 2px 10px; cursor: pointer; font-family: inherit;
+  background: var(--card); color: var(--mut); border: 1px solid var(--border); border-radius: 6px;
+}
+.stage-reset:hover { color: var(--txt); }
+.device-scroll { overflow-x: auto; max-width: 100%; padding: 2px; }
+.device-scroll--phone { padding: 8px; }
+body[data-view='desktop'] .stage-item--phone,
+body[data-view='phone'] .stage-item--desktop { display: none; }
+
+/* ── Dispositivos: largura fixa, contentor para as container queries ── */
+.device {
+  container-type: inline-size; container-name: app; position: relative;
+  background: var(--bg); overflow: hidden;
+}
+.device--desktop { width: 1180px; border-radius: 10px; box-shadow: 0 0 0 1px var(--border), 0 4px 18px rgba(0, 0, 0, 0.08); }
+.device--phone { width: 375px; border-radius: 22px; box-shadow: 0 0 0 1px var(--border), 0 0 0 6px #dde5df, 0 6px 22px rgba(0, 0, 0, 0.15); }
+
+/* ── Mini-app: barra lateral + conteúdo (réplica de .shell/.sidebar/.content) ── */
+.app { display: flex; position: relative; min-height: 560px; font-size: 14px; background: var(--bg); color: var(--txt); }
+.app-side {
+  width: 220px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; padding: 20px 12px;
+  background: var(--sidebar); color: var(--sidebar-tx);
+}
+.app-logo {
+  background: #fff; border-radius: 8px; padding: 8px 10px; margin-bottom: 4px; text-align: center;
+  font-weight: 700; font-size: 18px; letter-spacing: 0.04em; color: var(--primary);
+}
+.app-side nav { display: flex; flex-direction: column; gap: 4px; }
+.sidebar-link {
+  display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; font-size: 14px;
+  color: var(--sidebar-tx); opacity: 0.85; flex-shrink: 0;
+}
+.sidebar-link:hover { opacity: 1; background: rgba(255, 255, 255, 0.1); }
+.sidebar-link--active { background: rgba(127, 201, 162, 0.22); color: #bfe8d2; opacity: 1; }
+.sidebar-section { font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.5; padding: 0 10px; margin: 12px 0 2px; }
+.sidebar-section:first-child { margin-top: 4px; }
+.app-user { margin-top: auto; padding-top: 16px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.app-user__name { padding: 0 10px; opacity: 0.8; }
+.app-side .app-user button {
+  width: 100%; text-align: left; background: transparent; border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--sidebar-tx); border-radius: 8px; padding: 8px 10px; font-size: 13px; cursor: pointer; min-height: 0;
+}
+.app-side .app-user button:hover { background: rgba(255, 255, 255, 0.1); }
+.app-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.app-top { display: none; }
+.app-scrim { display: none; }
+.app-content { flex: 1; min-width: 0; padding: 24px; position: relative; }
+.app-toast {
+  position: absolute; z-index: 60; transform: translateX(-50%); width: max-content; max-width: calc(100% - 24px);
+  padding: 8px 14px; border-radius: 8px; background: var(--sidebar); color: var(--sidebar-tx); font-size: 13px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25); pointer-events: none;
+}
+.sheet { position: absolute; inset: 0; z-index: 50; background: rgba(0, 0, 0, 0.35); }
+.sheet__box {
+  position: absolute; width: min(520px, calc(100% - 24px)); max-height: 80%; overflow: auto;
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+}
+.new-tag {
+  display: inline-block; vertical-align: middle; margin-left: 6px; padding: 0 6px; border-radius: 4px; font-size: 11px;
+  font-weight: 600; text-transform: none; letter-spacing: 0; background: var(--info-bg); border: 1px solid var(--info-bd); color: var(--info-tx);
+}
+
+/* ── Base de formulários e botões (globals.css) ── */
+.device input, .device select, .device textarea, .device button {
+  font-size: 16px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 8px;
+  background: #fff; min-height: 36px; font-family: inherit; color: var(--txt);
+}
+.device input[type='checkbox'], .device input[type='radio'] { min-height: 0; width: 18px; height: 18px; accent-color: var(--primary); }
+.device label { font-size: 12px; color: var(--mut); display: block; margin-bottom: 12px; }
+.device label > input, .device label > select, .device label > textarea { display: block; width: 100%; max-width: 420px; margin-top: 4px; }
+.device button.primary {
+  background: var(--primary); color: #fff; border: none; font-weight: 600; cursor: pointer; padding: 10px 22px; border-radius: 8px;
+}
+.device button.primary:hover { background: var(--primary-hover); }
+.device button.primary:disabled { background: var(--hint); cursor: not-allowed; }
+.device button.secondary { cursor: pointer; background: #fff; }
+.device .btn-row {
+  display: inline-block; font-size: 13px; font-weight: 500; padding: 4px 12px; min-height: 0;
+  border: 1px solid var(--primary); border-radius: 6px; background: #f2faf6; color: var(--primary-hover);
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+}
+.device .btn-row:hover { background: #e3f4ea; }
+.device .btn-row[aria-pressed='true'], .device .btn-row[aria-current='page'] { background: var(--primary); color: #fff; }
+.device .btn-row.btn-row-strong { background: var(--primary); color: #fff; font-weight: 600; }
+.device .btn-row.btn-row-strong:hover { background: var(--primary-hover); }
+.device .btn-row.btn-row-quiet { font-size: 12px; font-weight: 400; border-color: var(--border); background: var(--bg); color: var(--mut); }
+.device .btn-row.btn-row-quiet:hover { background: var(--card); color: var(--txt); }
+.device .btn-row.danger { border-color: #c0392b; color: #c0392b; background: #fdf3f2; }
+.device .btn-row:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Cartões, badges, avisos (globals.css) ── */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.badge-ok, .badge-warn, .badge-err, .badge-info, .badge-mut {
+  font-size: 12px; padding: 2px 8px; border-radius: 4px; white-space: nowrap; border: 1px solid; display: inline-block;
+}
+.badge-ok { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.badge-warn { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); }
+.badge-err { background: var(--er-bg); border-color: var(--er-bd); color: var(--er-tx); }
+.badge-info { background: var(--info-bg); border-color: var(--info-bd); color: var(--info-tx); }
+.badge-mut { background: var(--bg); border-color: var(--border); color: var(--mut); }
+.alert-ok, .alert-warn, .alert-err, .alert-info { border-radius: 8px; padding: 8px 12px; font-size: 14px; border: 1px solid; }
+.alert-ok { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.alert-warn { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); }
+.alert-err { background: var(--er-bg); border-color: var(--er-bd); color: var(--er-tx); }
+.alert-info { background: var(--info-bg); border-color: var(--info-bd); color: var(--info-tx); }
+.toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 12px 0 16px; }
+.toolbar-actions { margin-left: auto; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.muted { color: var(--mut); }
+.small { font-size: 12px; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Separadores de trabalho e filtro segmentado (precedente 2026-09-25) */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin: 4px 0 12px; flex-wrap: wrap; }
+.tabs [role='tab'] {
+  border: 1px solid transparent; border-bottom: none; border-radius: 8px 8px 0 0; background: none; min-height: 0;
+  font-size: 15px; padding: 8px 14px; cursor: pointer; color: var(--mut); margin-bottom: -1px;
+}
+.tabs [role='tab'][aria-selected='true'] { background: var(--card); border-color: var(--border); color: var(--txt); font-weight: 600; }
+.tab-count { display: inline-block; min-width: 20px; padding: 0 6px; border-radius: 10px; background: var(--er-bg); color: var(--er-tx); font-size: 12px; font-weight: 600; text-align: center; }
+.seg { display: inline-flex; border: 1px solid var(--primary); border-radius: 6px; overflow: hidden; }
+.device .seg button { border: none; border-radius: 0; min-height: 0; font-size: 13px; padding: 4px 12px; background: #f2faf6; color: var(--primary-hover); cursor: pointer; }
+.device .seg button[aria-pressed='true'] { background: var(--primary); color: #fff; font-weight: 600; }
+
+/* ── Tabelas (globals.css:492-): base desktop ── */
+.device table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 14px; }
+.device th { text-align: left; font-size: 12px; color: var(--mut); border-bottom: 1px solid var(--border); padding: 6px 8px; }
+.device td { padding: 8px; border-bottom: 1px solid var(--border); }
+.table-scroll-wrap { overflow-x: auto; }
+
+/* ── ≤768px: réplica do bloco @media (max-width: 768px) de globals.css, por container query ── */
+@container app (max-width: 768px) {
+  .app-side {
+    position: absolute; top: 0; left: 0; bottom: 0; z-index: 30; width: 240px;
+    transform: translateX(-100%); visibility: hidden;
+    transition: transform 0.22s ease, visibility 0s linear 0.22s; box-shadow: 4px 0 16px rgba(0, 0, 0, 0.25);
+  }
+  .app[data-menu-open] .app-side { transform: none; visibility: visible; transition: transform 0.22s ease; }
+  .app[data-menu-open] .app-scrim { display: block; position: absolute; inset: 0; z-index: 20; background: rgba(0, 0, 0, 0.4); }
+  .app-top {
+    display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+  .app-top .app-burger { padding: 6px 10px; line-height: 1; cursor: pointer; }
+  .app-top__title { font-weight: 600; font-size: 15px; }
+  .app-content { padding: 16px; }
+  h1 { font-size: 20px; }
+  .card { padding: 12px; }
+  .tabs [role='tab'] { flex: 1; padding: 8px 6px; font-size: 14px; }
+  .toolbar-actions { margin-left: 0; }
+  .sheet__box { padding: 12px; }
+
+  /* Grelha por omissão: a tabela é o próprio contentor de scroll */
+  table:not(.table--cards):not(.table--scroll) { display: block; overflow-x: auto; width: 100%; margin-top: 12px; font-size: 13px; }
+  table:not(.table--cards):not(.table--scroll) th,
+  table:not(.table--cards):not(.table--scroll) td { white-space: nowrap; padding: 4px 8px; font-variant-numeric: tabular-nums; }
+  /* .table--fill: 2–3 colunas, 100% da largura, o nome quebra */
+  table.table--fill:not(.table--cards):not(.table--scroll) { display: table; width: 100%; table-layout: auto; overflow-x: visible; }
+  table.table--fill:not(.table--cards):not(.table--scroll) th,
+  table.table--fill:not(.table--cards):not(.table--scroll) td { white-space: normal; overflow-wrap: anywhere; }
+  /* .table--cards: linhas viram cards; exige data-label em cada td (excepto acções) */
+  table.table--cards thead { display: none; }
+  table.table--cards, table.table--cards tbody, table.table--cards tfoot, table.table--cards tr, table.table--cards td { display: block; width: 100%; }
+  table.table--cards tr { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; padding: 8px 12px; }
+  table.table--cards td { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 4px 0; border-bottom: none; }
+  table.table--cards td[data-label]::before {
+    content: attr(data-label); font-size: 11px; font-weight: 600; color: var(--mut); text-transform: uppercase; letter-spacing: 0.04em; flex-shrink: 0;
+  }
+  table.table--cards td:not([data-label]) { justify-content: flex-end; border-top: 1px solid var(--border); margin-top: 4px; padding-top: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* Página estreita: o dispositivo mantém 375 px, com deslocação na moldura. */
+@media (max-width: 420px) {
+  .mock-main { padding: 12px 0 40px; }
+  .variant-notes { margin-left: 12px; margin-right: 12px; }
+  .stage-cap { padding: 0 12px; }
+  .device-scroll--phone { padding: 0; }
+  .device--phone { border-radius: 0; box-shadow: 0 0 0 1px var(--border); }
+}
+@media (max-width: 700px) {
+  .mock-bar { position: static; padding: 8px 12px; }
+  .mock-back { order: 1; }
+  .mock-view { order: 2; margin-left: auto; }
+  .mock-title { order: 3; flex-basis: 100%; }
+  .mock-tabs { order: 4; flex: 1 1 100%; flex-wrap: nowrap; }
+  .mock-tabs button { flex: 1 1 0; min-width: 0; padding: 4px 4px; font-size: 12px; line-height: 1.25; }
+}
+/* === FIM MOLDURA === */
+
+/* === ESPECÍFICO DESTE MOCKUP === */
+/* === POSTOS (copiar) === */
+/* Postos e cores fixos (as mesmas em todos os mockups): Montagem #d9a400 · Fogão #2f6fd6 · Sumo #a03fb5 · Copa #e8742a ·
+   Copa e Apoio #d9534f · Bar #2e9e5b · Produção #7a5a2e · Sala #3aa6b9 · Supervisão #b0234a · Gerência #6b4fd8.
+   O bloco tem sempre fundo claro, texto escuro e barra esquerda de 4 px na cor do posto: o contraste AA não depende do tema.
+   Uso (turno com troca de posto: dois .shift-seg e duas .shift-band no MESMO bloco; flex do .shift-seg = minutos do segmento):
+     <span class="shift-block has-swap" style="--pos-color:#a03fb5">
+       <span class="shift-bars" aria-hidden="true"><i class="shift-seg" style="--pos-color:#a03fb5;flex:120"></i><i class="shift-seg" style="--pos-color:#e8742a;flex:420"></i></span>
+       <span class="shift-time">08:00–17:00</span>
+       <span class="shift-pos"><span class="shift-band" style="--pos-color:#a03fb5">Sumo</span><span class="shift-band" style="--pos-color:#e8742a">Copa 10:00</span></span>
+     </span> */
+.shift-block { --pos-color: #66736b; position: relative; display: flex; flex-direction: column; gap: 2px; min-width: 0; padding: 3px 4px 3px 9px; border-radius: 6px; overflow: hidden; text-align: left; color: #1f2a24; background: color-mix(in srgb, var(--pos-color) 15%, #fff); }
+.shift-bars { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; display: flex; flex-direction: column; }
+.shift-seg { display: block; flex: 1 1 0; min-height: 3px; background: var(--pos-color); }
+.shift-time { display: block; font-weight: 600; font-size: 12px; line-height: 1.2; font-variant-numeric: tabular-nums; white-space: nowrap; color: #1f2a24; }
+.shift-pos { display: flex; gap: 2px; min-width: 0; }
+.shift-band { display: block; flex: 1 1 auto; min-width: 0; padding: 0 4px; border-radius: 3px; font-size: 10px; line-height: 1.4; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #1f2a24; background: color-mix(in srgb, var(--pos-color) 30%, #fff); }
+.shift-tag { display: inline-block; margin-right: 3px; padding: 0 4px; border-radius: 3px; font-size: 9.5px; font-weight: 700; line-height: 1.4; color: #5a4300; background: #f0dca0; }
+.pos-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; background: var(--pos-color, #66736b); }
+/* === FIM POSTOS === */
+/* ── Controlo do mockup (não faz parte do ecrã) ── */
+.mockctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 8px 12px; margin-bottom: 12px; border: 1px dashed var(--border); border-radius: 8px; background: #fbfdfb; font-size: 13px; color: var(--mut); }
+.mockctl-t { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+.device .mockctl .seg button { min-height: 36px; font-size: 14px; }
+@container app (max-width: 768px) { .device .mockctl .seg button { min-height: 44px; } }
+
+/* ── Configuração ── */
+.cfg h1 { font-size: 22px; font-weight: 600; line-height: 1.2; margin-bottom: 12px; }
+.cfg h2 { font-size: 16px; font-weight: 600; }
+.cfg .card + .card, .cfg .card + .wiz-gap { margin-top: 16px; }
+.cfg .sec-head { display: flex; align-items: center; justify-content: space-between; gap: 8px 12px; flex-wrap: wrap; margin-bottom: 6px; }
+.cfg .sec-lead { font-size: 14px; color: var(--mut); margin-bottom: 10px; }
+.cfg .btn-line { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 10px; }
+.cfg .alert-ok, .cfg .alert-err, .cfg .alert-warn { margin-top: 10px; }
+.cfg .mut-line { margin-top: 8px; font-size: 14px; color: var(--mut); }
+.cfg .sheet-h { font-size: 17px; font-weight: 600; margin-bottom: 12px; }
+
+/* Fornecedor: três botões em grupo */
+.prov { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 8px 0 12px; }
+.device .prov button { text-align: left; padding: 10px 12px; min-height: 44px; background: #fff; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; gap: 2px; font-size: 15px; font-weight: 600; }
+.device .prov button small { font-size: 12px; font-weight: 400; color: var(--mut); }
+.device .prov button[aria-pressed='true'] { border-color: var(--primary); background: var(--ok-bg); box-shadow: 0 0 0 1px var(--primary); }
+.howto { padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: #fbfdfb; margin-bottom: 12px; font-size: 14px; }
+.howto ol { margin: 0 0 6px 20px; }
+.howto li + li { margin-top: 2px; }
+.howto p { margin: 0; }
+.link-inline { color: var(--info-tx); text-decoration: underline; }
+.cfg label.ro input { background: var(--bg); color: var(--mut); }
+.cfg .sender-prev { margin: -4px 0 4px; font-size: 14px; color: var(--mut); overflow-wrap: anywhere; }
+.status-line { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+
+/* Postos */
+.cfg .legend { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; align-items: center; font-size: 12px; color: var(--mut); }
+.cfg .legend .shift-band { flex: 0 0 auto; padding: 1px 8px; font-size: 12px; }
+.sw { display: inline-block; width: 18px; height: 18px; border-radius: 4px; vertical-align: -4px; margin-right: 6px; border: 1px solid rgba(0, 0, 0, 0.25); background: var(--c); }
+.postos td.ord { white-space: nowrap; }
+.device .postos .mv { min-height: 36px; min-width: 36px; padding: 0; cursor: pointer; font-size: 14px; }
+.device .postos .mv:disabled { opacity: 0.4; cursor: not-allowed; }
+.postos .ord-n { display: inline-block; min-width: 20px; text-align: center; font-variant-numeric: tabular-nums; color: var(--mut); }
+.postos tr.is-off td:not(:last-child) { opacity: 0.6; }
+.postos td.act { white-space: nowrap; }
+.postos td.act .btn-row + .btn-row { margin-left: 6px; }
+.colors { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; border: none; margin: 6px 0 8px; }
+.device .colors button { position: relative; min-height: 44px; padding: 0; border: 2px solid rgba(0, 0, 0, 0.2); border-radius: 8px; background: var(--c); cursor: pointer; }
+.device .colors button[aria-pressed='true'] { outline: 3px solid #1f2a24; outline-offset: 2px; }
+.device .colors button[aria-pressed='true']::after { content: '✓'; position: absolute; inset: 0; margin: auto; width: 22px; height: 22px; line-height: 22px; border-radius: 50%; background: #fff; color: #1f2a24; font-weight: 700; font-size: 14px; }
+.cfg fieldset { border: none; }
+.cfg legend { font-size: 12px; color: var(--mut); padding: 0; }
+
+/* Assistente (C) */
+.wiz-steps { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 8px 0 12px; }
+.wiz-steps li { display: flex; align-items: center; gap: 6px; padding: 4px 10px; border: 1px solid var(--border); border-radius: 999px; font-size: 13px; color: var(--mut); background: #fff; }
+.wiz-steps li b { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: var(--bg); border: 1px solid var(--border); font-size: 12px; }
+.wiz-steps li[aria-current='step'] { border-color: var(--primary); background: var(--ok-bg); color: var(--ok-tx); font-weight: 600; }
+.wiz-steps li[aria-current='step'] b { background: var(--primary); border-color: var(--primary); color: #fff; }
+.wiz-steps li.done b { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.sum-dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 14px; font-size: 14px; margin-top: 8px; }
+.sum-dl dt { color: var(--mut); }
+.sum-dl dd { overflow-wrap: anywhere; }
+
+@container app (max-width: 768px) {
+  .prov { grid-template-columns: 1fr; }
+  .cfg h1 { font-size: 20px; }
+  .tabs [role='tab'] { min-height: 44px; }
+  .device .cfg .btn-row, .device .cfg button.secondary, .device .cfg button.primary { min-height: 44px; }
+  .device .cfg .btn-row { display: inline-flex; align-items: center; justify-content: center; }
+  .device .cfg label > input { max-width: none; min-height: 44px; }
+  .device .postos .mv { min-height: 44px; min-width: 44px; }
+  .colors { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+  .postos td.act { white-space: normal; }
+  .postos td.act .btn-row { margin-left: 0 !important; margin-right: 6px; }
+  .wiz-steps li span { display: none; }
+  .wiz-steps li[aria-current='step'] span { display: inline; }
+}
+</style>
+</head>
+<body data-view="both">
+
+<header class="mock-bar">
+  <a class="mock-back" href="2026-10-03-escalas-ferias-mockups.html">← Índice</a>
+  <span class="mock-title">11 · Configuração: postos e email (/admin/integracoes)</span>
+  <div class="mock-tabs" role="tablist" aria-label="Variantes">
+    <button type="button" role="tab" id="tab-a" data-variant="a" aria-controls="panel-a" aria-selected="false">A · Página única</button>
+    <button type="button" role="tab" id="tab-b" data-variant="b" aria-controls="panel-b" aria-selected="false">B · Separadores</button>
+    <button type="button" role="tab" id="tab-c" data-variant="c" aria-controls="panel-c" aria-selected="false">C · Assistente</button>
+  </div>
+  <div class="mock-view" role="group" aria-label="Dispositivos">
+    <button type="button" data-view="both" aria-pressed="true">Ambos</button>
+    <button type="button" data-view="desktop" aria-pressed="false">Desktop</button>
+    <button type="button" data-view="phone" aria-pressed="false">375 px</button>
+  </div>
+</header>
+
+<main class="mock-main">
+  <section role="tabpanel" id="panel-a" aria-labelledby="tab-a" data-variant="a" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> uma só página com duas secções empilhadas, «Postos» e «Email da escala». O fornecedor escolhe-se em três botões e o formulário muda com ele (Gmail e Zoho: email e palavra-passe de aplicação; Outlook: botão «Ligar conta Microsoft»).</p>
+      <p><b>Vantagens:</b> tudo à vista, sem navegar; o estado do email e a lista de postos comparam-se de relance e não há navegação entre ecrãs.</p>
+      <p><b>Custo:</b> a página fica comprida em 375 px; quem só quer mudar a ordem dos postos passa primeiro por toda a lista, e a secção do email fica no fundo.</p>
+      <p class="note-extra">Controlo do mockup: o estado do email (Desligado / Ligado / Erro) força-se aqui; na aplicação vem da última ligação guardada. Nunca se mostra uma palavra-passe.</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-b" aria-labelledby="tab-b" data-variant="b" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> dois separadores, «Postos» e «Email», com o mesmo conteúdo da variante A; o separador do email mostra um «!» quando a ligação está em erro.</p>
+      <p><b>Vantagens:</b> cada tarefa tem o ecrã inteiro (a lista de postos já não obriga a rolar até ao email) e o erro de email avisa-se no próprio separador.</p>
+      <p><b>Custo:</b> um clique a mais para ver a outra metade; quem abre a página para um assunto não vê o estado do outro.</p>
+      <p class="note-extra">O estado do email é o mesmo nos dois separadores.</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-c" aria-labelledby="tab-c" data-variant="c" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> a ligação do email faz-se por um assistente em três passos (fornecedor, ligar a conta, testar); depois de ligado vira um resumo com «Alterar ligação». A lista de postos fica à parte, noutra secção, e funciona sem o assistente.</p>
+      <p><b>Vantagens:</b> guia quem nunca ligou um email, mostra só o que o fornecedor escolhido pede e termina com um teste obrigatório à vista; o erro leva direto ao passo de corrigir.</p>
+      <p><b>Custo:</b> mais cliques para quem já sabe; o assistente esconde as instruções dos outros fornecedores até se voltar ao passo 1.</p>
+      <p class="note-extra">Controlo do mockup: «Desligado» recomeça o assistente, «Ligado» e «Erro» mostram o resumo.</p>
+    </div>
+  </section>
+</main>
+
+<!-- Conteúdo de cada variante: clonado por JS para o desktop e para os 375 px. Sem id aqui dentro. -->
+<template data-variant="a" data-active="Integrações" data-title="Integrações" data-user="Joana Valente">
+  <div class="cfg">
+    <div class="mockctl">
+      <span class="mockctl-t">Controlo do mockup</span>
+      <span class="mockctl-t">Estado do email</span>
+      <span class="seg" role="group" aria-label="Estado do email">
+        <button type="button" data-act="set-status" data-v="off" aria-pressed="true">Desligado</button>
+        <button type="button" data-act="set-status" data-v="on" aria-pressed="false">Ligado</button>
+        <button type="button" data-act="set-status" data-v="err" aria-pressed="false">Erro</button>
+      </span>
+    </div>
+    <h1>Configuração <span class="new-tag" title="Elemento novo (marca do mockup)">Novo</span></h1>
+    <section class="card" data-labelledby="h-postos">
+      <div class="sec-head"><h2 data-id="h-postos">Postos</h2></div>
+      <div class="postos" data-slot="postos"></div>
+    </section>
+    <section class="card" data-labelledby="h-email">
+      <div class="sec-head"><h2 data-id="h-email">Email da escala</h2></div>
+      <div data-slot="email"></div>
+    </section>
+  </div>
+</template>
+
+<template data-variant="b" data-active="Integrações" data-title="Integrações" data-user="Joana Valente">
+  <div class="cfg">
+    <div class="mockctl">
+      <span class="mockctl-t">Controlo do mockup</span>
+      <span class="mockctl-t">Estado do email</span>
+      <span class="seg" role="group" aria-label="Estado do email">
+        <button type="button" data-act="set-status" data-v="off" aria-pressed="true">Desligado</button>
+        <button type="button" data-act="set-status" data-v="on" aria-pressed="false">Ligado</button>
+        <button type="button" data-act="set-status" data-v="err" aria-pressed="false">Erro</button>
+      </span>
+    </div>
+    <h1>Configuração <span class="new-tag" title="Elemento novo (marca do mockup)">Novo</span></h1>
+    <div data-slot="body"></div>
+  </div>
+</template>
+
+<template data-variant="c" data-active="Integrações" data-title="Integrações" data-user="Joana Valente">
+  <div class="cfg">
+    <div class="mockctl">
+      <span class="mockctl-t">Controlo do mockup</span>
+      <span class="mockctl-t">Estado do email</span>
+      <span class="seg" role="group" aria-label="Estado do email">
+        <button type="button" data-act="set-status" data-v="off" aria-pressed="true">Desligado</button>
+        <button type="button" data-act="set-status" data-v="on" aria-pressed="false">Ligado</button>
+        <button type="button" data-act="set-status" data-v="err" aria-pressed="false">Erro</button>
+      </span>
+    </div>
+    <h1>Configuração <span class="new-tag" title="Elemento novo (marca do mockup)">Novo</span></h1>
+    <section class="card" data-labelledby="h-email">
+      <div class="sec-head"><h2 data-id="h-email">Ligar o email da escala</h2></div>
+      <div data-slot="wizard"></div>
+    </section>
+    <section class="card" data-labelledby="h-postos">
+      <div class="sec-head"><h2 data-id="h-postos">Postos</h2></div>
+      <div class="postos" data-slot="postos"></div>
+    </section>
+  </div>
+</template>
+
+<script>
+/* === MOLDURA COMUM (copiar) === */
+/* API para o JS específico (script a seguir a este):
+     window.mockInit = (deviceEl, variant, kind) => {}   chamado por cada clone (kind = 'desktop' | 'phone')
+     Mock.on(tipo, seletor, (evento, elemento, deviceEl) => {})   delegação com escopo no .device
+     Mock.toast(deviceEl, texto)   Mock.sheet(deviceEl, html|Node) → caixa   Mock.closeSheet(deviceEl)
+     Mock.state(deviceEl) → objeto por clone   Mock.uid(prefixo) → id único   Mock.$ Mock.$$ Mock.esc
+   No markup dos templates (sem id): data-id="k" → id único por clone; data-for / data-controls /
+   data-labelledby / data-describedby="k" → for / aria-controls / aria-labelledby / aria-describedby.
+   [data-route="/rota"] simula navegação (aviso «Abre /rota»). Atributos do <template>:
+   data-active (item do menu activo), data-title (título da barra a 375 px), data-user (nome na barra lateral). */
+(function () {
+  'use strict';
+  var VIEW_KEY = 'escalas-ferias-mock-view';
+  var MENU = [
+    ['Geral', [['Início', '/']]],
+    ['Operação', [['Horas', '/horas'], ['As minhas horas', '/horas/minhas'], ['Escala', '/escala'], ['A minha escala', '/escala/minha'],
+      ['Férias', '/ferias'], ['As minhas férias', '/ferias/minhas'], ['Gorjetas', '/gorjetas'], ['As minhas gorjetas', '/gorjetas/minhas'],
+      ['Fecho de caixa', '/caixa']]],
+    ['Cadastros', [['Cadastros', '/cadastros'], ['Equipa', '/cadastros/equipa']]],
+    ['Administração', [['Integrações', '/admin/integracoes']]]
+  ];
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var mk = function (tag, cls) { var n = document.createElement(tag); if (cls) n.className = cls; return n; };
+  var clamp = function (v, lo, hi) { return Math.min(Math.max(v, lo), hi); };
+  var states = new WeakMap();
+  var counter = 0;
+  var uid = function (p) { counter += 1; return (p || 'u') + '-' + counter; };
+  var state = function (dev) { if (!states.has(dev)) states.set(dev, {}); return states.get(dev); };
+
+  /* ids únicos por clone: data-id define, os data-for/controls/labelledby/describedby ligam */
+  function wireIds(root) {
+    var map = {};
+    var get = function (k) { if (!map[k]) map[k] = uid(k); return map[k]; };
+    $$('[data-id]', root).forEach(function (n) { n.id = get(n.getAttribute('data-id')); });
+    [['data-for', 'for'], ['data-controls', 'aria-controls'], ['data-labelledby', 'aria-labelledby'], ['data-describedby', 'aria-describedby']]
+      .forEach(function (p) { $$('[' + p[0] + ']', root).forEach(function (n) { n.setAttribute(p[1], get(n.getAttribute(p[0]))); }); });
+  }
+
+  /* parte visível do dispositivo (para posicionar avisos e diálogos onde o utilizador está a olhar) */
+  function visibleBox(dev) {
+    var r = dev.getBoundingClientRect();
+    var sc = dev.closest('.device-scroll');
+    return {
+      top: clamp(-r.top, 0, r.height), bottom: clamp(window.innerHeight - r.top, 0, r.height),
+      left: sc ? sc.scrollLeft : 0, width: sc ? sc.clientWidth : dev.clientWidth
+    };
+  }
+  function toast(dev, msg) {
+    var app = $('.app', dev); if (!app) return;
+    var t = $('.app-toast', app);
+    if (!t) { t = mk('div', 'app-toast'); t.setAttribute('role', 'status'); app.appendChild(t); }
+    t.textContent = msg; t.hidden = false;
+    var v = visibleBox(dev);
+    t.style.top = Math.max(8, v.bottom - 56) + 'px';
+    t.style.left = (v.left + v.width / 2) + 'px';
+    clearTimeout(t._h); t._h = setTimeout(function () { t.hidden = true; }, 2800);
+  }
+  function sheet(dev, content) {
+    var app = $('.app', dev), s = $('.sheet', app);
+    if (!s) { s = mk('div', 'sheet'); s.innerHTML = '<div class="sheet__box" role="dialog" aria-modal="true"></div>'; app.appendChild(s); }
+    var box = $('.sheet__box', s);
+    if (typeof content === 'string') box.innerHTML = content; else if (content) box.replaceChildren(content);
+    wireIds(box); s.hidden = false;
+    var v = visibleBox(dev);
+    box.style.top = (v.top + 24) + 'px';
+    box.style.left = Math.max(12, v.left + (v.width - box.offsetWidth) / 2) + 'px';
+    var f = $('button, input, select, textarea, a[href]', box); if (f) f.focus();
+    return box;
+  }
+  function closeSheet(dev) { var s = $('.sheet', dev); if (s) s.hidden = true; }
+  function setMenu(dev, open) {
+    var app = $('.app', dev); if (!app) return;
+    app.toggleAttribute('data-menu-open', open);
+    var b = $('.app-burger', dev); if (b) { b.setAttribute('aria-expanded', String(open)); b.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu'); }
+  }
+  function on(type, selector, fn) {
+    document.addEventListener(type, function (e) {
+      var t = e.target && e.target.closest ? e.target.closest(selector) : null; if (!t) return;
+      var dev = t.closest('.device'); if (!dev) return;
+      fn(e, t, dev);
+    });
+  }
+
+  /* mini-app: barra lateral (desktop) / barra superior com ☰ (≤768px, por container query) */
+  function buildApp(tpl) {
+    var active = tpl.dataset.active || document.body.dataset.active || '';
+    var title = tpl.dataset.title || active;
+    var user = tpl.dataset.user || 'Carla Videira';
+    var app = mk('div', 'app');
+    if (tpl.dataset.shell === 'bare') {
+      app.className = 'app app--bare';
+      app.innerHTML = '<div class="app-main"><div class="app-content"></div></div>';
+      $('.app-content', app).appendChild(tpl.content.cloneNode(true));
+      return app;
+    }
+    var nav = MENU.map(function (sec) {
+      return '<div class="sidebar-section">' + esc(sec[0]) + '</div>' + sec[1].map(function (it) {
+        var on_ = it[0] === active;
+        return '<a class="sidebar-link' + (on_ ? ' sidebar-link--active' : '') + '" href="#" data-route="' + esc(it[1]) + '"' + (on_ ? ' aria-current="page"' : '') + '>' + esc(it[0]) + '</a>';
+      }).join('');
+    }).join('');
+    app.innerHTML =
+      '<aside class="app-side" aria-label="Menu principal"><div class="app-logo">GiG</div><nav>' + nav + '</nav>' +
+      '<div class="app-user"><span class="app-user__name">' + esc(user) + '</span><button type="button" data-route="/login">Sair</button></div></aside>' +
+      '<div class="app-scrim" data-act-scrim></div>' +
+      '<div class="app-main"><div class="app-top"><button type="button" class="app-burger" aria-expanded="false" aria-label="Abrir menu">☰</button>' +
+      '<span class="app-top__title">' + esc(title) + '</span></div><div class="app-content"></div></div>';
+    $('.app-content', app).appendChild(tpl.content.cloneNode(true));
+    return app;
+  }
+  function fill(dev) {
+    var tpl = $('template[data-variant="' + dev.dataset.variant + '"]');
+    states.delete(dev);
+    dev.replaceChildren(buildApp(tpl));
+    wireIds(dev);
+    if (typeof window.mockInit === 'function') window.mockInit(dev, dev.dataset.variant, dev.dataset.kind);
+  }
+  function mount(panel) {
+    var v = panel.dataset.variant;
+    var stage = $('.stage', panel) || panel.appendChild(mk('div', 'stage'));
+    stage.replaceChildren();
+    [['desktop', 'Desktop'], ['phone', '375 px']].forEach(function (d) {
+      var item = mk('figure', 'stage-item stage-item--' + d[0]);
+      item.innerHTML = '<figcaption class="stage-cap"><span>' + d[1] + '</span><button type="button" class="stage-reset" title="Repor o estado inicial">Repor</button></figcaption>';
+      var dev = mk('div', 'device device--' + d[0]);
+      dev.dataset.variant = v; dev.dataset.kind = d[0];
+      var sc = mk('div', 'device-scroll' + (d[0] === 'phone' ? ' device-scroll--phone' : '')); sc.appendChild(dev); item.appendChild(sc);
+      stage.appendChild(item);
+      fill(dev);
+    });
+    panel.dataset.rendered = '1';
+  }
+
+  /* separadores derivados dos <template data-variant> (hash #a, #b, ...) e alternador de dispositivos */
+  var VARIANTS = $$('template[data-variant]').map(function (t) { return t.dataset.variant; }).sort();
+  var tablist = $('.mock-tabs'), mainEl = $('.mock-main'), notice = mk('div', 'variant-missing');
+  notice.hidden = true; notice.setAttribute('role', 'alert'); mainEl.insertBefore(notice, mainEl.firstChild);
+  $$('.mock-bar [role="tab"], [role="tabpanel"][data-variant]').forEach(function (el) { if (VARIANTS.indexOf(el.dataset.variant) < 0) el.remove(); });
+  VARIANTS.forEach(function (v) {
+    if (!$('#tab-' + v)) {
+      var b = mk('button', ''); b.type = 'button'; b.id = 'tab-' + v; b.dataset.variant = v; b.setAttribute('role', 'tab');
+      b.setAttribute('aria-controls', 'panel-' + v); b.setAttribute('aria-selected', 'false'); b.textContent = v.toUpperCase(); tablist.appendChild(b);
+    }
+    if (!$('#panel-' + v)) {
+      var p = mk('section', ''); p.id = 'panel-' + v; p.dataset.variant = v; p.hidden = true; p.setAttribute('role', 'tabpanel'); p.setAttribute('aria-labelledby', 'tab-' + v);
+      mainEl.appendChild(p);
+    }
+  });
+  var tabs = $$('.mock-bar [role="tab"]'), panels = $$('[role="tabpanel"][data-variant]');
+  function select(v, focus) {
+    var missing = null;
+    if (VARIANTS.indexOf(v) < 0) { if (v) missing = v; v = VARIANTS[0]; }
+    tabs.forEach(function (t) { var o = !missing && t.dataset.variant === v; t.setAttribute('aria-selected', String(o)); t.tabIndex = o || (missing && t.dataset.variant === v) ? 0 : -1; if (o && focus) t.focus(); });
+    panels.forEach(function (p) { p.hidden = !!missing || p.dataset.variant !== v; if (!p.hidden && !p.dataset.rendered) mount(p); });
+    notice.hidden = !missing;
+    if (missing) {
+      notice.innerHTML = '<span>Esta funcionalidade não tem a variante ' + esc(missing.toUpperCase()) + '.</span> <a class="btn-row" href="#' + esc(VARIANTS[0]) + '">Ver a variante ' + esc(VARIANTS[0].toUpperCase()) + '</a>';
+    } else if (location.hash.slice(1) !== v) { try { history.replaceState(null, '', '#' + v); } catch (e) { /* file:// restrito */ } }
+  }
+  function setView(v) {
+    document.body.dataset.view = v;
+    $$('.mock-view button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.view === v)); });
+    try { localStorage.setItem(VIEW_KEY, v); } catch (e) { /* sem armazenamento */ }
+  }
+  function boot() {
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { select(t.dataset.variant); });
+      t.addEventListener('keydown', function (e) {
+        var j = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }[e.key];
+        if (j === undefined) return; e.preventDefault(); select(tabs[(j + tabs.length) % tabs.length].dataset.variant, true);
+      });
+    });
+    $$('.mock-view button').forEach(function (b) { b.addEventListener('click', function () { setView(b.dataset.view); }); });
+    window.addEventListener('hashchange', function () { select(location.hash.slice(1).toLowerCase()); });
+    var saved = null; try { saved = localStorage.getItem(VIEW_KEY); } catch (e) { /* ignorar */ }
+    setView(['both', 'desktop', 'phone'].indexOf(saved) >= 0 ? saved : 'both');
+    select(location.hash.slice(1).toLowerCase());
+  }
+
+  /* comportamentos da moldura */
+  on('click', '.app-burger', function (e, t, dev) { setMenu(dev, !$('.app', dev).hasAttribute('data-menu-open')); });
+  on('click', '.app-scrim', function (e, t, dev) { setMenu(dev, false); });
+  on('click', '[data-route]', function (e, t, dev) { e.preventDefault(); setMenu(dev, false); toast(dev, 'Abre ' + t.getAttribute('data-route')); });
+  on('click', 'a[href="#"]', function (e) { e.preventDefault(); });
+  on('click', '.sheet', function (e, t, dev) { if (e.target === t || e.target.closest('[data-close-sheet]')) closeSheet(dev); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    $$('.sheet:not([hidden])').forEach(function (s) { closeSheet(s.closest('.device')); });
+    $$('.app[data-menu-open]').forEach(function (a) { setMenu(a.closest('.device'), false); });
+  });
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.stage-reset'); if (!b) return;
+    fill($('.device', b.closest('.stage-item')));
+  });
+
+  window.Mock = { $: $, $$: $$, esc: esc, uid: uid, state: state, on: on, toast: toast, sheet: sheet, closeSheet: closeSheet, setMenu: setMenu };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+/* === FIM MOLDURA === */
+</script>
+<script>
+/* === ESPECÍFICO DESTE MOCKUP === */
+(function () {
+  'use strict';
+  var $ = Mock.$, $$ = Mock.$$, esc = Mock.esc;
+
+  /* ───────── dados fictícios ───────── */
+  var TODAY = '03/10/2026', TEST_TIME = '10:42';
+  var DEFAULT_ADDR = 'gig.escala@exemplo.pt', MANAGER_EMAIL = 'joana.valente@exemplo.pt', DEFAULT_SENDER = 'GiG · Escala';
+  /* as 10 cores do briefing (o nome é só descritivo) */
+  var COLORS = [['#d9a400', 'Amarelo'], ['#2f6fd6', 'Azul'], ['#a03fb5', 'Roxo'], ['#e8742a', 'Laranja'], ['#d9534f', 'Vermelho'],
+    ['#2e9e5b', 'Verde'], ['#7a5a2e', 'Castanho'], ['#3aa6b9', 'Turquesa'], ['#b0234a', 'Carmim'], ['#6b4fd8', 'Violeta']];
+  var COLOR_NAME = {};
+  COLORS.forEach(function (c) { COLOR_NAME[c[0]] = c[1]; });
+  /* uses = funcionários com este posto habitual (os 11 do briefing) */
+  var POSTOS0 = [['Montagem', '#d9a400', 2], ['Fogão', '#2f6fd6', 1], ['Sumo', '#a03fb5', 1], ['Copa', '#e8742a', 1], ['Copa e Apoio', '#d9534f', 1],
+    ['Bar', '#2e9e5b', 1], ['Produção', '#7a5a2e', 1], ['Sala', '#3aa6b9', 1], ['Supervisão', '#b0234a', 1], ['Gerência', '#6b4fd8', 1]];
+  var PROV = {
+    gmail: {
+      label: 'Gmail', sub: 'Palavra-passe de aplicação', kind: 'pw',
+      steps: ['Ative a verificação em 2 passos na conta Google (é obrigatória).', 'Crie uma palavra-passe de aplicação para o GiG e cole-a abaixo.'],
+      help: 'Ajuda do Google: «Iniciar sessão com palavras-passe de aplicação»', url: 'https://support.google.com/accounts/answer/185833', server: '',
+      err: 'Palavra-passe de aplicação recusada — confirme a verificação em 2 passos'
+    },
+    outlook: {
+      label: 'Outlook / Hotmail', sub: 'Conta Microsoft', kind: 'oauth',
+      steps: ['Ao ligar, abre-se o início de sessão da Microsoft e autoriza o GiG a enviar email em seu nome.', 'O GiG não pede nem guarda a sua palavra-passe.'],
+      help: 'Ajuda da Microsoft: definições de POP, IMAP e SMTP do Outlook.com', url: 'https://support.microsoft.com/en-us/outlook/pop-imap-and-smtp-settings-for-outlook-com', linkText: 'Ajuda da Microsoft', server: '',
+      err: 'Autorização expirada — volte a ligar a conta'
+    },
+    zoho: {
+      label: 'Zoho', sub: 'Palavra-passe de aplicação', kind: 'pw',
+      steps: ['Crie uma palavra-passe específica de aplicação na conta Zoho.', 'O servidor de envio é smtp.zoho.eu.'],
+      help: 'Ajuda do Zoho Mail (confirmar a página exacta das palavras-passe de aplicação)', url: 'https://www.zoho.com/mail/help/', server: 'smtp.zoho.eu',
+      err: 'Falha de autenticação em smtp.zoho.eu'
+    }
+  };
+  var PROV_ORDER = ['gmail', 'outlook', 'zoho'];
+  var STATUS_LABEL = { off: 'Desligado', on: 'Ligado', err: 'Erro' };
+
+  /* ───────── estado ───────── */
+  function newState(variant) {
+    return {
+      variant: variant, uid: Mock.uid('cfg'), prov: 'gmail', status: 'off', addr: '', pwSet: false, pwTyped: false, sender: DEFAULT_SENDER,
+      fieldErr: '', test: null, step: 1, tab: 'postos', edit: null, nextId: 11,
+      postos: POSTOS0.map(function (q, i) { return { id: i + 1, name: q[0], color: q[1], active: true, uses: q[2] }; })
+    };
+  }
+  var posto = function (st, id) { for (var i = 0; i < st.postos.length; i++) if (st.postos[i].id === id) return st.postos[i]; return null; };
+  var provOf = function (st) { return PROV[st.prov]; };
+
+  /* ───────── email: peças ───────── */
+  function statusHtml(st) {
+    var P = provOf(st);
+    if (st.status === 'on') return '<div class="alert-ok" role="status">Ligado como <b>' + esc(st.addr || DEFAULT_ADDR) + '</b>' + (P.kind === 'oauth' ? ' (conta Microsoft)' : '') + ' · ' + esc(P.label) + ' · desde ' + TODAY + '</div>';
+    if (st.status === 'err') return '<div class="alert-err" role="alert"><b>Erro na ligação (' + esc(P.label) + ').</b> ' + esc(P.err) + '</div>';
+    return '<p class="status-line"><span class="badge-mut">Desligado</span><span class="muted small">Sem fornecedor ligado, a escala publicada não é enviada por email.</span></p>';
+  }
+  function provChoiceHtml(st, fkPrefix) {
+    return '<div class="prov" role="group" aria-label="Fornecedor de email">' + PROV_ORDER.map(function (k) {
+      return '<button type="button" data-act="prov" data-v="' + k + '" data-fk="' + fkPrefix + k + '" aria-pressed="' + (st.prov === k) + '">' + esc(PROV[k].label) + '<small>' + esc(PROV[k].sub) + '</small></button>';
+    }).join('') + '</div>';
+  }
+  function senderPreview(st) {
+    var addr = st.status === 'on' || st.addr ? (st.addr || DEFAULT_ADDR) : 'o email ligado';
+    return '«' + esc(st.sender || DEFAULT_SENDER) + ' &lt;' + esc(addr) + '&gt;»';
+  }
+  function provForm(st) {
+    var P = provOf(st);
+    var h = '<div class="howto"><ol>' + P.steps.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ol>';
+    if (P.url) h += '<p><a href="' + P.url + '" target="_blank" rel="noopener" class="link-inline" title="' + esc(P.help) + '">' + (P.linkText || 'Como obter') + '</a></p>';
+    h += '</div>';
+    if (P.kind === 'pw') {
+      h += '<label>Email da conta<input type="email" data-f="addr" value="' + esc(st.addr) + '" autocomplete="off" placeholder="nome@exemplo.pt"></label>' +
+        '<label>Palavra-passe de aplicação<input type="password" data-f="pw" autocomplete="new-password" placeholder="' + (st.pwSet ? 'Guardada. Escreva para a substituir' : 'Cole aqui a palavra-passe de aplicação') + '"></label>';
+      if (P.server) h += '<label class="ro">Servidor de envio<input type="text" value="' + esc(P.server) + '" readonly></label>';
+    }
+    h += '<label>Nome do remetente (mostrado a quem recebe)<input type="text" data-f="sender" value="' + esc(st.sender) + '" maxlength="40"></label>' +
+      '<p class="sender-prev">Os emails saem como ' + senderPreview(st) + '.</p>';
+    if (st.fieldErr) h += '<div class="alert-err" role="alert">' + esc(st.fieldErr) + '</div>';
+    return h;
+  }
+  function testResult(st) {
+    if (!st.test) return '';
+    return st.test.ok
+      ? '<div class="alert-ok" role="status">Email de teste enviado para ' + MANAGER_EMAIL + ' às ' + TEST_TIME + '. Confirme na caixa de entrada.</div>'
+      : '<div class="alert-err" role="alert"><b>Falha no envio de teste.</b> ' + esc(st.test.msg) + '</div>';
+  }
+  function testBtn(st) {
+    return '<button type="button" class="secondary" data-act="test" data-fk="test"' + (st.status === 'off' ? ' disabled' : '') + '>Enviar email de teste</button>';
+  }
+  var connectBtn = function (st) {
+    return provOf(st).kind === 'pw'
+      ? '<button type="button" class="primary" data-act="save" data-fk="save">Guardar e ligar</button>'
+      : '<button type="button" class="primary" data-act="oauth" data-fk="oauth">' + (st.status === 'on' ? 'Voltar a ligar a conta Microsoft' : 'Ligar conta Microsoft') + '</button>';
+  };
+  /* A e B: tudo numa vista */
+  function emailHtml(st) {
+    return '<p class="sec-lead">Fornecedor usado para enviar a escala à equipa quando se publica com «Avisar a equipa por email».</p>' + provChoiceHtml(st, 'prov-') + statusHtml(st) +
+      '<div style="margin-top:12px">' + provForm(st) + '</div>' +
+      '<div class="btn-line">' + connectBtn(st) + testBtn(st) + (st.status !== 'off' ? '<button type="button" class="secondary" data-act="disconnect" data-fk="disc">Desligar</button>' : '') + '</div>' +
+      (st.status === 'off' ? '<p class="mut-line">Ligue primeiro o email para poder enviar o teste.</p>' : '') + testResult(st);
+  }
+
+  /* C: assistente */
+  var STEP_NAMES = ['Fornecedor', 'Ligar a conta', 'Testar'];
+  function wizardHtml(st) {
+    var P = provOf(st), h = '';
+    if (st.step === 0) {
+      h += '<p class="sec-lead">Fornecedor usado para enviar a escala à equipa quando se publica com «Avisar a equipa por email».</p>' + statusHtml(st);
+      h += '<dl class="sum-dl"><dt>Fornecedor</dt><dd>' + esc(P.label) + '</dd><dt>Conta</dt><dd>' + esc(st.addr || DEFAULT_ADDR) + '</dd><dt>Remetente</dt><dd>' + senderPreview(st) + '</dd></dl>';
+      h += '<div class="btn-line">' + (st.status === 'err' ? '<button type="button" class="primary" data-act="wiz-go" data-v="2" data-fk="fix">Corrigir a ligação</button>' : '') + testBtn(st) +
+        '<button type="button" class="secondary" data-act="wiz-go" data-v="1" data-fk="chg">Alterar a ligação</button><button type="button" class="secondary" data-act="disconnect" data-fk="disc">Desligar</button></div>' + testResult(st);
+      return h;
+    }
+    h += '<ol class="wiz-steps" aria-label="Passos">' + STEP_NAMES.map(function (n, i) {
+      var cur = i + 1 === st.step;
+      return '<li' + (cur ? ' aria-current="step"' : '') + (i + 1 < st.step ? ' class="done"' : '') + '><b>' + (i + 1 < st.step ? '✓' : i + 1) + '</b><span>' + n + '</span></li>';
+    }).join('') + '</ol>';
+    if (st.step === 1) {
+      h += '<p class="sec-lead">Passo 1 de 3. Escolha o fornecedor do email que vai enviar a escala.</p>' + provChoiceHtml(st, 'wprov-') +
+        '<div class="btn-line"><button type="button" class="primary" data-act="wiz-go" data-v="2" data-fk="next">Seguinte</button></div>';
+    } else if (st.step === 2) {
+      h += '<p class="sec-lead">Passo 2 de 3. Ligar a conta ' + esc(P.label) + '.</p>' + provForm(st) +
+        '<div class="btn-line"><button type="button" class="secondary" data-act="wiz-go" data-v="1" data-fk="back">Voltar</button>' + connectBtn(st) + '</div>';
+    } else {
+      h += '<p class="sec-lead">Passo 3 de 3. Conta ligada. Envie um email de teste para confirmar que chega.</p>' + statusHtml(st) +
+        '<div class="btn-line"><button type="button" class="secondary" data-act="wiz-go" data-v="2" data-fk="back">Voltar</button>' + testBtn(st) +
+        '<button type="button" class="primary" data-act="wiz-done" data-fk="done">Concluir</button></div>' + testResult(st);
+    }
+    return h;
+  }
+
+  /* ───────── postos ───────── */
+  function postosHtml(st) {
+    var n = st.postos.length;
+    var h = '<div class="toolbar" style="margin-top:0"><p class="sec-lead" style="margin:0;flex:1 1 240px">A ordem é a das escolhas e da legenda. Um posto desactivado deixa de poder ser escolhido, mas mantém-se nos turnos já planeados.</p>' +
+      '<div class="toolbar-actions"><button type="button" class="btn-row btn-row-strong" data-act="posto-add" data-fk="add">Adicionar posto</button></div></div>';
+    h += '<table class="table--cards"><thead><tr><th scope="col">Ordem</th><th scope="col">Posto</th><th scope="col">Cor</th><th scope="col">Habitual de</th><th scope="col">Estado</th><th scope="col"><span class="muted small">Ações</span></th></tr></thead><tbody>';
+    st.postos.forEach(function (p, i) {
+      h += '<tr' + (p.active ? '' : ' class="is-off"') + '><td class="ord" data-label="Ordem"><span>' +
+        '<button type="button" class="mv" data-act="posto-up" data-id="' + p.id + '" data-fk="up-' + p.id + '" aria-label="Subir ' + esc(p.name) + '"' + (i === 0 ? ' disabled' : '') + '>▲</button> ' +
+        '<span class="ord-n">' + (i + 1) + '</span> ' +
+        '<button type="button" class="mv" data-act="posto-down" data-id="' + p.id + '" data-fk="down-' + p.id + '" aria-label="Descer ' + esc(p.name) + '"' + (i === n - 1 ? ' disabled' : '') + '>▼</button></span></td>' +
+        '<td data-label="Posto"><span class="pos-dot" style="--pos-color:' + p.color + '"></span><b>' + esc(p.name) + '</b></td>' +
+        '<td data-label="Cor"><span><span class="sw" style="--c:' + p.color + '"></span>' + COLOR_NAME[p.color] + ' <span class="muted small">' + p.color + '</span></span></td>' +
+        '<td data-label="Habitual de">' + (p.uses ? p.uses + (p.uses === 1 ? ' pessoa' : ' pessoas') : 'ninguém') + '</td>' +
+        '<td data-label="Estado">' + (p.active ? '<span class="badge-ok">Activo</span>' : '<span class="badge-mut">Inactivo</span>') + '</td>' +
+        '<td class="act"><button type="button" class="btn-row" data-act="posto-edit" data-id="' + p.id + '" data-fk="edit-' + p.id + '" aria-label="Editar ' + esc(p.name) + '">Editar</button>' +
+        '<button type="button" class="btn-row' + (p.active ? ' btn-row-quiet' : '') + '" data-act="posto-toggle" data-id="' + p.id + '" data-fk="tog-' + p.id + '" aria-label="' + (p.active ? 'Desactivar ' : 'Reactivar ') + esc(p.name) + '">' + (p.active ? 'Desactivar' : 'Reactivar') + '</button></td></tr>';
+    });
+    h += '</tbody></table>';
+    var act = st.postos.filter(function (p) { return p.active; });
+    h += '<div class="legend"><span>Legenda nas escolhas e na grelha:</span>' + (act.length ? act.map(function (p) {
+      return '<span class="shift-band" style="--pos-color:' + p.color + '">' + esc(p.name) + '</span>';
+    }).join('') : '<span>nenhum posto activo</span>') + '</div>';
+    return h;
+  }
+  function postoForm(st) {
+    var e = st.edit, used = '';
+    var h = '<h2 class="sheet-h">' + (e.id ? 'Editar posto' : 'Novo posto') + '</h2>' +
+      '<label>Nome do posto<input type="text" data-f="p-name" value="' + esc(e.name) + '" maxlength="30" autocomplete="off"></label>' +
+      '<fieldset class="colors-wrap"><legend>Cor (uma das 10 do GiG)</legend><div class="colors" role="group" aria-label="Cor do posto">' + COLORS.map(function (c) {
+        return '<button type="button" data-act="pick-color" data-c="' + c[0] + '" style="--c:' + c[0] + '" aria-pressed="' + (e.color === c[0]) + '" aria-label="' + c[1] + ' ' + c[0] + '" title="' + c[1] + '"></button>';
+      }).join('') + '</div></fieldset><p class="mut-line" data-slot="p-hint" style="margin:0 0 8px"></p>' +
+      '<div class="alert-err" role="alert" data-slot="p-err" hidden></div>' +
+      '<div class="btn-line"><button type="button" class="primary" data-act="posto-save">Guardar</button><button type="button" class="secondary" data-close-sheet>Cancelar</button></div>';
+    return h;
+  }
+  function colorHint(st, box) {
+    var e = st.edit, others = st.postos.filter(function (p) { return p.color === e.color && p.id !== e.id; }).map(function (p) { return p.name; });
+    $('[data-slot="p-hint"]', box).textContent = COLOR_NAME[e.color] + (others.length ? ' · já usada por ' + others.join(', ') + '.' : ' · não está a ser usada.');
+  }
+
+  /* ───────── render por variante ───────── */
+  function render(dev) {
+    var st = Mock.state(dev), fk = null;
+    if (document.activeElement && dev.contains(document.activeElement)) fk = document.activeElement.getAttribute('data-fk');
+    if (st.variant === 'a') {
+      $('[data-slot="postos"]', dev).innerHTML = postosHtml(st);
+      $('[data-slot="email"]', dev).innerHTML = emailHtml(st);
+    } else if (st.variant === 'b') {
+      var tab = function (k, txt) {
+        var sel = st.tab === k;
+        return '<button type="button" role="tab" data-tab="' + k + '" data-fk="tab-' + k + '" id="' + st.uid + '-t-' + k + '" aria-controls="' + st.uid + '-p" aria-selected="' + sel + '" tabindex="' + (sel ? 0 : -1) + '">' + txt + '</button>';
+      };
+      $('[data-slot="body"]', dev).innerHTML = '<div class="tabs" role="tablist" aria-label="Configuração">' + tab('postos', 'Postos') +
+        tab('email', 'Email' + (st.status === 'err' ? ' <span class="tab-count" title="Ligação com erro">!</span>' : '')) + '</div>' +
+        '<section class="card" role="tabpanel" id="' + st.uid + '-p" aria-labelledby="' + st.uid + '-t-' + st.tab + '">' +
+        (st.tab === 'postos' ? '<div class="postos">' + postosHtml(st) + '</div>' : emailHtml(st)) + '</section>';
+    } else {
+      $('[data-slot="wizard"]', dev).innerHTML = wizardHtml(st);
+      $('[data-slot="postos"]', dev).innerHTML = postosHtml(st);
+    }
+    $$('[data-act="set-status"]', dev).forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.v === st.status)); });
+    if (fk) { var el = $('[data-fk="' + fk + '"]', dev); if (el && !el.disabled) el.focus(); }
+  }
+
+  window.mockInit = function (dev, variant) {
+    var s = Mock.state(dev), n = newState(variant);
+    Object.keys(n).forEach(function (k) { s[k] = n[k]; });
+    render(dev);
+  };
+
+  /* ───────── comportamento ───────── */
+  function connected(dev, st, toastMsg) {
+    st.status = 'on'; st.pwSet = provOf(st).kind === 'pw'; st.pwTyped = false; st.fieldErr = ''; st.test = null;
+    if (!st.addr) st.addr = DEFAULT_ADDR;
+    if (st.variant === 'c' && st.step > 0) st.step = 3;
+    render(dev); Mock.toast(dev, toastMsg);
+  }
+  Mock.on('click', '[data-act="set-status"]', function (e, t, dev) {
+    var st = Mock.state(dev);
+    st.status = t.dataset.v; st.test = null; st.fieldErr = '';
+    if (st.status === 'on') { st.addr = st.addr || DEFAULT_ADDR; st.pwSet = provOf(st).kind === 'pw'; st.step = 0; }
+    else if (st.status === 'err') { st.addr = st.addr || DEFAULT_ADDR; st.step = 0; }
+    else { st.pwSet = false; st.step = 1; }
+    render(dev);
+  });
+  Mock.on('click', '[data-act="prov"]', function (e, t, dev) {
+    var st = Mock.state(dev);
+    if (st.prov === t.dataset.v) return;
+    /* cada fornecedor tem a sua ligação e as suas credenciais: ao trocar, volta a Desligado e os campos limpam-se */
+    st.prov = t.dataset.v; st.status = 'off'; st.addr = ''; st.pwSet = false; st.pwTyped = false; st.fieldErr = ''; st.test = null;
+    render(dev);
+  });
+  Mock.on('input', '[data-f]', function (e, t, dev) {
+    var st = Mock.state(dev), f = t.dataset.f;
+    if (f === 'addr') st.addr = t.value;
+    else if (f === 'sender') { st.sender = t.value; var p = $('.sender-prev', dev); if (p) p.innerHTML = 'Os emails saem como ' + senderPreview(st) + '.'; }
+    else if (f === 'pw') st.pwTyped = t.value !== '';   /* a palavra-passe nunca se guarda nem se mostra */
+    else if (f === 'p-name') st.edit.name = t.value;
+  });
+  Mock.on('click', '[data-act="save"]', function (e, t, dev) {
+    var st = Mock.state(dev), pwEl = $('input[data-f="pw"]', dev);
+    st.pwTyped = !!(pwEl && pwEl.value !== '');
+    if (!st.addr || st.addr.indexOf('@') < 1) { st.fieldErr = 'Indique o email da conta que envia a escala.'; render(dev); return; }
+    if (!st.pwTyped && !st.pwSet) { st.fieldErr = 'Indique a palavra-passe de aplicação.'; render(dev); return; }
+    connected(dev, st, 'Email ligado: ' + st.addr);
+  });
+  Mock.on('click', '[data-act="oauth"]', function (e, t, dev) {
+    var st = Mock.state(dev);
+    Mock.sheet(dev, '<h2 class="sheet-h">Início de sessão na Microsoft (simulação)</h2><p style="margin-bottom:12px">O GiG pede permissão para enviar email em nome de <b>' + DEFAULT_ADDR + '</b>. Não vai ver nem guardar a palavra-passe.</p>' +
+      '<div class="btn-line"><button type="button" class="primary" data-act="oauth-ok">Autorizar</button><button type="button" class="secondary" data-close-sheet>Cancelar</button></div>');
+  });
+  Mock.on('click', '[data-act="oauth-ok"]', function (e, t, dev) { Mock.closeSheet(dev); connected(dev, Mock.state(dev), 'Conta Microsoft ligada (simulado)'); });
+  Mock.on('click', '[data-act="test"]', function (e, t, dev) {
+    var st = Mock.state(dev);
+    if (st.status === 'off') return;
+    if (st.status === 'on') { st.test = { ok: true }; render(dev); Mock.toast(dev, 'Email de teste enviado para ' + MANAGER_EMAIL); }
+    else { st.test = { ok: false, msg: provOf(st).err }; render(dev); Mock.toast(dev, 'Falha no envio de teste'); }
+  });
+  Mock.on('click', '[data-act="disconnect"]', function (e, t, dev) {
+    var st = Mock.state(dev);
+    st.status = 'off'; st.pwSet = false; st.pwTyped = false; st.addr = ''; st.test = null; st.fieldErr = ''; st.step = 1;
+    render(dev); Mock.toast(dev, 'Email desligado');
+  });
+  Mock.on('click', '[data-act="wiz-go"]', function (e, t, dev) { var st = Mock.state(dev); st.step = +t.dataset.v; st.fieldErr = ''; st.test = null; render(dev); });
+  Mock.on('click', '[data-act="wiz-done"]', function (e, t, dev) { var st = Mock.state(dev); st.step = 0; render(dev); Mock.toast(dev, 'Ligação do email concluída'); });
+
+  /* separadores (B) */
+  Mock.on('click', '[data-tab]', function (e, t, dev) { Mock.state(dev).tab = t.dataset.tab; render(dev); });
+  Mock.on('keydown', '[data-tab]', function (e, t, dev) {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    e.preventDefault();
+    var st = Mock.state(dev); st.tab = st.tab === 'postos' ? 'email' : 'postos'; render(dev);
+    var el = $('[data-tab="' + st.tab + '"]', dev); if (el) el.focus();
+  });
+
+  /* postos */
+  function move(dev, id, dir) {
+    var st = Mock.state(dev), i = st.postos.indexOf(posto(st, id)), j = i + dir;
+    if (i < 0 || j < 0 || j >= st.postos.length) return;
+    var tmp = st.postos[i]; st.postos[i] = st.postos[j]; st.postos[j] = tmp;
+    render(dev); Mock.toast(dev, tmp.name + ' passou para a posição ' + (j + 1));
+  }
+  Mock.on('click', '[data-act="posto-up"]', function (e, t, dev) { move(dev, +t.dataset.id, -1); });
+  Mock.on('click', '[data-act="posto-down"]', function (e, t, dev) { move(dev, +t.dataset.id, 1); });
+  function openPosto(dev, id) {
+    var st = Mock.state(dev), p = id ? posto(st, id) : null;
+    st.edit = { id: id || 0, name: p ? p.name : '', color: p ? p.color : COLORS[0][0] };
+    var box = Mock.sheet(dev, postoForm(st)); colorHint(st, box);
+  }
+  Mock.on('click', '[data-act="posto-add"]', function (e, t, dev) { openPosto(dev, 0); });
+  Mock.on('click', '[data-act="posto-edit"]', function (e, t, dev) { openPosto(dev, +t.dataset.id); });
+  Mock.on('click', '[data-act="pick-color"]', function (e, t, dev) {
+    var st = Mock.state(dev), box = t.closest('.sheet__box');
+    st.edit.color = t.dataset.c;
+    $$('[data-act="pick-color"]', box).forEach(function (b) { b.setAttribute('aria-pressed', String(b === t)); });
+    colorHint(st, box);
+  });
+  Mock.on('click', '[data-act="posto-save"]', function (e, t, dev) {
+    var st = Mock.state(dev), box = t.closest('.sheet__box'), err = $('[data-slot="p-err"]', box), name = st.edit.name.trim();
+    var fail = function (m) { err.textContent = m; err.hidden = false; };
+    if (!name) return fail('Indique o nome do posto.');
+    var dup = st.postos.filter(function (p) { return p.id !== st.edit.id && p.name.toLowerCase() === name.toLowerCase(); })[0];
+    if (dup) return fail('Já existe um posto com este nome.');
+    if (st.edit.id) { var p = posto(st, st.edit.id); p.name = name; p.color = st.edit.color; Mock.closeSheet(dev); render(dev); Mock.toast(dev, 'Posto «' + name + '» actualizado'); }
+    else { st.postos.push({ id: st.nextId++, name: name, color: st.edit.color, active: true, uses: 0 }); Mock.closeSheet(dev); render(dev); Mock.toast(dev, 'Posto «' + name + '» adicionado no fim da lista'); }
+  });
+  Mock.on('click', '[data-act="posto-toggle"]', function (e, t, dev) {
+    var st = Mock.state(dev), p = posto(st, +t.dataset.id);
+    if (!p.active) { p.active = true; render(dev); Mock.toast(dev, 'Posto «' + p.name + '» reactivado'); return; }
+    if (p.uses) {
+      Mock.sheet(dev, '<h2 class="sheet-h">Desactivar «' + esc(p.name) + '»?</h2><p style="margin-bottom:12px">' + p.uses + (p.uses === 1 ? ' pessoa tem' : ' pessoas têm') + ' este posto como habitual. Deixa de poder ser escolhido em turnos novos; os turnos já planeados mantêm-se.</p>' +
+        '<div class="btn-line"><button type="button" class="primary" data-act="posto-off-ok" data-id="' + p.id + '">Desactivar</button><button type="button" class="secondary" data-close-sheet>Cancelar</button></div>');
+    } else { p.active = false; render(dev); Mock.toast(dev, 'Posto «' + p.name + '» desactivado'); }
+  });
+  Mock.on('click', '[data-act="posto-off-ok"]', function (e, t, dev) {
+    var st = Mock.state(dev), p = posto(st, +t.dataset.id); p.active = false; Mock.closeSheet(dev); render(dev); Mock.toast(dev, 'Posto «' + p.name + '» desactivado');
+  });
+})();
+
+</script>
+</body>
+</html>

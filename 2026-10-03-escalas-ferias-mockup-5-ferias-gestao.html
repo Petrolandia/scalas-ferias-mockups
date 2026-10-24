@@ -77,6 +77,8 @@ a { color: inherit; text-decoration: none; }
 }
 .variant-notes b { font-weight: 600; }
 .variant-notes .note-extra { margin-top: 4px; font-size: 12px; color: var(--mut); }
+.variant-missing { max-width: 1180px; margin: 0 auto 16px; padding: 12px 14px; font-size: 14px; background: var(--warn-bg); color: var(--warn-tx); border: 1px solid var(--warn-bd, var(--border)); border-left: 4px solid var(--warn-tx); border-radius: 8px; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+.variant-missing[hidden] { display: none; }
 .stage { display: flex; flex-wrap: wrap; gap: 28px 24px; align-items: flex-start; justify-content: center; }
 .stage-item { min-width: 0; max-width: 100%; }
 .stage-cap { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; color: var(--mut); }
@@ -357,9 +359,21 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
 .dec-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
 .device .dec-actions button.primary { padding: 8px 20px; }
 .dec-hint { color: var(--warn-tx); min-height: 16px; margin-top: 4px; }
-.refuse-box { display: none; margin-top: 8px; }
-.decision.is-refusing .refuse-box, .decision[data-mode='refuse'] .refuse-box { display: block; }
-.decision.is-refusing [data-when='approve'], .decision[data-mode='refuse'] [data-when='approve'] { display: none; }
+.refuse-box, .adjust-box { display: none; margin-top: 8px; }
+.decision[data-view='refuse'] .refuse-box, .decision[data-view='adjust'] .adjust-box { display: block; }
+.decision:not([data-view='approve']) [data-when='approve'] { display: none; }
+.adj-pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0 12px; margin-top: 8px; }
+.device .adj-pair input { max-width: none; }
+.adj-count { font-size: 14px; margin: 4px 0; min-height: 20px; }
+.kind-badge { margin-right: 4px; }
+.dec-head h3 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.req-dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 12px; font-size: 14px; margin: 8px 0 12px; }
+.req-dl dt { color: var(--mut); }
+.req-dl dd { margin: 0; }
+.recent-list { list-style: none; font-size: 14px; }
+.recent-list li { padding: 6px 0; border-bottom: 1px solid var(--border); }
+.recent-list li:last-child { border-bottom: none; }
+.recent-list .small { display: block; color: var(--mut); }
 .device .reason textarea, .device .refuse-box textarea { max-width: none; }
 .bulk-list { list-style: none; margin: 4px 0 8px; font-size: 14px; }
 .bulk-list li { padding: 5px 0; border-bottom: 1px solid var(--border); }
@@ -394,6 +408,32 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
 .c-detail dd { margin: 0; }
 .c-page-tools { margin: 4px 0 12px; }
 
+
+/* Aviso da quarta-feira (folga rotativa): ícone âmbar e tooltip próprio dentro do .device */
+.device .wed-ico { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; min-height: 0; padding: 0; margin-left: 4px; border: none; border-radius: 6px; background: transparent; color: var(--warn-tx); cursor: help; vertical-align: middle; flex: none; }
+.device button.wed-ico:hover { background: var(--warn-bg); }
+.device .wed-ico svg { display: block; }
+.device .wed-ico--mark { cursor: inherit; }
+.wed-tip { position: absolute; z-index: 70; max-width: min(260px, calc(100% - 16px)); padding: 8px 10px; border-radius: 8px; background: var(--warn-bg); color: var(--warn-tx); border: 1px solid var(--warn-bd); font-size: 13px; line-height: 1.4; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2); pointer-events: none; }
+.wed-tip[hidden] { display: none; }
+.when-wrap { display: inline-flex; align-items: center; flex-wrap: wrap; }
+@container app (max-width: 768px) {
+  .device button.wed-ico { width: 44px; height: 44px; margin: -10px 0; }
+  .wed-tip { font-size: 14px; }
+}
+
+/* D · próxima do Homebase */
+.d-toolbar { margin-top: 4px; }
+.device .person-btn { min-height: 0; padding: 0; border: none; background: none; font-weight: 600; font-size: 14px; color: var(--txt); cursor: pointer; text-align: left; text-decoration: underline dotted var(--hint); text-underline-offset: 3px; }
+.device tr[data-drow] { cursor: pointer; }
+.device tr[data-drow]:hover { background: var(--row-hover); }
+.fer-table td .small { display: block; }
+.upc { list-style: none; font-size: 14px; }
+.upc li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; padding: 7px 0; border-bottom: 1px solid var(--border); }
+.upc li:last-child { border-bottom: none; }
+.upc .upc-d { min-width: 104px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.upcoming .sec-h { margin-bottom: 6px; }
+
 @container app (max-width: 768px) {
   .fer-title { font-size: 20px; }
   .fer-summary { padding: 8px 10px; }
@@ -406,6 +446,11 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
   .c-inbox[data-screen='detail'] .c-list { display: none; }
   .device .c-back { display: inline-block; }
   .c-detail { padding: 12px; }
+  .device .dec-actions button, .device .refuse-box button, .device .adjust-box button, .device .fer-table .btn-row, .device .d-toolbar .seg button, .device .c-back, .device .panel-top .btn-row, .device .sheet-head .btn-row { min-height: 44px; }
+  .device .dec-actions button.primary { padding: 10px 20px; }
+  .device .person-btn { min-height: 44px; }
+  .device .fer-table.table--cards td .btn-line { justify-content: flex-end; }
+  .device .adj-pair input, .device .reason textarea, .device .refuse-box textarea { min-height: 44px; }
 }
 </style>
 </head>
@@ -418,6 +463,7 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
     <button type="button" role="tab" id="tab-a" data-variant="a" aria-controls="panel-a" aria-selected="false">A · Separadores e mapa</button>
     <button type="button" role="tab" id="tab-b" data-variant="b" aria-controls="panel-b" aria-selected="false">B · Mapa protagonista</button>
     <button type="button" role="tab" id="tab-c" data-variant="c" aria-controls="panel-c" aria-selected="false">C · Caixa de entrada</button>
+    <button type="button" role="tab" id="tab-d" data-variant="d" aria-controls="panel-d" aria-selected="false">D · Próxima do Homebase (novo)</button>
   </div>
   <div class="mock-view" role="group" aria-label="Dispositivos">
     <button type="button" data-view="both" aria-pressed="true">Ambos</button>
@@ -432,6 +478,7 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
       <p><b>Ideia:</b> resumo e separadores no topo; os pedidos decidem-se na própria tabela (um a um ou em lote, com «Aprovar selecionados») e o mapa anual fica logo abaixo, com zoom ao mês e alternativa em lista.</p>
       <p><b>Vantagens:</b> é o desenho mais próximo do precedente de Folga e subsídio; decidir é 2 cliques (Aprovar, confirmar no diálogo) e o diálogo mostra datas, saldo e colegas ausentes.</p>
       <p><b>Custo:</b> o mapa fica abaixo da dobra, por isso decide-se sem o ver; só o diálogo diz quem mais está ausente.</p>
+      <p class="note-extra">Pedidos de dois tipos, com etiqueta distinta: «Folga rotativa» (um dia) e «Férias» (período). Cada linha tem Aprovar, «Ajustar datas e aprovar» (datas editáveis, já preenchidas com as pedidas) e Recusar (a nota é obrigatória: sem nota o botão fica desactivado). Qualquer decisão avisa quem pediu («Decisão enviada a … por email e no GiG.») e fica registada em «Decisões registadas agora». Folga aprovada: «Entra na escala da semana N como folga fixada». Uma folga rotativa à quarta-feira (exemplo: Nuno Arez, qua 21/10) é aceite e leva um ícone de aviso («A quarta-feira já costuma ser dia de folga da casa (excepto na época alta).»), em todas as variantes.</p>
     </div>
   </section>
   <section role="tabpanel" id="panel-b" aria-labelledby="tab-b" data-variant="b" hidden>
@@ -439,6 +486,7 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
       <p><b>Ideia:</b> o mapa é o ecrã. Os pedidos pendentes aparecem a tracejado; clicar num (no mapa ou na lista abaixo) abre um painel lateral de decisão (folha inferior a 375 px).</p>
       <p><b>Vantagens:</b> vê-se a sobreposição antes de decidir, sem sair do mapa; 2 cliques (pedido, Aprovar).</p>
       <p><b>Custo:</b> com o painel aberto o mapa estreita e passa a deslizar na horizontal; a 375 px a folha tapa o mapa.</p>
+      <p class="note-extra">O painel (ou a folha inferior, a 375 px) tem as três acções: Aprovar, «Ajustar datas e aprovar» e Recusar com nota obrigatória. Ao ajustar, o mapa passa a mostrar as datas aprovadas e o estado fica «Aprovado com datas ajustadas: pedido … → aprovado …». A folga rotativa aparece no mapa com «R»; as férias com «F».</p>
     </div>
   </section>
   <section role="tabpanel" id="panel-c" aria-labelledby="tab-c" data-variant="c" hidden>
@@ -446,18 +494,31 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
       <p><b>Ideia:</b> caixa de entrada mestre-detalhe: lista à esquerda, detalhe à direita com mini-mapa do mês do pedido, saldo antes → depois e decisão. «Mapa e saldos» fica numa vista própria; a 375 px a lista e o detalhe são ecrãs sucessivos.</p>
       <p><b>Vantagens:</b> despacha vários pedidos seguidos («Seguinte pedido»), cada um com o contexto certo e sem rolar.</p>
       <p><b>Custo:</b> o mapa anual e os saldos ficam a um clique de distância e o mini-mapa só mostra um mês.</p>
+      <p class="note-extra">O detalhe de cada pedido (folga rotativa ou férias) tem Aprovar, «Ajustar datas e aprovar» e Recusar com nota obrigatória; depois de decidir, o detalhe mostra o resultado (datas aprovadas ou nota da recusa) e «Seguinte pedido». Na lista, o aviso da quarta é só uma marca; a explicação aparece ao abrir o pedido.</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-d" aria-labelledby="tab-d" data-variant="d" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> a caixa de pedidos à maneira do Time Off › Requests do Homebase: uma tabela Nome · Tipo · Datas · Dias · Estado, com os filtros «Pendentes» e «Histórico». Tocar numa linha abre o pedido num painel lateral (folha inferior a 375 px) com as três acções. Por baixo, «Próximas ausências».</p>
+      <p><b>Vantagens:</b> é a disposição que a cliente já conhece do Homebase; um só sítio para folgas rotativas e férias, com o estado de cada uma à vista; as datas ajustadas aparecem logo na tabela e nas próximas ausências.</p>
+      <p><b>Custo:</b> não mostra o mapa anual nem a sobreposição por pessoa; só o painel diz quem mais está ausente nesses dias.</p>
+      <p class="note-extra">Mantém a identidade do GiG (cores, componentes e moldura actuais), sem copiar a marca nem as cores do Homebase. Aprovar, «Ajustar datas e aprovar» e Recusar (nota obrigatória) estão no painel; cada decisão avisa quem pediu por email e no GiG.</p>
     </div>
   </section>
 </main>
-<template data-variant="a" data-active="Férias" data-title="Férias" data-user="Carla Videira">
+<template data-variant="a" data-active="Férias" data-title="Férias" data-user="Joana Valente">
   <main><div data-root></div></main>
 </template>
 
-<template data-variant="b" data-active="Férias" data-title="Férias" data-user="Carla Videira">
+<template data-variant="b" data-active="Férias" data-title="Férias" data-user="Joana Valente">
   <main><div data-root></div></main>
 </template>
 
-<template data-variant="c" data-active="Férias" data-title="Férias" data-user="Carla Videira">
+<template data-variant="c" data-active="Férias" data-title="Férias" data-user="Joana Valente">
+  <main><div data-root></div></main>
+</template>
+
+<template data-variant="d" data-active="Férias" data-title="Férias" data-user="Joana Valente">
   <main><div data-root></div></main>
 </template>
 
@@ -575,7 +636,7 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
       }).join('');
     }).join('');
     app.innerHTML =
-      '<aside class="app-side" aria-label="Menu principal"><div class="app-logo">GIG</div><nav>' + nav + '</nav>' +
+      '<aside class="app-side" aria-label="Menu principal"><div class="app-logo">GiG</div><nav>' + nav + '</nav>' +
       '<div class="app-user"><span class="app-user__name">' + esc(user) + '</span><button type="button" data-route="/login">Sair</button></div></aside>' +
       '<div class="app-scrim" data-act-scrim></div>' +
       '<div class="app-main"><div class="app-top"><button type="button" class="app-burger" aria-expanded="false" aria-label="Abrir menu">☰</button>' +
@@ -606,13 +667,31 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     panel.dataset.rendered = '1';
   }
 
-  /* separadores A/B/C (hash #a/#b/#c) e alternador de dispositivos */
-  var tabs = $$('.mock-bar [role="tab"]'), panels = $$('[role="tabpanel"]');
+  /* separadores derivados dos <template data-variant> (hash #a, #b, ...) e alternador de dispositivos */
+  var VARIANTS = $$('template[data-variant]').map(function (t) { return t.dataset.variant; }).sort();
+  var tablist = $('.mock-tabs'), mainEl = $('.mock-main'), notice = mk('div', 'variant-missing');
+  notice.hidden = true; notice.setAttribute('role', 'alert'); mainEl.insertBefore(notice, mainEl.firstChild);
+  $$('.mock-bar [role="tab"], [role="tabpanel"][data-variant]').forEach(function (el) { if (VARIANTS.indexOf(el.dataset.variant) < 0) el.remove(); });
+  VARIANTS.forEach(function (v) {
+    if (!$('#tab-' + v)) {
+      var b = mk('button', ''); b.type = 'button'; b.id = 'tab-' + v; b.dataset.variant = v; b.setAttribute('role', 'tab');
+      b.setAttribute('aria-controls', 'panel-' + v); b.setAttribute('aria-selected', 'false'); b.textContent = v.toUpperCase(); tablist.appendChild(b);
+    }
+    if (!$('#panel-' + v)) {
+      var p = mk('section', ''); p.id = 'panel-' + v; p.dataset.variant = v; p.hidden = true; p.setAttribute('role', 'tabpanel'); p.setAttribute('aria-labelledby', 'tab-' + v);
+      mainEl.appendChild(p);
+    }
+  });
+  var tabs = $$('.mock-bar [role="tab"]'), panels = $$('[role="tabpanel"][data-variant]');
   function select(v, focus) {
-    if (!tabs.some(function (t) { return t.dataset.variant === v; })) v = tabs[0].dataset.variant;
-    tabs.forEach(function (t) { var o = t.dataset.variant === v; t.setAttribute('aria-selected', String(o)); t.tabIndex = o ? 0 : -1; if (o && focus) t.focus(); });
-    panels.forEach(function (p) { p.hidden = p.dataset.variant !== v; if (p.dataset.variant === v && !p.dataset.rendered) mount(p); });
-    if (location.hash.slice(1) !== v) { try { history.replaceState(null, '', '#' + v); } catch (e) { /* file:// restrito */ } }
+    var missing = null;
+    if (VARIANTS.indexOf(v) < 0) { if (v) missing = v; v = VARIANTS[0]; }
+    tabs.forEach(function (t) { var o = !missing && t.dataset.variant === v; t.setAttribute('aria-selected', String(o)); t.tabIndex = o || (missing && t.dataset.variant === v) ? 0 : -1; if (o && focus) t.focus(); });
+    panels.forEach(function (p) { p.hidden = !!missing || p.dataset.variant !== v; if (!p.hidden && !p.dataset.rendered) mount(p); });
+    notice.hidden = !missing;
+    if (missing) {
+      notice.innerHTML = '<span>Esta funcionalidade não tem a variante ' + esc(missing.toUpperCase()) + '.</span> <a class="btn-row" href="#' + esc(VARIANTS[0]) + '">Ver a variante ' + esc(VARIANTS[0].toUpperCase()) + '</a>';
+    } else if (location.hash.slice(1) !== v) { try { history.replaceState(null, '', '#' + v); } catch (e) { /* file:// restrito */ } }
   }
   function setView(v) {
     document.body.dataset.view = v;
@@ -662,7 +741,7 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
   var $ = Mock.$, $$ = Mock.$$, esc = Mock.esc, st = Mock.state;
 
   /* ── Dados fictícios (iguais em todos os mockups) ── */
-  var TODAY = '2026-10-03', YEAR = 2026, ANNUAL = 22, REFERENCE = '2026-10-01';
+  var TODAY = '2026-10-03', YEAR = 2026, ANNUAL = 22, REFERENCE = '2026-10-01', MAX_DATE = '2027-12-31';
   var OPENING = {"Beatriz Moura": 18, "Tiago Fontes": 14, "Inês Calado": 15, "Rui Pestana": 20, "Carla Videira": 22, "Duarte Sá": 13, "Marta Leal": 16, "Hugo Brandão": 12, "Matilde Teles": 10, "Nuno Arez": 6, "Filipa Couto": 8};
   var MES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
   var MES3 = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
@@ -689,9 +768,14 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     { id: 'a13', who: 'Nuno Arez', start: '2026-09-21', end: '2026-09-25', st: 'appr' },
     { id: 'a14', who: 'Filipa Couto', start: '2026-08-17', end: '2026-08-21', st: 'appr' },
     { id: 'a15', who: 'Filipa Couto', start: '2026-10-26', end: '2026-10-28', st: 'appr' },
+    { id: 'a16', who: 'Marta Leal', kind: 'folga', start: '2026-10-09', end: '2026-10-09', st: 'appr', asked: '2026-09-29' },
+    { id: 'r1', who: 'Nuno Arez', start: '2026-08-10', end: '2026-08-14', st: 'rec', asked: '2026-07-14', refusal: 'Época alta de Agosto. Sugiro 31/08–04/09.' },
     { id: 'p1', who: 'Tiago Fontes', start: '2026-11-02', end: '2026-11-06', st: 'pend', asked: '2026-09-28' },
     { id: 'p2', who: 'Marta Leal', start: '2026-11-23', end: '2026-11-27', st: 'pend', asked: '2026-09-30' },
-    { id: 'p3', who: 'Inês Calado', start: '2027-01-04', end: '2027-01-08', st: 'pend', asked: '2026-10-02' }
+    { id: 'p3', who: 'Inês Calado', start: '2027-01-04', end: '2027-01-08', st: 'pend', asked: '2026-10-02' },
+    { id: 'p4', who: 'Beatriz Moura', kind: 'folga', start: '2026-10-16', end: '2026-10-16', st: 'pend', asked: '2026-10-01' },
+    { id: 'p5', who: 'Rui Pestana', kind: 'folga', start: '2026-10-17', end: '2026-10-17', st: 'pend', asked: '2026-10-02' },
+    { id: 'p6', who: 'Nuno Arez', kind: 'folga', start: '2026-10-21', end: '2026-10-21', st: 'pend', asked: '2026-10-02' }
   ];
   var PRI = { conf: 4, appr: 3, pend: 2, prev: 1 };
   var GLYPH = { appr: 'F', pend: '?', prev: 'C', conf: 'C' };
@@ -704,19 +788,106 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
   function pad(n) { return (n < 10 ? '0' : '') + n; }
   function fmt(iso) { return iso.slice(8, 10) + '/' + iso.slice(5, 7); }
   function fmtY(iso) { return fmt(iso) + '/' + iso.slice(0, 4); }
+  function wdl(iso) { return DOW[dow(iso)] + ' ' + fmt(iso); }
   function isHoliday(iso) { return !!nationalHoliday(iso); }
   function countable(iso) { var w = dow(iso); return w > 0 && w < 6 && !isHoliday(iso); }
   function proposed(a, b) { return range(a, b).filter(countable); }
   function plural(n, one, many) { return n + ' ' + (n === 1 ? one : many); }
   function norm(t) { return String(t).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
   function short(name) { var p = name.split(' '); return p[0] + ' ' + p[p.length - 1].charAt(0) + '.'; }
-  function periodTxt(r) { return fmt(r.start) + '–' + fmt(r.end) + (r.start.slice(0, 4) !== String(YEAR) ? '/' + r.end.slice(0, 4) : ''); }
+  /* «14–18/12», «30/11–04/12», «16/10»; o ano só aparece fora de 2026 */
+  function rng(a, b) {
+    var yy = (a.slice(0, 4) !== String(YEAR) || b.slice(0, 4) !== String(YEAR)) ? '/' + b.slice(0, 4) : '';
+    if (a === b) return fmt(a) + yy;
+    if (a.slice(0, 7) === b.slice(0, 7)) return a.slice(8, 10) + '–' + fmt(b) + yy;
+    return fmt(a) + '–' + fmt(b) + yy;
+  }
+  function periodTxt(r) { return rng(r.start, r.end); }
+  function isoWeek(iso) {
+    var d = parse(iso); d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7) + 3);
+    var jan4 = new Date(Date.UTC(d.getUTCFullYear(), 0, 4));
+    return 1 + Math.round(((d - jan4) / 864e5 - 3 + ((jan4.getUTCDay() + 6) % 7)) / 7);
+  }
   function weekStart(k) { return add('2025-12-29', 7 * k); }
   function monthDays(y, m) {
     var d = y + '-' + pad(m + 1) + '-01', out = [];
     while (d.slice(5, 7) === pad(m + 1)) { out.push(d); d = add(d, 1); }
     return out;
   }
+
+
+  /* ── Aviso da quarta-feira (folga rotativa): tooltip ao passar o rato/focar (desktop), mostrar/esconder ao tocar (375 px) ── */
+  var WED_DOW = 3, WED_MSG = 'A quarta-feira já costuma ser dia de folga da casa (excepto na época alta).';
+  var WED_SVG = '<svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" focusable="false"><path d="M8 1.6 15 14H1z" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M8 6v4M8 11.7v.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+  function wedIcon(isStatic) {
+    return isStatic
+      ? '<span class="wed-ico wed-ico--mark" aria-hidden="true">' + WED_SVG + '</span>'
+      : '<button type="button" class="wed-ico" data-wed aria-label="Aviso sobre a quarta-feira" aria-expanded="false">' + WED_SVG + '</button>';
+  }
+  function tipEl(dev) {
+    var app = $('.app', dev), t = $('.wed-tip', app);
+    if (!t) {
+      t = document.createElement('div'); t.className = 'wed-tip'; t.setAttribute('role', 'tooltip'); t.id = Mock.uid('wedtip'); t.hidden = true; t.textContent = WED_MSG; app.appendChild(t);
+    }
+    return t;
+  }
+  function showTip(dev, ico) {
+    var t = tipEl(dev), app = $('.app', dev);
+    hideTip(dev); t.hidden = false; t._ico = ico; ico.setAttribute('aria-expanded', 'true');
+    var ar = app.getBoundingClientRect(), ir = ico.getBoundingClientRect(), w = t.offsetWidth, h = t.offsetHeight;
+    var left = Math.min(Math.max(8, ir.left - ar.left + ir.width / 2 - w / 2), Math.max(8, ar.width - w - 8));
+    var top = ir.bottom - ar.top + 4;
+    if (top + h > ar.height - 4) top = ir.top - ar.top - h - 4;
+    t.style.left = left + 'px'; t.style.top = Math.max(4, top) + 'px';
+  }
+  function hideTip(dev) {
+    var t = $('.wed-tip', dev); if (!t || t.hidden) return;
+    t.hidden = true; if (t._ico) t._ico.setAttribute('aria-expanded', 'false');
+  }
+  function wireWed(dev) { var t = tipEl(dev); $$('[data-wed]', dev).forEach(function (i) { i.setAttribute('aria-describedby', t.id); }); }
+  var isDesktop = function (dev) { return dev.dataset.kind === 'desktop'; };
+  Mock.on('mouseover', '[data-wed]', function (e, t, dev) { if (isDesktop(dev)) showTip(dev, t); });
+  Mock.on('mouseout', '[data-wed]', function (e, t, dev) { if (isDesktop(dev) && !t.contains(e.relatedTarget) && !t.matches(':focus-visible')) hideTip(dev); });
+  Mock.on('focusin', '[data-wed]', function (e, t, dev) { if (isDesktop(dev)) showTip(dev, t); });
+  Mock.on('focusout', '[data-wed]', function (e, t, dev) { if (isDesktop(dev)) hideTip(dev); });
+  Mock.on('click', '[data-wed]', function (e, t, dev) {
+    var tip = $('.wed-tip', dev), open = tip && !tip.hidden && tip._ico === t;
+    if (isDesktop(dev)) showTip(dev, t); else if (open) hideTip(dev); else showTip(dev, t);
+  });
+  document.addEventListener('click', function (e) {
+    if (e.target.closest && e.target.closest('[data-wed]')) return;
+    $$('.wed-tip:not([hidden])').forEach(function (t) { hideTip(t.closest('.device')); });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') $$('.wed-tip:not([hidden])').forEach(function (t) { hideTip(t.closest('.device')); });
+  });
+
+  function wedMark(r, isStatic) { return isFolga(r) && dow(r.start) === WED_DOW ? wedIcon(isStatic) : ''; }
+
+  /* ── Tipo de pedido ── */
+  function isFolga(r) { return r.kind === 'folga'; }
+  function kindLabel(r) { return isFolga(r) ? 'Folga rotativa' : 'Férias'; }
+  function kindBadge(r) { return '<span class="' + (isFolga(r) ? 'badge-info' : 'badge-mut') + ' kind-badge">' + kindLabel(r) + '</span>'; }
+  /* dias do pedido tal como foi pedido (férias: dias úteis; folga: o dia) */
+  function reqDays(r) { return isFolga(r) ? [r.start] : proposed(r.start, r.end); }
+  /* dias efectivos: os aprovados, ou os pedidos enquanto pendente */
+  function curDays(r) { return r.st === 'appr' ? r.counted : reqDays(r); }
+  function daysTxt(r) { return isFolga(r) ? wdl(r.start) + '/' + r.start.slice(0, 4) : fmtY(r.start) + ' a ' + fmtY(r.end); }
+  function weekNote(r) {
+    return isFolga(r) && r.st === 'appr' ? 'Entra na escala da semana ' + isoWeek(r.start) + ' como folga fixada' : '';
+  }
+  function outcome(r) {
+    if (r.st === 'rec') return 'Recusado: «' + r.refusal + '»';
+    if (r.orig) return 'Aprovado com datas ajustadas: pedido ' + rng(r.orig.start, r.orig.end) + ' → aprovado ' + rng(r.start, r.end);
+    if (isFolga(r)) return 'Folga aprovada';
+    return 'Aprovado' + (r.counted ? ' · ' + plural(r.counted.length, 'dia descontado', 'dias descontados') : '') + (r.adj ? ' (corrigido: ' + r.adj + ')' : '');
+  }
+  function stateBadge(r) {
+    if (r.st === 'pend') return '<span class="badge-warn">Pendente</span>';
+    if (r.st === 'rec') return '<span class="badge-err">Recusado</span>';
+    return r.orig ? '<span class="badge-ok">Aprovado com datas ajustadas</span>' : '<span class="badge-ok">Aprovado</span>';
+  }
+  function nDays(r) { return isFolga(r) ? 1 : (r.st === 'appr' ? r.counted.length : proposed(r.start, r.end).length); }
 
   /* ── Estado e cálculo ── */
   function find(s, id) { return s.reqs.filter(function (r) { return r.id === id; })[0]; }
@@ -726,30 +897,32 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     var g = 0, rsv = 0, pen = 0;
     function acc(d) { if (d.slice(0, 4) !== y || (y === String(YEAR) && d < REFERENCE)) return; if (d <= TODAY) g++; else rsv++; }
     s.reqs.forEach(function (r) {
-      if (r.who !== w) return;
+      if (r.who !== w || isFolga(r)) return;
       if (r.st === 'appr') r.counted.forEach(acc);
       else if (r.st === 'pend') pen += proposed(r.start, r.end).filter(function (d) { return d.slice(0, 4) === y; }).length;
     });
     COLL.forEach(function (c) { if (c.st === 'conf') proposed(c.start, c.end).forEach(acc); });
     return { g: g, rsv: rsv, pen: pen, disp: (y === String(YEAR) ? OPENING[w] : ANNUAL) - g - rsv };
   }
-  function others(s, r) {
-    var days = proposed(r.start, r.end), out = [];
+  function others(s, r, days) {
+    days = days || reqDays(r);
+    var out = [];
     s.reqs.forEach(function (o) {
       if (o.who === r.who || o.id === r.id || (o.st !== 'appr' && o.st !== 'pend')) return;
-      var od = o.st === 'appr' ? o.counted : proposed(o.start, o.end);
-      if (od.some(function (d) { return days.indexOf(d) >= 0; })) out.push({ who: o.who, kind: o.st === 'appr' ? 'férias' : 'pedido pendente' });
+      if (curDays(o).some(function (d) { return days.indexOf(d) >= 0; })) out.push({ who: o.who, kind: (isFolga(o) ? 'folga rotativa' : 'férias') + (o.st === 'appr' ? '' : ', pedido pendente') });
     });
     return out;
   }
-  /* mapa pessoa×dia: cm['Nome|aaaa-mm-dd'] → {st, req, start, end, label}; abs[dia] = pessoas ausentes a título individual */
+  /* mapa pessoa×dia: cm['Nome|aaaa-mm-dd'] → {st, req, start, end, label, kind}; abs[dia] = pessoas ausentes a título individual */
   function calc(s) {
     var cm = {}, abs = {};
     function put(w, d, o) { var k = w + '|' + d; if (!cm[k] || PRI[o.st] > PRI[cm[k].st]) cm[k] = o; }
     s.reqs.forEach(function (r) {
       if (r.st !== 'appr' && r.st !== 'pend') return;
-      var days = r.st === 'appr' ? r.counted : proposed(r.start, r.end);
-      days.forEach(function (d) { put(r.who, d, { st: r.st, req: r.id, start: r.start, end: r.end, label: r.st === 'appr' ? 'férias aprovadas' : 'pedido pendente' }); });
+      var what = isFolga(r) ? 'folga rotativa' : 'férias';
+      curDays(r).forEach(function (d) {
+        put(r.who, d, { st: r.st, req: r.id, kind: r.kind, start: r.start, end: r.end, label: r.st === 'appr' ? what + ' aprovada' + (r.orig ? ' (datas ajustadas)' : '') : 'pedido de ' + what + ' pendente' });
+      });
     });
     COLL.forEach(function (c) {
       proposed(c.start, c.end).forEach(function (d) {
@@ -771,8 +944,11 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
   }
   function urlLine(s) {
     var q = '?ano=' + YEAR;
-    if (!(s.v === 'c' && s.page === 'map')) q += '&separador=' + s.tab;
-    if (s.zoom != null && s.view === 'cal' && !(s.v === 'c' && s.page === 'inbox')) q += '&mes=' + (s.zoom + 1);
+    if (s.v === 'd') q += '&filtro=' + s.dfilter;
+    else {
+      if (!(s.v === 'c' && s.page === 'map')) q += '&separador=' + s.tab;
+      if (s.zoom != null && s.view === 'cal' && !(s.v === 'c' && s.page === 'inbox')) q += '&mes=' + (s.zoom + 1);
+    }
     return '<p class="url-sim">URL simulada: <code>/ferias' + q.replace(/&/g, '&amp;') + '</code></p>';
   }
   function head() { return '<div class="fer-head"><h1 class="fer-title">Férias</h1><span class="muted">Gestão · ' + YEAR + '</span></div>'; }
@@ -787,6 +963,14 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
       '<p class="alert-info" role="status"' + (s.cleared ? '' : ' hidden') + '>Seleção limpa ao mudar de separador.</p>' +
       '<div role="tabpanel" id="pnl-' + u + '" aria-labelledby="tab-' + s.tab + '-' + u + '"' + (bare ? '' : ' class="card panel"') + '>' + inner + '</div>';
   }
+  /* decisões registadas nesta sessão: o que foi decidido, com as datas aprovadas e a nota da escala */
+  function recentHTML(s) {
+    if (!s.recent.length) return '';
+    return '<section class="card panel recent" aria-label="Decisões registadas"><h2 class="sec-h">Decisões registadas agora</h2><ul class="recent-list" aria-live="polite">' + s.recent.map(function (id) {
+      var r = find(s, id), nt = weekNote(r);
+      return '<li data-recent="' + r.id + '">' + kindBadge(r) + ' <b>' + esc(r.who) + '</b> · ' + esc(outcome(r)) + wedMark(r) + (nt ? '<span class="small muted">' + esc(nt) + '</span>' : '') + '</li>';
+    }).join('') + '</ul></section>';
+  }
 
   /* ── Pedidos pendentes e divergências ── */
   function pendingHTML(s, mode) {
@@ -800,19 +984,22 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
         '<div class="toolbar-actions"><button type="button" class="btn-row btn-row-strong" data-act="bulk-open" data-fk="bulk"' + (nSel ? '' : ' disabled') + '>Aprovar selecionados (' + nSel + ')</button></div></div>';
     }
     var rows = list.map(function (r) {
-      var y = +r.start.slice(0, 4), b = saldo(s, r.who, y), n = proposed(r.start, r.end).length;
+      var folga = isFolga(r), y = +r.start.slice(0, 4), b = saldo(s, r.who, y), n = reqDays(r).length;
       var who = mode === 'a'
         ? '<label class="chk"><input type="checkbox" data-act="sel" data-id="' + r.id + '" data-fk="sel-' + r.id + '"' + (s.sel[r.id] ? ' checked' : '') + '><span class="person">' + esc(r.who) + '</span></label>'
         : '<span class="person">' + esc(r.who) + '</span>';
       var act = mode === 'a'
-        ? '<button type="button" class="btn-row btn-row-strong" data-act="approve-open" data-req="' + r.id + '" data-fk="ap-' + r.id + '" aria-label="Aprovar pedido de ' + esc(r.who) + '">Aprovar</button> <button type="button" class="btn-row danger" data-act="refuse-open" data-req="' + r.id + '" data-fk="rf-' + r.id + '" aria-label="Recusar pedido de ' + esc(r.who) + '">Recusar</button>'
+        ? '<div class="btn-line"><button type="button" class="btn-row btn-row-strong" data-act="approve-open" data-req="' + r.id + '" data-fk="ap-' + r.id + '" aria-label="Aprovar pedido de ' + esc(r.who) + '">Aprovar</button>' +
+          '<button type="button" class="btn-row" data-act="adjust-open" data-req="' + r.id + '" data-fk="aj-' + r.id + '" aria-label="Ajustar datas e aprovar o pedido de ' + esc(r.who) + '">Ajustar datas e aprovar</button>' +
+          '<button type="button" class="btn-row danger" data-act="refuse-open" data-req="' + r.id + '" data-fk="rf-' + r.id + '" aria-label="Recusar pedido de ' + esc(r.who) + '">Recusar</button></div>'
         : '<button type="button" class="btn-row btn-row-strong" data-act="open-req" data-req="' + r.id + '" data-fk="op-' + r.id + '" aria-label="Decidir pedido de ' + esc(r.who) + '">Decidir</button>';
-      return '<tr' + (s.active === r.id ? ' class="is-sel"' : '') + '><td data-label="Pessoa">' + who + '</td><td data-label="Período">' + periodTxt(r) + '</td>' +
-        '<td data-label="Conta" class="num">' + plural(n, 'dia', 'dias') + '</td>' +
-        '<td data-label="Disponível" class="num"><span><span class="arrow">' + b.disp + ' → ' + (b.disp - n) + '</span>' + (y !== YEAR ? ' <span class="muted small">(' + y + ')</span>' : '') + '</span></td>' +
+      var conta = folga ? '<span class="muted">—</span>' : plural(n, 'dia', 'dias');
+      var disp = folga ? '<span class="muted">—</span>' : '<span><span class="arrow">' + b.disp + ' → ' + (b.disp - n) + '</span>' + (y !== YEAR ? ' <span class="muted small">(' + y + ')</span>' : '') + '</span>';
+      return '<tr' + (s.active === r.id ? ' class="is-sel"' : '') + '><td data-label="Pessoa">' + who + '</td><td data-label="Tipo">' + kindBadge(r) + '</td><td data-label="Período"><span class="when-wrap">' + periodTxt(r) + wedMark(r) + '</span></td>' +
+        '<td data-label="Conta" class="num">' + conta + '</td><td data-label="Disponível" class="num">' + disp + '</td>' +
         '<td data-label="Pedido em">' + fmt(r.asked) + '</td><td>' + act + '</td></tr>';
     }).join('');
-    return tool + '<table class="fer-table table--cards"><thead><tr><th>Pessoa</th><th>Período</th><th class="num">Conta</th><th class="num">Disponível (antes → depois)</th><th>Pedido em</th><th><span class="sr-only">Acções</span></th></tr></thead><tbody>' + rows + '</tbody></table>';
+    return tool + '<table class="fer-table table--cards"><thead><tr><th>Pessoa</th><th>Tipo</th><th>Período</th><th class="num">Conta</th><th class="num">Disponível (antes → depois)</th><th>Pedido em</th><th><span class="sr-only">Acções</span></th></tr></thead><tbody>' + rows + '</tbody></table>';
   }
   function divHTML() {
     if (!DIVS.length) return '<p class="empty">Sem divergências desde a data de referência.</p>';
@@ -827,13 +1014,14 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
   /* ── Mapa ── */
   function legend(compact) {
     var li = function (cls, txt) { return '<li><i class="sw ' + cls + '"></i>' + txt + '</li>'; };
-    if (compact) return '<ul class="legend" aria-label="Legenda">' + li('s-appr', 'Aprovado') + li('s-pend', 'Pendente') + li('s-prev', 'Colectivo previsto') + li('s-conf', 'Colectivo confirmado') + '</ul>';
-    return '<ul class="legend" aria-label="Legenda">' + li('s-appr', 'Aprovado') + li('s-pend', 'Pendente (tracejado)') + li('s-prev', 'Colectivo previsto «Natal» 14/12–28/12') +
-      li('s-off', 'Fim de semana') + li('s-ho', 'Feriado') + '<li><b>Negrito</b>: 2 ou mais pessoas ausentes no mesmo dia (não bloqueia)</li></ul>' +
-      '<p class="legend-note">O número é o de dias úteis que contam. «Natal» é previsão e não desconta. Encerramento de 15 dias fora de Maio–Outubro: confirmar a base legal com o contabilista (art. 242.º).</p>';
+    var glyphs = '<li><b>F</b> férias · <b>R</b> folga rotativa · <b>?</b> pendente</li>';
+    if (compact) return '<ul class="legend" aria-label="Legenda">' + li('s-appr', 'Aprovado') + li('s-pend', 'Pendente') + li('s-prev', 'Colectivo previsto') + li('s-conf', 'Colectivo confirmado') + glyphs + '</ul>';
+    return '<ul class="legend" aria-label="Legenda">' + li('s-appr', 'Aprovado (datas aprovadas)') + li('s-pend', 'Pendente (tracejado)') + li('s-prev', 'Colectivo previsto «Natal» 14/12–28/12') +
+      li('s-off', 'Fim de semana') + li('s-ho', 'Feriado') + glyphs + '<li><b>Negrito</b>: 2 ou mais pessoas ausentes no mesmo dia (não bloqueia)</li></ul>' +
+      '<p class="legend-note">O número é o de dias úteis que contam (a folga rotativa conta como 1 dia ausente). «Natal» é previsão e não desconta. Encerramento de 15 dias fora de Maio–Outubro: confirmar a base legal com o contabilista (art. 242.º).</p>';
   }
   function cellBtn(top, w, n, key) {
-    return '<button type="button" class="cell-btn" data-act="open-req" data-req="' + top.req + '" data-fk="c-' + top.req + '-' + key + '" aria-label="Abrir pedido de ' + esc(w) + ', ' + fmt(top.start) + ' a ' + fmt(top.end) + '">' + n + '</button>';
+    return '<button type="button" class="cell-btn" data-act="open-req" data-req="' + top.req + '" data-fk="c-' + top.req + '-' + key + '" aria-label="Abrir pedido de ' + esc(w) + ', ' + rng(top.start, top.end) + '">' + n + '</button>';
   }
   function yearTable(c) {
     var s = c.s, cols = [], groups = [], tk = -1, k;
@@ -859,7 +1047,7 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
         }
         if (!top) return '<td class="c"></td>';
         var n = found.filter(function (o) { return o.st === top.st; }).length;
-        var tip = w + ' · ' + fmt(top.start) + '–' + fmt(top.end) + ' · ' + top.label + ' · ' + plural(n, 'dia', 'dias') + ' nesta semana' + (ov ? ' · 2 ou mais pessoas ausentes' : '');
+        var tip = w + ' · ' + rng(top.start, top.end) + ' · ' + top.label + ' · ' + plural(n, 'dia', 'dias') + ' nesta semana' + (ov ? ' · 2 ou mais pessoas ausentes' : '');
         var inner = top.st === 'pend' ? cellBtn(top, w, n, i) : n;
         return '<td class="c s-' + top.st + (ov ? ' ov' : '') + (top.req && top.req === s.active ? ' sel' : '') + '" title="' + esc(tip) + '">' + inner + '</td>';
       }).join('') + '</tr>';
@@ -876,16 +1064,18 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     var days = monthDays(y, m), cw = o.mini ? 13 : 22, nw = o.mini ? 92 : 112;
     var hd1 = days.map(function (d) { return '<th scope="col" class="dh' + (d === TODAY ? ' today' : '') + '"' + (isHoliday(d) ? ' title="Feriado (aberto)"' : '') + '>' + DOWL[dow(d)] + '</th>'; }).join('');
     var hd2 = days.map(function (d) { return '<th scope="col" class="dh' + (d === TODAY ? ' today' : '') + '" title="' + DOW[dow(d)] + ' ' + fmt(d) + (d === TODAY ? ' · hoje' : '') + (isHoliday(d) ? ' · Feriado (aberto)' : '') + '">' + (+d.slice(8)) + '</th>'; }).join('');
-    var names = o.mini ? EMP : EMP;
-    var body = names.map(function (w) {
+    var body = EMP.map(function (w) {
       var cells = days.map(function (d) {
         var o2 = c.cm[w + '|' + d];
-        if (!countable(d)) return '<td class="c off ' + (isHoliday(d) ? 'ho' : 'we') + '" title="' + (isHoliday(d) ? 'Feriado (aberto)' : 'Fim de semana') + ': não conta"></td>';
-        if (!o2) return '<td class="c"></td>';
+        if (!o2) {
+          if (countable(d)) return '<td class="c"></td>';
+          return '<td class="c off ' + (isHoliday(d) ? 'ho' : 'we') + '" title="' + (isHoliday(d) ? 'Feriado (aberto)' : 'Fim de semana') + ': não conta"></td>';
+        }
         var ov = (o2.st === 'appr' || o2.st === 'pend') && c.abs[d] >= 2;
         var rq = o.who === w && d >= o.hs && d <= o.he;
         var tip = w + ' · ' + DOW[dow(d)] + ' ' + fmt(d) + ' · ' + o2.label + (ov ? ' · 2 ou mais pessoas ausentes' : '');
-        var inner = (o2.st === 'pend' && !o.mini) ? cellBtn(o2, w, GLYPH.pend, d) : GLYPH[o2.st];
+        var gl = o2.kind === 'folga' ? 'R' : GLYPH[o2.st];
+        var inner = (o2.st === 'pend' && !o.mini) ? cellBtn(o2, w, '?', d) : gl;
         return '<td class="c s-' + o2.st + (ov ? ' ov' : '') + (rq ? ' rq' : '') + (o2.req && o2.req === c.s.active && !o.mini ? ' sel' : '') + '" title="' + esc(tip) + '">' + inner + '</td>';
       }).join('');
       var me = o.who === w;
@@ -906,7 +1096,7 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
         '<td data-label="Gozado" class="num">' + b.g + '</td><td data-label="Pendente" class="num">' + (b.pen ? '<span class="badge-warn">' + b.pen + '</span>' : '0') + '</td></tr>';
     }).join('');
     return '<table class="fer-table table--cards"><thead><tr><th>Pessoa</th><th class="num">Disponível</th><th class="num">Reservado</th><th class="num">Gozado</th><th class="num">Pendente</th></tr></thead><tbody>' + rows + '</tbody></table>' +
-      '<p class="legend-note">Dias de ' + YEAR + ' · disponível = saldo inicial a 01/10 − gozado desde a referência − reservado; o pendente não desconta.</p>';
+      '<p class="legend-note">Dias de férias de ' + YEAR + ' · disponível = saldo inicial a 01/10 − gozado desde a referência − reservado; o pendente não desconta.</p>';
   }
   function mapSection(c) {
     var s = c.s, zoom = '';
@@ -926,48 +1116,106 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     return tool + body;
   }
 
-  /* ── Decisão: datas a descontar, saldo, motivo ── */
-  function decisionHTML(s, r, mode, o) {
+  /* ── Decisão: aprovar, ajustar datas e aprovar, recusar com nota ── */
+  function adjustBox(r) {
+    var folga = isFolga(r), id = r.id;
+    return '<div class="adjust-box"><p class="muted small">Datas pedidas: ' + esc(daysTxt(r)) + '. Altere o que for preciso: quem pediu é avisado do pedido e das datas aprovadas.</p>' +
+      '<div class="adj-pair"><label>' + (folga ? 'Dia aprovado' : 'Início aprovado') + '<input type="date" class="adj-start" value="' + r.start + '" min="' + add(TODAY, 1) + '" max="' + MAX_DATE + '" data-fk="adj-s-' + id + '"></label>' +
+      (folga ? '' : '<label>Fim aprovado<input type="date" class="adj-end" value="' + r.end + '" min="' + add(TODAY, 1) + '" max="' + MAX_DATE + '" data-fk="adj-e-' + id + '"></label>') + '</div>' +
+      '<p class="adj-count" aria-live="polite"></p><p class="dec-hint small adj-hint" aria-live="polite"></p>' +
+      '<div class="btn-line"><button type="button" class="primary" data-act="adjust-go" data-fk="adjust-go" disabled>Confirmar e aprovar</button>' +
+      '<button type="button" class="btn-row btn-row-quiet" data-act="view-approve" data-fk="view-approve-a">Voltar</button></div></div>';
+  }
+  function decisionHTML(s, r, o) {
     o = o || {};
-    var days = range(r.start, r.end), prop = proposed(r.start, r.end).length, y = +r.start.slice(0, 4);
-    var b = saldo(s, r.who, y), oth = others(s, r);
-    var h = '<div class="decision" data-req="' + r.id + '" data-mode="' + mode + '" data-prop="' + prop + '" data-disp="' + b.disp + '" data-year="' + y + '">';
-    if (!o.noHead) h += '<div class="dec-head"><h3>' + esc(r.who) + '</h3><p class="muted">' + fmtY(r.start) + ' a ' + fmtY(r.end) + ' · pedido a ' + fmtY(r.asked) + '</p></div>';
-    h += '<fieldset class="dec-days" data-when="approve"><legend>Datas a descontar</legend><ul class="day-list">' + days.map(function (d) {
-      var lbl = DOW[dow(d)] + ' ' + fmt(d);
-      if (countable(d)) return '<li><label class="chk"><input type="checkbox" class="day-chk" data-date="' + d + '" checked><span>' + lbl + '</span></label></li>';
-      return '<li class="off"><span>' + lbl + '</span><span>não conta (' + (isHoliday(d) ? 'feriado' : 'fim de semana') + ')</span></li>';
-    }).join('') + '</ul><p class="muted small">Proposta pela regra «Dias úteis (seg–sex, sem feriados)». Desmarque um dia para o corrigir.</p></fieldset>' +
-      '<p class="dec-count" data-when="approve" aria-live="polite"></p>';
-    if (!o.noOthers) {
-      h += oth.length
-        ? '<p class="dec-others">Também ausentes nesses dias: ' + oth.map(function (x) { return '<b>' + esc(x.who) + '</b> (' + x.kind + ')'; }).join(', ') + '</p>'
-        : '<p class="dec-others none">Ninguém mais ausente nesses dias.</p>';
+    var folga = isFolga(r), view = o.view || 'approve';
+    var days = range(r.start, r.end), prop = reqDays(r).length, y = +r.start.slice(0, 4), b = saldo(s, r.who, y);
+    var h = '<div class="decision" data-req="' + r.id + '" data-kind="' + (folga ? 'folga' : 'ferias') + '" data-view="' + view + '" data-prop="' + prop + '" data-disp="' + b.disp + '" data-year="' + y + '">';
+    if (!o.noHead) h += '<div class="dec-head"><h3>' + esc(r.who) + ' ' + kindBadge(r) + '</h3><p class="muted">' + esc(daysTxt(r)) + wedMark(r) + (r.asked ? ' · pedido a ' + fmtY(r.asked) : '') + '</p></div>';
+    if (folga) {
+      h += '<p class="dec-count" data-when="approve">Folga rotativa em <b>' + wdl(r.start) + '</b>.</p>' +
+        '<p class="alert-info small" data-when="approve">Ao aprovar, entra na escala da semana ' + isoWeek(r.start) + ' como folga fixada.</p>';
+    } else {
+      h += '<fieldset class="dec-days" data-when="approve"><legend>Datas a descontar</legend><ul class="day-list">' + days.map(function (d) {
+        var lbl = DOW[dow(d)] + ' ' + fmt(d);
+        if (countable(d)) return '<li><label class="chk"><input type="checkbox" class="day-chk" data-date="' + d + '" checked><span>' + lbl + '</span></label></li>';
+        return '<li class="off"><span>' + lbl + '</span><span>não conta (' + (isHoliday(d) ? 'feriado' : 'fim de semana') + ')</span></li>';
+      }).join('') + '</ul><p class="muted small">Proposta pela regra «Dias úteis (seg–sex, sem feriados)». Desmarque um dia para o corrigir.</p></fieldset>' +
+        '<p class="dec-count" data-when="approve" aria-live="polite"></p>';
     }
-    h += '<label class="reason" data-when="approve" hidden><span>Motivo da correcção (obrigatório)</span><textarea class="motivo" rows="2" data-fk="mot-' + r.id + '"></textarea></label>' +
-      '<div class="dec-actions" data-when="approve"><button type="button" class="primary" data-act="approve" data-fk="approve" disabled>Aprovar</button>' +
-      (mode === 'both' ? '<button type="button" class="btn-row danger" data-act="refuse" data-fk="refuse">Recusar</button>' : '') +
+    if (!o.noOthers) h += '<p class="dec-others none" data-slot="others"></p>';
+    if (!folga) h += '<label class="reason" data-when="approve" hidden><span>Motivo da correcção (obrigatório)</span><textarea class="motivo" rows="2" data-fk="mot-' + r.id + '"></textarea></label>';
+    h += '<div class="dec-actions" data-when="approve"><button type="button" class="primary" data-act="approve" data-fk="approve" disabled>Aprovar</button>' +
+      '<button type="button" class="btn-row" data-act="view-adjust" data-fk="view-adjust">Ajustar datas e aprovar</button>' +
+      '<button type="button" class="btn-row danger" data-act="view-refuse" data-fk="view-refuse">Recusar</button>' +
       (o.dialog ? '<button type="button" class="btn-row btn-row-quiet" data-close-sheet>Cancelar</button>' : '') + '</div>' +
       '<p class="dec-hint small" data-when="approve" aria-live="polite"></p>' +
-      '<div class="refuse-box"><label><span>Motivo da recusa (obrigatório)</span><textarea class="motivo-r" rows="2" data-fk="motr-' + r.id + '"></textarea></label>' +
+      adjustBox(r) +
+      '<div class="refuse-box"><label><span>Nota para quem pediu (obrigatória)</span><textarea class="motivo-r" rows="2" data-fk="motr-' + r.id + '"></textarea></label>' +
+      '<p class="dec-hint small refuse-hint" aria-live="polite"></p>' +
       '<div class="btn-line"><button type="button" class="btn-row danger" data-act="refuse-go" data-fk="refuse-go" disabled>Confirmar recusa</button>' +
-      (mode === 'both' ? '<button type="button" class="btn-row btn-row-quiet" data-act="refuse-cancel">Voltar</button>' : '<button type="button" class="btn-row btn-row-quiet" data-close-sheet>Cancelar</button>') + '</div></div></div>';
+      '<button type="button" class="btn-row btn-row-quiet" data-act="view-approve" data-fk="view-approve-r">Voltar</button></div></div></div>';
     return h;
   }
-  function updateDecision(dev, box) {
-    var chk = $$('.day-chk', box);
-    if (chk.length && box.dataset.mode !== 'refuse') {
-      var n = chk.filter(function (x) { return x.checked; }).length, un = chk.length - n;
-      var prop = +box.dataset.prop, disp = +box.dataset.disp, after = disp - n, mot = $('.motivo', box);
-      $('.reason', box).hidden = un === 0;
-      $('.dec-count', box).innerHTML = '<b>Conta ' + plural(n, 'dia', 'dias') + '</b>' + (n !== prop ? ' <span class="muted">(proposta: ' + prop + ')</span>' : '') +
-        ' · Disponível ' + box.dataset.year + ': <b>' + disp + ' → ' + after + '</b>' + (after < 0 ? ' <span class="badge-err">saldo insuficiente</span>' : '');
-      var need = un > 0 && !mot.value.trim();
-      $('[data-act="approve"]', box).disabled = n === 0 || need;
-      $('.dec-hint', box).textContent = n === 0 ? 'Marque pelo menos um dia.' : (need ? 'Indique o motivo da correcção para poder aprovar.' : '');
+  function adjValues(box, r) {
+    var a = $('.adj-start', box), e = $('.adj-end', box), ns = a ? a.value : '';
+    return { start: ns, end: isFolga(r) ? ns : (e ? e.value : '') };
+  }
+  function adjProblem(v, r) {
+    if (!v.start || !v.end) return 'Indique as datas.';
+    if (v.end < v.start) return 'O último dia é anterior ao primeiro.';
+    if (v.start <= TODAY) return 'As datas têm de ser depois de hoje (' + fmtY(TODAY) + ').';
+    if (!isFolga(r)) {
+      if (range(v.start, v.end).length > 60) return 'Período demasiado longo: confirme as datas.';
+      if (!proposed(v.start, v.end).length) return 'Só fins de semana e feriados: não há dias a descontar.';
     }
-    var mr = $('.motivo-r', box);
-    if (mr) $('[data-act="refuse-go"]', box).disabled = !mr.value.trim();
+    if (v.start === r.start && v.end === r.end) return 'Altere pelo menos uma data (ou use Aprovar).';
+    return '';
+  }
+  function updateDecision(dev, box) {
+    var s = st(dev), r = find(s, box.dataset.req), view = box.dataset.view, folga = box.dataset.kind === 'folga', days = reqDays(r);
+    if (view === 'approve') {
+      if (folga) {
+        $('[data-act="approve"]', box).disabled = false;
+        $('.dec-hint', box).textContent = '';
+      } else {
+        var chk = $$('.day-chk', box), n = chk.filter(function (x) { return x.checked; }).length, un = chk.length - n;
+        var prop = +box.dataset.prop, disp = +box.dataset.disp, after = disp - n, mot = $('.motivo', box);
+        $('.reason', box).hidden = un === 0;
+        $('.dec-count', box).innerHTML = '<b>Conta ' + plural(n, 'dia', 'dias') + '</b>' + (n !== prop ? ' <span class="muted">(proposta: ' + prop + ')</span>' : '') +
+          ' · Disponível ' + box.dataset.year + ': <b>' + disp + ' → ' + after + '</b>' + (after < 0 ? ' <span class="badge-err">saldo insuficiente</span>' : '');
+        var need = un > 0 && !mot.value.trim();
+        $('[data-act="approve"]', box).disabled = n === 0 || need;
+        $('.dec-hint', box).textContent = n === 0 ? 'Marque pelo menos um dia.' : (need ? 'Indique o motivo da correcção para poder aprovar.' : '');
+      }
+    }
+    if (view === 'adjust') {
+      var v = adjValues(box, r), prob = adjProblem(v, r), cnt = $('.adj-count', box);
+      $('[data-act="adjust-go"]', box).disabled = !!prob;
+      $('.adj-hint', box).textContent = prob;
+      if (v.start && v.end && v.end >= v.start) {
+        days = folga ? [v.start] : proposed(v.start, v.end);
+        if (folga) cnt.innerHTML = 'Folga em <b>' + wdl(v.start) + '</b>' + (dow(v.start) === WED_DOW && v.start !== r.start ? wedIcon() : '') + ' · entra na escala da semana <b>' + isoWeek(v.start) + '</b> como folga fixada.';
+        else {
+          var d0 = +box.dataset.disp, y0 = +box.dataset.year, nn = days.filter(function (d) { return +d.slice(0, 4) === y0; }).length;
+          cnt.innerHTML = '<b>Conta ' + plural(days.length, 'dia', 'dias') + '</b> · Disponível ' + box.dataset.year + ': <b>' + d0 + ' → ' + (d0 - nn) + '</b>' + (d0 - nn < 0 ? ' <span class="badge-err">saldo insuficiente</span>' : '');
+        }
+      } else { cnt.textContent = ''; days = []; }
+    }
+    if (view === 'refuse') {
+      var mr = $('.motivo-r', box), empty = !mr.value.trim();
+      $('[data-act="refuse-go"]', box).disabled = empty;
+      $('.refuse-hint', box).textContent = empty ? 'Escreva a nota para poder recusar.' : '';
+    }
+    var oth = $('[data-slot="others"]', box);
+    if (oth) {
+      var list = others(s, r, days);
+      oth.className = 'dec-others' + (list.length ? '' : ' none');
+      oth.innerHTML = list.length
+        ? 'Também ausentes nesses dias: ' + list.map(function (x) { return '<b>' + esc(x.who) + '</b> (' + x.kind + ')'; }).join(', ')
+        : 'Ninguém mais ausente nesses dias.';
+    }
+    wireWed(dev);
     var sb = box.closest('.sheet__box');
     if (sb) fit(dev, sb, sb.dataset.bottom === '1');
   }
@@ -992,34 +1240,52 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     fit(dev, box, bottom);
     return box;
   }
-  function openDecision(dev, r, mode) {
+  var DIALOG_TITLE = { approve: 'Aprovar pedido', refuse: 'Recusar pedido', adjust: 'Ajustar datas e aprovar' };
+  function openDecision(dev, r, view) {
     var s = st(dev);
-    openSheet(dev, mode === 'refuse' ? 'Recusar pedido' : 'Aprovar pedido', decisionHTML(s, r, mode, { dialog: true }), false);
+    var box = openSheet(dev, DIALOG_TITLE[view], decisionHTML(s, r, { dialog: true, view: view }), false);
+    var f = $(view === 'refuse' ? '.motivo-r' : (view === 'adjust' ? '.adj-start' : '[data-act="approve"]:not(:disabled)'), box);
+    if (f) f.focus();
   }
   function openBulk(dev) {
     var s = st(dev), items = pend(s).filter(function (r) { return s.sel[r.id]; });
     if (!items.length) return;
-    var tot = items.reduce(function (a, r) { return a + proposed(r.start, r.end).length; }, 0);
+    var ferias = items.filter(function (r) { return !isFolga(r); });
+    var tot = ferias.reduce(function (a, r) { return a + proposed(r.start, r.end).length; }, 0);
     openSheet(dev, 'Aprovar selecionados', '<ul class="bulk-list">' + items.map(function (r) {
-      return '<li><b>' + esc(r.who) + '</b> · ' + periodTxt(r) + ' <span class="muted">· conta ' + plural(proposed(r.start, r.end).length, 'dia', 'dias') + '</span></li>';
-    }).join('') + '</ul><p class="muted small">Usa a contagem proposta pela regra «Dias úteis (seg–sex, sem feriados)»: ' + plural(tot, 'dia', 'dias') + ' no total. Para corrigir datas, aprove cada pedido em separado.</p>' +
+      return '<li>' + kindBadge(r) + ' <b>' + esc(r.who) + '</b> · ' + periodTxt(r) + wedMark(r) + (isFolga(r) ? ' <span class="muted">· entra na escala da semana ' + isoWeek(r.start) + '</span>' : ' <span class="muted">· conta ' + plural(proposed(r.start, r.end).length, 'dia', 'dias') + '</span>') + '</li>';
+    }).join('') + '</ul><p class="muted small">Usa a contagem proposta pela regra «Dias úteis (seg–sex, sem feriados)»' + (ferias.length ? ': ' + plural(tot, 'dia', 'dias') + ' de férias no total' : '') + '. Para corrigir datas, aprove cada pedido em separado.</p>' +
       '<div class="dec-actions"><button type="button" class="primary" data-act="bulk-go">Aprovar ' + items.length + '</button><button type="button" class="btn-row btn-row-quiet" data-close-sheet>Cancelar</button></div>', false);
+  }
+
+  /* ── Detalhe de um pedido (painel lateral, folha inferior, caixa de entrada) ── */
+  function detailBody(s, r, o) {
+    o = o || {};
+    var y = +r.start.slice(0, 4), b = saldo(s, r.who, y), n = nDays(r);
+    var dl = '<dl class="req-dl"><dt>Tipo</dt><dd>' + kindBadge(r) + '</dd><dt>Estado</dt><dd>' + stateBadge(r) + '</dd><dt>Datas</dt><dd>' + esc(daysTxt(r)) + wedMark(r) + '</dd>' +
+      (r.orig ? '<dt>Pedido original</dt><dd>' + esc(rng(r.orig.start, r.orig.end)) + '</dd>' : '') +
+      '<dt>Dias</dt><dd>' + (isFolga(r) ? '1 (folga rotativa)' : plural(n, 'dia', 'dias') + (r.st === 'appr' ? ' descontados' : '')) + '</dd>' +
+      (r.asked ? '<dt>Pedido em</dt><dd>' + fmtY(r.asked) + '</dd>' : '') +
+      (!isFolga(r) && r.st === 'pend' ? '<dt>Disponível</dt><dd>' + b.disp + ' → ' + (b.disp - n) + (y !== YEAR ? ' (' + y + ')' : '') + '</dd>' : '') + '</dl>';
+    if (r.st === 'pend') return dl + decisionHTML(s, r, { noHead: true, dialog: !!o.dialog });
+    var nt = weekNote(r);
+    return dl + '<div class="alert-' + (r.st === 'rec' ? 'err' : 'ok') + '" role="status">' + esc(outcome(r)) + wedMark(r) + (nt ? '<span class="small" style="display:block">' + esc(nt) + '</span>' : '') + '</div>';
   }
 
   /* ── Variantes ── */
   var VIEWS = {};
   VIEWS.a = function (c) {
     var s = c.s;
-    return head() + summary(s) + urlLine(s) + tabsBlock(s, s.tab === 'pedidos' ? pendingHTML(s, 'a') : divHTML()) +
+    return head() + summary(s) + urlLine(s) + recentHTML(s) + tabsBlock(s, s.tab === 'pedidos' ? pendingHTML(s, 'a') : divHTML()) +
       '<section class="card"><h2 class="sec-h">Mapa anual ' + YEAR + '</h2>' + mapSection(c) + '</section>';
   };
   VIEWS.b = function (c) {
     var s = c.s, r = s.active && find(s, s.active), panel = '';
     if (s.kind !== 'phone' && r && r.st === 'pend') {
       panel = '<aside class="card decision-panel" aria-label="Decisão do pedido de ' + esc(r.who) + '"><div class="panel-top"><h3>Decidir pedido</h3>' +
-        '<button type="button" class="btn-row btn-row-quiet" data-act="close-panel" data-fk="close-panel">Fechar</button></div>' + decisionHTML(s, r, 'both') + '</aside>';
+        '<button type="button" class="btn-row btn-row-quiet" data-act="close-panel" data-fk="close-panel">Fechar</button></div>' + decisionHTML(s, r) + '</aside>';
     }
-    return head() + summary(s) + urlLine(s) + '<div class="b-grid' + (panel ? ' has-panel' : '') + '"><div class="b-main">' +
+    return head() + summary(s) + urlLine(s) + recentHTML(s) + '<div class="b-grid' + (panel ? ' has-panel' : '') + '"><div class="b-main">' +
       '<section class="card panel"><h2 class="sec-h">Mapa anual ' + YEAR + '</h2>' + mapSection(c) + '</section>' +
       '<div class="b-lists">' + tabsBlock(s, s.tab === 'pedidos' ? pendingHTML(s, 'b') : divHTML()) + '</div></div>' + panel + '</div>';
   };
@@ -1041,13 +1307,12 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     var r = s.active && find(s, s.active);
     if (!r) return '<p class="empty">' + (pend(s).length ? 'Escolha um pedido na lista.' : 'Sem pedidos pendentes. Tudo decidido.') + '</p>';
     if (r.st !== 'pend') {
-      var nx = pend(s)[0];
-      return back + '<div class="alert-ok" role="status">' + (r.st === 'appr' ? 'Aprovado' : 'Recusado') + ': <b>' + esc(r.who) + '</b> · ' + periodTxt(r) +
-        (r.st === 'appr' ? ' · ' + plural(r.counted.length, 'dia descontado', 'dias descontados') + (r.adj ? ' (corrigido: ' + esc(r.adj) + ')' : '') : ' · motivo: ' + esc(r.refusal || '')) + '</div>' +
+      var nx = pend(s)[0], nt = weekNote(r);
+      return back + '<div class="alert-' + (r.st === 'rec' ? 'err' : 'ok') + '" role="status">' + kindBadge(r) + ' <b>' + esc(r.who) + '</b> · ' + esc(outcome(r)) + wedMark(r) + (nt ? '<span class="small" style="display:block">' + esc(nt) + '</span>' : '') + '</div>' +
         '<div class="btn-line" style="margin-top:12px">' + (nx ? '<button type="button" class="btn-row btn-row-strong" data-act="next" data-fk="next">Seguinte pedido (' + esc(nx.who) + ')</button>' : '<span class="muted">Sem mais pedidos pendentes.</span>') + '</div>';
     }
-    return back + '<div class="cd-head"><h3>' + esc(r.who) + '</h3><span class="badge-warn">Pendente</span></div>' +
-      '<p class="meta">' + fmtY(r.start) + ' a ' + fmtY(r.end) + ' · pedido a ' + fmtY(r.asked) + '</p>' + miniBlock(c, r) + decisionHTML(s, r, 'both', { noHead: true, noOthers: true });
+    return back + '<div class="cd-head"><h3>' + esc(r.who) + '</h3>' + kindBadge(r) + '<span class="badge-warn">Pendente</span></div>' +
+      '<p class="meta">' + esc(daysTxt(r)) + wedMark(r) + ' · pedido a ' + fmtY(r.asked) + '</p>' + miniBlock(c, r) + decisionHTML(s, r, { noHead: true, noOthers: true });
   }
   VIEWS.c = function (c) {
     var s = c.s;
@@ -1060,7 +1325,7 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     } else {
       var list = s.tab === 'pedidos'
         ? (pend(s).length ? pend(s).map(function (r) {
-          return '<li><button type="button" class="c-item" data-act="select" data-id="' + r.id + '" data-fk="it-' + r.id + '" aria-current="' + (s.active === r.id) + '"><span class="ci-name">' + esc(r.who) + '</span><span class="ci-sub">' + periodTxt(r) + ' · ' + plural(proposed(r.start, r.end).length, 'dia', 'dias') + '</span></button></li>';
+          return '<li><button type="button" class="c-item" data-act="select" data-id="' + r.id + '" data-fk="it-' + r.id + '" aria-current="' + (s.active === r.id) + '"><span class="ci-name">' + esc(r.who) + '</span><span class="ci-sub">' + kindLabel(r) + ' · ' + periodTxt(r) + wedMark(r, true) + (isFolga(r) ? '' : ' · ' + plural(proposed(r.start, r.end).length, 'dia', 'dias')) + '</span></button></li>';
         }).join('') : '<li class="empty">Sem pedidos pendentes.</li>')
         : DIVS.map(function (d, i) {
           return '<li><button type="button" class="c-item" data-act="select-div" data-i="' + i + '" data-fk="dv-' + i + '" aria-current="' + (s.activeDiv === i) + '"><span class="ci-name">' + esc(d.who) + '</span><span class="ci-sub">' + esc(d.text) + '</span></button></li>';
@@ -1069,6 +1334,51 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
       body = tabsBlock(s, inbox, true);
     }
     return head() + summary(s) + urlLine(s) + alt + body;
+  };
+
+  /* D · próxima do Homebase (Time Off › Requests): tabela Nome · Tipo · Datas · Dias · Estado, painel lateral, próximas ausências */
+  function dRows(s) {
+    var list = s.dfilter === 'pend'
+      ? pend(s).slice().sort(function (a, b) { return a.asked < b.asked ? -1 : 1; })
+      : s.reqs.filter(function (r) { return r.st !== 'pend'; }).sort(function (a, b) {
+        var ra = s.recent.indexOf(a.id), rb = s.recent.indexOf(b.id);
+        if (ra >= 0 || rb >= 0) return (ra < 0 ? 99 : ra) - (rb < 0 ? 99 : rb);
+        return a.start < b.start ? 1 : -1;
+      });
+    return list;
+  }
+  function dTable(s) {
+    var list = dRows(s);
+    if (!list.length) return '<p class="empty">' + (s.dfilter === 'pend' ? 'Sem pedidos pendentes. Todos decididos.' : 'Sem pedidos no histórico.') + '</p>';
+    var rows = list.map(function (r) {
+      return '<tr data-drow="' + r.id + '"' + (s.active === r.id ? ' class="is-sel"' : '') + '>' +
+        '<td data-label="Nome"><button type="button" class="person-btn" data-fk="dr-' + r.id + '" aria-label="Abrir pedido de ' + esc(r.who) + ', ' + kindLabel(r) + ', ' + periodTxt(r) + '">' + esc(r.who) + '</button></td>' +
+        '<td data-label="Tipo">' + kindBadge(r) + '</td>' +
+        '<td data-label="Datas"><span class="when-wrap"><b>' + (isFolga(r) ? wdl(r.start) : periodTxt(r)) + '</b>' + wedMark(r) + '</span>' + (r.orig ? '<span class="small muted">pedido ' + rng(r.orig.start, r.orig.end) + '</span>' : '') + '</td>' +
+        '<td data-label="Dias" class="num">' + nDays(r) + '</td>' +
+        '<td data-label="Estado">' + stateBadge(r) + '</td></tr>';
+    }).join('');
+    return '<table class="fer-table table--cards"><thead><tr><th>Nome</th><th>Tipo</th><th>Datas</th><th class="num">Dias</th><th>Estado</th></tr></thead><tbody>' + rows + '</tbody></table>';
+  }
+  function upcomingHTML(s) {
+    var list = s.reqs.filter(function (r) { return r.st === 'appr' && r.end >= TODAY; }).sort(function (a, b) { return a.start < b.start ? -1 : 1; }).slice(0, 8);
+    return '<section class="card panel upcoming" aria-label="Próximas ausências"><h2 class="sec-h">Próximas ausências</h2>' +
+      (list.length ? '<ul class="upc">' + list.map(function (r) {
+        return '<li><span class="upc-d">' + periodTxt(r) + wedMark(r) + '</span><b>' + esc(r.who) + '</b>' + kindBadge(r) + (r.orig ? '<span class="small muted">datas ajustadas</span>' : '') + '</li>';
+      }).join('') + '</ul>' : '<p class="empty">Sem ausências aprovadas por vir.</p>') + '</section>';
+  }
+  VIEWS.d = function (c) {
+    var s = c.s, r = s.active && find(s, s.active), panel = '';
+    var nH = s.reqs.filter(function (x) { return x.st !== 'pend'; }).length;
+    if (s.kind !== 'phone' && r) {
+      panel = '<aside class="card decision-panel" aria-label="Pedido de ' + esc(r.who) + '"><div class="panel-top"><h3>' + esc(r.who) + '</h3>' +
+        '<button type="button" class="btn-row btn-row-quiet" data-act="close-panel" data-fk="close-panel">Fechar</button></div>' + detailBody(s, r) + '</aside>';
+    }
+    var bar = '<div class="toolbar d-toolbar"><div class="seg" role="group" aria-label="Filtrar pedidos">' +
+      '<button type="button" data-act="dfilter" data-f="pend" data-fk="f-pend" aria-pressed="' + (s.dfilter === 'pend') + '">Pendentes (' + pend(s).length + ')</button>' +
+      '<button type="button" data-act="dfilter" data-f="hist" data-fk="f-hist" aria-pressed="' + (s.dfilter === 'hist') + '">Histórico (' + nH + ')</button></div>' +
+      '<span class="muted small">Toque numa linha para decidir.</span></div>';
+    return head() + summary(s) + urlLine(s) + recentHTML(s) + bar + '<div class="b-grid' + (panel ? ' has-panel' : '') + '"><section class="card panel" aria-label="Pedidos de folga rotativa e de férias">' + dTable(s) + '</section>' + panel + '</div>' + upcomingHTML(s);
   };
 
   /* ── Renderização ── */
@@ -1082,10 +1392,10 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     var fk = s.nextFocus || (ae && dev.contains(ae) && ae.getAttribute ? ae.getAttribute('data-fk') : null);
     var caret = ae && ae.selectionStart != null ? ae.selectionStart : null;
     var scr = $$('.map-wrap', dev).map(function (w) { return w.scrollLeft; });
-    s.nextFocus = null;
+    s.nextFocus = null; hideTip(dev);
     root.innerHTML = VIEWS[s.v](calc(s));
     if (!opt.noScroll) $$('.map-wrap', dev).forEach(function (w, i) { if (scr[i]) w.scrollLeft = scr[i]; });
-    applyFilter(dev); updateAll(dev);
+    applyFilter(dev); updateAll(dev); wireWed(dev);
     if (fk) {
       var el = $('[data-fk="' + fk + '"]', root);
       if (el && !el.disabled) { el.focus({ preventScroll: true }); if (caret != null && el.setSelectionRange && /text|search/.test(el.type)) { try { el.setSelectionRange(caret, caret); } catch (x) { /* ignorar */ } } }
@@ -1098,12 +1408,12 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     var s = st(dev);
     s.uid = Mock.uid('fer'); s.v = variant; s.kind = kind;
     s.reqs = BASE.map(function (r) {
-      var o = { id: r.id, who: r.who, start: r.start, end: r.end, st: r.st, asked: r.asked };
-      if (r.st === 'appr') o.counted = proposed(r.start, r.end);
+      var o = { id: r.id, who: r.who, kind: r.kind || 'ferias', start: r.start, end: r.end, st: r.st, asked: r.asked, refusal: r.refusal };
+      if (r.st === 'appr') o.counted = isFolga(o) ? [o.start] : proposed(r.start, r.end);
       return o;
     });
     s.tab = 'pedidos'; s.sel = {}; s.cleared = false; s.view = 'cal'; s.zoom = null; s.filter = '';
-    s.page = 'inbox'; s.screen = 'list'; s.active = null; s.activeDiv = null; s.nextFocus = null;
+    s.page = 'inbox'; s.screen = 'list'; s.active = null; s.activeDiv = null; s.nextFocus = null; s.recent = []; s.dfilter = 'pend';
     if (variant === 'c' && !phone(s)) { s.active = firstPend(s); s.activeDiv = 0; }
     render(dev, { noScroll: true });
   };
@@ -1132,8 +1442,12 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
   Mock.on('click', '[data-act="zoom-prev"]', function (e, t, dev) { var s = st(dev); s.zoom = Math.max(0, s.zoom - 1); render(dev, { noScroll: true }); });
   Mock.on('click', '[data-act="zoom-next"]', function (e, t, dev) { var s = st(dev); s.zoom = Math.min(11, s.zoom + 1); render(dev, { noScroll: true }); });
   Mock.on('click', '[data-act="page"]', function (e, t, dev) { st(dev).page = t.dataset.p; render(dev, { noScroll: true }); });
+  Mock.on('click', '[data-act="dfilter"]', function (e, t, dev) {
+    var s = st(dev); s.dfilter = t.dataset.f; s.active = null; Mock.closeSheet(dev); render(dev);
+  });
 
   Mock.on('click', '[data-act="approve-open"]', function (e, t, dev) { openDecision(dev, find(st(dev), t.dataset.req), 'approve'); });
+  Mock.on('click', '[data-act="adjust-open"]', function (e, t, dev) { openDecision(dev, find(st(dev), t.dataset.req), 'adjust'); });
   Mock.on('click', '[data-act="refuse-open"]', function (e, t, dev) { openDecision(dev, find(st(dev), t.dataset.req), 'refuse'); });
   Mock.on('click', '[data-act="bulk-open"]', function (e, t, dev) { openBulk(dev); });
   Mock.on('click', '[data-act="open-req"]', function (e, t, dev) {
@@ -1144,7 +1458,7 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
       if (s.zoom != null && +r.start.slice(0, 4) === YEAR) s.zoom = m;
       if (phone(s)) {
         render(dev);
-        openSheet(dev, 'Decidir pedido', decisionHTML(s, r, 'both', { dialog: false }), true);
+        openSheet(dev, 'Decidir pedido', decisionHTML(s, r, { dialog: false }), true);
       } else {
         s.active = r.id; render(dev);
         var btn = $('.map-wrap .cell-btn[data-req="' + r.id + '"]', dev);
@@ -1155,6 +1469,17 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     }
     s.page = 'inbox'; s.tab = 'pedidos'; s.active = r.id; s.screen = 'detail'; render(dev);
   });
+  Mock.on('click', 'tr[data-drow]', function (e, t, dev) {
+    if (e.target.closest('[data-wed]')) return;
+    var s = st(dev), r = find(s, t.dataset.drow); if (!r) return;
+    if (phone(s)) {
+      render(dev);
+      openSheet(dev, 'Pedido de ' + r.who, detailBody(s, r), true);
+    } else {
+      s.active = r.id; render(dev);
+      var pn = $('.decision-panel', dev); if (pn) pn.scrollIntoView({ block: 'nearest' });
+    }
+  });
   Mock.on('click', '[data-act="close-panel"]', function (e, t, dev) { st(dev).active = null; render(dev); });
   Mock.on('click', '[data-act="select"]', function (e, t, dev) { var s = st(dev); s.active = t.dataset.id; s.screen = 'detail'; render(dev); });
   Mock.on('click', '[data-act="select-div"]', function (e, t, dev) { var s = st(dev); s.activeDiv = +t.dataset.i; s.screen = 'detail'; render(dev); });
@@ -1163,34 +1488,60 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
 
   Mock.on('change', '.day-chk', function (e, t, dev) { updateDecision(dev, t.closest('.decision')); });
   Mock.on('input', '.motivo, .motivo-r', function (e, t, dev) { updateDecision(dev, t.closest('.decision')); });
-  Mock.on('click', '[data-act="refuse"]', function (e, t, dev) { var b = t.closest('.decision'); b.classList.add('is-refusing'); var ta = $('.motivo-r', b); if (ta) ta.focus(); updateDecision(dev, b); });
-  Mock.on('click', '[data-act="refuse-cancel"]', function (e, t, dev) { var b = t.closest('.decision'); b.classList.remove('is-refusing'); updateDecision(dev, b); });
+  Mock.on('input', '.adj-start, .adj-end', function (e, t, dev) { updateDecision(dev, t.closest('.decision')); });
+  Mock.on('change', '.adj-start, .adj-end', function (e, t, dev) {
+    var b = t.closest('.decision'), a = $('.adj-start', b), en = $('.adj-end', b);
+    if (t === a && en && a.value && (!en.value || en.value < a.value)) en.value = a.value;
+    updateDecision(dev, b);
+  });
+  function setView(dev, box, view) {
+    box.dataset.view = view; updateDecision(dev, box);
+    var f = $(view === 'refuse' ? '.motivo-r' : (view === 'adjust' ? '.adj-start' : '[data-act="approve"]'), box);
+    if (f && !f.disabled) f.focus({ preventScroll: true });
+  }
+  Mock.on('click', '[data-act="view-adjust"]', function (e, t, dev) { setView(dev, t.closest('.decision'), 'adjust'); });
+  Mock.on('click', '[data-act="view-refuse"]', function (e, t, dev) { setView(dev, t.closest('.decision'), 'refuse'); });
+  Mock.on('click', '[data-act="view-approve"]', function (e, t, dev) { setView(dev, t.closest('.decision'), 'approve'); });
 
   function finish(dev, r) {
     var s = st(dev);
     Mock.closeSheet(dev);
     delete s.sel[r.id];
-    if (s.v === 'b') s.active = null;
+    r.decided = TODAY;
+    s.recent = [r.id].concat(s.recent.filter(function (x) { return x !== r.id; })).slice(0, 5);
+    if (s.v === 'b' || s.v === 'd') s.active = null;
     if (s.v === 'c') s.active = r.id;
     render(dev);
-    Mock.toast(dev, r.st === 'appr' ? 'Aprovado: ' + r.who + ' · ' + plural(r.counted.length, 'dia descontado', 'dias descontados') : 'Recusado: ' + r.who);
+    Mock.toast(dev, 'Decisão enviada a ' + r.who + ' por email e no GiG.');
   }
   Mock.on('click', '[data-act="approve"]', function (e, t, dev) {
     var box = t.closest('.decision'), s = st(dev), r = find(s, box.dataset.req);
+    if (isFolga(r)) { r.st = 'appr'; r.counted = [r.start]; finish(dev, r); return; }
     var chk = $$('.day-chk', box), ok = chk.filter(function (x) { return x.checked; }).map(function (x) { return x.dataset.date; });
     r.st = 'appr'; r.counted = ok; r.adj = ok.length < chk.length ? $('.motivo', box).value.trim() : '';
     finish(dev, r);
   });
+  Mock.on('click', '[data-act="adjust-go"]', function (e, t, dev) {
+    var box = t.closest('.decision'), s = st(dev), r = find(s, box.dataset.req), v = adjValues(box, r);
+    if (adjProblem(v, r)) return;
+    r.orig = { start: r.start, end: r.end };
+    r.start = v.start; r.end = v.end; r.st = 'appr'; r.adj = '';
+    r.counted = isFolga(r) ? [r.start] : proposed(r.start, r.end);
+    finish(dev, r);
+  });
   Mock.on('click', '[data-act="refuse-go"]', function (e, t, dev) {
-    var box = t.closest('.decision'), s = st(dev), r = find(s, box.dataset.req);
-    r.st = 'rec'; r.refusal = $('.motivo-r', box).value.trim();
+    var box = t.closest('.decision'), s = st(dev), r = find(s, box.dataset.req), note = $('.motivo-r', box).value.trim();
+    if (!note) return;
+    r.st = 'rec'; r.refusal = note;
     finish(dev, r);
   });
   Mock.on('click', '[data-act="bulk-go"]', function (e, t, dev) {
     var s = st(dev), items = pend(s).filter(function (r) { return s.sel[r.id]; });
-    items.forEach(function (r) { r.st = 'appr'; r.counted = proposed(r.start, r.end); delete s.sel[r.id]; });
+    items.forEach(function (r) { r.st = 'appr'; r.counted = isFolga(r) ? [r.start] : proposed(r.start, r.end); r.decided = TODAY; delete s.sel[r.id]; });
+    s.recent = items.map(function (r) { return r.id; }).reverse().concat(s.recent.filter(function (x) { return !items.some(function (r) { return r.id === x; }); })).slice(0, 5);
     Mock.closeSheet(dev); render(dev);
-    Mock.toast(dev, 'Aprovados: ' + plural(items.length, 'pedido', 'pedidos'));
+    var names = items.map(function (r) { return r.who; });
+    Mock.toast(dev, 'Decisão enviada a ' + (names.length > 1 ? names.slice(0, -1).join(', ') + ' e ' + names[names.length - 1] : names[0]) + ' por email e no GiG.');
   });
 })();
 </script>

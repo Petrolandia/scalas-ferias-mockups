@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mockup 9 — Folha semanal: «Preencher com a escala»</title>
+<title>Mockup 9 — Folha semanal pré-preenchida pela escala</title>
 <style>
 /* === MOLDURA COMUM (copiar) === */
 /* Tokens copiados de src/app/globals.css:2-33 (tema «Menta») */
@@ -77,6 +77,8 @@ a { color: inherit; text-decoration: none; }
 }
 .variant-notes b { font-weight: 600; }
 .variant-notes .note-extra { margin-top: 4px; font-size: 12px; color: var(--mut); }
+.variant-missing { max-width: 1180px; margin: 0 auto 16px; padding: 12px 14px; font-size: 14px; background: var(--warn-bg); color: var(--warn-tx); border: 1px solid var(--warn-bd, var(--border)); border-left: 4px solid var(--warn-tx); border-radius: 8px; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+.variant-missing[hidden] { display: none; }
 .stage { display: flex; flex-wrap: wrap; gap: 28px 24px; align-items: flex-start; justify-content: center; }
 .stage-item { min-width: 0; max-width: 100%; }
 .stage-cap { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; color: var(--mut); }
@@ -272,6 +274,26 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
 /* === FIM MOLDURA === */
 
 /* === ESPECÍFICO DESTE MOCKUP === */
+/* === POSTOS (copiar) === */
+/* Postos e cores fixos (as mesmas em todos os mockups): Montagem #d9a400 · Fogão #2f6fd6 · Sumo #a03fb5 · Copa #e8742a ·
+   Copa e Apoio #d9534f · Bar #2e9e5b · Produção #7a5a2e · Sala #3aa6b9 · Supervisão #b0234a · Gerência #6b4fd8.
+   O bloco tem sempre fundo claro, texto escuro e barra esquerda de 4 px na cor do posto: o contraste AA não depende do tema.
+   Uso (turno com troca de posto: dois .shift-seg e duas .shift-band no MESMO bloco; flex do .shift-seg = minutos do segmento):
+     <span class="shift-block has-swap" style="--pos-color:#a03fb5">
+       <span class="shift-bars" aria-hidden="true"><i class="shift-seg" style="--pos-color:#a03fb5;flex:120"></i><i class="shift-seg" style="--pos-color:#e8742a;flex:420"></i></span>
+       <span class="shift-time">08:00–17:00</span>
+       <span class="shift-pos"><span class="shift-band" style="--pos-color:#a03fb5">Sumo</span><span class="shift-band" style="--pos-color:#e8742a">Copa 10:00</span></span>
+     </span> */
+.shift-block { --pos-color: #66736b; position: relative; display: flex; flex-direction: column; gap: 2px; min-width: 0; padding: 3px 4px 3px 9px; border-radius: 6px; overflow: hidden; text-align: left; color: #1f2a24; background: color-mix(in srgb, var(--pos-color) 15%, #fff); }
+.shift-bars { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; display: flex; flex-direction: column; }
+.shift-seg { display: block; flex: 1 1 0; min-height: 3px; background: var(--pos-color); }
+.shift-time { display: block; font-weight: 600; font-size: 12px; line-height: 1.2; font-variant-numeric: tabular-nums; white-space: nowrap; color: #1f2a24; }
+.shift-pos { display: flex; gap: 2px; min-width: 0; }
+.shift-band { display: block; flex: 1 1 auto; min-width: 0; padding: 0 4px; border-radius: 3px; font-size: 10px; line-height: 1.4; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #1f2a24; background: color-mix(in srgb, var(--pos-color) 30%, #fff); }
+.shift-tag { display: inline-block; margin-right: 3px; padding: 0 4px; border-radius: 3px; font-size: 9.5px; font-weight: 700; line-height: 1.4; color: #5a4300; background: #f0dca0; }
+.pos-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; background: var(--pos-color, #66736b); }
+/* === FIM POSTOS === */
+
 /* Cores de tipo de dia (globals.css:1439-1467) */
 :root {
   --day-folga-bg: #f2922d; --day-folga-tx: #1f1300;
@@ -355,28 +377,27 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
 .device .unlock label input { min-width: 260px; max-width: none; margin: 0; }
 .device .unlock button { margin-top: auto; }
 
-/* Mensagem «preenchidos a partir da escala» */
-.fill-status { margin-top: 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px 12px; flex-wrap: wrap; }
-.fill-status .btn-row { font-size: 12px; }
 
-/* Células preenchidas a partir da escala (realce informativo) */
-.cell.from-plan { background: var(--info-bg); box-shadow: 0 0 0 4px var(--info-bg), 0 0 0 5px var(--info-bd); border-radius: 6px; }
-.fp-tag { position: absolute; top: -2px; right: 0; font-size: 11px; padding: 0 6px; z-index: 1; }
+/* Posto da escala em cada dia (chip) e nota «sem escala» */
+.pos-chip { --pos-color: #66736b; display: inline-flex; align-items: center; max-width: 100%; padding: 0 6px 0 7px; border-left: 4px solid var(--pos-color); border-radius: 4px;
+  font-size: 12px; line-height: 1.6; font-weight: 600; color: #1f2a24; background: color-mix(in srgb, var(--pos-color) 18%, #fff); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cell-pos { display: flex; flex-wrap: wrap; gap: 3px; min-height: 20px; align-items: center; }
+.cell-top { min-height: 18px; }
+.cell--future { min-height: 150px; justify-content: flex-start; color: var(--mut); }
+.cell--future .future-line { font-size: 13px; font-weight: 600; color: var(--txt); font-variant-numeric: tabular-nums; }
+.td-future { background: var(--bg); }
 
-/* B · pré-visualização por baixo da linha real */
-.pv-head > td { background: var(--info-bg); border-top: 2px solid var(--info-bd); border-bottom: 1px solid var(--info-bd); padding: 8px; }
-.pv-bar { position: sticky; left: 0; display: flex; align-items: center; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap;
-  width: calc(100cqw - 220px - 48px - 40px - 4px); min-width: 280px; }
-.pv-title { font-size: 13px; color: var(--info-tx); }
-.pv-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-.device .pv-actions button { font-size: 13px; padding: 6px 14px; }
-.pv-cell { background: #f7faff; vertical-align: top; font-size: 13px; }
-.pv-in { display: flex; flex-direction: column; gap: 4px; min-width: 120px; align-items: flex-start; }
-.pv-time { font-weight: 600; font-variant-numeric: tabular-nums; font-size: 14px; }
-.pv-sub { color: var(--mut); font-size: 12px; }
-.pv-chip { font-size: 12px; padding: 1px 8px; font-weight: 600; }
-.device .pv-check { display: flex; align-items: center; gap: 6px; margin: 4px 0 0; font-size: 13px; color: var(--txt); cursor: pointer; }
-.pv-in.is-skip .pv-time, .pv-in.is-skip .pv-chip, .pv-in.is-skip .pv-sub { opacity: 0.55; }
+/* Marca «da escala» (A e C: discreta; B e D: realçada até gravar) */
+.fp-tag { display: inline-block; font-size: 11px; line-height: 1.5; padding: 0 6px; border-radius: 4px; white-space: nowrap; }
+.fp-tag[hidden] { display: none; }
+.wk-card[data-v='a'] .fp-tag, .wk-card[data-v='c'] .fp-tag { color: var(--mut); background: #fff; border: 1px solid var(--border); }
+.wk-card[data-v='b'] .fp-tag, .wk-card[data-v='d'] .fp-tag { color: var(--info-tx); background: var(--info-bg); border: 1px solid var(--info-bd); font-weight: 600; }
+.wk-card[data-v='b'] .cell.is-sug { background: var(--info-bg); box-shadow: 0 0 0 4px var(--info-bg), 0 0 0 5px var(--info-bd); border-radius: 6px; }
+.wk-card[data-v='b'] .cell.is-sug label { color: var(--info-tx); }
+
+/* Aviso no topo da página */
+.plan-bar .alert-info { flex: 1 1 100%; font-weight: 600; }
+.plan-bar .alert-info b { font-weight: 600; }
 
 /* C · texto fantasma */
 .gv { display: none; position: absolute; left: 11px; top: 50%; transform: translateY(-50%); max-width: calc(100% - 34px);
@@ -390,11 +411,51 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
 .cell.is-ghost .gw.has-gv:focus-within input[type='time']::-webkit-datetime-edit { opacity: 1; }
 .cell.is-ghost .gw.has-gv:focus-within select { color: var(--txt); }
 .gl { font-style: italic; color: var(--mut); }
+.device .btn-accept { font-size: 13px; font-weight: 600; padding: 4px 10px; min-height: 30px; }
+
+/* D · linhas por dia: escala à esquerda, realizado editável à direita */
+.dgrid { display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--card); }
+.dhead, .drow { display: grid; grid-template-columns: 76px 196px minmax(0, 1fr) 78px; gap: 8px 10px; align-items: center; padding: 8px 12px; }
+.dhead { background: var(--bg); font-size: 12px; color: var(--mut); border-bottom: 1px solid var(--border); padding-top: 6px; padding-bottom: 6px; }
+.drow { border-bottom: 1px solid var(--border); }
+.drow:last-child { border-bottom: none; }
+.drow.is-today { box-shadow: inset 4px 0 0 var(--primary); }
+.drow__day strong { display: block; font-weight: 600; }
+.drow__day .badge-info { font-size: 11px; padding: 0 6px; }
+.drow__plan { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.drow__plan .shift-block { flex: 1 1 auto; max-width: 170px; }
+.src-tag { flex-shrink: 0; font-size: 11px; font-weight: 600; line-height: 1.5; padding: 0 6px; border-radius: 4px; color: var(--info-tx); background: var(--info-bg); border: 1px solid var(--info-bd); white-space: nowrap; }
+.plan-off { display: inline-block; font-size: 13px; padding: 2px 10px; border-radius: 4px; font-weight: 600; }
+.drow__real { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: flex-end; border-radius: 6px; padding: 6px 8px; min-width: 0; }
+.drow__real.is-sug { background: var(--info-bg); box-shadow: 0 0 0 1px var(--info-bd); }
+.device .drow__real label { margin: 0; font-size: 12px; }
+.drow__real[class*='day--'] label { color: inherit; opacity: 0.85; }
+.drow__real .f-time { flex: 0 0 92px; }
+.drow__real .f-abs { flex: 0 0 150px; }
+.drow__real .f-note { flex: 1 1 70px; min-width: 70px; }
+.device .drow__real label > input, .device .drow__real label > select { max-width: none; }
+.drow__real .real-future { font-size: 13px; color: var(--mut); padding: 6px 0; }
+.drow__real .real-future b { color: var(--txt); font-weight: 600; font-variant-numeric: tabular-nums; }
+.drow__tot { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; font-size: 13px; font-variant-numeric: tabular-nums; text-align: right; }
+.drow__cap { display: none; }
+.dsum { padding: 8px 12px; font-size: 13px; color: var(--mut); background: var(--bg); border-top: 1px solid var(--border); }
 
 @container app (max-width: 768px) {
   .wk-title { margin-bottom: 0; }
-  .pv-bar { width: calc(100cqw - 32px - 24px - 4px); }
   .device .unlock label input { min-width: 0; width: 100%; }
+  .dhead { display: none; }
+  .drow { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: 'day tot' 'plan plan' 'real real'; padding: 12px; gap: 8px; align-items: start; }
+  .drow__day { grid-area: day; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .drow__day strong { display: inline; }
+  .drow__tot { grid-area: tot; }
+  .drow__plan { grid-area: plan; flex-wrap: wrap; }
+  .drow__real { grid-area: real; padding: 8px; }
+  .drow__cap { display: block; flex: 1 1 100%; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--mut); }
+  .drow__plan .drow__cap { margin-bottom: 0; }
+  .drow__real .f-time { flex: 1 1 calc(50% - 5px); }
+  .drow__real .f-abs, .drow__real .f-note { flex: 1 1 100%; }
+  .device .drow__real input, .device .drow__real select { min-height: 44px; }
+  .device .wk-head .btn-row, .device .btn-accept { min-height: 44px; }
 }
 </style>
 </head>
@@ -402,11 +463,12 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
 
 <header class="mock-bar">
   <a class="mock-back" href="2026-10-03-escalas-ferias-mockups.html">← Índice</a>
-  <span class="mock-title">9 · Folha semanal de horas — «Preencher com a escala»</span>
+  <span class="mock-title">9 · Folha semanal de horas — pré-preenchida pela escala</span>
   <div class="mock-tabs" role="tablist" aria-label="Variantes">
-    <button type="button" role="tab" id="tab-a" data-variant="a" aria-controls="panel-a" aria-selected="false">A · Aplicar logo</button>
-    <button type="button" role="tab" id="tab-b" data-variant="b" aria-controls="panel-b" aria-selected="false">B · Pré-visualizar e escolher</button>
-    <button type="button" role="tab" id="tab-c" data-variant="c" aria-controls="panel-c" aria-selected="false">C · Texto fantasma</button>
+    <button type="button" role="tab" id="tab-a" data-variant="a" aria-controls="panel-a" aria-selected="false">A · Sugestões aplicadas, marca discreta</button>
+    <button type="button" role="tab" id="tab-b" data-variant="b" aria-controls="panel-b" aria-selected="false">B · Sugestões destacadas até gravar</button>
+    <button type="button" role="tab" id="tab-c" data-variant="c" aria-controls="panel-c" aria-selected="false">C · Texto fantasma até tocar</button>
+    <button type="button" role="tab" id="tab-d" data-variant="d" aria-controls="panel-d" aria-selected="false">D · Próxima do Homebase (novo)</button>
   </div>
   <div class="mock-view" role="group" aria-label="Dispositivos">
     <button type="button" data-view="both" aria-pressed="true">Ambos</button>
@@ -418,34 +480,42 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
 <main class="mock-main">
   <section role="tabpanel" id="panel-a" aria-labelledby="tab-a" data-variant="a" hidden>
     <div class="variant-notes">
-      <p><b>Ideia:</b> um botão «Preencher com a escala» em cada cartão (e um «Preencher todos» na barra da página) aplica logo o plano publicado aos dias vazios já decorridos; as células ficam realçadas «da escala», com «Desfazer».</p>
-      <p><b>Vantagens:</b> 1 clique por funcionário (ou 1 para todos) e nada se grava sem rever e carregar em «Gravar semana».</p>
-      <p><b>Custo:</b> aplica sem mostrar antes o que vai entrar; a revisão depende do realce e do «Desfazer».</p>
-      <p class="note-extra">Hoje = sáb 03/10: o dom 04/10, os dias com registo e a segunda do Rui (sem escala publicada) não se tocam. Totais ilustrativos (meta = carga ÷ dias de horário × dias contados). «Novo» assinala o que não existe hoje.</p>
+      <p><b>Ideia:</b> a folha pré-preenche-se sozinha ao abrir. Os dias passados (até hoje) sem registo vêm com a entrada, a saída ou a ausência da escala publicada, e cada um leva um pequeno selo «da escala». Não há botão para preencher.</p>
+      <p><b>Vantagens:</b> zero cliques e a folha parece a de hoje; basta ver os dias e gravar. Cada dia mostra, no fim, o posto da escala (cor e nome).</p>
+      <p><b>Custo:</b> o selo é discreto: com pressa, um valor sugerido pode passar por registado. Só fica registado ao carregar em «Gravar semana».</p>
+      <p class="note-extra">Hoje = sáb 03/10. Dom 04/10 (futuro) não tem campos, só «previsto»; os dias com registo ficam como estão; a segunda do Rui não tem escala publicada. A Beatriz tem a semana conferida e não recebe sugestões. «← Anterior» abre a semana 39 (conferida, sem sugestões). «Repor sugestões» devolve a escala aos dias ainda não gravados. Totais ilustrativos (meta = carga ÷ dias de horário × dias contados). «Novo» assinala o que não existe hoje.</p>
     </div>
   </section>
   <section role="tabpanel" id="panel-b" aria-labelledby="tab-b" data-variant="b" hidden>
     <div class="variant-notes">
-      <p><b>Ideia:</b> o botão abre, por baixo da linha real, uma linha com o plano dia a dia e uma caixa por dia; só se preenche o que estiver marcado, e os dias que ficam de fora dizem porquê.</p>
-      <p><b>Vantagens:</b> vê-se exatamente o que entra antes de entrar (e o «porquê» de cada célula, no tooltip); controlo dia a dia.</p>
-      <p><b>Custo:</b> 2 cliques no mínimo e o cartão cresce uma linha; a 375 px a pré-visualização rola na horizontal com a tabela.</p>
-      <p class="note-extra">Hoje = sáb 03/10. Totais ilustrativos (meta = carga ÷ dias de horário × dias contados). «Novo» assinala o que não existe hoje.</p>
+      <p><b>Ideia:</b> o mesmo pré-preenchimento automático, mas os dias sugeridos ficam realçados até gravar, e um aviso no topo diz quantos são: «N dias preenchidos a partir da escala — confirme e grave». Ao gravar, o realce e o aviso desaparecem.</p>
+      <p><b>Vantagens:</b> é difícil gravar sem reparar no que veio da escala; o realce sai sozinho se se corrigir o valor.</p>
+      <p><b>Custo:</b> mais ruído visual enquanto há sugestões por confirmar; o aviso soma todos os cartões da página.</p>
+      <p class="note-extra">Hoje = sáb 03/10. Regras de fronteira como na variante A: futuro sem campos, dias com registo intactos, semana conferida sem sugestões, nada grava sem «Gravar semana». «Repor sugestões» devolve o realce e os valores. Totais ilustrativos. «Novo» assinala o que não existe hoje.</p>
     </div>
   </section>
   <section role="tabpanel" id="panel-c" aria-labelledby="tab-c" data-variant="c" hidden>
     <div class="variant-notes">
-      <p><b>Ideia:</b> sem clicar em nada, as células vazias já decorridas mostram o plano em cinzento; «↵ usar» (ou Enter) aceita uma célula e «Usar a escala nos N dias vazios» aceita todas.</p>
-      <p><b>Vantagens:</b> o plano está à vista enquanto se preenche, não há botão a descobrir e dá para aceitar umas células e escrever outras.</p>
-      <p><b>Custo:</b> o cinzento pode confundir-se com um valor já gravado e altera o aspeto dos campos de hora.</p>
-      <p class="note-extra">Hoje = sáb 03/10: o dom 04/10 não tem fantasma. Totais ilustrativos (meta = carga ÷ dias de horário × dias contados). «Novo» assinala o que não existe hoje.</p>
+      <p><b>Ideia:</b> os valores da escala aparecem como texto fantasma (itálico cinzento), sem entrar na folha. Para os aceitar toca-se no «✓ aceitar» do dia, ou carrega-se em Enter ou Tab num dos campos; só então passam a valor. «Gravar» só grava o que foi aceite.</p>
+      <p><b>Vantagens:</b> nada entra sem um gesto, por isso não se grava por descuido; dá para aceitar uns dias e escrever outros.</p>
+      <p><b>Custo:</b> um gesto por dia (há «✓ Aceitar os N dias» no cartão para os aceitar todos de uma vez) e o cinzento pode confundir-se com um campo vazio.</p>
+      <p class="note-extra">Hoje = sáb 03/10. Dom 04/10 (futuro) não tem campos. Os dias não aceites ficam por preencher e contam como «por preencher» nos totais. «Repor sugestões» devolve o fantasma aos dias ainda não gravados. Totais ilustrativos. «Novo» assinala o que não existe hoje.</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-d" aria-labelledby="tab-d" data-variant="d" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> uma linha por dia, à maneira das linhas do Homebase. À esquerda a escala publicada, com o chip «da escala» e o bloco do posto (cor e nome; troca de posto na mesma jornada); à direita o realizado, editável. Os dias passados sem registo vêm com o realizado já preenchido a partir da escala, realçado até gravar.</p>
+      <p><b>Vantagens:</b> compara-se escala e realizado lado a lado, com o posto à vista; é familiar a quem hoje usa o Homebase; a 375 px as linhas empilham em vez de rolar na horizontal.</p>
+      <p><b>Custo:</b> cada pessoa ocupa mais altura do que a grelha de 7 colunas, e a folha muda de aspeto face à actual.</p>
+      <p class="note-extra">Hoje = sáb 03/10 (linha marcada). Dom 04/10 (futuro) mostra só «previsto», sem campos. Dias com registo ficam como estão; semana conferida (Beatriz, ou «← Anterior») sem sugestões; «Repor sugestões» devolve a escala aos dias não gravados. Totais ilustrativos. «Novo» assinala o que não existe hoje.</p>
     </div>
   </section>
 </main>
 
 <!-- Conteúdo de cada variante: clonado por JS para o desktop e para os 375 px. Sem id aqui dentro. -->
-<template data-variant="a" data-active="Horas" data-title="Horas — Semana 40/2026" data-user="Carla Videira">
+<template data-variant="a" data-active="Horas" data-title="Horas — Semana 40/2026" data-user="Joana Valente">
   <main class="wk">
-    <h1 class="wk-title">Horas — Semana 40/2026</h1>
+    <h1 class="wk-title" data-r="h1">Horas — Semana 40/2026</h1>
     <nav class="quicknav" aria-label="Acesso rápido — Horas">
       <a class="btn-row" href="#" aria-current="page" data-route="/horas">Registo semanal</a>
       <a class="btn-row" href="#" data-route="/horas/saldos">Banco de horas</a>
@@ -453,22 +523,22 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
       <a class="btn-row" href="#" data-route="/pagamentos">Pagamentos</a>
     </nav>
     <nav class="weeknav" aria-label="Navegar entre semanas">
-      <a class="btn-row" href="#" data-route="/horas/2026/39">← Anterior</a>
-      <a class="btn-row" href="#" data-route="/horas">Semana atual</a>
-      <a class="btn-row" href="#" data-route="/horas/2026/41">Seguinte →</a>
+      <a class="btn-row" href="#" data-wk="39" title="Semana 39, conferida">← Anterior</a>
+      <a class="btn-row" href="#" data-wk="40" aria-current="page">Semana atual</a>
+      <a class="btn-row" href="#" data-wk="next">Seguinte →</a>
       <a class="btn-row" href="#" data-route="/horas/2026/40?mostrarDesativados=1">Mostrar desativados</a>
       <span class="hidden-count">2 ocultos</span>
     </nav>
-    <p class="range">28/09/2026 – 04/10/2026</p>
+    <p class="range"><span data-r="range">28/09/2026 – 04/10/2026</span> <span class="badge-ok" data-r="wkbadge" hidden>Semana conferida</span></p>
     <div class="plan-bar" data-bar></div>
     <div class="legend" data-legend></div>
     <div data-cards></div>
   </main>
 </template>
 
-<template data-variant="b" data-active="Horas" data-title="Horas — Semana 40/2026" data-user="Carla Videira">
+<template data-variant="b" data-active="Horas" data-title="Horas — Semana 40/2026" data-user="Joana Valente">
   <main class="wk">
-    <h1 class="wk-title">Horas — Semana 40/2026</h1>
+    <h1 class="wk-title" data-r="h1">Horas — Semana 40/2026</h1>
     <nav class="quicknav" aria-label="Acesso rápido — Horas">
       <a class="btn-row" href="#" aria-current="page" data-route="/horas">Registo semanal</a>
       <a class="btn-row" href="#" data-route="/horas/saldos">Banco de horas</a>
@@ -476,22 +546,22 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
       <a class="btn-row" href="#" data-route="/pagamentos">Pagamentos</a>
     </nav>
     <nav class="weeknav" aria-label="Navegar entre semanas">
-      <a class="btn-row" href="#" data-route="/horas/2026/39">← Anterior</a>
-      <a class="btn-row" href="#" data-route="/horas">Semana atual</a>
-      <a class="btn-row" href="#" data-route="/horas/2026/41">Seguinte →</a>
+      <a class="btn-row" href="#" data-wk="39" title="Semana 39, conferida">← Anterior</a>
+      <a class="btn-row" href="#" data-wk="40" aria-current="page">Semana atual</a>
+      <a class="btn-row" href="#" data-wk="next">Seguinte →</a>
       <a class="btn-row" href="#" data-route="/horas/2026/40?mostrarDesativados=1">Mostrar desativados</a>
       <span class="hidden-count">2 ocultos</span>
     </nav>
-    <p class="range">28/09/2026 – 04/10/2026</p>
+    <p class="range"><span data-r="range">28/09/2026 – 04/10/2026</span> <span class="badge-ok" data-r="wkbadge" hidden>Semana conferida</span></p>
     <div class="plan-bar" data-bar></div>
     <div class="legend" data-legend></div>
     <div data-cards></div>
   </main>
 </template>
 
-<template data-variant="c" data-active="Horas" data-title="Horas — Semana 40/2026" data-user="Carla Videira">
+<template data-variant="c" data-active="Horas" data-title="Horas — Semana 40/2026" data-user="Joana Valente">
   <main class="wk">
-    <h1 class="wk-title">Horas — Semana 40/2026</h1>
+    <h1 class="wk-title" data-r="h1">Horas — Semana 40/2026</h1>
     <nav class="quicknav" aria-label="Acesso rápido — Horas">
       <a class="btn-row" href="#" aria-current="page" data-route="/horas">Registo semanal</a>
       <a class="btn-row" href="#" data-route="/horas/saldos">Banco de horas</a>
@@ -499,13 +569,36 @@ body[data-view='phone'] .stage-item--desktop { display: none; }
       <a class="btn-row" href="#" data-route="/pagamentos">Pagamentos</a>
     </nav>
     <nav class="weeknav" aria-label="Navegar entre semanas">
-      <a class="btn-row" href="#" data-route="/horas/2026/39">← Anterior</a>
-      <a class="btn-row" href="#" data-route="/horas">Semana atual</a>
-      <a class="btn-row" href="#" data-route="/horas/2026/41">Seguinte →</a>
+      <a class="btn-row" href="#" data-wk="39" title="Semana 39, conferida">← Anterior</a>
+      <a class="btn-row" href="#" data-wk="40" aria-current="page">Semana atual</a>
+      <a class="btn-row" href="#" data-wk="next">Seguinte →</a>
       <a class="btn-row" href="#" data-route="/horas/2026/40?mostrarDesativados=1">Mostrar desativados</a>
       <span class="hidden-count">2 ocultos</span>
     </nav>
-    <p class="range">28/09/2026 – 04/10/2026</p>
+    <p class="range"><span data-r="range">28/09/2026 – 04/10/2026</span> <span class="badge-ok" data-r="wkbadge" hidden>Semana conferida</span></p>
+    <div class="plan-bar" data-bar></div>
+    <div class="legend" data-legend></div>
+    <div data-cards></div>
+  </main>
+</template>
+
+<template data-variant="d" data-active="Horas" data-title="Horas — Semana 40/2026" data-user="Joana Valente">
+  <main class="wk">
+    <h1 class="wk-title" data-r="h1">Horas — Semana 40/2026</h1>
+    <nav class="quicknav" aria-label="Acesso rápido — Horas">
+      <a class="btn-row" href="#" aria-current="page" data-route="/horas">Registo semanal</a>
+      <a class="btn-row" href="#" data-route="/horas/saldos">Banco de horas</a>
+      <a class="btn-row" href="#" data-route="/horas/folga-subsidio">Folga e subsídio</a>
+      <a class="btn-row" href="#" data-route="/pagamentos">Pagamentos</a>
+    </nav>
+    <nav class="weeknav" aria-label="Navegar entre semanas">
+      <a class="btn-row" href="#" data-wk="39" title="Semana 39, conferida">← Anterior</a>
+      <a class="btn-row" href="#" data-wk="40" aria-current="page">Semana atual</a>
+      <a class="btn-row" href="#" data-wk="next">Seguinte →</a>
+      <a class="btn-row" href="#" data-route="/horas/2026/40?mostrarDesativados=1">Mostrar desativados</a>
+      <span class="hidden-count">2 ocultos</span>
+    </nav>
+    <p class="range"><span data-r="range">28/09/2026 – 04/10/2026</span> <span class="badge-ok" data-r="wkbadge" hidden>Semana conferida</span></p>
     <div class="plan-bar" data-bar></div>
     <div class="legend" data-legend></div>
     <div data-cards></div>
@@ -626,7 +719,7 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
       }).join('');
     }).join('');
     app.innerHTML =
-      '<aside class="app-side" aria-label="Menu principal"><div class="app-logo">GIG</div><nav>' + nav + '</nav>' +
+      '<aside class="app-side" aria-label="Menu principal"><div class="app-logo">GiG</div><nav>' + nav + '</nav>' +
       '<div class="app-user"><span class="app-user__name">' + esc(user) + '</span><button type="button" data-route="/login">Sair</button></div></aside>' +
       '<div class="app-scrim" data-act-scrim></div>' +
       '<div class="app-main"><div class="app-top"><button type="button" class="app-burger" aria-expanded="false" aria-label="Abrir menu">☰</button>' +
@@ -657,13 +750,31 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     panel.dataset.rendered = '1';
   }
 
-  /* separadores A/B/C (hash #a/#b/#c) e alternador de dispositivos */
-  var tabs = $$('.mock-bar [role="tab"]'), panels = $$('[role="tabpanel"]');
+  /* separadores derivados dos <template data-variant> (hash #a, #b, ...) e alternador de dispositivos */
+  var VARIANTS = $$('template[data-variant]').map(function (t) { return t.dataset.variant; }).sort();
+  var tablist = $('.mock-tabs'), mainEl = $('.mock-main'), notice = mk('div', 'variant-missing');
+  notice.hidden = true; notice.setAttribute('role', 'alert'); mainEl.insertBefore(notice, mainEl.firstChild);
+  $$('.mock-bar [role="tab"], [role="tabpanel"][data-variant]').forEach(function (el) { if (VARIANTS.indexOf(el.dataset.variant) < 0) el.remove(); });
+  VARIANTS.forEach(function (v) {
+    if (!$('#tab-' + v)) {
+      var b = mk('button', ''); b.type = 'button'; b.id = 'tab-' + v; b.dataset.variant = v; b.setAttribute('role', 'tab');
+      b.setAttribute('aria-controls', 'panel-' + v); b.setAttribute('aria-selected', 'false'); b.textContent = v.toUpperCase(); tablist.appendChild(b);
+    }
+    if (!$('#panel-' + v)) {
+      var p = mk('section', ''); p.id = 'panel-' + v; p.dataset.variant = v; p.hidden = true; p.setAttribute('role', 'tabpanel'); p.setAttribute('aria-labelledby', 'tab-' + v);
+      mainEl.appendChild(p);
+    }
+  });
+  var tabs = $$('.mock-bar [role="tab"]'), panels = $$('[role="tabpanel"][data-variant]');
   function select(v, focus) {
-    if (!tabs.some(function (t) { return t.dataset.variant === v; })) v = tabs[0].dataset.variant;
-    tabs.forEach(function (t) { var o = t.dataset.variant === v; t.setAttribute('aria-selected', String(o)); t.tabIndex = o ? 0 : -1; if (o && focus) t.focus(); });
-    panels.forEach(function (p) { p.hidden = p.dataset.variant !== v; if (p.dataset.variant === v && !p.dataset.rendered) mount(p); });
-    if (location.hash.slice(1) !== v) { try { history.replaceState(null, '', '#' + v); } catch (e) { /* file:// restrito */ } }
+    var missing = null;
+    if (VARIANTS.indexOf(v) < 0) { if (v) missing = v; v = VARIANTS[0]; }
+    tabs.forEach(function (t) { var o = !missing && t.dataset.variant === v; t.setAttribute('aria-selected', String(o)); t.tabIndex = o || (missing && t.dataset.variant === v) ? 0 : -1; if (o && focus) t.focus(); });
+    panels.forEach(function (p) { p.hidden = !!missing || p.dataset.variant !== v; if (!p.hidden && !p.dataset.rendered) mount(p); });
+    notice.hidden = !missing;
+    if (missing) {
+      notice.innerHTML = '<span>Esta funcionalidade não tem a variante ' + esc(missing.toUpperCase()) + '.</span> <a class="btn-row" href="#' + esc(VARIANTS[0]) + '">Ver a variante ' + esc(VARIANTS[0].toUpperCase()) + '</a>';
+    } else if (location.hash.slice(1) !== v) { try { history.replaceState(null, '', '#' + v); } catch (e) { /* file:// restrito */ } }
   }
   function setView(v) {
     document.body.dataset.view = v;
@@ -713,8 +824,14 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
   var esc = Mock.esc, $ = Mock.$, $$ = Mock.$$;
   var TODAY = '2026-10-03';
   var FT = 'FOLGA_TRABALHADA';
-  var DAYS = [['2026-09-28', 'Seg', '28/09'], ['2026-09-29', 'Ter', '29/09'], ['2026-09-30', 'Qua', '30/09'], ['2026-10-01', 'Qui', '01/10'],
-    ['2026-10-02', 'Sex', '02/10'], ['2026-10-03', 'Sáb', '03/10'], ['2026-10-04', 'Dom', '04/10']];
+  var WEEKS = {
+    '40': { label: 'Semana 40/2026', range: '28/09/2026 – 04/10/2026', conf: false,
+      days: [['2026-09-28', 'Seg', '28/09'], ['2026-09-29', 'Ter', '29/09'], ['2026-09-30', 'Qua', '30/09'], ['2026-10-01', 'Qui', '01/10'],
+        ['2026-10-02', 'Sex', '02/10'], ['2026-10-03', 'Sáb', '03/10'], ['2026-10-04', 'Dom', '04/10']] },
+    '39': { label: 'Semana 39/2026', range: '21/09/2026 – 27/09/2026', conf: true,
+      days: [['2026-09-21', 'Seg', '21/09'], ['2026-09-22', 'Ter', '22/09'], ['2026-09-23', 'Qua', '23/09'], ['2026-09-24', 'Qui', '24/09'],
+        ['2026-09-25', 'Sex', '25/09'], ['2026-09-26', 'Sáb', '26/09'], ['2026-09-27', 'Dom', '27/09']] }
+  };
   /* Rótulos e explicações: src/lib/horas/day-colors.ts (mesma ordem do dropdown) */
   var ABS = [
     ['FOLGA', 'Folga', 'day--folga', 'Dia de descanso. Não conta para a meta nem gera dívida.'],
@@ -734,6 +851,13 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
   var ABSMAP = {};
   ABS.forEach(function (a) { ABSMAP[a[0]] = a; });
   var NO_ABS_HELP = 'Dia trabalhado. As horas contam para a meta da semana.';
+  /* Postos (lista fixa, as mesmas cores em todos os mockups) */
+  var POSTOS = [['Montagem', '#d9a400'], ['Fogão', '#2f6fd6'], ['Sumo', '#a03fb5'], ['Copa', '#e8742a'], ['Copa e Apoio', '#d9534f'],
+    ['Bar', '#2e9e5b'], ['Produção', '#7a5a2e'], ['Sala', '#3aa6b9'], ['Supervisão', '#b0234a'], ['Gerência', '#6b4fd8']];
+  var POSTO_COLOR = {};
+  POSTOS.forEach(function (q) { POSTO_COLOR[q[0]] = q[1]; });
+  var POSTO_NONE = '#66736b';
+  var SCHEDULE_REF = 'semana 40, versão 2, 25/09/2026';
 
   /* ── dados fictícios ── */
   function E() { return { 'in': '', out: '', abs: '', notes: '' }; }
@@ -742,22 +866,50 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
   function work(s, e, turno, why) { return { t: 'w', s: s, e: e, turno: turno, why: why || 'Turno ' + turno }; }
   function ft(s, e, turno, why) { return { t: 'w', ft: true, s: s, e: e, turno: turno, why: why }; }
   function off(k, why) { return { t: 'a', a: k, why: why }; }
-  function makePeople() {
-    return [
-      { id: 'ines', name: 'Inês Calado', contracted: 40, locked: false,
+  var TURNOS = { '08:00-17:30': 'Dia', '08:00-17:00': 'Dia curto', '09:00-15:15': 'Meio-dia' };
+  /* semana conferida: a escala de referência deriva do registo */
+  function planFrom(v) {
+    return v.map(function (x) { return x.abs ? off(x.abs, 'Registo conferido') : work(x['in'], x.out, TURNOS[x['in'] + '-' + x.out] || 'Turno', 'Escala da semana 39'); });
+  }
+  var DEFS = [
+    { id: 'ines', name: 'Inês Calado', pos: 'Copa', contracted: 40 },
+    { id: 'rui', name: 'Rui Pestana', pos: 'Montagem', contracted: 40 },
+    { id: 'beatriz', name: 'Beatriz Moura', pos: 'Sumo', contracted: 40 }
+  ];
+  function data40(id) {
+    var sat;
+    if (id === 'ines') {
+      sat = work('08:00', '17:30', 'Dia', 'Turno Dia · Sumo até às 10:00, depois Copa'); sat.pos = 'Sumo'; sat.swap = { t: '10:00', pos: 'Copa' };
+      return { locked: false,
         v: [W('08:00', '17:30'), W('08:10', '17:30', 'Trânsito'), E(), E(), E(), E(), E()],
         plan: [work('08:00', '17:30', 'Dia'), work('08:00', '17:30', 'Dia'), off('FOLGA', 'Folga fixa (quarta)'), off('FOLGA', 'Rotativa: semana 6, desfasamento 2'),
-          work('08:00', '17:30', 'Dia'), work('08:00', '17:30', 'Dia'), work('08:00', '17:00', 'Dia curto')] },
-      { id: 'rui', name: 'Rui Pestana', contracted: 40, locked: false,
+          work('08:00', '17:30', 'Dia'), sat, work('08:00', '17:00', 'Dia curto')] };
+    }
+    if (id === 'rui') {
+      return { locked: false,
         v: [E(), E(), E(), E(), E(), E(), E()],
         plan: [null, off('FOLGA', 'Rotativa: semana 6, desfasamento 3'), off('FOLGA', 'Folga fixa (quarta)'), work('08:00', '17:00', 'Dia curto'),
-          work('08:00', '17:30', 'Dia'), ft('09:00', '15:15', 'Meio-dia', 'Fixado à mão: folga trabalhada'), work('08:00', '17:30', 'Dia')] },
-      { id: 'beatriz', name: 'Beatriz Moura', contracted: 40, locked: true,
-        v: [W('08:00', '17:30'), W('08:00', '17:00'), A('FOLGA'), W('08:00', '17:30'), A('FOLGA'), W('09:00', '15:15'), E()],
-        plan: [work('08:00', '17:30', 'Dia'), work('08:00', '17:00', 'Dia curto'), off('FOLGA', 'Folga fixa (quarta)'), work('08:00', '17:30', 'Dia'),
-          off('FOLGA', 'Rotativa: semana 6, desfasamento 1'), work('09:00', '15:15', 'Meio-dia'), work('08:00', '17:30', 'Dia')] }
-    ].map(function (p) {
-      p.base = JSON.parse(JSON.stringify(p.v)); p.fp = {}; p.preview = false; p.pv = {};
+          work('08:00', '17:30', 'Dia'), ft('09:00', '15:15', 'Meio-dia', 'Fixado à mão: folga trabalhada'), work('08:00', '17:30', 'Dia')] };
+    }
+    return { locked: true,
+      v: [W('08:00', '17:30'), W('08:00', '17:00'), A('FOLGA'), W('08:00', '17:30'), A('FOLGA'), W('09:00', '15:15'), E()],
+      plan: [work('08:00', '17:30', 'Dia'), work('08:00', '17:00', 'Dia curto'), off('FOLGA', 'Folga fixa (quarta)'), work('08:00', '17:30', 'Dia'),
+        off('FOLGA', 'Rotativa: semana 6, desfasamento 1'), work('09:00', '15:15', 'Meio-dia'), work('08:00', '17:30', 'Dia')] };
+  }
+  function data39(id) {
+    var v = {
+      ines: [W('08:00', '17:30'), W('08:00', '17:30'), A('FOLGA'), W('08:00', '17:30'), W('08:00', '17:30'), W('08:00', '17:00'), A('FOLGA')],
+      rui: [A('FOLGA'), W('08:00', '17:00'), A('FOLGA'), W('08:00', '17:30'), W('08:00', '17:30'), W('09:00', '15:15'), W('08:00', '17:30')],
+      beatriz: [W('08:00', '17:30'), W('08:00', '17:30'), A('FOLGA'), W('08:00', '17:00'), A('FOLGA'), W('09:00', '15:15'), W('08:00', '17:30')]
+    }[id];
+    return { locked: true, v: v, plan: planFrom(v) };
+  }
+  function makePeople(wk) {
+    return DEFS.map(function (d) {
+      var src = wk === '40' ? data40(d.id) : data39(d.id);
+      var p = { id: d.id, name: d.name, pos: d.pos, contracted: d.contracted, days: WEEKS[wk].days, locked: src.locked, v: src.v, plan: src.plan };
+      p.plan.forEach(function (c) { if (c && c.t === 'w' && !c.pos) c.pos = d.pos; });
+      p.base = JSON.parse(JSON.stringify(p.v)); p.sug = {};
       return p;
     });
   }
@@ -767,15 +919,16 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
   function hrs(a, b) { var x = toMin(a), y = toMin(b); if (x === null || y === null) return 0; return y > x ? (y - x) / 60 : 0; }
   function pad(n) { return (n < 10 ? '0' : '') + n; }
   function hhmm(h) { var m = Math.round(h * 60), s = m < 0 ? '-' : ''; m = Math.abs(m); return s + pad(Math.floor(m / 60)) + ':' + pad(m % 60); }
+  function plural(n, s, pl) { return n + ' ' + (n === 1 ? s : pl); }
   function calc(p) {
     var worked = 0, paid = 0, offDays = 0, counted = 0, pending = 0;
-    p.v.forEach(function (x) {
+    p.v.forEach(function (x, i) {
       var h = hrs(x['in'], x.out);
       if (x.abs === 'FOLGA') { offDays++; return; }
-      if (x.abs === FT) { if (h > 0) { worked += h; paid += h; } else pending++; return; }
+      if (x.abs === FT) { if (h > 0) { worked += h; paid += h; } else if (!isFuture(p, i)) pending++; return; }
       if (x.abs) return;
       if (h > 0) { worked += h; counted++; return; }
-      pending++;
+      if (!isFuture(p, i)) pending++;
     });
     var target = (p.contracted / (7 - offDays)) * counted;
     var bal = worked - paid - target;
@@ -797,127 +950,163 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
       (c.pending > 0 ? '<div style="color:var(--mut)" title="O saldo só conta os dias já preenchidos.">⚠ ' + c.pending + ' por preencher</div>' : '');
   }
 
-  /* ── regras de planToWeekValues: até hoje, vazio, com célula publicada ── */
+  /* ── regras da sugestão: dia passado ou de hoje, sem registo gravado, com escala publicada, semana não conferida ── */
   function isEmpty(x) { return !x['in'] && !x.out && !x.abs && !x.notes; }
-  function fillable(p, i) {
-    if (p.locked) return { ok: false, reason: 'conferida' };
-    if (DAYS[i][0] > TODAY) return { ok: false, reason: 'futuro' };
-    if (!isEmpty(p.v[i])) return { ok: false, reason: 'já registado' };
-    if (!p.plan[i]) return { ok: false, reason: 'sem escala publicada' };
-    return { ok: true };
-  }
-  function fillIdx(p) { var r = []; for (var i = 0; i < 7; i++) if (fillable(p, i).ok) r.push(i); return r; }
+  function same(a, b) { return a['in'] === b['in'] && a.out === b.out && a.abs === b.abs && (a.notes || '') === (b.notes || ''); }
+  function isFuture(p, i) { return p.days[i][0] > TODAY; }
+  function hasRecord(p, i) { return !isEmpty(p.base[i]); }
+  function sugCand(p, i) { return !p.locked && !isFuture(p, i) && !hasRecord(p, i) && !!p.plan[i]; }
   function cellToValue(c) {
     if (c.t === 'a') return { 'in': '', out: '', abs: c.a, notes: '' };
     return { 'in': c.s, out: c.e, abs: c.ft ? FT : '', notes: '' };
   }
-  function planText(c) { return c.t === 'a' ? ABSMAP[c.a][1] : (c.ft ? 'F. trab. ' : '') + c.s + '–' + c.e; }
+  function sugValue(p, i) { return cellToValue(p.plan[i]); }
+  /* A, B, D: a sugestão entra como valor; C: fica como texto fantasma até ser aceite */
+  function isGhost(S, p, i) { return S.variant === 'c' && !!p.sug[i] && isEmpty(p.v[i]); }
+  function isMarked(p, i) { return !!p.sug[i] && !isEmpty(p.v[i]) && same(p.v[i], sugValue(p, i)); }
+  function restored(S, p, i) { return !!p.sug[i] && (S.variant === 'c' ? isEmpty(p.v[i]) : same(p.v[i], sugValue(p, i))); }
+  function candIdx(p) { var r = []; for (var i = 0; i < 7; i++) if (sugCand(p, i)) r.push(i); return r; }
+  function ghostIdx(S, p) { return candIdx(p).filter(function (i) { return isGhost(S, p, i); }); }
+  function resetIdx(S, p) { return candIdx(p).filter(function (i) { return !restored(S, p, i); }); }
+  function applySug(S, p, idx) {
+    idx.forEach(function (i) { p.sug[i] = true; p.v[i] = S.variant === 'c' ? E() : sugValue(p, i); });
+  }
   function isDirty(p) { return JSON.stringify(p.v) !== JSON.stringify(p.base); }
-  function plural(n, s, pl) { return n + ' ' + (n === 1 ? s : pl); }
+  function planText(c) { return c.t === 'a' ? ABSMAP[c.a][1] : (c.ft ? 'F. trab. ' : '') + c.s + '–' + c.e; }
+  function futureText(c) {
+    if (!c) return 'sem escala publicada';
+    return c.t === 'a' ? 'previsto: ' + ABSMAP[c.a][1].toLowerCase() : 'previsto ' + (c.ft ? 'F. trab. ' : '') + c.s + '–' + c.e;
+  }
 
-  /* ── células ── */
+  /* ── posto da escala ── */
+  function col(n) { return POSTO_COLOR[n] || POSTO_NONE; }
+  function posChips(c) {
+    if (!c || c.t !== 'w') return '';
+    var one = function (n, t) { return '<span class="pos-chip" style="--pos-color:' + col(n) + '" title="Posto da escala">' + esc(n) + (t ? ' ' + t : '') + '</span>'; };
+    return one(c.pos) + (c.swap ? one(c.swap.pos, c.swap.t) : '');
+  }
+  function blockHtml(c) {
+    var segs = c.swap ? [{ pos: c.pos, from: c.s, to: c.swap.t }, { pos: c.swap.pos, from: c.swap.t, to: c.e }] : [{ pos: c.pos, from: c.s, to: c.e }];
+    var bars = segs.map(function (g) { return '<i class="shift-seg" style="--pos-color:' + col(g.pos) + ';flex:' + (toMin(g.to) - toMin(g.from)) + '"></i>'; }).join('');
+    var bands = segs.map(function (g, i) { return '<span class="shift-band" style="--pos-color:' + col(g.pos) + '">' + esc(g.pos) + (i ? ' ' + g.from : '') + '</span>'; }).join('');
+    return '<span class="shift-block' + (c.swap ? ' has-swap' : '') + '" style="--pos-color:' + col(c.pos) + '" title="' + esc(c.why || '') + '"><span class="shift-bars" aria-hidden="true">' + bars + '</span>' +
+      '<span class="shift-time">' + (c.ft ? '<span class="shift-tag">F. trab.</span>' : '') + c.s + '–' + c.e + '</span><span class="shift-pos">' + bands + '</span></span>';
+  }
+
+  /* ── campos (partilhados por A, B, C e D) ── */
   function labelText(x) {
     var h = hrs(x['in'], x.out);
     if (x.abs) return ABSMAP[x.abs][1] + (x.abs === FT && h > 0 ? ' · ' + hhmm(h) : '');
     return hhmm(h) + 'h';
   }
-  function showSkip(S, p, i) {
-    if (p.locked || DAYS[i][0] <= TODAY || !p.plan[i] || !isEmpty(p.v[i])) return false;
-    return S.variant === 'c' || (S.variant === 'a' && Object.keys(p.fp).length > 0);
+  function lblHTML(S, p, i) {
+    if (isGhost(S, p, i)) { var c = p.plan[i]; return '<em class="gl">sugestão ' + esc(c.t === 'a' ? ABSMAP[c.a][1] : hhmm(hrs(c.s, c.e)) + 'h') + '</em>'; }
+    return esc(labelText(p.v[i]));
   }
-  function isGhost(S, p, i) { return S.variant === 'c' && !!p.plan[i] && fillable(p, i).ok; }
-  function extraHTML(S, p, i, ghost) {
-    if (ghost) return '<button type="button" class="btn-row btn-row-quiet" data-act="use-day" data-i="' + i + '" title="Usar a escala neste dia (Enter)" aria-label="Usar a escala em ' + DAYS[i][1] + ' ' + DAYS[i][2] + ': ' + esc(planText(p.plan[i])) + '">↵ usar</button>';
-    if (showSkip(S, p, i)) return '<span class="badge-mut">futuro</span>';
-    return '';
-  }
-  function lblHTML(S, p, i, ghost) {
-    return ghost ? '<em class="gl">plano ' + esc(p.plan[i].t === 'a' ? ABSMAP[p.plan[i].a][1] : hhmm(hrs(p.plan[i].s, p.plan[i].e)) + 'h') + '</em>' : esc(labelText(p.v[i]));
+  function extraHTML(S, p, i) {
+    if (!isGhost(S, p, i)) return '';
+    return '<button type="button" class="btn-row btn-accept" data-act="accept-day" data-i="' + i + '" title="Aceitar a escala neste dia (Tab ou Enter num campo)" aria-label="Aceitar a escala em ' +
+      p.days[i][1] + ' ' + p.days[i][2] + ': ' + esc(planText(p.plan[i])) + '">✓ aceitar</button>';
   }
   function gw(inner, g) { return '<span class="gw' + (g ? ' has-gv' : '') + '">' + inner + (g ? '<span class="gv" aria-hidden="true">' + esc(g) + '</span>' : '') + '</span>'; }
-  function cellHTML(S, p, i) {
+  function fieldsHTML(S, p, i) {
     var x = p.v[i], c = p.plan[i], sched = !!x.abs && x.abs !== FT;
-    var hasG = S.variant === 'c' && !p.locked && !!c && DAYS[i][0] <= TODAY;
-    var ghost = isGhost(S, p, i);
+    var hasG = S.variant === 'c' && sugCand(p, i);
     var gIn = hasG && c.t === 'w' ? c.s : '', gOut = hasG && c.t === 'w' ? c.e : '';
     var gAbs = hasG ? (c.t === 'a' ? ABSMAP[c.a][1] : (c.ft ? ABSMAP[FT][1] : '')) : '';
     var dis = p.locked || sched ? ' disabled' : '', dis2 = p.locked ? ' disabled' : '';
     var opts = '<option value="" title="' + esc(NO_ABS_HELP) + '">—</option>' + ABS.map(function (a) {
       return '<option value="' + a[0] + '" title="' + esc(a[3]) + '"' + (x.abs === a[0] ? ' selected' : '') + '>' + esc(a[1]) + '</option>';
     }).join('');
-    var fp = !!p.fp[i];
-    return '<td class="' + (x.abs ? ABSMAP[x.abs][2] : '') + '" data-i="' + i + '"><div class="cell' + (fp ? ' from-plan' : '') + (ghost ? ' is-ghost' : '') + '">' +
-      (fp ? '<span class="fp-tag badge-info">da escala</span>' : '') +
-      '<label>Entrada' + gw('<input type="time" data-f="in" value="' + x['in'] + '"' + dis + '>', gIn) + '</label>' +
-      '<label>Saída' + gw('<input type="time" data-f="out" value="' + x.out + '"' + dis + '>', gOut) + '</label>' +
-      '<label>Ausência' + gw('<select data-f="abs"' + dis2 + '>' + opts + '</select>', gAbs) + '</label>' +
-      '<label>Observação' + gw('<input type="text" data-f="notes" value="' + esc(x.notes) + '"' + dis2 + '>', '') + '</label>' +
-      '<div class="cell-foot"><span class="cell-extra" data-r="extra">' + extraHTML(S, p, i, ghost) + '</span><span class="cell-lbl" data-r="lbl">' + lblHTML(S, p, i, ghost) + '</span></div>' +
+    return '<label class="f-time">Entrada' + gw('<input type="time" data-f="in" value="' + x['in'] + '"' + dis + '>', gIn) + '</label>' +
+      '<label class="f-time">Saída' + gw('<input type="time" data-f="out" value="' + x.out + '"' + dis + '>', gOut) + '</label>' +
+      '<label class="f-abs">Ausência' + gw('<select data-f="abs"' + dis2 + '>' + opts + '</select>', gAbs) + '</label>' +
+      '<label class="f-note">Observação' + gw('<input type="text" data-f="notes" value="' + esc(x.notes) + '"' + dis2 + '>', '') + '</label>';
+  }
+  function dayClass(x) { return x.abs ? ABSMAP[x.abs][2] : ''; }
+
+  /* A, B, C: uma célula por dia */
+  function cellHTML(S, p, i) {
+    var x = p.v[i], c = p.plan[i];
+    if (isFuture(p, i)) {
+      return '<td class="td-future" data-i="' + i + '"><div class="cell cell--future"><div class="cell-top"></div><div class="future-line">' + esc(futureText(c)) + '</div>' +
+        '<div class="cell-pos">' + posChips(c) + '</div><div class="cell-foot"><span class="badge-mut">ainda não decorrido</span></div></div></td>';
+    }
+    var ghost = isGhost(S, p, i), marked = isMarked(p, i);
+    return '<td class="' + dayClass(x) + '" data-i="' + i + '"><div class="cell' + (marked ? ' is-sug' : '') + (ghost ? ' is-ghost' : '') + '" data-r="box"' + (c ? ' title="' + esc(c.why) + '"' : '') + '>' +
+      '<div class="cell-top"><span class="fp-tag" data-r="mark"' + (marked ? '' : ' hidden') + '>da escala</span></div>' + fieldsHTML(S, p, i) +
+      '<div class="cell-pos">' + (c ? posChips(c) : '<span class="badge-mut">sem escala publicada</span>') + '</div>' +
+      '<div class="cell-foot"><span class="cell-extra" data-r="extra">' + extraHTML(S, p, i) + '</span><span class="cell-lbl" data-r="lbl">' + lblHTML(S, p, i) + '</span></div>' +
       '</div></td>';
   }
-  function syncCell(S, p, i, td) {
-    var x = p.v[i], cell = $('.cell', td);
-    td.className = x.abs ? ABSMAP[x.abs][2] : '';
-    var sched = !!x.abs && x.abs !== FT;
-    [['in', x['in']], ['out', x.out]].forEach(function (f) {
-      var inp = $('input[data-f="' + f[0] + '"]', td);
-      inp.disabled = p.locked || sched;
-      if (inp.value !== f[1]) inp.value = f[1];
-    });
-    var ghost = isGhost(S, p, i);
-    cell.classList.toggle('is-ghost', ghost);
-    $('[data-r="extra"]', td).innerHTML = extraHTML(S, p, i, ghost);
-    $('[data-r="lbl"]', td).innerHTML = lblHTML(S, p, i, ghost);
+  function tableHTML(S, p) {
+    return '<table class="table--scroll"><thead><tr>' + p.days.map(function (d) {
+      return '<th>' + d[1] + ' ' + d[2] + (d[0] === TODAY ? ' <span class="badge-info">hoje</span>' : '') + '</th>';
+    }).join('') + '<th>Total</th></tr></thead><tbody>' +
+      '<tr>' + p.days.map(function (d, i) { return cellHTML(S, p, i); }).join('') + '<td class="total-cell" data-r="total">' + totalHTML(p) + '</td></tr></tbody></table>';
   }
 
-  /* ── pré-visualização (B) ── */
-  function pvCount(p) { return fillIdx(p).filter(function (i) { return p.pv[i]; }).length; }
-  function planChip(c) {
-    if (!c) return '';
-    if (c.t === 'a') return '<span class="pv-chip ' + ABSMAP[c.a][2] + '">' + esc(ABSMAP[c.a][1]) + '</span>';
-    var h = hhmm(hrs(c.s, c.e));
-    return (c.ft ? '<span class="pv-chip day--folga-trabalhada">Folga trabalhada</span>' : '') + '<span class="pv-time">' + c.s + '–' + c.e + '</span><span class="pv-sub">' + esc(c.turno) + ' · ' + h + (c.ft ? ' · 📌' : '') + '</span>';
+  /* D: uma linha por dia (escala | realizado) */
+  function rowHTML(S, p, i) {
+    var d = p.days[i], x = p.v[i], c = p.plan[i], fut = isFuture(p, i), marked = isMarked(p, i);
+    var plan;
+    if (!c) plan = '<span class="drow__cap">Escala</span><span class="muted small">Sem escala publicada</span>';
+    else plan = '<span class="drow__cap">Escala</span><span class="src-tag" title="Escala publicada: ' + SCHEDULE_REF + '">da escala</span>' +
+      (c.t === 'a' ? '<span class="plan-off ' + ABSMAP[c.a][2] + '" title="' + esc(c.why) + '">' + esc(ABSMAP[c.a][1]) + '</span>' : blockHtml(c));
+    var real;
+    if (fut) real = '<span class="drow__cap">Realizado</span><span class="real-future">' + (c ? '<b>' + esc(futureText(c)) + '</b> · só leitura' : 'sem escala publicada · só leitura') + '</span>';
+    else real = '<span class="drow__cap">Realizado</span>' + fieldsHTML(S, p, i);
+    return '<div class="drow' + (d[0] === TODAY ? ' is-today' : '') + '" role="listitem" data-i="' + i + '">' +
+      '<div class="drow__day"><strong>' + d[1] + ' ' + d[2] + '</strong>' + (d[0] === TODAY ? '<span class="badge-info">hoje</span>' : '') + '</div>' +
+      '<div class="drow__plan">' + plan + '</div>' +
+      '<div class="drow__real ' + dayClass(x) + (marked ? ' is-sug' : '') + '" data-r="box real">' + real + '</div>' +
+      '<div class="drow__tot"><span class="fp-tag" data-r="mark"' + (marked ? '' : ' hidden') + '>da escala</span>' + (fut ? '' : '<span data-r="lbl">' + lblHTML(S, p, i) + '</span>') + '</div></div>';
   }
-  function pvApplyLabel(n) { return n ? 'Preencher ' + plural(n, 'dia', 'dias') : 'Nenhum dia marcado'; }
-  function previewRows(p) {
-    var n = pvCount(p);
-    var head = '<tr class="pv-head"><td colspan="8"><div class="pv-bar"><div class="pv-title"><b>Escala publicada</b> · versão 2, 25/09/2026 — marque os dias a preencher</div>' +
-      '<div class="pv-actions"><button type="button" class="primary" data-act="pv-apply"' + (n ? '' : ' disabled') + '>' + pvApplyLabel(n) + '</button><button type="button" class="secondary" data-act="pv-cancel">Cancelar</button></div></div></td></tr>';
-    var cells = DAYS.map(function (d, i) {
-      var f = fillable(p, i), c = p.plan[i];
-      return '<td class="pv-cell"><div class="pv-in' + (f.ok ? '' : ' is-skip') + '" title="' + esc(c ? c.why : 'Sem célula publicada') + '">' + planChip(c) +
-        (f.ok ? '<label class="pv-check"><input type="checkbox" data-pv="' + i + '"' + (p.pv[i] ? ' checked' : '') + '> Preencher</label>' : '<span class="badge-mut">' + f.reason + '</span>') + '</div></td>';
-    }).join('');
-    return head + '<tr class="pv-row">' + cells + '<td class="pv-cell"></td></tr>';
+  function gridHTML(S, p) {
+    return '<div class="dgrid" role="list" aria-label="Dias da semana: escala e realizado"><div class="dhead" aria-hidden="true"><span>Dia</span><span>Escala publicada</span><span>Realizado</span><span></span></div>' +
+      p.days.map(function (d, i) { return rowHTML(S, p, i); }).join('') + '<div class="dsum" data-r="total"></div></div>';
+  }
+
+  /* sincroniza uma célula/linha sem a recriar (mantém o foco enquanto se escreve) */
+  function syncUnit(S, p, i, unit) {
+    var x = p.v[i], sched = !!x.abs && x.abs !== FT;
+    var tgt = unit.tagName === 'TD' ? unit : $('[data-r~="real"]', unit);
+    var keep = tgt.className.split(/\s+/).filter(function (k) { return k && k.indexOf('day--') !== 0; });
+    tgt.className = keep.concat(dayClass(x) ? [dayClass(x)] : []).join(' ');
+    [['in', x['in']], ['out', x.out], ['notes', x.notes]].forEach(function (f) {
+      var inp = $('[data-f="' + f[0] + '"]', unit); if (!inp) return;
+      inp.disabled = p.locked || (f[0] !== 'notes' && sched);
+      if (inp.value !== f[1]) inp.value = f[1];
+    });
+    var sel = $('[data-f="abs"]', unit);
+    if (sel.value !== x.abs) sel.value = x.abs;
+    var box = $('[data-r~="box"]', unit), ghost = isGhost(S, p, i), marked = isMarked(p, i);
+    if (box) { box.classList.toggle('is-ghost', ghost); box.classList.toggle('is-sug', marked); }
+    var mk = $('[data-r="mark"]', unit); if (mk) mk.hidden = !marked;
+    var ex = $('[data-r="extra"]', unit); if (ex) ex.innerHTML = extraHTML(S, p, i);
+    var lb = $('[data-r="lbl"]', unit); if (lb) lb.innerHTML = lblHTML(S, p, i);
   }
 
   /* ── cartão ── */
-  function shell(p) {
+  function shell(S, p) {
     var card = document.createElement('div');
-    card.className = 'card wk-card'; card.dataset.emp = p.id;
-    card.innerHTML = '<div class="wk-head" data-r="head"></div><div class="tscroll" data-r="table"></div>' +
-      '<p role="status" class="alert-info fill-status" data-r="status" hidden><span data-r="stext"></span><button type="button" class="btn-row" data-act="undo">Desfazer</button></p>' +
-      '<div class="wk-actions" data-r="actions"></div>';
+    card.className = 'card wk-card'; card.dataset.emp = p.id; card.dataset.v = S.variant;
+    card.innerHTML = '<div class="wk-head" data-r="head"></div><div class="tscroll table--scroll" data-r="table"></div><div class="wk-actions" data-r="actions"></div>';
     return card;
   }
   function headHTML(S, p) {
-    var btn = '';
+    var btns = '';
     if (!p.locked) {
-      if (S.variant === 'a') btn = '<button type="button" class="btn-row btn-row-strong" data-act="fill" data-r="headbtn">Preencher com a escala</button>';
-      if (S.variant === 'b') btn = '<button type="button" class="btn-row btn-row-strong" data-act="pv-open" data-r="headbtn" aria-expanded="' + p.preview + '">Preencher com a escala</button>';
-      if (S.variant === 'c') btn = '<button type="button" class="btn-row btn-row-strong" data-act="use-all-card" data-r="headbtn"></button>';
+      btns += '<button type="button" class="btn-row btn-row-quiet" data-act="reset-sug" data-r="resetbtn" title="Devolve a sugestão da escala aos dias passados sem registo gravado (descarta o que escreveu nesses dias)">Repor sugestões</button>';
+      if (S.variant === 'c') btns += '<button type="button" class="btn-row btn-row-strong" data-act="accept-all" data-r="acceptall" hidden></button>';
     }
-    return '<div class="wk-head__l"><strong><a class="entity" href="#" data-route="/cadastros/funcionarios/' + p.id + '">' + esc(p.name) + '</a></strong>' + btn + '</div>' +
+    return '<div class="wk-head__l"><strong><a class="entity" href="#" data-route="/cadastros/funcionarios/' + p.id + '">' + esc(p.name) + '</a></strong>' +
+      '<span class="pos-chip" style="--pos-color:' + col(p.pos) + '" title="Posto habitual">' + esc(p.pos) + '</span>' + btns + '</div>' +
       '<span class="wk-stats" data-r="stats">' + statsHTML(p) + '</span>';
-  }
-  function tableHTML(S, p) {
-    return '<table class="table--scroll"><thead><tr>' + DAYS.map(function (d) { return '<th>' + d[1] + ' ' + d[2] + '</th>'; }).join('') + '<th>Total</th></tr></thead><tbody>' +
-      '<tr>' + DAYS.map(function (d, i) { return cellHTML(S, p, i); }).join('') + '<td class="total-cell" data-r="total">' + totalHTML(p) + '</td></tr>' +
-      (S.variant === 'b' && p.preview && !p.locked ? previewRows(p) : '') + '</tbody></table>';
   }
   function actionsHTML(p) {
     if (p.locked) {
-      return '<div class="wk-actions__row"><span class="sel-conf">Semana conferida</span><div class="unlock"><label><span>Motivo de desbloqueio (obrigatório)</span>' +
+      return '<div class="wk-actions__row"><span class="sel-conf">Semana conferida</span><span class="muted small">Sem sugestões da escala: a semana está bloqueada.</span><div class="unlock"><label><span>Motivo de desbloqueio (obrigatório)</span>' +
         '<input type="text" data-r="motivo" placeholder="Descreva o motivo…"></label><button type="button" data-act="unlock">Desbloquear</button></div></div>';
     }
     return '<div class="wk-actions__row"><button type="button" class="secondary" data-act="save" data-r="save">Gravar semana</button>' +
@@ -926,8 +1115,9 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
   function cardEl(dev, p) { return $('.wk-card[data-emp="' + p.id + '"]', dev); }
   function renderCard(S, dev, p) {
     var card = cardEl(dev, p), tw = $('[data-r="table"]', card), left = tw.scrollLeft;
+    tw.className = S.variant === 'd' ? '' : 'tscroll table--scroll';
     $('[data-r="head"]', card).innerHTML = headHTML(S, p);
-    tw.innerHTML = tableHTML(S, p);
+    tw.innerHTML = S.variant === 'd' ? gridHTML(S, p) : tableHTML(S, p);
     tw.scrollLeft = left;
     $('[data-r="actions"]', card).innerHTML = actionsHTML(p);
     refresh(S, dev, p);
@@ -935,65 +1125,84 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
   function refresh(S, dev, p) {
     var card = cardEl(dev, p);
     $('[data-r="stats"]', card).innerHTML = statsHTML(p);
-    $('[data-r="total"]', card).innerHTML = totalHTML(p);
-    var hb = $('[data-r="headbtn"]', card), n = fillIdx(p).length;
-    if (hb && S.variant === 'a') { hb.disabled = !n; hb.title = n ? 'Preencher ' + plural(n, 'dia', 'dias') + ' vazios já decorridos com a escala publicada' : 'Nada por preencher: os dias decorridos já têm registo ou não têm escala'; }
-    if (hb && S.variant === 'b') { hb.disabled = !n && !p.preview; hb.title = n ? '' : 'Nada por preencher'; }
-    if (hb && S.variant === 'c') { hb.hidden = !n; hb.textContent = 'Usar a escala ' + (n === 1 ? 'no 1 dia vazio' : 'nos ' + n + ' dias vazios'); }
+    var tot = $('[data-r="total"]', card);
+    if (tot) tot.innerHTML = S.variant === 'd' ? 'Total da semana: ' + hhmm(calc(p).worked) + 'h' : totalHTML(p);
+    var rb = $('[data-r="resetbtn"]', card), nr = rb ? resetIdx(S, p).length : 0;
+    if (rb) { rb.disabled = !nr; rb.title = nr ? 'Devolve a sugestão da escala a ' + plural(nr, 'dia', 'dias') + ' (descarta o que escreveu nesses dias)' : 'Nada a repor: os dias passados sem registo já têm a sugestão da escala'; }
+    var ac = $('[data-r="acceptall"]', card);
+    if (ac) { var g = ghostIdx(S, p).length; ac.hidden = !g; ac.textContent = '✓ Aceitar ' + (g === 1 ? 'o dia' : 'os ' + g + ' dias') + ' da escala'; }
     var sv = $('[data-r="save"]', card); if (sv) sv.disabled = !isDirty(p);
-    var k = Object.keys(p.fp).length, st = $('[data-r="status"]', card);
-    st.hidden = !k;
-    if (k) $('[data-r="stext"]', st).textContent = plural(k, 'dia preenchido', 'dias preenchidos') + ' a partir da escala — reveja e grave';
-    updateBar(S, dev);
+    renderBar(S, dev);
   }
-  function updateBar(S, dev) {
-    var bar = $('[data-bar]', dev), btn = $('[data-act="fill-all"]', bar), info = $('[data-r="barinfo"]', bar);
-    if (!btn) return;
-    var n = 0, m = 0;
-    S.people.forEach(function (p) { var k = fillIdx(p).length; n += k; if (k) m++; });
-    btn.disabled = !n;
-    info.textContent = n ? plural(n, 'dia', 'dias') + ' por preencher em ' + plural(m, 'funcionário', 'funcionários') + ' · escala da semana 40, versão 2' : 'Nada por preencher com a escala';
+  function renderBar(S, dev) {
+    var bar = $('[data-bar]', dev), wk = WEEKS[S.wk], m = 0, g = 0;
+    var newTag = '<span class="new-tag" title="Elemento novo (marca do mockup)">Novo</span>';
+    S.people.forEach(function (p) { for (var i = 0; i < 7; i++) if (isMarked(p, i)) m++; g += ghostIdx(S, p).length; });
+    var html;
+    if (wk.conf) html = '<span class="muted small">Semana conferida: o GiG não sugere valores da escala em semanas conferidas. Para corrigir, desbloqueie o cartão com motivo.</span>';
+    else if (S.variant === 'a') html = '<span class="muted small">Os dias passados sem registo vêm preenchidos pela escala publicada (' + SCHEDULE_REF + '), cada um com o selo «da escala». Nada se grava até carregar em «Gravar semana».</span>' + newTag;
+    else if (S.variant === 'b') html = m ? '<div class="alert-info" role="status"><b>' + plural(m, 'dia preenchido', 'dias preenchidos') + ' a partir da escala — confirme e grave</b></div>' : '<span class="muted small">Sem dias por confirmar. Escala publicada: ' + SCHEDULE_REF + '.</span>' + newTag;
+    else if (S.variant === 'c') html = '<span class="muted small">O texto cinzento em itálico é a sugestão da escala (' + SCHEDULE_REF + '): ' + (g ? plural(g, 'dia por aceitar', 'dias por aceitar') : 'nenhum dia por aceitar') + '. Aceite com ✓, Enter ou Tab; só se grava o que aceitar.</span>' + newTag;
+    else html = m ? '<div class="alert-info" role="status"><b>' + plural(m, 'dia preenchido', 'dias preenchidos') + ' a partir da escala — confirme e grave</b></div>' : '<span class="muted small">À esquerda a escala publicada (' + SCHEDULE_REF + '), à direita o realizado. Sem dias por confirmar.</span>' + newTag;
+    bar.innerHTML = html;
+  }
+  function renderAll(dev) {
+    var S = Mock.state(dev), wk = WEEKS[S.wk], host = $('[data-cards]', dev);
+    S.people = weekPeople(S, S.wk); S.byId = {};
+    S.people.forEach(function (p) { S.byId[p.id] = p; });
+    $('[data-r="h1"]', dev).textContent = 'Horas — ' + wk.label;
+    $('[data-r="range"]', dev).textContent = wk.range;
+    $('[data-r="wkbadge"]', dev).hidden = !wk.conf;
+    var top = $('.app-top__title', dev); if (top) top.textContent = 'Horas — ' + wk.label;
+    $$('[data-wk]', dev).forEach(function (a) {
+      var on = a.dataset.wk === S.wk || (a.dataset.wk === '39' && S.wk === '39');
+      if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    });
+    host.replaceChildren();
+    S.people.forEach(function (p) { host.appendChild(shell(S, p)); });
+    S.people.forEach(function (p) { renderCard(S, dev, p); });
+  }
+  function weekPeople(S, wk) {
+    if (!S.weeks[wk]) {
+      S.weeks[wk] = makePeople(wk);
+      S.weeks[wk].forEach(function (p) { applySug(S, p, candIdx(p)); });
+    }
+    return S.weeks[wk];
   }
 
   /* ── ações ── */
-  function applyFill(p, idx) {
-    idx.forEach(function (i) { p.v[i] = cellToValue(p.plan[i]); p.fp[i] = true; });
-  }
   function find(S, t) { return S.byId[t.closest('.wk-card').dataset.emp]; }
   function focusIn(card, sel) { var el = $(sel, card); if (el) el.focus(); }
-
+  function unitOf(t) { return t.closest('td[data-i], .drow[data-i]'); }
+  function acceptDay(S, dev, p, i) {
+    p.v[i] = sugValue(p, i);
+    syncUnit(S, p, i, $('[data-i="' + i + '"]', cardEl(dev, p)));
+    refresh(S, dev, p);
+  }
+  Mock.on('click', '[data-wk]', function (e, t, dev) {
+    var S = Mock.state(dev), to = t.dataset.wk;
+    if (to === 'next') { if (S.wk === '39') to = '40'; else { Mock.toast(dev, 'Abre /horas/2026/41'); return; } }
+    if (to === S.wk) return;
+    S.wk = to; renderAll(dev);
+    Mock.toast(dev, to === '39' ? 'Semana 39: conferida, sem sugestões da escala' : 'Semana 40: sugestões da escala nos dias passados sem registo');
+  });
   Mock.on('click', '[data-act]', function (e, t, dev) {
     var S = Mock.state(dev), act = t.dataset.act;
-    if (!S.byId) return;
-    if (act === 'fill-all') {
-      var nd = 0, nc = 0;
-      S.people.forEach(function (p) { var idx = fillIdx(p); if (!idx.length) return; applyFill(p, idx); nd += idx.length; nc++; renderCard(S, dev, p); });
-      Mock.toast(dev, nd ? plural(nd, 'dia preenchido', 'dias preenchidos') + ' em ' + plural(nc, 'cartão', 'cartões') + ' — reveja e grave' : 'Nada por preencher');
-      return;
-    }
-    if (!t.closest('.wk-card')) return;
+    if (!S.byId || !t.closest('.wk-card')) return;
     var p = find(S, t), card = cardEl(dev, p), i = +t.dataset.i;
-    if (act === 'fill' || act === 'use-all-card') {
-      applyFill(p, fillIdx(p)); renderCard(S, dev, p);
-    } else if (act === 'use-day') {
-      applyFill(p, [i]); renderCard(S, dev, p);
-      if ($('[data-act="use-day"]', card)) focusIn(card, '[data-act="use-day"]'); else focusIn(card, '[data-r="save"]');
-    } else if (act === 'undo') {
-      Object.keys(p.fp).forEach(function (k) { p.v[k] = E(); }); p.fp = {}; renderCard(S, dev, p);
-      Mock.toast(dev, 'Preenchimento desfeito');
-    } else if (act === 'pv-open') {
-      p.preview = !p.preview; p.pv = {};
-      if (p.preview) fillIdx(p).forEach(function (k) { p.pv[k] = true; });
-      renderCard(S, dev, p);
-      focusIn(card, p.preview ? '[data-pv]' : '[data-act="pv-open"]');
-    } else if (act === 'pv-cancel') {
-      p.preview = false; renderCard(S, dev, p); focusIn(card, '[data-act="pv-open"]');
-    } else if (act === 'pv-apply') {
-      var idx = fillIdx(p).filter(function (k) { return p.pv[k]; });
-      if (!idx.length) return;
-      applyFill(p, idx); p.preview = false; renderCard(S, dev, p); focusIn(card, '[data-r="save"]');
+    if (act === 'reset-sug') {
+      var idx = resetIdx(S, p); applySug(S, p, idx); renderCard(S, dev, p); focusIn(card, '[data-act="reset-sug"]');
+      Mock.toast(dev, idx.length ? 'Sugestões da escala repostas em ' + plural(idx.length, 'dia', 'dias') + ' — ' + p.name : 'Nada a repor');
+    } else if (act === 'accept-day') {
+      acceptDay(S, dev, p, i);
+      if ($('[data-act="accept-day"]', card)) focusIn(card, '[data-act="accept-day"]'); else focusIn(card, '[data-r="save"]');
+    } else if (act === 'accept-all') {
+      ghostIdx(S, p).forEach(function (k) { p.v[k] = sugValue(p, k); });
+      renderCard(S, dev, p); focusIn(card, '[data-r="save"]');
     } else if (act === 'save' || act === 'confer') {
-      p.base = JSON.parse(JSON.stringify(p.v)); p.fp = {}; p.preview = false;
+      p.base = JSON.parse(JSON.stringify(p.v));
+      /* C: o que não foi aceite continua a ser só sugestão; nas outras variantes a marca cai ao gravar */
+      Object.keys(p.sug).forEach(function (k) { if (act === 'confer' || S.variant !== 'c' || !isEmpty(p.v[k])) delete p.sug[k]; });
       if (act === 'confer') p.locked = true;
       renderCard(S, dev, p);
       Mock.toast(dev, act === 'confer' ? 'Semana conferida — ' + p.name : 'Semana gravada — ' + p.name);
@@ -1004,30 +1213,19 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
     }
   });
 
-  Mock.on('change', '[data-pv]', function (e, t, dev) {
-    var S = Mock.state(dev), p = find(S, t);
-    p.pv[t.dataset.pv] = t.checked;
-    var n = pvCount(p), b = $('[data-act="pv-apply"]', cardEl(dev, p));
-    b.disabled = !n; b.textContent = pvApplyLabel(n);
-  });
   function onField(e, t, dev) {
-    var S = Mock.state(dev), p = find(S, t), td = t.closest('td'), i = +td.dataset.i, f = t.dataset.f, x = p.v[i];
+    var S = Mock.state(dev), p = find(S, t), unit = unitOf(t), i = +unit.dataset.i, f = t.dataset.f, x = p.v[i];
     if (f === 'abs') { x.abs = t.value; if (t.value && t.value !== FT) { x['in'] = ''; x.out = ''; } } else x[f] = t.value;
-    syncCell(S, p, i, td); refresh(S, dev, p);
+    syncUnit(S, p, i, unit); refresh(S, dev, p);
   }
   Mock.on('input', 'input[data-f]', onField);
   Mock.on('change', 'select[data-f], input[data-f]', onField);
-  Mock.on('keydown', '.cell.is-ghost input', function (e, t, dev) {
-    if (e.key !== 'Enter') return;
-    e.preventDefault();
-    var S = Mock.state(dev), p = find(S, t), card = cardEl(dev, p), i = +t.closest('td').dataset.i;
-    applyFill(p, [i]); renderCard(S, dev, p);
-    if ($('[data-act="use-day"]', card)) focusIn(card, '[data-act="use-day"]'); else focusIn(card, '[data-r="save"]');
-  });
-  Mock.on('keydown', '.pv-bar, .pv-cell', function (e, t, dev) {
-    if (e.key !== 'Escape') return;
-    var S = Mock.state(dev), p = find(S, t), card = cardEl(dev, p);
-    p.preview = false; renderCard(S, dev, p); focusIn(card, '[data-act="pv-open"]');
+  /* C: Enter ou Tab num campo fantasma aceita o dia */
+  Mock.on('keydown', '.cell.is-ghost input, .cell.is-ghost select', function (e, t, dev) {
+    if (e.key !== 'Enter' && !(e.key === 'Tab' && !e.shiftKey)) return;
+    if (e.key === 'Enter') e.preventDefault();
+    var S = Mock.state(dev), p = find(S, t);
+    acceptDay(S, dev, p, +unitOf(t).dataset.i);
   });
 
   /* ── arranque por clone ── */
@@ -1036,20 +1234,14 @@ function nationalHoliday(iso) { return nationalHolidays(+iso.slice(0, 4))[iso] |
       return '<span class="legend-item" role="listitem"><span class="legend-sw ' + a[2] + '" aria-hidden="true"></span><span>' + esc(a[1]) + (help ? '<span class="muted"> — ' + esc(a[3]) + '</span>' : '') + '</span></span>';
     };
     $('[data-legend]', dev).innerHTML = '<details><summary>Legenda</summary><div class="legend-detail" role="list" aria-label="Legenda de tipos de ausência">' + ABS.map(function (a) { return item(a, true); }).join('') +
-      '</div></details><div class="legend-chips" role="list" aria-label="Legenda de tipos de ausência">' + ABS.map(function (a) { return item(a, false); }).join('') + '</div>';
+      '</div></details><div class="legend-chips" role="list" aria-label="Legenda de tipos de ausência">' + ABS.map(function (a) { return item(a, false); }).join('') + '</div>' +
+      '<div class="legend-chips" role="list" aria-label="Legenda de postos">' + POSTOS.map(function (q) { return '<span class="legend-item" role="listitem"><i class="pos-dot" style="--pos-color:' + q[1] + '"></i>' + esc(q[0]) + '</span>'; }).join('') + '</div>';
   }
   window.mockInit = function (dev, variant) {
     var S = Mock.state(dev);
-    S.variant = variant; S.people = makePeople(); S.byId = {};
-    S.people.forEach(function (p) { S.byId[p.id] = p; });
+    S.variant = variant; S.wk = '40'; S.weeks = {};
     legend(dev);
-    var bar = $('[data-bar]', dev), newTag = '<span class="new-tag" title="Elemento novo (marca do mockup)">Novo</span>';
-    if (variant === 'a') bar.innerHTML = '<button type="button" class="btn-row btn-row-strong" data-act="fill-all">Preencher todos com a escala</button>' + newTag + '<span class="muted small" data-r="barinfo"></span>';
-    if (variant === 'b') bar.innerHTML = '<span class="muted small">Escala publicada: semana 40, versão 2 (25/09/2026) — «Preencher com a escala» em cada cartão.</span>' + newTag;
-    if (variant === 'c') bar.innerHTML = '<button type="button" class="btn-row btn-row-strong" data-act="fill-all">Usar a escala em todos os dias vazios</button>' + newTag + '<span class="muted small" data-r="barinfo"></span>';
-    var host = $('[data-cards]', dev);
-    S.people.forEach(function (p) { host.appendChild(shell(p)); });
-    S.people.forEach(function (p) { renderCard(S, dev, p); });
+    renderAll(dev);
   };
 })();
 </script>

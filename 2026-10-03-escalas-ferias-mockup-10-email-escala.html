@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 10 — Email da escala</title>
+<style>
+/* === MOLDURA COMUM (copiar) === */
+/* Tokens copiados de src/app/globals.css:2-33 (tema «Menta») */
+:root {
+  --bg: #f3f6f3;
+  --card: #fff;
+  --border: rgba(0, 0, 0, 0.15);
+  --txt: #1f2a24;
+  --mut: #66736b;
+  --hint: #9aa49e;
+  --sidebar: #2f3a33;
+  --sidebar-tx: #dfeee5;
+  --brand: #7fc9a2;
+  --primary: #2e9e68;
+  --primary-hover: #267f54;
+  --ok-bg: #e2f2e9;
+  --ok-tx: #1f6b44;
+  --ok-bd: #7fc9a2;
+  --row-hover: rgba(127, 201, 162, 0.12);
+  --er-bg: #fcebeb;
+  --er-tx: #a32d2d;
+  --er-bd: #f09595;
+  --warn-bg: #faeeda;
+  --warn-tx: #854f0b;
+  --warn-bd: #e8c44e;
+  --info-tx: #1d4ed8;
+  --info-bg: #e6eefc;
+  --info-bd: #9db7f0;
+  --on-primary: #fff;
+}
+* { box-sizing: border-box; padding: 0; margin: 0; }
+[hidden] { display: none !important; }
+html, body {
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--txt);
+  -webkit-font-smoothing: antialiased;
+}
+body { min-height: 100vh; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+/* ── Barra do mockup (não faz parte do ecrã) ── */
+.mock-bar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+  padding: 8px 16px; background: var(--sidebar); color: var(--sidebar-tx); font-size: 13px;
+}
+.mock-back { padding: 4px 10px; border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 6px; white-space: nowrap; }
+.mock-back:hover { background: rgba(255, 255, 255, 0.12); }
+.mock-title { font-weight: 600; flex: 1 1 200px; min-width: 0; }
+.mock-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+.mock-bar button {
+  font-size: 13px; min-height: 30px; padding: 3px 12px; cursor: pointer; font-family: inherit;
+  background: transparent; color: var(--sidebar-tx); border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 6px;
+}
+.mock-bar button:hover { background: rgba(255, 255, 255, 0.12); }
+.mock-bar [role='tab'][aria-selected='true'],
+.mock-bar [aria-pressed='true'] { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+.mock-view { display: inline-flex; }
+.mock-view button { border-radius: 0; margin-left: -1px; }
+.mock-view button:first-child { border-radius: 6px 0 0 6px; margin-left: 0; }
+.mock-view button:last-child { border-radius: 0 6px 6px 0; }
+
+/* ── Palco: dois dispositivos lado a lado, a quebrar para baixo ── */
+.mock-main { padding: 16px 16px 56px; }
+.variant-notes {
+  max-width: 1180px; margin: 0 auto 16px; padding: 10px 14px; font-size: 14px; line-height: 1.5;
+  background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--primary); border-radius: 8px;
+}
+.variant-notes b { font-weight: 600; }
+.variant-notes .note-extra { margin-top: 4px; font-size: 12px; color: var(--mut); }
+.variant-missing { max-width: 1180px; margin: 0 auto 16px; padding: 12px 14px; font-size: 14px; background: var(--warn-bg); color: var(--warn-tx); border: 1px solid var(--warn-bd, var(--border)); border-left: 4px solid var(--warn-tx); border-radius: 8px; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+.variant-missing[hidden] { display: none; }
+.stage { display: flex; flex-wrap: wrap; gap: 28px 24px; align-items: flex-start; justify-content: center; }
+.stage-item { min-width: 0; max-width: 100%; }
+.stage-cap { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; color: var(--mut); }
+.stage-reset {
+  font-size: 12px; min-height: 0; padding: 2px 10px; cursor: pointer; font-family: inherit;
+  background: var(--card); color: var(--mut); border: 1px solid var(--border); border-radius: 6px;
+}
+.stage-reset:hover { color: var(--txt); }
+.device-scroll { overflow-x: auto; max-width: 100%; padding: 2px; }
+.device-scroll--phone { padding: 8px; }
+body[data-view='desktop'] .stage-item--phone,
+body[data-view='phone'] .stage-item--desktop { display: none; }
+
+/* ── Dispositivos: largura fixa, contentor para as container queries ── */
+.device {
+  container-type: inline-size; container-name: app; position: relative;
+  background: var(--bg); overflow: hidden;
+}
+.device--desktop { width: 1180px; border-radius: 10px; box-shadow: 0 0 0 1px var(--border), 0 4px 18px rgba(0, 0, 0, 0.08); }
+.device--phone { width: 375px; border-radius: 22px; box-shadow: 0 0 0 1px var(--border), 0 0 0 6px #dde5df, 0 6px 22px rgba(0, 0, 0, 0.15); }
+
+/* ── Mini-app: barra lateral + conteúdo (réplica de .shell/.sidebar/.content) ── */
+.app { display: flex; position: relative; min-height: 560px; font-size: 14px; background: var(--bg); color: var(--txt); }
+.app-side {
+  width: 220px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; padding: 20px 12px;
+  background: var(--sidebar); color: var(--sidebar-tx);
+}
+.app-logo {
+  background: #fff; border-radius: 8px; padding: 8px 10px; margin-bottom: 4px; text-align: center;
+  font-weight: 700; font-size: 18px; letter-spacing: 0.04em; color: var(--primary);
+}
+.app-side nav { display: flex; flex-direction: column; gap: 4px; }
+.sidebar-link {
+  display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; font-size: 14px;
+  color: var(--sidebar-tx); opacity: 0.85; flex-shrink: 0;
+}
+.sidebar-link:hover { opacity: 1; background: rgba(255, 255, 255, 0.1); }
+.sidebar-link--active { background: rgba(127, 201, 162, 0.22); color: #bfe8d2; opacity: 1; }
+.sidebar-section { font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.5; padding: 0 10px; margin: 12px 0 2px; }
+.sidebar-section:first-child { margin-top: 4px; }
+.app-user { margin-top: auto; padding-top: 16px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.app-user__name { padding: 0 10px; opacity: 0.8; }
+.app-side .app-user button {
+  width: 100%; text-align: left; background: transparent; border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--sidebar-tx); border-radius: 8px; padding: 8px 10px; font-size: 13px; cursor: pointer; min-height: 0;
+}
+.app-side .app-user button:hover { background: rgba(255, 255, 255, 0.1); }
+.app-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.app-top { display: none; }
+.app-scrim { display: none; }
+.app-content { flex: 1; min-width: 0; padding: 24px; position: relative; }
+.app-toast {
+  position: absolute; z-index: 60; transform: translateX(-50%); width: max-content; max-width: calc(100% - 24px);
+  padding: 8px 14px; border-radius: 8px; background: var(--sidebar); color: var(--sidebar-tx); font-size: 13px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25); pointer-events: none;
+}
+.sheet { position: absolute; inset: 0; z-index: 50; background: rgba(0, 0, 0, 0.35); }
+.sheet__box {
+  position: absolute; width: min(520px, calc(100% - 24px)); max-height: 80%; overflow: auto;
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+}
+.new-tag {
+  display: inline-block; vertical-align: middle; margin-left: 6px; padding: 0 6px; border-radius: 4px; font-size: 11px;
+  font-weight: 600; text-transform: none; letter-spacing: 0; background: var(--info-bg); border: 1px solid var(--info-bd); color: var(--info-tx);
+}
+
+/* ── Base de formulários e botões (globals.css) ── */
+.device input, .device select, .device textarea, .device button {
+  font-size: 16px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 8px;
+  background: #fff; min-height: 36px; font-family: inherit; color: var(--txt);
+}
+.device input[type='checkbox'], .device input[type='radio'] { min-height: 0; width: 18px; height: 18px; accent-color: var(--primary); }
+.device label { font-size: 12px; color: var(--mut); display: block; margin-bottom: 12px; }
+.device label > input, .device label > select, .device label > textarea { display: block; width: 100%; max-width: 420px; margin-top: 4px; }
+.device button.primary {
+  background: var(--primary); color: #fff; border: none; font-weight: 600; cursor: pointer; padding: 10px 22px; border-radius: 8px;
+}
+.device button.primary:hover { background: var(--primary-hover); }
+.device button.primary:disabled { background: var(--hint); cursor: not-allowed; }
+.device button.secondary { cursor: pointer; background: #fff; }
+.device .btn-row {
+  display: inline-block; font-size: 13px; font-weight: 500; padding: 4px 12px; min-height: 0;
+  border: 1px solid var(--primary); border-radius: 6px; background: #f2faf6; color: var(--primary-hover);
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+}
+.device .btn-row:hover { background: #e3f4ea; }
+.device .btn-row[aria-pressed='true'], .device .btn-row[aria-current='page'] { background: var(--primary); color: #fff; }
+.device .btn-row.btn-row-strong { background: var(--primary); color: #fff; font-weight: 600; }
+.device .btn-row.btn-row-strong:hover { background: var(--primary-hover); }
+.device .btn-row.btn-row-quiet { font-size: 12px; font-weight: 400; border-color: var(--border); background: var(--bg); color: var(--mut); }
+.device .btn-row.btn-row-quiet:hover { background: var(--card); color: var(--txt); }
+.device .btn-row.danger { border-color: #c0392b; color: #c0392b; background: #fdf3f2; }
+.device .btn-row:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Cartões, badges, avisos (globals.css) ── */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.badge-ok, .badge-warn, .badge-err, .badge-info, .badge-mut {
+  font-size: 12px; padding: 2px 8px; border-radius: 4px; white-space: nowrap; border: 1px solid; display: inline-block;
+}
+.badge-ok { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.badge-warn { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); }
+.badge-err { background: var(--er-bg); border-color: var(--er-bd); color: var(--er-tx); }
+.badge-info { background: var(--info-bg); border-color: var(--info-bd); color: var(--info-tx); }
+.badge-mut { background: var(--bg); border-color: var(--border); color: var(--mut); }
+.alert-ok, .alert-warn, .alert-err, .alert-info { border-radius: 8px; padding: 8px 12px; font-size: 14px; border: 1px solid; }
+.alert-ok { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok-tx); }
+.alert-warn { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-tx); }
+.alert-err { background: var(--er-bg); border-color: var(--er-bd); color: var(--er-tx); }
+.alert-info { background: var(--info-bg); border-color: var(--info-bd); color: var(--info-tx); }
+.toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 12px 0 16px; }
+.toolbar-actions { margin-left: auto; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.muted { color: var(--mut); }
+.small { font-size: 12px; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Separadores de trabalho e filtro segmentado (precedente 2026-09-25) */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin: 4px 0 12px; flex-wrap: wrap; }
+.tabs [role='tab'] {
+  border: 1px solid transparent; border-bottom: none; border-radius: 8px 8px 0 0; background: none; min-height: 0;
+  font-size: 15px; padding: 8px 14px; cursor: pointer; color: var(--mut); margin-bottom: -1px;
+}
+.tabs [role='tab'][aria-selected='true'] { background: var(--card); border-color: var(--border); color: var(--txt); font-weight: 600; }
+.tab-count { display: inline-block; min-width: 20px; padding: 0 6px; border-radius: 10px; background: var(--er-bg); color: var(--er-tx); font-size: 12px; font-weight: 600; text-align: center; }
+.seg { display: inline-flex; border: 1px solid var(--primary); border-radius: 6px; overflow: hidden; }
+.device .seg button { border: none; border-radius: 0; min-height: 0; font-size: 13px; padding: 4px 12px; background: #f2faf6; color: var(--primary-hover); cursor: pointer; }
+.device .seg button[aria-pressed='true'] { background: var(--primary); color: #fff; font-weight: 600; }
+
+/* ── Tabelas (globals.css:492-): base desktop ── */
+.device table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 14px; }
+.device th { text-align: left; font-size: 12px; color: var(--mut); border-bottom: 1px solid var(--border); padding: 6px 8px; }
+.device td { padding: 8px; border-bottom: 1px solid var(--border); }
+.table-scroll-wrap { overflow-x: auto; }
+
+/* ── ≤768px: réplica do bloco @media (max-width: 768px) de globals.css, por container query ── */
+@container app (max-width: 768px) {
+  .app-side {
+    position: absolute; top: 0; left: 0; bottom: 0; z-index: 30; width: 240px;
+    transform: translateX(-100%); visibility: hidden;
+    transition: transform 0.22s ease, visibility 0s linear 0.22s; box-shadow: 4px 0 16px rgba(0, 0, 0, 0.25);
+  }
+  .app[data-menu-open] .app-side { transform: none; visibility: visible; transition: transform 0.22s ease; }
+  .app[data-menu-open] .app-scrim { display: block; position: absolute; inset: 0; z-index: 20; background: rgba(0, 0, 0, 0.4); }
+  .app-top {
+    display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+  .app-top .app-burger { padding: 6px 10px; line-height: 1; cursor: pointer; }
+  .app-top__title { font-weight: 600; font-size: 15px; }
+  .app-content { padding: 16px; }
+  h1 { font-size: 20px; }
+  .card { padding: 12px; }
+  .tabs [role='tab'] { flex: 1; padding: 8px 6px; font-size: 14px; }
+  .toolbar-actions { margin-left: 0; }
+  .sheet__box { padding: 12px; }
+
+  /* Grelha por omissão: a tabela é o próprio contentor de scroll */
+  table:not(.table--cards):not(.table--scroll) { display: block; overflow-x: auto; width: 100%; margin-top: 12px; font-size: 13px; }
+  table:not(.table--cards):not(.table--scroll) th,
+  table:not(.table--cards):not(.table--scroll) td { white-space: nowrap; padding: 4px 8px; font-variant-numeric: tabular-nums; }
+  /* .table--fill: 2–3 colunas, 100% da largura, o nome quebra */
+  table.table--fill:not(.table--cards):not(.table--scroll) { display: table; width: 100%; table-layout: auto; overflow-x: visible; }
+  table.table--fill:not(.table--cards):not(.table--scroll) th,
+  table.table--fill:not(.table--cards):not(.table--scroll) td { white-space: normal; overflow-wrap: anywhere; }
+  /* .table--cards: linhas viram cards; exige data-label em cada td (excepto acções) */
+  table.table--cards thead { display: none; }
+  table.table--cards, table.table--cards tbody, table.table--cards tfoot, table.table--cards tr, table.table--cards td { display: block; width: 100%; }
+  table.table--cards tr { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; padding: 8px 12px; }
+  table.table--cards td { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 4px 0; border-bottom: none; }
+  table.table--cards td[data-label]::before {
+    content: attr(data-label); font-size: 11px; font-weight: 600; color: var(--mut); text-transform: uppercase; letter-spacing: 0.04em; flex-shrink: 0;
+  }
+  table.table--cards td:not([data-label]) { justify-content: flex-end; border-top: 1px solid var(--border); margin-top: 4px; padding-top: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* Página estreita: o dispositivo mantém 375 px, com deslocação na moldura. */
+@media (max-width: 420px) {
+  .mock-main { padding: 12px 0 40px; }
+  .variant-notes { margin-left: 12px; margin-right: 12px; }
+  .stage-cap { padding: 0 12px; }
+  .device-scroll--phone { padding: 0; }
+  .device--phone { border-radius: 0; box-shadow: 0 0 0 1px var(--border); }
+}
+@media (max-width: 700px) {
+  .mock-bar { position: static; padding: 8px 12px; }
+  .mock-back { order: 1; }
+  .mock-view { order: 2; margin-left: auto; }
+  .mock-title { order: 3; flex-basis: 100%; }
+  .mock-tabs { order: 4; flex: 1 1 100%; flex-wrap: nowrap; }
+  .mock-tabs button { flex: 1 1 0; min-width: 0; padding: 4px 4px; font-size: 12px; line-height: 1.25; }
+}
+/* === FIM MOLDURA === */
+
+/* === ESPECÍFICO DESTE MOCKUP === */
+/* === POSTOS (copiar) === */
+/* Postos e cores fixos (as mesmas em todos os mockups): Montagem #d9a400 · Fogão #2f6fd6 · Sumo #a03fb5 · Copa #e8742a ·
+   Copa e Apoio #d9534f · Bar #2e9e5b · Produção #7a5a2e · Sala #3aa6b9 · Supervisão #b0234a · Gerência #6b4fd8.
+   O bloco tem sempre fundo claro, texto escuro e barra esquerda de 4 px na cor do posto: o contraste AA não depende do tema.
+   Uso (turno com troca de posto: dois .shift-seg e duas .shift-band no MESMO bloco; flex do .shift-seg = minutos do segmento):
+     <span class="shift-block has-swap" style="--pos-color:#a03fb5">
+       <span class="shift-bars" aria-hidden="true"><i class="shift-seg" style="--pos-color:#a03fb5;flex:120"></i><i class="shift-seg" style="--pos-color:#e8742a;flex:420"></i></span>
+       <span class="shift-time">08:00–17:00</span>
+       <span class="shift-pos"><span class="shift-band" style="--pos-color:#a03fb5">Sumo</span><span class="shift-band" style="--pos-color:#e8742a">Copa 10:00</span></span>
+     </span> */
+.shift-block { --pos-color: #66736b; position: relative; display: flex; flex-direction: column; gap: 2px; min-width: 0; padding: 3px 4px 3px 9px; border-radius: 6px; overflow: hidden; text-align: left; color: #1f2a24; background: color-mix(in srgb, var(--pos-color) 15%, #fff); }
+.shift-bars { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; display: flex; flex-direction: column; }
+.shift-seg { display: block; flex: 1 1 0; min-height: 3px; background: var(--pos-color); }
+.shift-time { display: block; font-weight: 600; font-size: 12px; line-height: 1.2; font-variant-numeric: tabular-nums; white-space: nowrap; color: #1f2a24; }
+.shift-pos { display: flex; gap: 2px; min-width: 0; }
+.shift-band { display: block; flex: 1 1 auto; min-width: 0; padding: 0 4px; border-radius: 3px; font-size: 10px; line-height: 1.4; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #1f2a24; background: color-mix(in srgb, var(--pos-color) 30%, #fff); }
+.shift-tag { display: inline-block; margin-right: 3px; padding: 0 4px; border-radius: 3px; font-size: 9.5px; font-weight: 700; line-height: 1.4; color: #5a4300; background: #f0dca0; }
+.pos-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; background: var(--pos-color, #66736b); }
+/* === FIM POSTOS === */
+
+.app--bare { min-height: 0; }
+.app--bare .app-content { padding: 16px; }
+@container app (max-width: 768px) { .app--bare .app-content { padding: 8px 0 16px; } }
+/* ── Controlo do mockup (não faz parte do ecrã) ── */
+.mockctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 8px 12px; margin-bottom: 12px; border: 1px dashed var(--border); border-radius: 8px; background: #fbfdfb; font-size: 13px; color: var(--mut); }
+.mockctl-t { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+.device .mockctl label { margin: 0; display: flex; align-items: center; gap: 6px; font-size: 13px; }
+.device .mockctl label > select { display: inline-block; width: auto; max-width: 260px; margin: 0; font-size: 14px; min-height: 36px; }
+.device .mockctl .seg button { min-height: 36px; font-size: 14px; }
+.sendinfo { margin-top: 10px; font-size: 13px; color: var(--mut); }
+@container app (max-width: 768px) {
+  .device .mockctl .seg button, .device .mockctl label > select { min-height: 44px; }
+  .device .mockctl label { flex: 1 1 100%; }
+  .device .mockctl label > select { flex: 1; max-width: none; }
+}
+
+/* ── Cliente de email simulado ── */
+.mailc { border: 1px solid var(--border); border-radius: 10px; background: #fff; overflow: hidden; }
+.mailc-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 14px; background: #eef1ef; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--mut); }
+.mailc-head { padding: 14px 16px; border-bottom: 1px solid var(--border); }
+.mailc-meta .mailc-subj { font-weight: 700; }
+.mailc-meta { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 12px; font-size: 14px; }
+.mailc-meta dt { color: var(--mut); }
+.mailc-meta dd { overflow-wrap: anywhere; }
+.mailc-body { background: #e9ece9; padding: 20px 12px; }
+@container app (max-width: 768px) {
+  .mailc { border-radius: 0; border-left: none; border-right: none; }
+  .mailc-body { padding: 0; }
+  .mailc-head { padding: 12px; }
+}
+
+/* ── O email (HTML simples, largura máxima 600 px, cores fixas) ── */
+.mail-doc { max-width: 600px; margin: 0 auto; background: #fff; color: #1f2a24; font-size: 15px; line-height: 1.45; }
+.md-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px 12px; padding: 14px 20px; background: #2f3a33; color: #dfeee5; }
+.md-logo { font-weight: 700; font-size: 20px; letter-spacing: 0.04em; color: #7fc9a2; }
+.md-wk { font-size: 14px; }
+.md-pad { padding: 16px 20px; }
+.md-pad p { margin-bottom: 10px; }
+.md-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 22px; border-radius: 8px; background: #267f54; color: #fff; font-weight: 700; font-size: 15px; }
+.md-btn:hover { background: #1f6b44; }
+.md-foot { padding: 14px 20px 18px; border-top: 1px solid #e3e8e4; font-size: 13px; color: #4b554f; }
+.md-foot p + p { margin-top: 6px; }
+.md-box { margin: 0 0 14px; padding: 10px 12px; border: 1px solid #e8c44e; border-left: 4px solid #d99a00; border-radius: 6px; background: #faeeda; color: #4a2c06; font-size: 14px; }
+.md-box h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.md-box ul { list-style: none; }
+.md-box li { padding: 3px 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.md-box--ok { border-color: #7fc9a2; border-left-color: #2e9e68; background: #e2f2e9; color: #1f4d36; }
+.mail-doc .was { color: #555e58; text-decoration: line-through; }
+.mail-doc .was-line { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; margin-bottom: 4px; font-size: 13px; color: #4a2c06; }
+.tag { display: inline-block; padding: 0 6px; border-radius: 4px; font-size: 12px; font-weight: 600; line-height: 1.5; }
+.tag-chg { background: #f3c969; color: #4a2c06; }
+.tag-ft { background: #f0dca0; color: #5a4300; }
+.tag-fer { background: #fcebeb; color: #a32d2d; border: 1px solid #f09595; }
+.you { display: inline-block; padding: 0 6px; border-radius: 4px; background: #1f6b44; color: #fff; font-size: 12px; font-weight: 600; line-height: 1.5; }
+.hrs { display: inline-block; font-size: 12px; font-variant-numeric: tabular-nums; color: #4b554f; }
+.hrs.over { padding: 0 5px; border-radius: 4px; background: #faeeda; border: 1px solid #e8c44e; color: #854f0b; font-weight: 600; }
+.ms { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 14px; font-weight: 600; border: 1px solid; }
+.ms-off { background: #fdf0e0; border-color: #f2922d; color: #7a4300; }
+.ms-vac { background: #e6f3e7; border-color: #2e7d32; color: #1b5e20; }
+.ms-ind { background: #ece9f1; border-color: #7b3fb5; color: #4b2a73; }
+.mail-doc .shift-block { padding: 4px 6px 4px 11px; max-width: 280px; }
+.mail-doc .shift-time { font-size: 15px; }
+.mail-doc .shift-band { font-size: 13px; padding: 0 6px; }
+.mail-doc .shift-pos { flex-wrap: wrap; }
+.shift-time--split { display: flex; flex-wrap: wrap; white-space: normal !important; column-gap: 1px; }
+.shift-time--split span { white-space: nowrap; }
+
+/* Dias */
+.day { margin: 0 0 14px; }
+.day-h { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; padding: 6px 10px; border-left: 4px solid #2f3a33; background: #eef3ef; font-size: 15px; font-weight: 700; }
+.day-n { margin-left: auto; font-size: 13px; font-weight: 400; color: #4b554f; }
+.prow { display: grid; grid-template-columns: minmax(0, 120px) minmax(0, 1fr); gap: 4px 10px; align-items: center; padding: 6px 8px 6px 10px; border-bottom: 1px solid #e3e8e4; border-left: 4px solid transparent; }
+.prow .who { font-size: 14px; min-width: 0; overflow-wrap: anywhere; }
+.prow .who .nm { font-weight: 600; }
+.prow.me { background: #e2f2e9; border-left-color: #2e9e68; }
+.prow.chg { background: #faeeda; border-left-color: #d99a00; }
+.prow.me.chg { background: #f1f0d4; }
+.offl { padding: 6px 10px; font-size: 14px; color: #3d4741; }
+.offl b { font-weight: 700; }
+.day--compact .prow { padding-top: 4px; padding-bottom: 4px; }
+.md-h { font-size: 16px; font-weight: 700; margin: 4px 0 8px; }
+
+/* B · resumo da minha semana */
+.sum { margin-bottom: 14px; border: 1px solid #cfd8d2; border-radius: 6px; overflow: hidden; }
+.sumrow { display: grid; grid-template-columns: minmax(0, 96px) minmax(0, 1fr); gap: 4px 10px; align-items: center; padding: 7px 10px; border-bottom: 1px solid #e3e8e4; }
+.sumrow:last-child { border-bottom: none; }
+.sumrow .d { font-size: 14px; font-weight: 700; }
+.sumrow .d small { display: block; font-size: 12px; font-weight: 400; color: #4b554f; }
+.sumrow.chg { background: #faeeda; }
+.sumrow .brk { display: block; margin-top: 3px; font-size: 13px; color: #4b554f; }
+.sumtot { padding: 8px 10px; background: #eef3ef; font-size: 14px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
+.sumtot .hrs { font-size: 14px; }
+
+/* C · tabela compacta (largura) e lista por dia (estreito) */
+.mt-wrap { padding: 0 8px 12px; }
+.device .mail-doc table.mt { margin: 0; width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 12px; }
+.device .mail-doc .mt th { text-align: center; font-size: 12px; font-weight: 700; color: #1f2a24; padding: 5px 1px; background: #eef3ef; border-bottom: 2px solid #2f3a33; white-space: normal; }
+.device .mail-doc .mt td { padding: 3px 2px; border-bottom: 1px solid #e3e8e4; vertical-align: middle; text-align: center; font-size: 12px; }
+.device .mail-doc .mt th.nm, .device .mail-doc .mt td.nm { text-align: left; width: 108px; padding-left: 4px; }
+.mt td.nm b { display: block; font-size: 13px; font-weight: 600; overflow-wrap: anywhere; }
+.mt tr.me td { background: #e2f2e9; }
+.mt td.chg { background: #faeeda; }
+.mt .tag { font-size: 10px; padding: 0 3px; margin-top: 2px; }
+.mt .shift-block { padding: 3px 2px 3px 7px; }
+.mt .shift-bars { width: 3px; }
+.mt .shift-time { font-size: 11px; }
+.mt .shift-pos { flex-direction: column; }
+.mail-doc .mt .shift-band { font-size: 10px; padding: 0 2px; white-space: normal; overflow-wrap: anywhere; }
+.mt .shift-tag { font-size: 9px; padding: 0 2px; margin: 0 0 1px; }
+.mt .ms { font-size: 10px; padding: 3px 1px; border-radius: 4px; overflow-wrap: anywhere; display: block; }
+.mt small.was { display: block; font-size: 10.5px; margin-top: 2px; text-decoration: none; color: #4a2c06; }
+.mt small.was s { text-decoration: line-through; }
+.mt-note { padding: 8px 4px 0; font-size: 12px; color: #4b554f; }
+.mt-narrow { display: none; }
+@container app (max-width: 768px) {
+  .mt-wide { display: none; }
+  .mt-narrow { display: block; }
+  .md-pad { padding: 14px 12px; }
+  .md-top, .md-foot { padding-left: 12px; padding-right: 12px; }
+  .mail-doc { font-size: 16px; }
+  .prow { grid-template-columns: minmax(0, 104px) minmax(0, 1fr); padding-left: 6px; }
+  .sumrow { grid-template-columns: minmax(0, 84px) minmax(0, 1fr); padding-left: 8px; padding-right: 8px; }
+  .mail-doc .shift-block { max-width: none; }
+}
+</style>
+</head>
+<body data-view="both">
+
+<header class="mock-bar">
+  <a class="mock-back" href="2026-10-03-escalas-ferias-mockups.html">← Índice</a>
+  <span class="mock-title">10 · Email da escala</span>
+  <div class="mock-tabs" role="tablist" aria-label="Variantes">
+    <button type="button" role="tab" id="tab-a" data-variant="a" aria-controls="panel-a" aria-selected="false">A · Por dia</button>
+    <button type="button" role="tab" id="tab-b" data-variant="b" aria-controls="panel-b" aria-selected="false">B · A minha semana + equipa</button>
+    <button type="button" role="tab" id="tab-c" data-variant="c" aria-controls="panel-c" aria-selected="false">C · Tabela compacta</button>
+  </div>
+  <div class="mock-view" role="group" aria-label="Dispositivos">
+    <button type="button" data-view="both" aria-pressed="true">Ambos</button>
+    <button type="button" data-view="desktop" aria-pressed="false">Desktop</button>
+    <button type="button" data-view="phone" aria-pressed="false">375 px</button>
+  </div>
+</header>
+
+<main class="mock-main">
+  <section role="tabpanel" id="panel-a" aria-labelledby="tab-a" data-variant="a" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> o email segue a semana dia a dia (segunda a domingo). Em cada dia, a linha do destinatário vem primeiro e em destaque verde, e os colegas a trabalhar por baixo, com a cor do posto; quem está de folga, de férias ou indisponível vai numa linha no fim do dia.</p>
+      <p><b>Vantagens:</b> lê-se de cima para baixo sem tabelas, em qualquer cliente de email e no telemóvel; a troca de posto na jornada (Sumo → Copa 10:00) cabe na mesma linha.</p>
+      <p><b>Custo:</b> é o email mais comprido (sete secções); para comparar a semana de duas pessoas é preciso percorrer os sete dias.</p>
+      <p class="note-extra">Controlo do mockup: alterne Publicação / Republicação e o destinatário. Uma baixa médica de um colega aparece sempre como «Indisponível».</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-b" aria-labelledby="tab-b" data-variant="b" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> no topo, o resumo da semana do destinatário (um dia por linha, com o intervalo e as horas planeadas / carga); por baixo, a equipa dia a dia, sem repetir o destinatário.</p>
+      <p><b>Vantagens:</b> responde logo a «quando trabalho?» e mostra o que mudou para a pessoa, antes → depois; a equipa fica como consulta.</p>
+      <p><b>Custo:</b> a pessoa vê a sua semana duas vezes se quiser conferir com os colegas; o email só é bom para quem tem horário próprio nessa semana.</p>
+      <p class="note-extra">Horas planeadas = fim − início, sem descontar o almoço; a folga trabalhada fica à parte, fora do banco de horas.</p>
+    </div>
+  </section>
+  <section role="tabpanel" id="panel-c" aria-labelledby="tab-c" data-variant="c" hidden>
+    <div class="variant-notes">
+      <p><b>Ideia:</b> uma tabela pessoas × dias, como a grelha da gestora, com as horas junto ao nome. Em 375 px a tabela não cabe: o mesmo email passa a uma lista por dia (como em A, mais densa).</p>
+      <p><b>Vantagens:</b> dá a visão da semana inteira de relance e permite comparar colegas na mesma linha; as alterações ficam em células âmbar.</p>
+      <p><b>Custo:</b> em cliente de email estreito perde-se a tabela (a lista por dia é uma segunda versão do mesmo conteúdo, escondida por regra de estilo); as células são pequenas, com letra de 10 a 12 px.</p>
+      <p class="note-extra">Alterne para «375 px» para ver a lista por dia.</p>
+    </div>
+  </section>
+</main>
+
+<!-- Conteúdo de cada variante: clonado por JS para o desktop e para os 375 px. Sem id aqui dentro.
+     data-shell="bare": cliente de email simulado, sem a barra lateral do GiG. -->
+<template data-variant="a" data-shell="bare" data-title="Email" data-user="Inês Calado">
+  <div class="mockctl">
+    <span class="mockctl-t">Controlo do mockup</span>
+    <span class="seg" role="group" aria-label="Tipo de envio">
+      <button type="button" data-act="mode" data-v="pub" aria-pressed="true">Publicação</button>
+      <button type="button" data-act="mode" data-v="repub" aria-pressed="false">Republicação</button>
+    </span>
+    <label>Destinatário <select data-role="rcpt"></select></label>
+  </div>
+  <div data-slot="mail"></div>
+  <p class="sendinfo" data-slot="sendinfo"></p>
+</template>
+
+<template data-variant="b" data-shell="bare" data-title="Email" data-user="Inês Calado">
+  <div class="mockctl">
+    <span class="mockctl-t">Controlo do mockup</span>
+    <span class="seg" role="group" aria-label="Tipo de envio">
+      <button type="button" data-act="mode" data-v="pub" aria-pressed="true">Publicação</button>
+      <button type="button" data-act="mode" data-v="repub" aria-pressed="false">Republicação</button>
+    </span>
+    <label>Destinatário <select data-role="rcpt"></select></label>
+  </div>
+  <div data-slot="mail"></div>
+  <p class="sendinfo" data-slot="sendinfo"></p>
+</template>
+
+<template data-variant="c" data-shell="bare" data-title="Email" data-user="Inês Calado">
+  <div class="mockctl">
+    <span class="mockctl-t">Controlo do mockup</span>
+    <span class="seg" role="group" aria-label="Tipo de envio">
+      <button type="button" data-act="mode" data-v="pub" aria-pressed="true">Publicação</button>
+      <button type="button" data-act="mode" data-v="repub" aria-pressed="false">Republicação</button>
+    </span>
+    <label>Destinatário <select data-role="rcpt"></select></label>
+  </div>
+  <div data-slot="mail"></div>
+  <p class="sendinfo" data-slot="sendinfo"></p>
+</template>
+
+<script>
+/* === MOLDURA COMUM (copiar) === */
+/* API para o JS específico (script a seguir a este):
+     window.mockInit = (deviceEl, variant, kind) => {}   chamado por cada clone (kind = 'desktop' | 'phone')
+     Mock.on(tipo, seletor, (evento, elemento, deviceEl) => {})   delegação com escopo no .device
+     Mock.toast(deviceEl, texto)   Mock.sheet(deviceEl, html|Node) → caixa   Mock.closeSheet(deviceEl)
+     Mock.state(deviceEl) → objeto por clone   Mock.uid(prefixo) → id único   Mock.$ Mock.$$ Mock.esc
+   No markup dos templates (sem id): data-id="k" → id único por clone; data-for / data-controls /
+   data-labelledby / data-describedby="k" → for / aria-controls / aria-labelledby / aria-describedby.
+   [data-route="/rota"] simula navegação (aviso «Abre /rota»). Atributos do <template>:
+   data-active (item do menu activo), data-title (título da barra a 375 px), data-user (nome na barra lateral). */
+(function () {
+  'use strict';
+  var VIEW_KEY = 'escalas-ferias-mock-view';
+  var MENU = [
+    ['Geral', [['Início', '/']]],
+    ['Operação', [['Horas', '/horas'], ['As minhas horas', '/horas/minhas'], ['Escala', '/escala'], ['A minha escala', '/escala/minha'],
+      ['Férias', '/ferias'], ['As minhas férias', '/ferias/minhas'], ['Gorjetas', '/gorjetas'], ['As minhas gorjetas', '/gorjetas/minhas'],
+      ['Fecho de caixa', '/caixa']]],
+    ['Cadastros', [['Cadastros', '/cadastros'], ['Equipa', '/cadastros/equipa']]],
+    ['Administração', [['Integrações', '/admin/integracoes']]]
+  ];
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var mk = function (tag, cls) { var n = document.createElement(tag); if (cls) n.className = cls; return n; };
+  var clamp = function (v, lo, hi) { return Math.min(Math.max(v, lo), hi); };
+  var states = new WeakMap();
+  var counter = 0;
+  var uid = function (p) { counter += 1; return (p || 'u') + '-' + counter; };
+  var state = function (dev) { if (!states.has(dev)) states.set(dev, {}); return states.get(dev); };
+
+  /* ids únicos por clone: data-id define, os data-for/controls/labelledby/describedby ligam */
+  function wireIds(root) {
+    var map = {};
+    var get = function (k) { if (!map[k]) map[k] = uid(k); return map[k]; };
+    $$('[data-id]', root).forEach(function (n) { n.id = get(n.getAttribute('data-id')); });
+    [['data-for', 'for'], ['data-controls', 'aria-controls'], ['data-labelledby', 'aria-labelledby'], ['data-describedby', 'aria-describedby']]
+      .forEach(function (p) { $$('[' + p[0] + ']', root).forEach(function (n) { n.setAttribute(p[1], get(n.getAttribute(p[0]))); }); });
+  }
+
+  /* parte visível do dispositivo (para posicionar avisos e diálogos onde o utilizador está a olhar) */
+  function visibleBox(dev) {
+    var r = dev.getBoundingClientRect();
+    var sc = dev.closest('.device-scroll');
+    return {
+      top: clamp(-r.top, 0, r.height), bottom: clamp(window.innerHeight - r.top, 0, r.height),
+      left: sc ? sc.scrollLeft : 0, width: sc ? sc.clientWidth : dev.clientWidth
+    };
+  }
+  function toast(dev, msg) {
+    var app = $('.app', dev); if (!app) return;
+    var t = $('.app-toast', app);
+    if (!t) { t = mk('div', 'app-toast'); t.setAttribute('role', 'status'); app.appendChild(t); }
+    t.textContent = msg; t.hidden = false;
+    var v = visibleBox(dev);
+    t.style.top = Math.max(8, v.bottom - 56) + 'px';
+    t.style.left = (v.left + v.width / 2) + 'px';
+    clearTimeout(t._h); t._h = setTimeout(function () { t.hidden = true; }, 2800);
+  }
+  function sheet(dev, content) {
+    var app = $('.app', dev), s = $('.sheet', app);
+    if (!s) { s = mk('div', 'sheet'); s.innerHTML = '<div class="sheet__box" role="dialog" aria-modal="true"></div>'; app.appendChild(s); }
+    var box = $('.sheet__box', s);
+    if (typeof content === 'string') box.innerHTML = content; else if (content) box.replaceChildren(content);
+    wireIds(box); s.hidden = false;
+    var v = visibleBox(dev);
+    box.style.top = (v.top + 24) + 'px';
+    box.style.left = Math.max(12, v.left + (v.width - box.offsetWidth) / 2) + 'px';
+    var f = $('button, input, select, textarea, a[href]', box); if (f) f.focus();
+    return box;
+  }
+  function closeSheet(dev) { var s = $('.sheet', dev); if (s) s.hidden = true; }
+  function setMenu(dev, open) {
+    var app = $('.app', dev); if (!app) return;
+    app.toggleAttribute('data-menu-open', open);
+    var b = $('.app-burger', dev); if (b) { b.setAttribute('aria-expanded', String(open)); b.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu'); }
+  }
+  function on(type, selector, fn) {
+    document.addEventListener(type, function (e) {
+      var t = e.target && e.target.closest ? e.target.closest(selector) : null; if (!t) return;
+      var dev = t.closest('.device'); if (!dev) return;
+      fn(e, t, dev);
+    });
+  }
+
+  /* mini-app: barra lateral (desktop) / barra superior com ☰ (≤768px, por container query) */
+  function buildApp(tpl) {
+    var active = tpl.dataset.active || document.body.dataset.active || '';
+    var title = tpl.dataset.title || active;
+    var user = tpl.dataset.user || 'Carla Videira';
+    var app = mk('div', 'app');
+    if (tpl.dataset.shell === 'bare') {
+      app.className = 'app app--bare';
+      app.innerHTML = '<div class="app-main"><div class="app-content"></div></div>';
+      $('.app-content', app).appendChild(tpl.content.cloneNode(true));
+      return app;
+    }
+    var nav = MENU.map(function (sec) {
+      return '<div class="sidebar-section">' + esc(sec[0]) + '</div>' + sec[1].map(function (it) {
+        var on_ = it[0] === active;
+        return '<a class="sidebar-link' + (on_ ? ' sidebar-link--active' : '') + '" href="#" data-route="' + esc(it[1]) + '"' + (on_ ? ' aria-current="page"' : '') + '>' + esc(it[0]) + '</a>';
+      }).join('');
+    }).join('');
+    app.innerHTML =
+      '<aside class="app-side" aria-label="Menu principal"><div class="app-logo">GiG</div><nav>' + nav + '</nav>' +
+      '<div class="app-user"><span class="app-user__name">' + esc(user) + '</span><button type="button" data-route="/login">Sair</button></div></aside>' +
+      '<div class="app-scrim" data-act-scrim></div>' +
+      '<div class="app-main"><div class="app-top"><button type="button" class="app-burger" aria-expanded="false" aria-label="Abrir menu">☰</button>' +
+      '<span class="app-top__title">' + esc(title) + '</span></div><div class="app-content"></div></div>';
+    $('.app-content', app).appendChild(tpl.content.cloneNode(true));
+    return app;
+  }
+  function fill(dev) {
+    var tpl = $('template[data-variant="' + dev.dataset.variant + '"]');
+    states.delete(dev);
+    dev.replaceChildren(buildApp(tpl));
+    wireIds(dev);
+    if (typeof window.mockInit === 'function') window.mockInit(dev, dev.dataset.variant, dev.dataset.kind);
+  }
+  function mount(panel) {
+    var v = panel.dataset.variant;
+    var stage = $('.stage', panel) || panel.appendChild(mk('div', 'stage'));
+    stage.replaceChildren();
+    [['desktop', 'Desktop'], ['phone', '375 px']].forEach(function (d) {
+      var item = mk('figure', 'stage-item stage-item--' + d[0]);
+      item.innerHTML = '<figcaption class="stage-cap"><span>' + d[1] + '</span><button type="button" class="stage-reset" title="Repor o estado inicial">Repor</button></figcaption>';
+      var dev = mk('div', 'device device--' + d[0]);
+      dev.dataset.variant = v; dev.dataset.kind = d[0];
+      var sc = mk('div', 'device-scroll' + (d[0] === 'phone' ? ' device-scroll--phone' : '')); sc.appendChild(dev); item.appendChild(sc);
+      stage.appendChild(item);
+      fill(dev);
+    });
+    panel.dataset.rendered = '1';
+  }
+
+  /* separadores derivados dos <template data-variant> (hash #a, #b, ...) e alternador de dispositivos */
+  var VARIANTS = $$('template[data-variant]').map(function (t) { return t.dataset.variant; }).sort();
+  var tablist = $('.mock-tabs'), mainEl = $('.mock-main'), notice = mk('div', 'variant-missing');
+  notice.hidden = true; notice.setAttribute('role', 'alert'); mainEl.insertBefore(notice, mainEl.firstChild);
+  $$('.mock-bar [role="tab"], [role="tabpanel"][data-variant]').forEach(function (el) { if (VARIANTS.indexOf(el.dataset.variant) < 0) el.remove(); });
+  VARIANTS.forEach(function (v) {
+    if (!$('#tab-' + v)) {
+      var b = mk('button', ''); b.type = 'button'; b.id = 'tab-' + v; b.dataset.variant = v; b.setAttribute('role', 'tab');
+      b.setAttribute('aria-controls', 'panel-' + v); b.setAttribute('aria-selected', 'false'); b.textContent = v.toUpperCase(); tablist.appendChild(b);
+    }
+    if (!$('#panel-' + v)) {
+      var p = mk('section', ''); p.id = 'panel-' + v; p.dataset.variant = v; p.hidden = true; p.setAttribute('role', 'tabpanel'); p.setAttribute('aria-labelledby', 'tab-' + v);
+      mainEl.appendChild(p);
+    }
+  });
+  var tabs = $$('.mock-bar [role="tab"]'), panels = $$('[role="tabpanel"][data-variant]');
+  function select(v, focus) {
+    var missing = null;
+    if (VARIANTS.indexOf(v) < 0) { if (v) missing = v; v = VARIANTS[0]; }
+    tabs.forEach(function (t) { var o = !missing && t.dataset.variant === v; t.setAttribute('aria-selected', String(o)); t.tabIndex = o || (missing && t.dataset.variant === v) ? 0 : -1; if (o && focus) t.focus(); });
+    panels.forEach(function (p) { p.hidden = !!missing || p.dataset.variant !== v; if (!p.hidden && !p.dataset.rendered) mount(p); });
+    notice.hidden = !missing;
+    if (missing) {
+      notice.innerHTML = '<span>Esta funcionalidade não tem a variante ' + esc(missing.toUpperCase()) + '.</span> <a class="btn-row" href="#' + esc(VARIANTS[0]) + '">Ver a variante ' + esc(VARIANTS[0].toUpperCase()) + '</a>';
+    } else if (location.hash.slice(1) !== v) { try { history.replaceState(null, '', '#' + v); } catch (e) { /* file:// restrito */ } }
+  }
+  function setView(v) {
+    document.body.dataset.view = v;
+    $$('.mock-view button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.view === v)); });
+    try { localStorage.setItem(VIEW_KEY, v); } catch (e) { /* sem armazenamento */ }
+  }
+  function boot() {
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { select(t.dataset.variant); });
+      t.addEventListener('keydown', function (e) {
+        var j = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }[e.key];
+        if (j === undefined) return; e.preventDefault(); select(tabs[(j + tabs.length) % tabs.length].dataset.variant, true);
+      });
+    });
+    $$('.mock-view button').forEach(function (b) { b.addEventListener('click', function () { setView(b.dataset.view); }); });
+    window.addEventListener('hashchange', function () { select(location.hash.slice(1).toLowerCase()); });
+    var saved = null; try { saved = localStorage.getItem(VIEW_KEY); } catch (e) { /* ignorar */ }
+    setView(['both', 'desktop', 'phone'].indexOf(saved) >= 0 ? saved : 'both');
+    select(location.hash.slice(1).toLowerCase());
+  }
+
+  /* comportamentos da moldura */
+  on('click', '.app-burger', function (e, t, dev) { setMenu(dev, !$('.app', dev).hasAttribute('data-menu-open')); });
+  on('click', '.app-scrim', function (e, t, dev) { setMenu(dev, false); });
+  on('click', '[data-route]', function (e, t, dev) { e.preventDefault(); setMenu(dev, false); toast(dev, 'Abre ' + t.getAttribute('data-route')); });
+  on('click', 'a[href="#"]', function (e) { e.preventDefault(); });
+  on('click', '.sheet', function (e, t, dev) { if (e.target === t || e.target.closest('[data-close-sheet]')) closeSheet(dev); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    $$('.sheet:not([hidden])').forEach(function (s) { closeSheet(s.closest('.device')); });
+    $$('.app[data-menu-open]').forEach(function (a) { setMenu(a.closest('.device'), false); });
+  });
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.stage-reset'); if (!b) return;
+    fill($('.device', b.closest('.stage-item')));
+  });
+
+  window.Mock = { $: $, $$: $$, esc: esc, uid: uid, state: state, on: on, toast: toast, sheet: sheet, closeSheet: closeSheet, setMenu: setMenu };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+/* === FIM MOLDURA === */
+</script>
+<script>
+/* === ESPECÍFICO DESTE MOCKUP === */
+(function () {
+  'use strict';
+  var $ = Mock.$, esc = Mock.esc;
+
+  /* ───────── dados fictícios (semana 33: 10/08–16/08/2026, os mesmos do mockup 1) ───────── */
+  var DAYN = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+  var DATES = ['10/08', '11/08', '12/08', '13/08', '14/08', '15/08', '16/08'];
+  var MANAGER = 'Joana Valente';
+  var POSTO_COLOR = { 'Montagem': '#d9a400', 'Fogão': '#2f6fd6', 'Sumo': '#a03fb5', 'Copa': '#e8742a', 'Copa e Apoio': '#d9534f',
+    'Bar': '#2e9e5b', 'Produção': '#7a5a2e', 'Sala': '#3aa6b9', 'Supervisão': '#b0234a', 'Gerência': '#6b4fd8' };
+  var TPL = {
+    D: { s: '08:00', e: '17:30', bs: '12:30', be: '13:30' },
+    C: { s: '08:00', e: '17:00', bs: '12:00', be: '13:00' },
+    M: { s: '09:00', e: '15:15', bs: '11:45', be: '12:45' },
+    X: { s: '14:00', e: '23:00', bs: '18:00', be: '19:00' }
+  };
+  /* D=Dia · C=Dia curto · M=Meio-dia · X=14:00–23:00 · T=F. trab. · F=Folga · S=Folga fixa · V=Férias · B=Baixa médica (mostra-se «Indisponível») */
+  var PEOPLE = [
+    { id: 'beatriz', name: 'Beatriz Moura', pos: 'Sumo', load: 40, row: 'F D T C B M M', email: 'beatriz.moura@exemplo.pt', acct: 'active' },
+    { id: 'carla', name: 'Carla Videira', pos: 'Supervisão', load: 40, row: 'F D T D C M M', email: 'carla.videira@exemplo.pt', acct: 'active' },
+    { id: 'filipa', name: 'Filipa Couto', pos: 'Sala', load: 30, row: 'C D T M F M S', email: '', acct: 'none' },
+    { id: 'hugo', name: 'Hugo Brandão', pos: 'Gerência', load: 40, row: 'V V V V V V V', email: 'hugo.brandao@exemplo.pt', acct: 'active' },
+    { id: 'ines', name: 'Inês Calado', pos: 'Copa', load: 40, row: 'D D T F C M M', email: 'ines.calado@exemplo.pt', acct: 'active' },
+    { id: 'marta', name: 'Marta Leal', pos: 'Bar', load: 40, row: 'M C T F D C M', email: 'marta.leal@exemplo.pt', acct: 'invited' },
+    { id: 'matilde', name: 'Matilde Teles', pos: 'Produção', load: 40, row: 'B B B F D C M', email: 'matilde.teles@exemplo.pt', acct: 'none' },
+    { id: 'nuno', name: 'Nuno Arez', pos: 'Copa e Apoio', load: 30, row: 'D F T C M M S', email: 'nuno.arez@exemplo.pt', acct: 'invited' },
+    { id: 'rui', name: 'Rui Pestana', pos: 'Montagem', load: 40, row: 'C C T D F M M', email: 'rui.pestana@exemplo.pt', acct: 'none' },
+    { id: 'sonia', name: 'Sónia Brito', pos: 'Montagem', load: 40, row: 'D F T X D M M', email: 'sonia.brito@exemplo.pt', acct: 'none' },
+    { id: 'tiago', name: 'Tiago Fontes', pos: 'Fogão', load: 40, row: 'C F T D M D M', email: 'tiago.fontes@exemplo.pt', acct: 'active' }
+  ];
+  PEOPLE.forEach(function (p) { p.row = p.row.split(' '); });
+  /* trocas de posto na mesma jornada: um turno, dois segmentos */
+  var SWAPS = { 'beatriz:1': { t: '10:00', pos: 'Copa' }, 'marta:4': { t: '12:00', pos: 'Sala' }, 'tiago:5': { t: '14:00', pos: 'Montagem' } };
+  /* a versão anterior (v2) difere nestas células; a republicação (v3) destaca-as */
+  var BEFORE = { 'ines:4': 'M', 'ines:5': 'F', 'sonia:3': 'D', 'beatriz:4': 'C' };
+  var MODE = {
+    pub: { subject: 'Escala da semana 33 · 10/08–16/08', date: 'qui., 23 jul. 2026, 17:10' },
+    repub: { subject: 'Escala alterada — semana 33', date: 'sex., 7 ago. 2026, 10:20' }
+  };
+
+  /* ───────── funções puras ───────── */
+  var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+  var toMin = function (t) { var p = t.split(':'); return (+p[0]) * 60 + (+p[1]); };
+  var hhmm = function (m) { return pad(Math.floor(m / 60)) + ':' + pad(m % 60); };
+  var worked = function (x) { return x.k === 'W' || x.k === 'FT'; };
+  var firstName = function (p) { return p.name.split(' ')[0]; };
+
+  function cell(p, c, old) {
+    var key = p.id + ':' + c, code = old && BEFORE[key] ? BEFORE[key] : p.row[c];
+    var t = TPL[code === 'T' ? 'D' : code];
+    if (code === 'D' || code === 'C' || code === 'M' || code === 'X') return { k: 'W', s: t.s, e: t.e, bs: t.bs, be: t.be, pos: p.pos, swap: SWAPS[key] || null };
+    if (code === 'T') return { k: 'FT', s: t.s, e: t.e, bs: t.bs, be: t.be, pos: p.pos, swap: null };
+    if (code === 'V') return { k: 'V' };
+    if (code === 'B') return { k: 'B' };
+    return { k: 'F' };
+  }
+  function label(x) {
+    switch (x.k) {
+      case 'W': return x.s + '–' + x.e;
+      case 'FT': return 'F. trab. ' + x.s + '–' + x.e;
+      case 'V': return 'Férias';
+      case 'B': return 'Indisponível';
+    }
+    return 'Folga';
+  }
+  function hours(p) {
+    var planned = 0, ft = 0;
+    for (var c = 0; c < 7; c++) {
+      var x = cell(p, c, false), d = worked(x) ? toMin(x.e) - toMin(x.s) : 0;
+      if (x.k === 'W') planned += d; else if (x.k === 'FT') ft += d;
+    }
+    return { planned: planned, ft: ft, over: planned > p.load * 60 };
+  }
+  var hrsHtml = function (p) {
+    var h = hours(p);
+    return '<span class="hrs' + (h.over ? ' over' : '') + '" title="Horas planeadas / carga semanal">' + hhmm(h.planned) + ' / ' + hhmm(p.load * 60) + '</span>';
+  };
+  function order(r) { return [r].concat(PEOPLE.filter(function (p) { return p.id !== r.id; })); }
+  var dayNote = function (c) { return c === 2 ? 'Época Agosto' : c === 5 ? 'Feriado (aberto)' : ''; };
+  var dayTags = function (c) {
+    return (c === 2 ? '<span class="tag tag-ft">F. trab. (Época Agosto)</span>' : '') + (c === 5 ? '<span class="tag tag-fer">Feriado (aberto)</span>' : '');
+  };
+
+  /* bloco de turno com a cor do posto (classes .shift-* do bloco «POSTOS (copiar)») */
+  function shiftHtml(x, split) {
+    if (x.k === 'F') return '<span class="ms ms-off">Folga</span>';
+    if (x.k === 'V') return '<span class="ms ms-vac">Férias</span>';
+    if (x.k === 'B') return '<span class="ms ms-ind">Indisponível</span>';
+    var col = POSTO_COLOR[x.pos];
+    var time = split ? '<span class="shift-time shift-time--split"><span>' + x.s + '–</span><span>' + x.e + '</span></span>' : '<span class="shift-time">' + x.s + '–' + x.e + '</span>';
+    var tag = x.k === 'FT' ? '<span class="shift-tag" style="align-self:flex-start">F. trab.</span>' : '';
+    if (x.swap) {
+      var col2 = POSTO_COLOR[x.swap.pos], m1 = toMin(x.swap.t) - toMin(x.s), m2 = toMin(x.e) - toMin(x.swap.t);
+      return '<span class="shift-block has-swap" style="--pos-color:' + col + '"><span class="shift-bars" aria-hidden="true"><i class="shift-seg" style="--pos-color:' + col + ';flex:' + m1 + '"></i><i class="shift-seg" style="--pos-color:' + col2 + ';flex:' + m2 + '"></i></span>' +
+        tag + time + '<span class="shift-pos"><span class="shift-band" style="--pos-color:' + col + '">' + esc(x.pos) + '</span><span class="shift-band" style="--pos-color:' + col2 + '">' + esc(x.swap.pos) + ' ' + x.swap.t + '</span></span></span>';
+    }
+    return '<span class="shift-block" style="--pos-color:' + col + '"><span class="shift-bars" aria-hidden="true"><i class="shift-seg" style="--pos-color:' + col + '"></i></span>' +
+      tag + time + '<span class="shift-pos"><span class="shift-band" style="--pos-color:' + col + '">' + esc(x.pos) + '</span></span></span>';
+  }
+  var chgLine = function (p, c) {
+    return '<div class="was-line"><span class="tag tag-chg">alterado</span> <span>antes:</span> <span class="was">' + esc(label(cell(p, c, true))) + '</span></div>';
+  };
+
+  /* ───────── blocos do email ───────── */
+  function topHtml() { return '<div class="md-top"><span class="md-logo">GiG</span><span class="md-wk">Semana 33 · 10/08–16/08/2026</span></div>'; }
+  function introHtml(st, r) {
+    var rep = st.mode === 'repub';
+    return '<p>Olá, <b>' + esc(firstName(r)) + '</b>.</p>' + (rep
+      ? '<p><b>A escala da semana 33 foi alterada</b> (versão 3). O que mudou está destacado a âmbar, com o que tinha antes e o que passa a ter.</p>'
+      : '<p>A escala da semana 33 (10/08–16/08/2026) foi publicada por ' + MANAGER + '. A sua semana está em destaque; abaixo está a escala da equipa toda.</p>');
+  }
+  function ctaHtml(r) {
+    var note = r.acct === 'invited' ? 'Aceite o convite que recebeu para entrar.' : r.acct === 'none' ? 'Peça acesso à ' + MANAGER + ' para entrar.' : '';
+    return '<p><a class="md-btn" href="#" data-route="/escala/minha?semana=2026-W33">Abrir no GiG</a></p>' + (note ? '<p style="font-size:14px;color:#4b554f">' + note + '</p>' : '');
+  }
+  function footHtml() {
+    return '<div class="md-foot"><p>Recebe este email porque o seu email está na ficha de funcionário do GiG. Não precisa de conta para receber a escala.</p>' +
+      '<p>Enviado pelo GiG em nome de ' + MANAGER + '. Dúvidas sobre o horário: fale com a gestora.</p></div>';
+  }
+  function changeLine(p, c, withName) {
+    var b = cell(p, c, true), a = cell(p, c, false);
+    return '<li>' + (withName ? '<b>' + esc(p.name) + '</b> · ' : '') + '<b>' + DAYN[c].toLowerCase() + ' ' + DATES[c] + '</b> ' +
+      '<span><span class="was">' + esc(label(b)) + '</span> <span role="img" aria-label="passa a">→</span> <b>' + esc(label(a)) + '</b>' + (worked(a) ? ' · ' + esc(a.pos) : '') + '</span></li>';
+  }
+  function changeBoxes(st, r, withMine) {
+    var mine = '', others = '', nm = 0;
+    PEOPLE.forEach(function (p) {
+      for (var c = 0; c < 7; c++) {
+        if (!BEFORE[p.id + ':' + c]) continue;
+        if (p.id === r.id) { mine += changeLine(p, c, false); nm++; } else others += changeLine(p, c, true);
+      }
+    });
+    var h = '';
+    if (withMine) h += nm ? '<div class="md-box"><h3>A sua escala mudou</h3><ul>' + mine + '</ul></div>' : '<div class="md-box md-box--ok"><h3>A sua escala não mudou</h3><p style="margin:0">Nesta versão não há alterações nos seus dias.</p></div>';
+    if (others) h += '<div class="md-box"><h3>Outras alterações na equipa</h3><ul>' + others + '</ul></div>';
+    return h;
+  }
+
+  /* um dia: o destinatário primeiro (se me), os colegas a trabalhar (ou alterados) e uma linha com o resto */
+  function dayHtml(c, st, r, o) {
+    var rep = st.mode === 'repub', rows = '', n = 0, offs = { 'Folga': [], 'Férias': [], 'Indisponível': [] };
+    order(r).forEach(function (p) {
+      var x = cell(p, c, false), isMe = p.id === r.id, ch = rep && BEFORE[p.id + ':' + c];
+      if (worked(x)) n++;
+      if (isMe && !o.me) return;
+      if (isMe || worked(x) || ch) {
+        rows += '<div class="prow' + (isMe ? ' me' : '') + (ch ? ' chg' : '') + '"><div class="who"><span class="nm">' + esc(p.name) + '</span>' + (isMe ? ' <span class="you">você</span>' : '') + '</div>' +
+          '<div class="what">' + (ch ? chgLine(p, c) : '') + shiftHtml(x) + '</div></div>';
+      } else offs[label(x)].push(esc(p.name));
+    });
+    var off = Object.keys(offs).filter(function (k) { return offs[k].length; }).map(function (k) { return '<b>' + k + ':</b> ' + offs[k].join(', '); }).join(' · ');
+    return '<section class="day' + (o.compact ? ' day--compact' : '') + '"><h3 class="day-h"><span>' + DAYN[c] + ' ' + DATES[c] + '</span>' + dayTags(c) + '<span class="day-n">' + n + ' a trabalhar</span></h3>' +
+      rows + (off ? '<p class="offl">' + off + '</p>' : '') + '</section>';
+  }
+  function daysHtml(st, r, o) { var h = ''; for (var c = 0; c < 7; c++) h += dayHtml(c, st, r, o); return h; }
+
+  /* ───────── corpo por variante ───────── */
+  var BODY = {
+    a: function (st, r) {
+      var rep = st.mode === 'repub';
+      return '<div class="md-pad">' + introHtml(st, r) + (rep ? changeBoxes(st, r, true) : '') + ctaHtml(r) +
+        '<h2 class="md-h">Escala da equipa, dia a dia</h2>' + daysHtml(st, r, { me: true }) + '</div>';
+    },
+    b: function (st, r) {
+      var rep = st.mode === 'repub', h = '<div class="md-pad">' + introHtml(st, r) + ctaHtml(r);
+      h += '<h2 class="md-h">A sua semana</h2><div class="sum">';
+      for (var c = 0; c < 7; c++) {
+        var x = cell(r, c, false), ch = rep && BEFORE[r.id + ':' + c];
+        h += '<div class="sumrow' + (ch ? ' chg' : '') + '"><div class="d">' + DAYN[c] + ' ' + DATES[c] + (dayNote(c) ? '<small>' + dayNote(c) + '</small>' : '') + '</div><div>' +
+          (ch ? chgLine(r, c) : '') + shiftHtml(x) + (worked(x) ? '<span class="brk">intervalo ' + x.bs + '–' + x.be + '</span>' : '') + '</div></div>';
+      }
+      var hh = hours(r);
+      h += '<div class="sumtot"><span>Horas planeadas ' + hrsHtml(r) + '</span>' + (hh.ft ? '<span class="hrs">+' + hhmm(hh.ft) + ' F. trab. (fora do banco de horas)</span>' : '') +
+        '<span class="hrs">Planeadas = fim − início, sem descontar o almoço.</span></div></div>';
+      if (rep) h += changeBoxes(st, r, false);
+      return h + '<h2 class="md-h">A equipa, dia a dia</h2>' + daysHtml(st, r, { me: false, compact: true }) + '</div>';
+    },
+    c: function (st, r) {
+      var rep = st.mode === 'repub';
+      var t = '<table class="mt"><thead><tr><th class="nm" scope="col">Equipa</th>';
+      for (var c = 0; c < 7; c++) t += '<th scope="col">' + DAYN[c] + '<br>' + DATES[c] + (c === 2 ? '<br><span class="tag tag-ft">F. trab.</span>' : c === 5 ? '<br><span class="tag tag-fer">Feriado</span>' : '') + '</th>';
+      t += '</tr></thead><tbody>';
+      order(r).forEach(function (p) {
+        t += '<tr' + (p.id === r.id ? ' class="me"' : '') + '><td class="nm"><b>' + esc(p.name) + '</b>' + (p.id === r.id ? '<span class="you">você</span> ' : '') + hrsHtml(p) + '</td>';
+        for (var d = 0; d < 7; d++) {
+          var ch = rep && BEFORE[p.id + ':' + d];
+          t += '<td' + (ch ? ' class="chg"' : '') + '>' + shiftHtml(cell(p, d, false), true) + (ch ? '<small class="was">antes: <s>' + esc(label(cell(p, d, true))) + '</s></small>' : '') + '</td>';
+        }
+        t += '</tr>';
+      });
+      t += '</tbody></table>';
+      return '<div class="md-pad">' + introHtml(st, r) + (rep ? changeBoxes(st, r, true) : '') + ctaHtml(r) + '</div>' +
+        '<div class="mt-wide"><h2 class="md-h" style="padding:0 20px">Escala da semana</h2><div class="mt-wrap">' + t +
+        '<p class="mt-note">Horas junto ao nome: planeadas / carga (a âmbar quando excedem a carga). Planeadas = fim − início, sem descontar o almoço.' + (rep ? ' Células a âmbar: alteradas nesta versão.' : '') + '</p></div></div>' +
+        '<div class="mt-narrow md-pad"><h2 class="md-h">A equipa, dia a dia</h2>' + daysHtml(st, r, { me: true, compact: true }) + '</div>';
+    }
+  };
+
+  function render(dev) {
+    var st = Mock.state(dev), r = PEOPLE.filter(function (p) { return p.id === st.rcpt; })[0], m = MODE[st.mode];
+    $('[data-slot="mail"]', dev).innerHTML =
+      '<div class="mailc"><div class="mailc-bar"><span>Caixa de entrada</span><span>Cliente de email simulado</span></div>' +
+      '<div class="mailc-head"><dl class="mailc-meta"><dt>De</dt><dd>GiG &lt;escala@exemplo.pt&gt;</dd><dt>Para</dt><dd>' + esc(r.name) + ' &lt;' + esc(r.email) + '&gt;</dd>' +
+      '<dt>Assunto</dt><dd class="mailc-subj">' + esc(m.subject) + '</dd><dt>Data</dt><dd>' + esc(m.date) + '</dd></dl></div>' +
+      '<div class="mailc-body"><div class="mail-doc">' + topHtml() + BODY[st.variant](st, r) + footHtml() + '</div></div></div>';
+    var n = PEOPLE.filter(function (p) { return p.email; }).length, sem = PEOPLE.filter(function (p) { return !p.email; }).map(function (p) { return p.name; });
+    $('[data-slot="sendinfo"]', dev).textContent = (st.mode === 'repub' ? 'Republicação (versão 3): ' : 'Publicação: ') + 'com «Avisar a equipa por email» ligada, o GiG envia este email a ' + n + ' pessoas. ' +
+      sem.join(', ') + ' não tem email na ficha e não recebe (ver Equipa).';
+    Mock.$$('[data-act="mode"]', dev).forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.v === st.mode)); });
+    $('select[data-role="rcpt"]', dev).value = st.rcpt;
+  }
+
+  window.mockInit = function (dev, variant) {
+    var st = Mock.state(dev);
+    st.variant = variant; st.mode = 'pub'; st.rcpt = 'ines';
+    $('select[data-role="rcpt"]', dev).innerHTML = PEOPLE.map(function (p) {
+      return '<option value="' + p.id + '"' + (p.email ? '' : ' disabled') + '>' + esc(p.name) + (p.email ? '' : ' — sem email, não recebe') + '</option>';
+    }).join('');
+    render(dev);
+  };
+  Mock.on('click', '[data-act="mode"]', function (e, t, dev) { Mock.state(dev).mode = t.dataset.v; render(dev); });
+  Mock.on('change', 'select[data-role="rcpt"]', function (e, t, dev) { Mock.state(dev).rcpt = t.value; render(dev); });
+})();
+
+</script>
+</body>
+</html>
